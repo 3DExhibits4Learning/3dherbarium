@@ -1,0 +1,232 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "mysql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model Account {
+  id                  String   @id @default(cuid())
+  userId              String   @map("user_id")
+  type                String
+  provider            String
+  providerAccountId   String?  @map("provider_account_id")
+  refresh_token       String?  @db.Text
+  access_token        String?  @db.Text
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String? @db.Text
+  session_state       String?
+  user                User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId], map: "accounts_user_id_fkey")
+  @@map("accounts")
+}
+
+model annotations {
+  url              String?           @db.VarChar(1000)
+  uid              String            @db.VarChar(100)
+  annotation_no    Int               @db.TinyInt
+  annotation_type  String            @db.Char(5)
+  annotation_id    String            @id @db.VarChar(36)
+  model            model             @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "annotations_ibfk_1")
+  position         String?           @db.VarChar(250)
+  title            String?           @db.VarChar(50)
+  photo_annotation photo_annotation?
+  video_annotation video_annotation?
+  model_annotation model_annotation?
+
+  @@index([uid], map: "uid")
+}
+
+model common_names {
+  spec_name   String  @db.VarChar(100)
+  common_name String  @db.VarChar(100)
+  species     species @relation(fields: [spec_name], references: [spec_name], map: "common_names_ibfk_1")
+
+  @@id([spec_name, common_name])
+}
+
+model image_set {
+  spec_name        String   @db.VarChar(100)
+  spec_acquis_date DateTime @db.Date
+  set_no           Int      @db.TinyInt
+  imaged_by        String   @db.VarChar(25)
+  imaged_date      DateTime @db.Date
+  images_link      String?  @db.VarChar(100)
+  no_of_images     Int      @db.SmallInt
+  uid              String?  @db.VarChar(100)
+  species          species  @relation(fields: [spec_name], references: [spec_name], onDelete: NoAction, onUpdate: NoAction, map: "image_set_ibfk_1")
+  specimen         specimen @relation(fields: [spec_acquis_date, spec_name], references: [spec_acquis_date, spec_name], onDelete: NoAction, onUpdate: NoAction, map: "image_set_ibfk_2")
+  model            model?   @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "image_set_ibfk_3")
+
+  @@id([spec_name, spec_acquis_date, set_no])
+  @@index([spec_acquis_date, spec_name], map: "image_set_ibfk_2")
+  @@index([spec_acquis_date], map: "spec_acquis_date")
+  @@index([uid], map: "uid")
+}
+
+model model {
+  uid                 String        @id @db.VarChar(100)
+  spec_name           String        @db.VarChar(100)
+  spec_acquis_date    DateTime      @db.Date
+  modeled_by          String        @db.VarChar(25)
+  site_ready          Boolean       @default(false)
+  pref_comm_name      String        @default("") @db.VarChar(100)
+  base_model          Boolean?      @default(true)
+  annotated           Boolean?      @default(false)
+  annotationPosition  String?       @db.VarChar(250)
+  build_process       String?       @default("Photogrammetry") @db.VarChar(50)
+  thumbnail           String        @default("")
+  annotator           String?       @db.VarChar(75)
+  annotations         annotations[]
+  image_set           image_set[]
+  species             species       @relation(fields: [spec_name], references: [spec_name], onDelete: NoAction, map: "model_ibfk_1")
+  specimen            specimen      @relation(fields: [spec_acquis_date, spec_name], references: [spec_acquis_date, spec_name], onDelete: NoAction, map: "model_ibfk_2")
+  software            software[]
+  model_annotation    model_annotation?
+
+  @@index([spec_acquis_date, spec_name], map: "model_ibfk_2")
+  @@index([spec_acquis_date], map: "spec_acquis_date")
+  @@index([spec_name], map: "spec_name")
+}
+
+model model_annotation {
+  modeler       String      @db.VarChar(75) @default("Hunter Phillips")
+  license       String      @db.VarChar(75) @default("CC BY-NC-SA")
+  annotator     String      @db.VarChar(25) @default("Kat Lim")
+  annotation    String      @db.VarChar(4000)
+  annotation_id String      @id @db.VarChar(36)
+  uid           String      @unique @db.VarChar(36)
+  modelUid      model       @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "modelAnnotationFk2")      
+  annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "modelAnnotationFk1")
+}
+
+model photo_annotation {
+  url           String      @db.VarChar(1000)
+  website       String?     @db.VarChar(150)
+  author        String      @db.VarChar(75)
+  title         String?     @db.VarChar(100)
+  license       String      @db.VarChar(75)
+  annotator     String      @db.VarChar(25)
+  annotation    String      @db.VarChar(4000)
+  annotation_id String      @id @db.VarChar(36)
+  photo         Bytes?       
+  annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "photoFk1")
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  sessionToken  String   @unique @map("session_token")
+  userId        String   @map("user_id")
+  expires       DateTime
+  users         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "sessions_user_id_fkey")
+  @@map("sessions")
+}
+
+model software {
+  uid      String @db.VarChar(100)
+  software String @db.VarChar(25)
+  model    model  @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "software_ibfk_1")
+
+  @@id([uid, software])
+}
+
+model species {
+  spec_name    String         @id @db.VarChar(100)
+  genus        String         @db.VarChar(50)
+  is_local     Boolean
+  common_names common_names[]
+  image_set    image_set[]
+  model        model[]
+  specimen     specimen[]
+}
+
+model specimen {
+  spec_name        String      @db.VarChar(100)
+  spec_acquis_date DateTime    @db.Date
+  procurer         String      @db.VarChar(25)
+  image_set        image_set[]
+  model            model[]
+  species          species     @relation(fields: [spec_name], references: [spec_name], onDelete: NoAction, map: "specimen_ibfk_1")
+
+  @@id([spec_name, spec_acquis_date])
+  @@index([spec_acquis_date], map: "spec_acquis_date")
+  @@index([spec_name], map: "spec_name")
+}
+
+model submittalAttempt {
+  attemptuid String   @id
+  email      String
+  dateTime   DateTime @default(now())
+  errorCode  String
+}
+
+model submittalSoftware {
+  id            String
+  software      String
+  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], map: "submittalSoftwareFk")
+
+  @@id([id, software])
+}
+
+model submittalTags {
+  id            String
+  tag           String
+  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], map: "submittalTagsFk")
+
+  @@id([id, tag])
+}
+
+model userSubmittal {
+  confirmation      String @id
+  email             String
+  artistName        String
+  speciesName       String
+  createdWithMobile Boolean
+  methodology       String
+  dateTime          DateTime @default(now())
+  modeluid          String   @unique
+  status            String
+  thumbnail         String
+  lat               Decimal
+  lng               Decimal
+  commonName        String @default("")
+  submittalSoftware submittalSoftware[]
+  submittalTags     submittalTags[]
+}
+
+model User {
+  id             String     @id @default(cuid())
+  name           String?
+  email          String?    @unique
+  emailVerified  DateTime?  @map("email_verified")
+  image          String?
+  accounts       Account[]
+  sessions       Session[]
+
+  @@map("users")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
+
+model video_annotation {
+  url           String      @db.VarChar(1000)
+  length        String?     @db.VarChar(5)
+  annotation_id String      @id @db.VarChar(36)
+  annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "videoFk1")
+}

@@ -1,0 +1,429 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.annotationBorder {
+  border-color: #004C46 !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .annotationBorder {
+    border-color: grey !important;
+  }
+}
+
+header {
+  min-width: 99vw;
+}
+
+body {
+  width: 100%;
+  margin: 0 auto !important;
+  float: none !important;
+}
+
+.fade {
+  animation: fadeIn 3s;
+}
+
+#sliderDiv {
+  animation: fadeIn 3s;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.collections-map {
+  z-index: 1;
+}
+
+.inat-map {
+  height: 100%;
+  margin: auto;
+  width: 100%;
+  border-radius: 10px;
+  z-index: 1;
+  outline: none;
+  outline: 2px solid #004C46 !important;
+  min-height: 50px;
+}
+
+.collections-map>.leaflet-container,
+.inat-map>.leaflet-container {
+  outline: 2px solid #004C46 !important;
+}
+
+
+@media (max-width: 640px) {
+  .inat-map {
+    border-radius: 0px;
+  }
+
+  .collections-map>.leaflet-container,
+  .inat-map>.leaflet-container {
+    border-radius: 0px;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .inat-map {
+    outline: 2px solid #3d3d3d !important;
+  }
+
+  .collections-map>.leaflet-container,
+  .inat-map>.leaflet-container {
+    outline: 2px solid #3d3d3d !important;
+
+  }
+}
+
+
+.collections-map:focus,
+.inat-map:focus {
+  outline-style: solid !important;
+}
+
+.collections-map>.leaflet-container:focus,
+.inat-map>.leaflet-container:focus {
+  outline-style: solid !important;
+}
+
+
+/** Prevents images from being selected / dragged **/
+img {
+  -drag: none;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+
+/** Prevents text from being selected / dragged **/
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: rgb(245, 243, 231);
+  right: 10px;
+  padding: 30px;
+  color: #000 !important;
+  fill: black !important;
+  stroke: black !important;
+  border-radius: 10px;
+  transition: background-color 0.3s;
+  transform: scale(0.85);
+  width: initial;
+  height: initial;
+  font-size: 3rem;
+  display: none;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background-color: rgb(245, 243, 231, 0.8);
+}
+
+.swiper-slide-custom {
+  padding-left: 1%;
+  padding-right: 1%;
+}
+
+@media (max-width: 766px) {
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    transform: scale(0.65);
+  }
+}
+
+button#map-more-options-button:disabled {
+  opacity: 0.5;
+  background-color: #afafaf;
+  --tw-border-opacity: 1;
+}
+
+button#map-more-options-button:hover {
+  background-color: #e3e3e3;
+  opacity: 0.9;
+}
+
+button#map-more-options-button:disabled:hover {
+  background-color: #afafaf;
+  opacity: 0.5;
+}
+
+a:focus {
+  outline: 1.5px solid #FFC72C;
+  border-radius: 5px;
+}
+
+@media (prefers-color-scheme: dark) {
+  a:focus {
+    outline: 1.5px solid #FFFFFF;
+    border-radius: 5px;
+  }
+}
+
+@media (max-width: 1023.5px),
+(orientation: portrait) {
+  #annotationDiv {
+    display: none !important;
+  }
+
+  #model-viewer {
+    width: 100vw !important;
+  }
+}
+
+@media (min-width: 1023.5px) and (orientation: landscape) {
+  #modalDiv {
+    display: none !important;
+  }
+}
+
+#searchPlaceHolder::-webkit-search-cancel-button,
+#iNatSearch::-webkit-search-cancel-button,
+#collectionsSearch::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.swiper-pagination-progressbar {
+  padding: 3px;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #004C46 !important
+}
+
+@media (prefers-color-scheme: dark) {
+  .swiper-pagination-bullet-active {
+    background-color: white !important
+  }
+
+  .swiper-pagination-bullet {
+    background-color: white !important
+  }
+}
+
+.annotation_hyperlink {
+  color: #98B8AD;
+}
+
+@keyframes swipeUpAndFadeBack {
+
+  0%,
+  100% {
+    transform: translateX(0);
+    opacity: 0.5;
+  }
+
+  50% {
+    transform: translateX(-20px);
+    opacity: 1;
+  }
+}
+
+@keyframes blinkImage {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.rotate-blink-animation {
+  opacity: 1;
+  animation: swipeUpAndFadeBack 2s ease-in-out infinite;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.image-transition {
+  transition: right 1s ease, bottom 1s ease, width 1s ease;
+}
+
+.move-to-bottom-right {
+  position: absolute;
+  right: 0;
+  bottom: 15px;
+  width: 15%;
+}
+
+@supports (-webkit-touch-callout: none) {
+  input {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 1023.5px) {
+  #tailwindBroken {
+    height: 2rem !important;
+  }
+}
+
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  width: 80%;
+}
+
+/***** Track Styles *****/
+/***** Chrome, Safari, Opera, and Edge Chromium *****/
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #a1ada3;
+  height: 0.5rem;
+  border-radius: 5px;
+}
+
+/******** Firefox ********/
+input[type="range"]::-moz-range-track {
+  background: #a1ada3;
+  height: 0.5rem;
+  border-radius: 5px;
+}
+
+/***** Thumb Styles *****/
+/***** Chrome, Safari, Opera, and Edge Chromium *****/
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -8px;
+  background-color: #00856A;
+  height: 1.5rem;
+  width: 1.5rem;
+  border-radius: 1.5rem;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: #004C46;
+}
+
+#postInput::file-selector-button {
+  background-color: #00856A;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  padding-right: 10px;
+  padding-left: 10px
+}
+
+#formFileInput::file-selector-button {
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  padding-right: 10px;
+  padding-left: 10px
+}
+
+#plantIdFileInput::file-selector-button {
+  color: white;
+  border-radius: 5px;
+  border: none;
+  padding: 5px;
+  padding-right: 10px;
+  padding-left: 10px
+}
+
+#postInput::file-selector-button:hover {
+  cursor: pointer
+}
+
+/* image gallery CSS */
+
+.image-gallery {
+  height: 100% !important;
+  width: 100% !important
+}
+
+.image-gallery-content {
+  height: 100% !important;
+  width: 100% !important
+}
+
+.image-gallery-slide-wrapper {
+  height: calc(100% - 100px) !important;
+  width: 100% !important
+}
+
+.image-gallery-swipe {
+  height: 100% !important;
+  width: 100% !important
+}
+
+.image-gallery-slides {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.image-gallery-slide {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.image-gallery-slide img {
+  display: 'inline-block';
+  max-height: 100% !important;
+  max-width: 100% !important;
+  object-fit: fill !important;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+
+/* Tafigy placeholder text color (dark mode) */
+
+@media (prefers-color-scheme: dark) {
+  .tagify {
+    --placeholder-color: white !important
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .leaflet-popup-content-wrapper {
+    background-color: #181818 !important;
+    color: white !important
+  }
+}
+
+/* Removes stripes from tagify tags when 'readOnly' is enabled */
+
+tags.tagify {
+  text-decoration: 'none' !;
+  --readonly-striped: 0
+}
