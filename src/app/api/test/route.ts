@@ -41,7 +41,7 @@ const comments = [
       const bytes = await file.arrayBuffer()
       const buffer = Buffer.from(bytes)
       //const path = join('public/tmp', file.name)
-      const path = join('/public/data', file.name)
+      const path = join('public/data', file.name)
       await writeFile(path, buffer)
 
       return Response.json({ data:'success', response: 'no data returned' })
