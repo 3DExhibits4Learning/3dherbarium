@@ -1,4 +1,5 @@
-import { citationHandler } from "@/utils/modelAnnotations"
+import { writeFile } from "fs/promises"
+import { join } from "path"
 
 const comments = [
     {
@@ -35,18 +36,25 @@ const comments = [
   
   export async function POST(request: Request) {
     try{
-      const json = await request.json()
-      // const name = formData.get('name')
-      // const email = formData.get('email')
-      //const file = formData.get('file')
-      const annotations = json.annotations
-      const citations = await citationHandler(annotations)
-      return Response.json({ data:'success', response: citations })
+      const data = await request.formData()
+      const file = data.get('file') as File
+      const bytes = await file.arrayBuffer()
+      const buffer = Buffer.from(bytes)
+      //const path = join('public/tmp', file.name)
+      const path = join('/opt/data/tmp', file.name)
+      await writeFile(path, buffer)
 
+      return Response.json({ data:'success', response: 'no data returned' })
     }
     catch(e: any) {return Response.json({data: 'error', reponse: e.message}, {status: 400, statusText:"error"})}
-    //return Response.json({ file })
   }
+
+        // const json = await request.json()
+      // const name = formData.get('name')
+      // const email = formData.get('email')
+      // const file = formData.get('file')
+      // const annotations = json.annotations
+      // const citations = await citationHandler(annotations)
 
   // interface progressObject {
 //     started: boolean,

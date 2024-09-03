@@ -9,6 +9,7 @@ import DataTransferModal from "../Shared/DataTransferModal";
 export default function ManagerClient(props: { pendingModels: userSubmittal[] }) {
 
     const uid = useRef<HTMLInputElement>()
+    const [file, setFile] = useState<File>()
 
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
@@ -28,9 +29,32 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[] })
             })
     }
 
+    const writeFile = async () => {
+
+        if (file) {
+
+            const data = new FormData()
+            data.set('file', file as File)
+
+            await fetch('/api/test', {
+                method: 'POST',
+                body: data
+            }).then(res => res.json())
+            .then(json => console.log(json.response))
+        }
+    }
+
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel="Updating Thumbnail" result={result} />
+            <input type='file'
+                onChange={(e) => {
+                    if (e.target.files?.length)
+                        setFile(e.target.files[0])
+                }}
+            >
+            </input>
+            <Button onPress={() => writeFile()}>Write File to Data Storage</Button>
             <div className="flex h-48 w-full">
                 <div className="h-full w-1/3 flex flex-col items-center">
                     <label className='text-2xl block mb-2'>Model UID</label>
