@@ -1,11 +1,11 @@
 ## About
-Welcome to the 3D Herbarium repository. This is a next.js project with a mysql database accessed via prisma ORM. Authentication is through nextauth.js.
+Welcome to the 3D Herbarium repository. This is a [Next.js](https://nextjs.org/) project with a [MySQL](https://www.mysql.com/) database accessed via [Prisma ORM](https://www.prisma.io/). Authentication is through nextauth.js.
 
 As we finalize our new version updates, we will be publishing additional reference documentation for the creation of 3D models, post production and more. The main branch of this repo will be the production branch once updates are stable.
 
 ## Initialization
 
-Before the program will run, you will need to create and host a database, initialize a [Prisma](https://www.prisma.io/) client with .env file, and get a [plant.id](https://plant.id/) api key if you wish to use that feature. The preconfigured Oauth2 providers are Google, Sketchfab and iNaturalist. A premium sketchfab account is also required for all model viewer initialization options.
+Before the program will run, you will need to create and host a database, initialize a [Prisma ORM](https://www.prisma.io/) client with .env file, and get a [plant.id](https://plant.id/) api key if you wish to use that feature. The preconfigured Oauth2 providers are Google, Sketchfab and iNaturalist. A premium sketchfab account is also required for all model viewer initialization options.
 
 ## Database
 
