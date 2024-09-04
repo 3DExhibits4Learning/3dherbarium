@@ -1,5 +1,5 @@
 ## About
-Welcome to the 3D Herbarium repository. This is a [Next.js](https://nextjs.org/) project with a [MySQL](https://www.mysql.com/) database accessed via [Prisma ORM](https://www.prisma.io/). Authentication is through nextauth.js.
+Welcome to the 3D Herbarium repository, the first of many platforms comprising 3DExhibits4Learning. This is a [Next.js](https://nextjs.org/) project with a [MySQL](https://www.mysql.com/) database accessed via [Prisma ORM](https://www.prisma.io/). Authentication is through nextauth.js.
 
 As we finalize our new version updates, we will be publishing additional reference documentation for the creation of 3D models, post production and more. The main branch of this repo will be the production branch once updates are stable.
 
