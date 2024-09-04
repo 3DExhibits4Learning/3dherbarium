@@ -277,8 +277,8 @@ export interface modelInsertion extends modelerInsertion{
   commonName: string,
   uid: string,
   modeler: string,
-  isViable: boolean,
-  isBase: boolean
+  isViable: string,
+  isBase: string
 }
 
 export interface specimenWithImageSet extends specimen{

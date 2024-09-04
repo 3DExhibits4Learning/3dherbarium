@@ -33,8 +33,6 @@ export default function New3DModel() {
         setInsertionModalOpen(true)
         setInserting(true)
 
-        const viable = isViable.current?.value ? true : false
-        const base = isBase.current?.value ? true : false
         const lowerCommon = commonName.current?.value.toLowerCase()
 
         const insertObj: modelInsertion = {
@@ -44,8 +42,8 @@ export default function New3DModel() {
             commonName: lowerCommon as string,
             uid: uid.current?.value as string,
             modeler: modeler.current?.value as string,
-            isViable: viable,
-            isBase: base
+            isViable: isViable.current?.value as string,
+            isBase: isBase.current?.value as string
         }
         const insert = await fetch('/api/admin/modeler', {
             method: 'POST',
@@ -95,8 +93,8 @@ export default function New3DModel() {
             <div className="mb-6">
                 <label className='text-2xl ml-12 block mb-2'>Viable</label>
                 <select className='ml-12 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 rounded-xl outline-[#004C46]' ref={isViable as LegacyRef<HTMLSelectElement>} onChange={buttonEnable}>
-                    <option value={1}>Yes</option>
-                    <option value={0}>No</option>
+                    <option value={'1'}>Yes</option>
+                    <option value={'0'}>No</option>
                 </select>
             </div>
             <div className="mb-6">

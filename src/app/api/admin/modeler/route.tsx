@@ -91,8 +91,8 @@ export async function POST(request: Request) {
                     pref_comm_name: model.commonName.toLowerCase(),
                     uid: model.uid,
                     modeled_by: data.modeler,
-                    site_ready: data.viable,
-                    base_model: data.isBase,
+                    site_ready: !!parseInt(data.isViable),
+                    base_model: !!parseInt(data.isBase),
                     thumbnail: thumbUrl
                 }
             })
