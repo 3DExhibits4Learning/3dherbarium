@@ -20,7 +20,7 @@ in the code in coming updates.
 
 ## 3D Models
 
-Check back here for updates regarding 3D modeling documentation. Sketchfab is our 3D model hosting provider; a premium account is required for many of the viewer api initialization options in the code (such as watermark removal)
+Check back here for updates regarding 3D modeling documentation. [Sketchfab](https://sketchfab.com/developers/viewer) is our 3D model hosting provider; a premium account is required for many of the viewer api initialization options in the code (such as watermark removal)
 
 ## Getting Started
 
