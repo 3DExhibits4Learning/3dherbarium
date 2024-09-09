@@ -6,7 +6,7 @@ import PendingModelsAdmin from "@/components/Admin/PendingModels";
 import { Button } from "@nextui-org/react";
 import DataTransferModal from "../Shared/DataTransferModal";
 
-export default function ManagerClient(props: { pendingModels: userSubmittal[] }) {
+export default function ManagerClient(props: { pendingModels: userSubmittal[], jiraToken: string }) {
 
     const uid = useRef<HTMLInputElement>()
     const [file, setFile] = useState<File>()
@@ -44,6 +44,37 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[] })
         }
     }
 
+    const jiraTest = async() => {
+
+        const base64 = Buffer.from(`ab632@humboldt.edu:${props.jiraToken}`).toString('base64')
+        
+        const data = {
+            fields: {
+              project: {
+                key: 'HERB',
+              },
+              parent: {
+                key: 'HERB-47'
+              },
+              summary: 'Issue created via API',
+              description: 'This is a test issue created using the Jira API',
+              issuetype: {
+                name: 'Task',
+              },
+            },
+          }
+
+          await fetch('https://3dteam.atlassian.net/rest/api/3/issue',{
+            method: 'POST',
+            headers: {
+                'Authorization': `Basic ${base64}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data) 
+          })
+          .then(res => console.log(res))
+    }
+
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel="Updating Thumbnail" result={result} />
@@ -55,6 +86,7 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[] })
             >
             </input>
             <Button onPress={() => writeFile()}>Write File to Data Storage</Button>
+            <Button onPress={() => jiraTest()}>Jira Test</Button>
             <div className="flex h-48 w-full">
                 <div className="h-full w-1/3 flex flex-col items-center">
                     <label className='text-2xl block mb-2'>Model UID</label>

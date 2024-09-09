@@ -11,9 +11,6 @@ export async function GET(request: Request) {
             .then(res => res.json())
             .then(data => thumbUrl = data.thumbnails.images[0].url)
 
-        console.log(searchParams.get('uid'))
-        console.log(searchParams.get('nonCommunity'))
-
         let updateResponse
         if(searchParams.get('nonCommunity')) updateResponse = await updateThumbUrl(thumbUrl, undefined, uid, true)
         else updateResponse = await updateThumbUrl(thumbUrl, undefined, uid)
