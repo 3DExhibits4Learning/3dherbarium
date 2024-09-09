@@ -75,7 +75,7 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[] })
                     name: 'Task',
                 },
             },
-        };
+        }
 
         await fetch('/api/issues/create', {
             method: 'POST',

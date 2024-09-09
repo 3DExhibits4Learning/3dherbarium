@@ -1,3 +1,6 @@
+// TODO: Split if-else statement to mulitple route handlers
+// TODO: Condense sequential awaits to Promise.all()
+
 import { prismaClient } from "@/api/queries"
 import { imageInsertion, modelInsertion, specimenInsertion } from "@/api/types"
 const prisma = prismaClient()
@@ -76,7 +79,7 @@ export async function POST(request: Request) {
                 },
             })
         }
-        catch (e: any) { return Response.json({ data: e.message, response: 'Prisma Error' }, { status: 400, statusText: 'Prisma Error' }) }
+        catch (e: any) { return Response.json({ data: e.message, response: 'Image Set Not Found' }, { status: 400, statusText: 'Image Set Not Found' }) }
 
         try {
 
@@ -109,7 +112,23 @@ export async function POST(request: Request) {
                     uid: model.uid
                 }
             })
-            return Response.json({ data: 'Model Data Entered Successfully', response: insert, update })
+
+            const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
+    
+            const createAnnotateTask = await fetch('https://3dteam.atlassian.net/rest/api/3/issue', {
+                method: 'POST',
+                //@ts-ignore -- without the first two headers, data is not returned in English
+                headers: {
+                    'X-Force-Accept-Language': true,
+                    'Accept-Language': 'en',
+                    'Authorization': `Basic ${base64}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json()).then(json => json)
+
+            return Response.json({ data: 'Model Data Entered Successfully', response: insert, update, })
         }
         catch (e: any) { return Response.json({ data: e.message, response: 'Prisma Error' }, { status: 400, statusText: 'Prisma Error' }) }
     }

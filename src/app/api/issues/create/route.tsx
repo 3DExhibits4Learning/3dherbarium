@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     
         const response = await fetch('https://3dteam.atlassian.net/rest/api/3/issue', {
             method: 'POST',
-            //@ts-ignore -- without the first two headers, data is not returned in English.
+            //@ts-ignore -- without the first two headers, data is not returned in English
             headers: {
                 'X-Force-Accept-Language': true,
                 'Accept-Language': 'en',

@@ -42,10 +42,10 @@ export default function New3DModel() {
             commonName: lowerCommon as string,
             uid: uid.current?.value as string,
             modeler: modeler.current?.value as string,
-            isViable: isViable.current?.value as string,
-            isBase: isBase.current?.value as string
+            isViable: isViable.current?.value.toString() as string,
+            isBase: isBase.current?.value.toString() as string
         }
-        const insert = await fetch('/api/admin/modeler', {
+        const insert = await fetch('/api/admin/modeler/model', {
             method: 'POST',
             body: JSON.stringify(insertObj)
         }).then(res => res.json()).then(json => {
