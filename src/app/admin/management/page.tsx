@@ -23,7 +23,7 @@ export default async function Page() {
         <>
             <Header pageRoute="collections" headerTitle='Management' />
             <section className="flex flex-col !min-h-[calc(100vh-177px)]">
-                <ManagerClient pendingModels={pendingModels} jiraToken={process.env.JIRA_API_KEY as string}/>
+                <ManagerClient pendingModels={pendingModels}/>
             </section>
             <Foot />
         </>

@@ -6,7 +6,7 @@ import PendingModelsAdmin from "@/components/Admin/PendingModels";
 import { Button } from "@nextui-org/react";
 import DataTransferModal from "../Shared/DataTransferModal";
 
-export default function ManagerClient(props: { pendingModels: userSubmittal[], jiraToken: string }) {
+export default function ManagerClient(props: { pendingModels: userSubmittal[] }) {
 
     const uid = useRef<HTMLInputElement>()
     const [file, setFile] = useState<File>()
@@ -39,40 +39,48 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], j
             await fetch('/api/test', {
                 method: 'POST',
                 body: data
-            }).then(res => res.json())
-            .then(json => console.log(json.response))
+            })
+                .then(res => res.json())
+                .then(json => console.log(json.response))
         }
     }
 
-    const jiraTest = async() => {
+    const jiraTest = async () => {
 
-        const base64 = Buffer.from(`ab632@humboldt.edu:${props.jiraToken}`).toString('base64')
-        
         const data = {
             fields: {
-              project: {
-                key: 'HERB',
-              },
-              parent: {
-                key: 'HERB-47'
-              },
-              summary: 'Issue created via API',
-              description: 'This is a test issue created using the Jira API',
-              issuetype: {
-                name: 'Task',
-              },
+                project: {
+                    key: 'HERB',
+                },
+                parent: {
+                    key: 'HERB-47'
+                },
+                summary: 'Issue created with ADF format description',
+                description: {
+                    type: 'doc',
+                    version: 1,
+                    content: [
+                        {
+                            type: 'paragraph',
+                            content: [
+                                {
+                                    type: 'text',
+                                    text: 'This is the issue description in Atlassian Document Format.',
+                                },
+                            ],
+                        },
+                    ],
+                },
+                issuetype: {
+                    name: 'Task',
+                },
             },
-          }
+        };
 
-          await fetch('https://3dteam.atlassian.net/rest/api/3/issue',{
+        await fetch('/api/issues/create', {
             method: 'POST',
-            headers: {
-                'Authorization': `Basic ${base64}`,
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data) 
-          })
-          .then(res => console.log(res))
+            body: JSON.stringify(data)
+        }).then(res => res.json()).then(res => console.log(res.response))
     }
 
     return (
