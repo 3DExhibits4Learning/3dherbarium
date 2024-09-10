@@ -1,16 +1,16 @@
 import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
+import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 const prisma = prismaClient()
 
 export async function POST(request: Request) {
 
     // Variable initialization
-    const data = await request.json()
-    const model = data as modelInsertion
+    const model = await request.json() as modelInsertion
 
     var thumbUrl, insert, update, createAnnotateTask
 
-    // Verify there is an image_set for the 3D_model
+    // Try to check if there is associated image data, if so, insert model into database and update uid in image set table. Finally, create Jira annotation issue if the model is viable.
     try {
 
         // Ensure that image_set data has been entered first
@@ -28,10 +28,7 @@ export async function POST(request: Request) {
         thumbUrl = await fetch(`https://api.sketchfab.com/v3/models/${model.uid}`)
             .then(res => res.json())
             .then(data => data.thumbnails?.images[0]?.url ?? '')
-            .catch((e: any) => { 
-                if(process.env.NODE_ENV === 'development') console.log(e.message)
-                throw new Error("Couldn't get Thumbnail") 
-            })
+            .catch((e: any) => { throw new Error("Couldn't get Thumbnail") })
 
         // Create model database entry
         insert = await prisma.model.create({
@@ -40,9 +37,9 @@ export async function POST(request: Request) {
                 spec_acquis_date: new Date(model.acquisitionDate),
                 pref_comm_name: model.commonName.toLowerCase(),
                 uid: model.uid,
-                modeled_by: data.modeler,
-                site_ready: !!parseInt(data.isViable),
-                base_model: !!parseInt(data.isBase),
+                modeled_by: model.modeler,
+                site_ready: !!parseInt(model.isViable),
+                base_model: !!parseInt(model.isBase),
                 thumbnail: thumbUrl
             }
         }).catch(() => { throw new Error("Couldn't enter model into Database") })
@@ -62,7 +59,7 @@ export async function POST(request: Request) {
         }).catch(() => { throw new Error("Couldn't update Image Set UID") })
 
         // Create Jira task if the model has been marked as viable by the 3D modeler
-        if (parseInt(data.isViable)) {
+        if (parseInt(model.isViable)) {
 
             const data = {
                 fields: {
@@ -70,9 +67,9 @@ export async function POST(request: Request) {
                         key: 'HERB',
                     },
                     parent: {
-                        key: 'HERB-47'
+                        key: 'HERB-59'
                     },
-                    summary: 'Annotation Test Issue',
+                    summary: `Annotate ${toUpperFirstLetter(model.species)}`,
                     description: {
                         type: 'doc',
                         version: 1,
@@ -82,7 +79,7 @@ export async function POST(request: Request) {
                                 content: [
                                     {
                                         type: 'text',
-                                        text: 'This is a test issue created from a test model submission.',
+                                        text: `Annotate ${toUpperFirstLetter(model.species)}`,
                                     },
                                 ],
                             },
@@ -92,7 +89,7 @@ export async function POST(request: Request) {
                         name: 'Task',
                     },
                     assignee: {
-                        id: process.env.AJ_JIRA_ID
+                        id: process.env.KAT_JIRA_ID
                     }
                 },
             }
