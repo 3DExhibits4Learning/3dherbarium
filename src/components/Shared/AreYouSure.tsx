@@ -6,25 +6,25 @@ import { Spinner } from "@nextui-org/react";
 
 export default function AreYouSure(props: { uid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
 
-    //Variable initialization
+    // Variable initialization
     const [areTheySure, setAreTheySure] = useState<boolean>(false)
     const [markedAsAnnotated, setMarkedAsAnnotated] = useState<boolean>(false)
     const [msg, setMsg] = useState<any>('')
 
-        //Delete 3D Model
-        const markAsAnnotated = async () => {
-                const mark = await fetch('/api/admin/botanist', {
-                    method: 'PATCH',
-                    body: JSON.stringify({
-                        uid: props.uid,
-                    })
-                })
-                    .then(res => res.json())
-                    .then(json => json.data)
-                setMsg(mark)
-                setMarkedAsAnnotated(true)
-            }
-        
+    // Mark 3D Model as Annotated
+    const markAsAnnotated = async () => {
+        const mark = await fetch('/api/admin/botanist', {
+            method: 'PATCH',
+            body: JSON.stringify({
+                uid: props.uid,
+            })
+        })
+            .then(res => res.json())
+            .then(json => json.data)
+        setMsg(mark)
+        setMarkedAsAnnotated(true)
+    }
+
     return (
         <>
             <Modal isOpen={props.open}>
