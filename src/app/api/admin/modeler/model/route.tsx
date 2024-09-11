@@ -2,6 +2,7 @@ import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
+import createTask from "@/utils/Jira/createTask"
 const prisma = prismaClient()
 
 export async function POST(request: Request) {
@@ -9,7 +10,7 @@ export async function POST(request: Request) {
     // Variable initialization
     const model = await request.json() as modelInsertion
 
-    var thumbUrl, insert, update, createAnnotateTask
+    var thumbUrl, insert, update, annotateTask
 
     // Try to check if there is associated image data, if so, insert model into database and update uid in image set table. Finally, create Jira annotation issue if the model is viable.
     try {
@@ -60,63 +61,14 @@ export async function POST(request: Request) {
         }).catch(() => { throw new Error("Couldn't update Image Set UID") })
 
         // Mark Create 3D Model task as done
-        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`)
+        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch() // TODO : Send Email
 
         // Create Jira task if the model has been marked as viable by the 3D modeler
         if (parseInt(model.isViable)) {
-
-            const data = {
-                fields: {
-                    project: {
-                        key: 'HERB',
-                    },
-                    parent: {
-                        key: 'HERB-59'
-                    },
-                    summary: `Annotate ${toUpperFirstLetter(model.species)}`,
-                    description: {
-                        type: 'doc',
-                        version: 1,
-                        content: [
-                            {
-                                type: 'paragraph',
-                                content: [
-                                    {
-                                        type: 'text',
-                                        text: `Annotate ${toUpperFirstLetter(model.species)}`,
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                    issuetype: {
-                        name: 'Task',
-                    },
-                    assignee: {
-                        id: process.env.KAT_JIRA_ID
-                    }
-                },
-            }
-
-            const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
-
-            createAnnotateTask = await fetch('https://3dteam.atlassian.net/rest/api/3/issue', {
-                method: 'POST',
-                //@ts-ignore -- without the first two headers, data is not returned in English
-                headers: {
-                    'X-Force-Accept-Language': true,
-                    'Accept-Language': 'en',
-                    'Authorization': `Basic ${base64}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-                .then(res => res.json())
-                .then(json => json)
-                .catch(() => { throw new Error("Unable to create Annotation Task") })
+            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string)
         }
 
-        return Response.json({ data: 'Model Data Entered Successfully', response: { insert: insert, update: update, task: createAnnotateTask } })
+        return Response.json({ data: 'Model Data Entered Successfully', response: { insert: insert, update: update, task: annotateTask } })
     }
     catch (e: any) { return Response.json({ data: e.message, response: 'Model Entry Error' }, { status: 400, statusText: 'Model Entry Error' }) }
 }

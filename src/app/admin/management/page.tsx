@@ -4,8 +4,9 @@ import { getAllPendingModels } from "@/api/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { management } from "@/utils/devAuthed"
-import ManagerClient from "@/components/Admin/ManagerClient";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
+import ManagerClient from "@/components/Admin/ManagerClient"
+import nodemailer from 'nodemailer'
+
 
 export default async function Page() {
 
@@ -20,59 +21,7 @@ export default async function Page() {
 
     const pendingModels = await getAllPendingModels()
 
-    const data = {
-        fields: {
-            project: {
-                key: 'HERB',
-            },
-            // parent: {
-            //     key: 'HERB-59'
-            // },
-            summary: `Annotate`,
-            description: {
-                type: 'doc',
-                version: 1,
-                content: [
-                    {
-                        type: 'paragraph',
-                        content: [
-                            {
-                                type: 'text',
-                                text: `Annotate`,
-                            },
-                        ],
-                    },
-                ],
-            },
-            issuetype: {
-                name: 'Task',
-            },
-            assignee: {
-                id: process.env.KAT_JIRA_ID
-            }
-        },
-    }
-
-    const transitionData = {
-        transition: {id: 31}
-    } 
-
     //const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
-
-    // await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = HERB-47`, {
-    //     //@ts-ignore -- without the first two headers, data is not returned in English
-    //     headers: {
-    //         'X-Force-Accept-Language': true,
-    //         'Accept-Language': 'en',
-    //         'Authorization': `Basic ${base64}`,
-    //         'Content-Type': 'application/json',
-    //     },
-    // })
-    //     .then(res => res.json())
-    //     .then(json => {
-    //         console.log(json.issues[1].fields)
-    //     })
-    //     .catch((e: any) => { console.log(e.message) })
 
     // await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/HERB-74/transitions`, {
     //     method: 'POST',
@@ -93,41 +42,25 @@ export default async function Page() {
 
     // const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
 
-    // const epic = await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = HERB-59`, {
-    //     //@ts-ignore -- without the first two headers, data is not returned in English
-    //     headers: {
-    //         'X-Force-Accept-Language': true,
-    //         'Accept-Language': 'en',
-    //         'Authorization': `Basic ${base64}`,
-    //         'Content-Type': 'application/json',
-    //     },
+    // const transporter = nodemailer.createTransport({
+    //     host: process.env.EMAIL_SERVER_HOST,
+    //     port: parseInt(process.env.EMAIL_SERVER_PORT as string),
+    //     secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL_SERVER_USER,
+    //         pass: process.env.EMAIL_SERVER_PASSWORD
+    //     }
     // })
-    //     .then(res => res.json())
-    //     .then(json => json)
 
-    // for (let i in epic.issues) {
-    //     if (epic.issues[i].fields.summary.includes(`Annotate Linaria purpurea`)) {
-    //         console.log('UNIT TEST PASSED')
+    // await transporter.sendMail({
+    //     from: process.env.EMAIL_FROM,
+    //     to: 'ab632@humboldt.edu',
+    //     subject: 'Notification',
+    //     text: 'This is a notification',
+    //     html: 'This is an <b>IMPORTANT</b> notification'
+    // }).catch((e: any) => console.log(e.message))
 
-            // const transitionData = {
-            //     transition: { id: 31 }
-            // }
 
-        //     await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/${epic.issues[i].key}/transitions`, {
-        //         method: 'POST',
-        //         //@ts-ignore -- without the first two headers, data is not returned in English
-        //         headers: {
-        //             'X-Force-Accept-Language': true,
-        //             'Accept-Language': 'en',
-        //             'Authorization': `Basic ${base64}`,
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(transitionData)
-        //     })
-        //         .then(res => res.json())
-        // }
-    //}
-//}
 
     return (
         <>
