@@ -68,7 +68,7 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
         setOpenModal(true)
         setTransferring(true)
 
-        const task = await fetch('/api/issues/create', {
+        await fetch('/api/issues/create', {
             method: 'POST',
             body: JSON.stringify(data)
         }).then(res => res.json()).then(json => {

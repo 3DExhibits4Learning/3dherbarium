@@ -1,3 +1,5 @@
+import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
+
 export async function POST(request: Request) {
 
     try{
@@ -16,7 +18,7 @@ export async function POST(request: Request) {
             },
             body: JSON.stringify(data)
         })
-            .then(res => res.json()).then(json => json)
+            .then(res => res.json()).then(json => json).catch((e: any) => sendErrorEmail(e.message))
     
         return Response.json({data: "Success", response: response})
     }

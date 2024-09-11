@@ -3,6 +3,7 @@ import prisma from "@/utils/prisma"
 import createTask from "@/utils/Jira/createTask"
 import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
 
 export async function POST(request: Request){
     const images = await request.json() as imageInsertion
@@ -18,8 +19,8 @@ export async function POST(request: Request){
             }
         })
         
-        await markIssueAsDone('HERB-59', `Photograph ${toUpperFirstLetter(images.species)}`).catch() // TODO: Send Email
-        const task = await createTask('HERB-59', `Model ${toUpperFirstLetter(images.species)}`, `Model ${toUpperFirstLetter(images.species)}`, process.env.HUNTER_JIRA_ID as string) .catch() // TODO: Send Email
+        await markIssueAsDone('HERB-59', `Photograph ${toUpperFirstLetter(images.species)}`).catch((e: any) => sendErrorEmail(e.message))
+        const task = await createTask('HERB-59', `Model ${toUpperFirstLetter(images.species)}`, `Model ${toUpperFirstLetter(images.species)}`, process.env.HUNTER_JIRA_ID as string) .catch()
 
         return Response.json({ data: 'Image Data Entered Successfully', response: insert, task })
     }

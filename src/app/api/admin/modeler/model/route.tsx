@@ -4,6 +4,7 @@ import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
 import createTask from "@/utils/Jira/createTask"
 const prisma = prismaClient()
+import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
 
 export async function POST(request: Request) {
 
@@ -61,11 +62,11 @@ export async function POST(request: Request) {
         }).catch(() => { throw new Error("Couldn't update Image Set UID") })
 
         // Mark Create 3D Model task as done
-        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch() // TODO : Send Email
+        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch((e: any) => sendErrorEmail(e.message))
 
         // Create Jira task if the model has been marked as viable by the 3D modeler
         if (parseInt(model.isViable)) {
-            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string)
+            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message))
         }
 
         return Response.json({ data: 'Model Data Entered Successfully', response: { insert: insert, update: update, task: annotateTask } })
