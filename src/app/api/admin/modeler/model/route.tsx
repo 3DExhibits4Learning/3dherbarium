@@ -1,6 +1,7 @@
 import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
 const prisma = prismaClient()
 
 export async function POST(request: Request) {
@@ -57,6 +58,9 @@ export async function POST(request: Request) {
                 uid: model.uid
             }
         }).catch(() => { throw new Error("Couldn't update Image Set UID") })
+
+        // Mark Create 3D Model task as done
+        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`)
 
         // Create Jira task if the model has been marked as viable by the 3D modeler
         if (parseInt(model.isViable)) {
