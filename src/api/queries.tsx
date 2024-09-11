@@ -178,13 +178,27 @@ export const getAllAnnotationModels = async (): Promise<model[]> => {
  * @description returns an array of pending model objects contributed by the user with specified email address.
  * 
  */
-export const updateModelAnnotator = async (uid: string, annotator: string) => {
+export const updateModelAnnotator = async (uid: string, annotator: string,) => {
   const models = await prisma.model.update({
     where: { uid: uid },
     data: { annotator: annotator }
   });
   return models;
 };
+
+/**
+ * @function markAsAnnotated
+ * @description update a model record to indicate whether or not it's annotated
+ * 
+ */
+export const markAsAnnotated = async (uid: string) => {
+
+  const updated = await prisma.model.update({
+    where: { uid: uid },
+    data: { annotated: true, annotator: "Kat Lim"}
+  })
+  return updated
+}
 
 /**
  * @function getPendingModels
@@ -777,20 +791,6 @@ export const deleteModelAnnotation = async (id: string) => {
     where: { annotation_id: id }
   })
   return deletion
-}
-
-/**
- * @function markAsAnnotated
- * @description update a model record to indicate whether or not it's annotated
- * 
- */
-export const markAsAnnotated = async (uid: string, annotated: boolean) => {
-
-  const updated = await prisma.model.update({
-    where: { uid: uid },
-    data: { annotated: annotated }
-  })
-  return updated
 }
 
 

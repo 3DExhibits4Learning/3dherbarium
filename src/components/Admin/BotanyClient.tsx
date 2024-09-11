@@ -94,9 +94,11 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
     }, [uid, annotationSavedOrDeleted])
 
+    useEffect(() => console.log(specimenName))
+
     return (
         <>
-            <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} />
+            <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} species={specimenName as string} />
             <div className="flex w-full h-full">
                 <section className="h-full w-1/5">
 
