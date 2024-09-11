@@ -21,6 +21,16 @@ export default async function Page() {
 
     const pendingModels = await getAllPendingModels()
 
+    return (
+        <>
+            <Header pageRoute="collections" headerTitle='Management' />
+            <section className="flex flex-col !min-h-[calc(100vh-177px)]">
+                <ManagerClient pendingModels={pendingModels} katId={process.env.KAT_JIRA_ID as string} hunterId={process.env.hunter_JIRA_ID as string}/>
+            </section>
+            <Foot />
+        </>
+    )
+}
     //const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
 
     // await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/HERB-74/transitions`, {
@@ -61,14 +71,3 @@ export default async function Page() {
     // }).catch((e: any) => console.log(e.message))
 
     //console.log(new Date().toLocaleDateString())
-
-    return (
-        <>
-            <Header pageRoute="collections" headerTitle='Management' />
-            <section className="flex flex-col !min-h-[calc(100vh-177px)]">
-                <ManagerClient pendingModels={pendingModels} />
-            </section>
-            <Foot />
-        </>
-    )
-}
