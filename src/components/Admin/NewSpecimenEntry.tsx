@@ -35,14 +35,13 @@ export default function NewSpecimenEntry() {
         setInserting(true)
 
         const insertObj: specimenInsertion = {
-            requestType: 'specimenEntry',
             species: species.current as string,
             acquisitionDate: speciesAcquisitionDate.current?.value as string,
             procurer: procurer.current?.value as string,
             isLocal: local,
             genus: genus.current as string
         }
-        await fetch('/api/admin/modeler', {
+        await fetch('/api/admin/modeler/specimen', {
             method: 'POST',
             body: JSON.stringify(insertObj)
         }).then(res => res.json()).then(json => {

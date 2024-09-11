@@ -34,14 +34,13 @@ export default function NewImageSet() {
         setInserting(true)
 
         const insertObj: imageInsertion = {
-            requestType: 'imageEntry',
             species: species.current as string,
             acquisitionDate: speciesAcquisitionDate.current?.value as string,
             imagedBy: imagedBy.current?.value as string,
             imagedDate: imagedDate.current?.value as string,
             numberOfImages: numberOfImages.current?.value as string
         }
-        const insert = await fetch('/api/admin/modeler', {
+        await fetch('/api/admin/modeler/photos', {
             method: 'POST',
             body: JSON.stringify(insertObj)
         }).then(res => res.json()).then(json => {

@@ -256,7 +256,6 @@ export interface PendingModelProps {
 }
 
 export interface modelerInsertion{
-  requestType: 'specimenEntry' | 'imageEntry' | 'modelEntry',
   species: string
   acquisitionDate: string
 }

@@ -36,7 +36,6 @@ export default function New3DModel() {
         const lowerCommon = commonName.current?.value.toLowerCase()
 
         const insertObj: modelInsertion = {
-            requestType: 'modelEntry',
             species: species.current as string,
             acquisitionDate: speciesAcquisitionDate.current?.value as string,
             commonName: lowerCommon as string,
