@@ -19,8 +19,8 @@ export async function POST(request: Request){
             }
         })
         
-        await markIssueAsDone('HERB-59', `Photograph ${toUpperFirstLetter(images.species)}`).catch((e: any) => sendErrorEmail(e.message))
-        const task = await createTask('HERB-59', `Model ${toUpperFirstLetter(images.species)}`, `Model ${toUpperFirstLetter(images.species)}`, process.env.HUNTER_JIRA_ID as string) .catch()
+        await markIssueAsDone('HERB-59', `Photograph ${toUpperFirstLetter(images.species)}`).catch((e: any) => sendErrorEmail(e.message, `Mark Photograph ${toUpperFirstLetter(images.species)} as done`))
+        const task = await createTask('HERB-59', `Model ${toUpperFirstLetter(images.species)}`, `Model ${toUpperFirstLetter(images.species)}`, process.env.HUNTER_JIRA_ID as string) .catch((e: any) => sendErrorEmail(e.message, `Create task: Model ${toUpperFirstLetter(images.species)}`))
 
         return Response.json({ data: 'Image Data Entered Successfully', response: insert, task })
     }

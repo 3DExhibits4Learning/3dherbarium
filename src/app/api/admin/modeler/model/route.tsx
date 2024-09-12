@@ -62,11 +62,11 @@ export async function POST(request: Request) {
         }).catch(() => { throw new Error("Couldn't update Image Set UID") })
 
         // Mark Create 3D Model task as done
-        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch((e: any) => sendErrorEmail(e.message))
+        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch((e: any) => sendErrorEmail(e.message, `Mark Model ${toUpperFirstLetter(model.species)} as done`))
 
         // Create Jira task if the model has been marked as viable by the 3D modeler
         if (parseInt(model.isViable)) {
-            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message))
+            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message,  `Create annotation for ${toUpperFirstLetter(model.species)}`))
         }
 
         return Response.json({ data: 'Model Data Entered Successfully', response: { insert: insert, update: update, task: annotateTask } })

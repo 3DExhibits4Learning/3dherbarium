@@ -21,53 +21,57 @@ export default async function Page() {
 
     const pendingModels = await getAllPendingModels()
 
+    try{
+        const transporter = nodemailer.createTransport({
+            host: process.env.EMAIL_SERVER_HOST,
+            port: 465,
+            secure: true,
+            auth: {
+                user: process.env.EMAIL_SERVER_USER,
+                pass: process.env.EMAIL_SERVER_PASSWORD
+            }
+        })
+    
+        await transporter.sendMail({
+            from: process.env.EMAIL_SERVER_USER,
+            to: 'ab632@humboldt.edu',
+            subject: 'Notification',
+            text: 'This is a notification',
+            //html: 'This is an <b>IMPORTANT</b> notification'
+        })
+    }
+    catch{(e: any) => console.log(e.message)}
+
+
     return (
         <>
             <Header pageRoute="collections" headerTitle='Management' />
             <section className="flex flex-col !min-h-[calc(100vh-177px)]">
-                <ManagerClient pendingModels={pendingModels} katId={process.env.KAT_JIRA_ID as string} hunterId={process.env.hunter_JIRA_ID as string}/>
+                <ManagerClient pendingModels={pendingModels} katId={process.env.KAT_JIRA_ID as string} hunterId={process.env.hunter_JIRA_ID as string} />
             </section>
             <Foot />
         </>
     )
 }
-    //const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
+//const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
 
-    // await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/HERB-74/transitions`, {
-    //     method: 'POST',
-    //     //@ts-ignore -- without the first two headers, data is not returned in English
-    //     headers: {
-    //         'X-Force-Accept-Language': true,
-    //         'Accept-Language': 'en',
-    //         'Authorization': `Basic ${base64}`,
-    //         'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(transitionData)
-    // })
-    //     .then(res => res.json())
-    //     .then(json => {
-    //         console.log(json)
-    //     })
-    //     .catch((e: any) => { console.log(e.message) })
+// await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/HERB-74/transitions`, {
+//     method: 'POST',
+//     //@ts-ignore -- without the first two headers, data is not returned in English
+//     headers: {
+//         'X-Force-Accept-Language': true,
+//         'Accept-Language': 'en',
+//         'Authorization': `Basic ${base64}`,
+//         'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(transitionData)
+// })
+//     .then(res => res.json())
+//     .then(json => {
+//         console.log(json)
+//     })
+//     .catch((e: any) => { console.log(e.message) })
 
-    // const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
+// const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
 
-    // const transporter = nodemailer.createTransport({
-    //     host: process.env.EMAIL_SERVER_HOST,
-    //     port: parseInt(process.env.EMAIL_SERVER_PORT as string),
-    //     secure: true,
-    //     auth: {
-    //         user: process.env.EMAIL_SERVER_USER,
-    //         pass: process.env.EMAIL_SERVER_PASSWORD
-    //     }
-    // })
-
-    // await transporter.sendMail({
-    //     from: process.env.EMAIL_FROM,
-    //     to: 'ab632@humboldt.edu',
-    //     subject: 'Notification',
-    //     text: 'This is a notification',
-    //     html: 'This is an <b>IMPORTANT</b> notification'
-    // }).catch((e: any) => console.log(e.message))
-
-    //console.log(new Date().toLocaleDateString())
+//console.log(new Date().toLocaleDateString())

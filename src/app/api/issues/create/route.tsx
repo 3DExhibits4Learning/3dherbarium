@@ -18,7 +18,7 @@ export async function POST(request: Request) {
             },
             body: JSON.stringify(data)
         })
-            .then(res => res.json()).then(json => json).catch((e: any) => sendErrorEmail(e.message))
+            .then(res => res.json()).then(json => json).catch((e: any) => sendErrorEmail(e.message, `Create task Procure ${new Date().toLocaleDateString}`))
     
         return Response.json({data: "Success", response: response})
     }
