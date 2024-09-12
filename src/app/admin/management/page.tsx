@@ -5,8 +5,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { management } from "@/utils/devAuthed"
 import ManagerClient from "@/components/Admin/ManagerClient"
-import nodemailer from 'nodemailer'
-
 
 export default async function Page() {
 
@@ -20,28 +18,6 @@ export default async function Page() {
     }
 
     const pendingModels = await getAllPendingModels()
-
-    try{
-        const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_SERVER_HOST,
-            port: 465,
-            secure: true,
-            auth: {
-                user: process.env.EMAIL_SERVER_USER,
-                pass: process.env.EMAIL_SERVER_PASSWORD
-            }
-        })
-    
-        await transporter.sendMail({
-            from: process.env.EMAIL_SERVER_USER,
-            to: 'ab632@humboldt.edu',
-            subject: 'Notification',
-            text: 'This is a notification',
-            //html: 'This is an <b>IMPORTANT</b> notification'
-        })
-    }
-    catch{(e: any) => console.log(e.message)}
-
 
     return (
         <>
