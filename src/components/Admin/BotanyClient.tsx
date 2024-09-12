@@ -94,8 +94,6 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
     }, [uid, annotationSavedOrDeleted])
 
-    useEffect(() => console.log(specimenName))
-
     return (
         <>
             <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} species={specimenName as string} />
