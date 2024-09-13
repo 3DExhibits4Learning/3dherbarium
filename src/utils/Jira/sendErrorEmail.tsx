@@ -16,6 +16,6 @@ export default async function sendErrorEmail(message: string, action: string){
         from: process.env.EMAIL_FROM,
         to: 'ab632@humboldt.edu',
         subject: 'Jira Create/Update Error',
-        html: `Jira error message: ${message}`,
+        html: `Jira error message: ${message}<br> ${action}`,
     }).catch((e: any) => console.log(e.message))
 }   
