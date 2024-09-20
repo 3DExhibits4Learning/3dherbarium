@@ -65,13 +65,6 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotation(annotations[activeAnnotationIndex - 2].annotation)
         }
 
-        console.log(annotations)
-        console.log(activeAnnotation)
-        //@ts-ignore
-        if(annotations) console.log(annotations[0])
-        //@ts-ignore
-        //console.log(annotations[activeAnnotationIndex - 2].annotation)
-
     }, [activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {

@@ -110,7 +110,6 @@ const BotanistModelViewer = forwardRef((props: {
     const annotationSelectHandler = (index: any) => {
         if (newAnnotationEnabled.current) return
         else if (index != -1) props.setActiveAnnotationIndex(index + 1)
-            console.log('SET INDEX, ', index+1)
     }
 
     // Sketchfab API initialization success object
