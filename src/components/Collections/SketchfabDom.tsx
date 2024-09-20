@@ -6,7 +6,7 @@ export const boolRinse = (bool: boolean | string) => {
 }
 
 export const addCommas = (stringArray: Array<string>) => {
-  if (stringArray) {
+  if (stringArray.length) {
     const commaSeparated = stringArray.map((str) => str + ', ');
     commaSeparated[commaSeparated.length - 1] = commaSeparated[commaSeparated.length - 1].replace(',', '');
     return commaSeparated

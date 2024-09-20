@@ -27,7 +27,7 @@ class ModelAnnotations {
             )
         }
 
-        Promise.all(promises).then(res => {
+        await Promise.all(promises).then(res => {
             for (let i = 0; i < annotations.length; i++) {
                 annotations[i].annotation = res[i]
             }

@@ -55,7 +55,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotationType(undefined)
             setActiveAnnotationPosition(undefined)
         }
-
+        
         else if (typeof (activeAnnotationIndex) === 'number' && annotations) {
             setActiveAnnotationType(annotations[activeAnnotationIndex - 2].annotation_type as 'photo' | 'video')
             setActiveAnnotationPosition((annotations[activeAnnotationIndex - 2].position) as string)
@@ -64,6 +64,13 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotationTitle(annotations[activeAnnotationIndex - 2].title ?? '')
             setActiveAnnotation(annotations[activeAnnotationIndex - 2].annotation)
         }
+
+        console.log(annotations)
+        console.log(activeAnnotation)
+        //@ts-ignore
+        if(annotations) console.log(annotations[0])
+        //@ts-ignore
+        //console.log(annotations[activeAnnotationIndex - 2].annotation)
 
     }, [activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -79,7 +86,6 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                     if (json.response) annotationPosition = JSON.parse(json.response)
                     else annotationPosition = ''
                 })
-
             setAnnotations(modelAnnotations.annotations)
             setNumberOfAnnotations(modelAnnotations.annotations.length)
             setActiveAnnotationIndex(undefined)

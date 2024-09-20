@@ -13,7 +13,7 @@ export default function License(props: {license: string, setLicense: Dispatch<Se
                     props.setLicense(e.target.value)
                 }}
             >
-                <option value={props.license} selected disabled hidden>{props.license}</option>
+                <option value={props.license} disabled hidden>{props.license}</option>
                 <option value='CC BY'>CC BY</option>
                 <option value='CC BY-SA'>CC BY-SA</option>
                 <option value='CC BY-NC'>CC BY-NC</option>
