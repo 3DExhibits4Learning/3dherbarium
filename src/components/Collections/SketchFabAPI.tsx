@@ -87,6 +87,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       setS(sRef.current)
       setAnnotations(sRef.current.annotations.annotations)
     }
+    
     instantiateHerbarium()
 
     document.body.scrollTop = document.documentElement.scrollTop = 0;

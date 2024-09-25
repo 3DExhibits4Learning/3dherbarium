@@ -79,6 +79,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                     if (json.response) annotationPosition = JSON.parse(json.response)
                     else annotationPosition = ''
                 })
+
             setAnnotations(modelAnnotations.annotations)
             setNumberOfAnnotations(modelAnnotations.annotations.length)
             setActiveAnnotationIndex(undefined)
@@ -89,6 +90,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotation(undefined)
             setRepositionEnabled(false)
         }
+        
         getAnnotationsObj()
 
     }, [uid, annotationSavedOrDeleted])
