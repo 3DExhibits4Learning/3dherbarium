@@ -2,7 +2,7 @@ import { getAllSiteReadyModels } from "@/api/queries"
 
 // Returns all SiteReadyModels
 export async function GET(request: Request) {
-
+      console.log('TEST: The following should be true: ', !!(process.env.NODE_ENV === 'development'))
       try{
         const models = await getAllSiteReadyModels(!!(process.env.NODE_ENV === 'development'))
         return Response.json({data: 'models got', response: models})
