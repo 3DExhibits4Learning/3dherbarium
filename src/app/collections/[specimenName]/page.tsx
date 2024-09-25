@@ -5,12 +5,12 @@
  */
 
 import { GbifImageResponse, GbifResponse } from "@/api/types";
-import { getModel, getPublishedUserSubmittalsBySpecies } from '@/api/queries'
+import { getModel } from '@/api/queries'
 import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions";
 import { fetchHSCImages } from "@/api/fetchFunctions";
 import Foot from '@/components/Shared/Foot'
 import dynamic from "next/dynamic";
-import { model, userSubmittal } from "@prisma/client";
+import { model } from "@prisma/client";
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const CollectionsWrapper = dynamic(() => import('@/utils/CollectionsWrapper'), { ssr: false })
 
@@ -21,7 +21,6 @@ export default async function Page({ params }: { params: { specimenName: string 
   var promises = []
   var gMatch: any
   var _3dmodel: any
-  var communityModels: any
   var noModelData: any
   var images: any
   const decodedSpecimenName = decodeURI(params.specimenName)
