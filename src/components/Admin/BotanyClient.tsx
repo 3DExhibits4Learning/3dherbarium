@@ -11,6 +11,7 @@ import ModelAnnotations from "@/utils/ModelAnnotationsClass"
 import { fullAnnotation } from "@/api/types"
 import BotanistRefWrapper from "./BotanistModelViewerRef"
 import AreYouSure from "../Shared/AreYouSure"
+import { Spinner } from "@nextui-org/react"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 
@@ -55,7 +56,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotationType(undefined)
             setActiveAnnotationPosition(undefined)
         }
-        
+
         else if (typeof (activeAnnotationIndex) === 'number' && annotations) {
             setActiveAnnotationType(annotations[activeAnnotationIndex - 2].annotation_type as 'photo' | 'video')
             setActiveAnnotationPosition((annotations[activeAnnotationIndex - 2].position) as string)
@@ -90,7 +91,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
             setActiveAnnotation(undefined)
             setRepositionEnabled(false)
         }
-        
+
         getAnnotationsObj()
 
     }, [uid, annotationSavedOrDeleted])
@@ -121,11 +122,21 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                                         else setUid(undefined)
                                     }}
                                 >
+
+                                    {/* Display Spinner while 3D Model is loading*/}
+                                    {
+                                        firstAnnotationPosition === undefined && uid && !activeAnnotation &&
+                                        <div className="h-[400px] w-full flex justify-center">
+                                            <Spinner label='Loading 3D Model' />
+                                        </div>
+                                    }
+
                                     {/* Conditional render that waits until the first annotation(thus all annotations) is loaded*/}
                                     {/* RefWrapper required to pass ref to dynamically imported component*/}
 
+
                                     {
-                                        firstAnnotationPosition != undefined &&
+                                        firstAnnotationPosition !== undefined &&
                                         <div className="h-[400px]">
                                             <BotanistRefWrapper
                                                 uid={model.uid}
