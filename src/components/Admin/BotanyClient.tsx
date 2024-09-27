@@ -124,10 +124,11 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                                 >
 
                                     {/* Display Spinner while 3D Model is loading*/}
+
                                     {
                                         firstAnnotationPosition === undefined && uid && !activeAnnotation &&
                                         <div className="h-[400px] w-full flex justify-center">
-                                            <Spinner label='Loading 3D Model' />
+                                            <Spinner label='Loading 3D Model' size="lg"/>
                                         </div>
                                     }
 
