@@ -93,14 +93,14 @@ const AnnotationEntry = (props: {
             setAnnotationTitle(props.activeAnnotationTitle)
 
             // Settings for hosted photo annotations
-            if (props.annotationType == 'photo' && !props.new && (props.activeAnnotation as photo_annotation).photo) {
+            if (props.annotationType == 'photo' && !props.new && (props.activeAnnotation as photo_annotation).url.startsWith('/data')) {
                 setMediaType('upload')
                 setVideoChecked(false)
                 setPhotoChecked(true)
                 setUrlChecked(false)
                 setUploadChecked(true)
-                const base64String = Buffer.from((props.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
-                const dataUrl = `data:image/jpeg;base64,${base64String}`
+                //const base64String = Buffer.from((props.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
+                const dataUrl = (props.activeAnnotation as photo_annotation).url
                 setImageSource(dataUrl)
             }
             // Settings for web based photo annotations
@@ -320,12 +320,15 @@ const AnnotationEntry = (props: {
             }
 
             // Shared data (url was formerly the foreign key)
-            data.set('annotation_id', uuidv4())
+            const annotationId = uuidv4()
+            data.set('annotation_id', annotationId)
 
             if (!file) data.set('url', url)
             //
             else {
-                data.set('url', '')
+                data.set('dir', `public/data/${props.uid}/${annotationId}`)
+                data.set('path', `public/data/${props.uid}/${annotationId}/${file.name}`)
+                data.set('url', `/data/${props.uid}/${annotationId}/${file.name}`)
             }
 
             // Route handler data
@@ -421,7 +424,13 @@ const AnnotationEntry = (props: {
             if (!file || mediaType === 'url') data.set('url', url)
             else {
                 data.set('specimenName', props.specimenName as string)
-                data.set('url', '')
+                data.set('dir', `public/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}`)
+                data.set('path', `public/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
+                data.set('url', `/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
+                // Temporary until database binaries are all eliminated/updated
+                if ((props.activeAnnotation as photo_annotation | video_annotation).url.startsWith('/data'))
+                    console.log(`public${data.get('oldUrl')}`)
+                data.set('oldUrl', (props.activeAnnotation as photo_annotation | video_annotation).url)
             }
 
             // Route handler data
@@ -451,6 +460,7 @@ const AnnotationEntry = (props: {
         const requestObj = {
             annotation_id: props.activeAnnotation?.annotation_id,
             modelUid: props.uid,
+            path: (props.activeAnnotation as photo_annotation).url.startsWith('/data') ? `public/data/${props.uid}/${props.activeAnnotation?.annotation_id}` : ''
         }
 
         // Open transfer modal and set spinner
@@ -469,7 +479,6 @@ const AnnotationEntry = (props: {
     }
 
     // This effect updates annotation image visibility and source
-    //https://www.youtube.com/embed/WZtsoVYJ3Iw?si=pgqRvYNm6z8u91as
     useEffect(() => {
 
         // This code shouldn't run for the first annotation
@@ -483,6 +492,11 @@ const AnnotationEntry = (props: {
             // Determine image visibility
             if (annotationType === 'photo' && mediaType === 'url' && url) setImageVisible(true)
 
+            else if (!props.new && mediaType === 'upload' && (props.activeAnnotation as photo_annotation).url && !file || !props.new && mediaType === 'url' && (props.activeAnnotation as photo_annotation).url && !url) {
+                setImageSource((props.activeAnnotation as photo_annotation).url)
+                setImageVisible(true)
+            }
+
             else if (!props.new && mediaType === 'upload' && (props.activeAnnotation as photo_annotation).photo && !file || !props.new && mediaType === 'url' && (props.activeAnnotation as photo_annotation).photo && !url) {
                 const base64String = Buffer.from((props.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
                 const dataUrl = `data:image/jpeg;base64,${base64String}`
@@ -491,7 +505,7 @@ const AnnotationEntry = (props: {
             }
 
             else setImageVisible(false)
-            
+
             if (url?.includes('https://www.youtube.com/embed/')) setImageVisible(false)
         }
 
@@ -621,7 +635,7 @@ const AnnotationEntry = (props: {
                                 <div className="flex ml-12 mt-12 flex-col w-3/5 max-w-[750px] mr-12">
                                     <TextInput value={annotationTitle as string} setValue={setAnnotationTitle as Dispatch<SetStateAction<string>>} title='Annotation Title' required />
                                     {/* <TextInput value={modelAnnotationUid as string} setValue={setModelAnnotationUid as Dispatch<SetStateAction<string>>} title='UID' required /> */}
-                                    <ModelAnnotationSelect value={modelAnnotationUid} setValue={setModelAnnotationUid} modelAnnotations={props.annotationModels}/>
+                                    <ModelAnnotationSelect value={modelAnnotationUid} setValue={setModelAnnotationUid} modelAnnotations={props.annotationModels} />
                                     <Annotation annotation={annotation} setAnnotation={setAnnotation} />
                                 </div>
                                 {
