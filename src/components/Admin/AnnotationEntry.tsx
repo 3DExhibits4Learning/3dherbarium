@@ -77,6 +77,13 @@ const AnnotationEntry = (props: {
     const [createDisabled, setCreateDisabled] = useState<boolean>(true)
     const [saveDisabled, setSaveDisabled] = useState<boolean>(true)
 
+    // Set imgSrc from NFS storage
+    const setImgSrc = async() => {
+        const annotation = props.activeAnnotation as photo_annotation
+        const path = process.env.NODE_ENV === 'development' ? `X:/Hebarium/${annotation.url.slice(5)}` : `public${annotation.url}`
+        setImageSource(await fetch(`/api/annotations/photos?path=${path}`).then(res => res.json()).then(json => json.response))
+    }
+
     // This effect populates all relevant form fields with the corresponding data when there is an active annotation that has already been databased
     useEffect(() => {
 
@@ -93,15 +100,16 @@ const AnnotationEntry = (props: {
             setAnnotationTitle(props.activeAnnotationTitle)
 
             // Settings for hosted photo annotations
-            if (props.annotationType == 'photo' && !props.new && (props.activeAnnotation as photo_annotation).url.startsWith('/data')) {
+            if (props.annotationType == 'photo' && !props.new && (props.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium')) {
                 setMediaType('upload')
                 setVideoChecked(false)
                 setPhotoChecked(true)
                 setUrlChecked(false)
                 setUploadChecked(true)
                 //const base64String = Buffer.from((props.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
-                const dataUrl = (props.activeAnnotation as photo_annotation).url
-                setImageSource(dataUrl)
+                //const dataUrl = (props.activeAnnotation as photo_annotation).url
+                //setImageSource(dataUrl)
+                setImgSrc()
             }
             // Settings for web based photo annotations
             else if (props.annotationType == 'photo') {
@@ -326,9 +334,9 @@ const AnnotationEntry = (props: {
             if (!file) data.set('url', url)
             //
             else {
-                data.set('dir', `public/data/${props.uid}/${annotationId}`)
-                data.set('path', `public/data/${props.uid}/${annotationId}/${file.name}`)
-                data.set('url', `/data/${props.uid}/${annotationId}/${file.name}`)
+                data.set('dir', `public/data/Herbarium/${props.uid}/${annotationId}`)
+                data.set('path', `public/data/Herbarium/${props.uid}/${annotationId}/${file.name}`)
+                data.set('url', `/data/Herbarium/${props.uid}/${annotationId}/${file.name}`)
             }
 
             // Route handler data
@@ -460,7 +468,7 @@ const AnnotationEntry = (props: {
         const requestObj = {
             annotation_id: props.activeAnnotation?.annotation_id,
             modelUid: props.uid,
-            path: (props.activeAnnotation as photo_annotation).url.startsWith('/data') ? `public/data/${props.uid}/${props.activeAnnotation?.annotation_id}` : ''
+            path: (props.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium') ? `public/data/Herbarium/${props.uid}/${props.activeAnnotation?.annotation_id}` : ''
         }
 
         // Open transfer modal and set spinner

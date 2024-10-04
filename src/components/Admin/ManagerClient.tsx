@@ -1,7 +1,7 @@
 'use client'
 
 import { userSubmittal } from "@prisma/client";
-import { useRef, LegacyRef, useState, ChangeEvent } from "react";
+import { useRef, LegacyRef, useState, ChangeEvent, useEffect } from "react";
 import PendingModelsAdmin from "@/components/Admin/PendingModels";
 import { Button } from "@nextui-org/react";
 import DataTransferModal from "../Shared/DataTransferModal";
@@ -78,6 +78,16 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
         })
     }
 
+    // var imgSrc = 'C:/Users/ab632/Pictures/Screenshots/Xylem'
+    const [src, setSrc] = useState<string>()
+
+    useEffect(() => {
+        const getPhoto = async() => {
+            setSrc(await fetch('/api/annotations/photos?path=X:/testPhoto.png').then(res => res.json()).then(json => json.response))
+        }
+        getPhoto()
+    })
+
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel="Updating Thumbnail" result={result} />
@@ -115,7 +125,11 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
                         Create Task
                     </Button>
                 </div>
+                <div className="h-full w-1/3 flex flex-col items-center border">
+                    <div><img src={src}></img></div>
+                </div>
             </div>
+
             {
                 props.pendingModels &&
                 //@ts-ignore - Typescript thinks decimal isn't assignable to number (it seems to be)
