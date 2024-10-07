@@ -83,7 +83,7 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
 
     useEffect(() => {
         const getPhoto = async() => {
-            setSrc(await fetch('/api/annotations/photos?path=X:/testPhoto.png').then(res => res.json()).then(json => json.response))
+            setSrc('/api/test?path=X:/Herbarium/Annotations/bae2326300c94ea4af9a400d4f656dc1/81f2d1fd-1f66-4e26-ae34-e3fccb47467a/Metashape Server Error.png')
         }
         getPhoto()
     })

@@ -78,10 +78,10 @@ const AnnotationEntry = (props: {
     const [saveDisabled, setSaveDisabled] = useState<boolean>(true)
 
     // Set imgSrc from NFS storage
-    const setImgSrc = async() => {
+    const setImgSrc = async () => {
         const annotation = props.activeAnnotation as photo_annotation
-        const path = process.env.NODE_ENV === 'development' ? `X:/Hebarium/${annotation.url.slice(5)}` : `public${annotation.url}`
-        setImageSource(await fetch(`/api/annotations/photos?path=${path}`).then(res => res.json()).then(json => json.response))
+        const path = process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' ? `X:${annotation.url.slice(5)}` : `public${annotation.url}`
+        setImageSource(`/api/annotations/photos?path=${path}`)
     }
 
     // This effect populates all relevant form fields with the corresponding data when there is an active annotation that has already been databased
@@ -106,9 +106,6 @@ const AnnotationEntry = (props: {
                 setPhotoChecked(true)
                 setUrlChecked(false)
                 setUploadChecked(true)
-                //const base64String = Buffer.from((props.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
-                //const dataUrl = (props.activeAnnotation as photo_annotation).url
-                //setImageSource(dataUrl)
                 setImgSrc()
             }
             // Settings for web based photo annotations
@@ -501,7 +498,7 @@ const AnnotationEntry = (props: {
             if (annotationType === 'photo' && mediaType === 'url' && url) setImageVisible(true)
 
             else if (!props.new && mediaType === 'upload' && (props.activeAnnotation as photo_annotation).url && !file || !props.new && mediaType === 'url' && (props.activeAnnotation as photo_annotation).url && !url) {
-                setImageSource((props.activeAnnotation as photo_annotation).url)
+                setImgSrc()
                 setImageVisible(true)
             }
 

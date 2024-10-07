@@ -1,4 +1,4 @@
-import { writeFile } from "fs/promises"
+import { writeFile, readFile } from "fs/promises"
 import { join } from "path"
 
 const comments = [
@@ -18,17 +18,21 @@ const comments = [
   
   export async function GET(request: Request) {
    
-  //   const myOptions = { status: 200, statusText: "SuperSmashingGreat!" };
-  //   const obj = { hello: "world" }
-  //   const blob = new Blob([JSON.stringify(obj, null, 2)], {
-  //   type: "application/json",
-  // }) 
-  //   const myResponse = new Response(blob)
-  //   return Response.json({error: 'Upload Error'}, {status: 400, statusText: 'Upload Error'})
+
     try{
-      //const models = await getAllSiteReadyModels()
-      
-      //return Response.json({data: 'models got', response: citations})
+      try {
+        const {searchParams} = new URL(request.url)
+        const fileBuffer = await readFile(searchParams.get('path') as string).catch((e) => {
+            if (process.env.LOCAL_ENV === 'development') console.error(e.message)
+            throw Error("Can't read annotation photo")
+        })
+
+        return new Response(fileBuffer, {status:200})
+    }
+    catch (e: any) { 
+        if (process.env.LOCAL_ENV) console.error(e.message)
+        return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) 
+    }
     }
     catch(e: any) {return Response.json({data:'fail', response: e.message}, {status: 400, statusText: 'fail'})}
   }
@@ -154,3 +158,11 @@ const comments = [
 //   await writeFile(path, buffer)
 //   return Response.json({ imageUpload: "successful" })
 // }
+
+  //   const myOptions = { status: 200, statusText: "SuperSmashingGreat!" };
+  //   const obj = { hello: "world" }
+  //   const blob = new Blob([JSON.stringify(obj, null, 2)], {
+  //   type: "application/json",
+  // }) 
+  //   const myResponse = new Response(blob)
+  //   return Response.json({error: 'Upload Error'}, {status: 400, statusText: 'Upload Error'})

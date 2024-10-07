@@ -128,7 +128,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                                     {
                                         firstAnnotationPosition === undefined && uid && !activeAnnotation &&
                                         <div className="h-[400px] w-full flex justify-center">
-                                            <Spinner label='Loading 3D Model' size="lg"/>
+                                            <Spinner label='Loading Annotations' size="lg"/>
                                         </div>
                                     }
 
