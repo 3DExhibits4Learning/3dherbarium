@@ -3,8 +3,6 @@
 import { useState, useRef } from 'react';
 import axios, { AxiosHeaderValue } from 'axios';
 import ProgressModal from '@/components/ModelSubmit/ProgressModal';
-import ArtistName from './ArtistNameField';
-import SpeciesName from './SpeciesNameField';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import Software from './SoftwareField';
@@ -22,28 +20,26 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
     // Variable initialization
 
     const [speciesName, setSpeciesName] = useState<string>('')
+    const [position, setPosition] = useState<Leaflet.LatLngExpression | null>(null)
     const [artistName, setArtistName] = useState<string>('')
-    const mobileValue = useRef<string>('')
-    const radioValue = useRef<string>('')
-    const software = useRef<string>('')
-    const file = useRef<File | null>(null)
-    const softwareArray = useRef<Array<string>>([])
-    const tagArray = useRef<object[]>([])
-    const positionRef = useRef<any>({})
-
+    const [madeWithMobile, setMadeWithMobile] = useState<string>()
+    const [buildMethod, setBuildMethod] = useState<string>()
+    const [file, setFile] = useState<File | null>(null)
     const [additionalSoftware, setAdditionalSoftware] = useState(0)
     const [uploadDisabled, setUploadDisabled] = useState<boolean>(true)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
     const [success, setSuccess] = useState<boolean | null>(null)
     const [errorMsg, setErrorMsg] = useState<string>('')
-    const [position, setPosition] = useState<Leaflet.LatLngExpression | null>(null)
+
+    const softwareArray = useRef<object[]>([])
+    const tagArray = useRef<object[]>([])
 
     var uid: string
 
     // Handler that is called everytime a field is updated; it checks all mandatory fields for values, enabling the upload button if those fields exist
 
     const isUploadable = () => {
-            if (speciesName && artistName && mobileValue.current && radioValue.current && software.current && file.current && positionRef.current) { setUploadDisabled(false) }
+            if (speciesName && artistName && madeWithMobile && buildMethod && softwareArray.current.length > 0 && file && position) { setUploadDisabled(false) }
             else { setUploadDisabled(true) }
     }
 
@@ -56,19 +52,19 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
         const modelDbEntry = async () => {
             try {
-                softwareArray.current.unshift(software.current)
 
                 const data = {
                     email: props.email,
                     artist: artistName,
                     species: speciesName,
-                    isMobile: mobileValue.current,
-                    methodology: radioValue.current,
+                    isMobile: madeWithMobile,
+                    methodology: buildMethod,
                     uid: uid,
                     software: softwareArray.current,
                     tags: tagArray.current,
-                    position: positionRef.current
+                    position: position
                 }
+
                 const res = await fetch('/api/modelSubmit', {
                     method: 'POST',
                     body: JSON.stringify(data)
@@ -82,12 +78,12 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
         // Handler for fileUpload
 
-        if (!file.current) return
+        if (!file) return
 
         try {
             const data = new FormData()
             data.set('orgProject', props.sketchfab.projectUid)
-            data.set('modelFile', file.current)
+            data.set('modelFile', file)
             data.set('visibility', 'private')
             data.set('options', JSON.stringify({background: {color:"#000000"}}))
 
@@ -117,29 +113,32 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             <ProgressModal progress={uploadProgress} success={success} errorMsg={errorMsg} />
             <h1 className='hidden lg:block ml-[20%] text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
             <form className='w-full lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
+                
                 <Divider />
+                
                 <div className='flex items-center h-[75px]'>
                     <p className='ml-12 text-3xl'>Specimen Data</p>
                 </div>
+
                 <Divider className='mb-6' />
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required/>
-                <FormMap position={position} setPosition={setPosition} ref={positionRef} title/>
-                <TagInput ref={tagArray} />
+                <FormMap position={position} setPosition={setPosition} title/>
+                <TagInput ref={tagArray} title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)"/>
                 <Divider className='mt-8' />
                 <h1 className='ml-12 text-3xl mt-4 mb-4'>Model Data</h1>
                 <Divider className='mb-8'/>
                 <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12'/>
-                <MobileSelect ref={mobileValue} handler={isUploadable} />
-                <ProcessSelect ref={radioValue} handler={isUploadable} />
-                <Software ref={software} handler={isUploadable} />
-                <AdditionalSoftware ref={softwareArray} handler={isUploadable} stateVar={additionalSoftware} stateFn={setAdditionalSoftware} />
-                <div className='my-6 mx-12'>
+                <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
+                <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
+                <TagInput ref={softwareArray} title="Enter software used to create the model (must enter at least one)"/>
+                
+                <div className='my-8 mx-12'>
                     <p className='text-2xl mb-6'>Select your 3D model file.
                         The supported file formats can be found <a href='https://support.fab.com/s/article/Supported-3D-File-Formats' target='_blank'><u>here</u></a>.
                         If your format requires more than one file, zip the files then upload the folder. Maximum upload size is 500 MB.</p>
                     <input onChange={(e) => {
                         if (e.target.files?.[0])
-                            file.current = e.target.files[0]
+                            setFile(e.target.files[0])
                         isUploadable()
                     }}
                         type='file' 
@@ -148,6 +147,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                         >
                     </input>
                 </div>
+                
                 <Button
                     isDisabled={uploadDisabled}
                     color='primary'

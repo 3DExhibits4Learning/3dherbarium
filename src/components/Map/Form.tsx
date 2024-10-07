@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 
 
-const FormMap = forwardRef((props: { position: any, setPosition: any, className?: string, title?: boolean, enabler?: Function }, ref) => {
+export default function FormMap(props: { position: any, setPosition: any, className?: string, title?: boolean, enabler?: Function }){
 
   // This clause ensures that this code doesn't run server side; it will throw an error if it does (it uses the window object)
   if (typeof window !== 'undefined') {
@@ -21,13 +21,10 @@ const FormMap = forwardRef((props: { position: any, setPosition: any, className?
     let tiles = !prefersDarkMode ? lightModeTiles : darkModeTiles
     let attribution = !prefersDarkMode ? openAttribution : esriAttribution
 
-    const positionRef = ref as MutableRefObject<any>
-
     const LocationMarker = () => {
       const map = useMapEvents({
         click(e) {
           props.setPosition({ lat: e.latlng.lat, lng: e.latlng.lng });
-          positionRef.current = e.latlng
           if (props.enabler) props.enabler()
         }
       })
@@ -53,6 +50,4 @@ const FormMap = forwardRef((props: { position: any, setPosition: any, className?
       </>
     )
   }
-})
-FormMap.displayName = 'FormMap'
-export default FormMap
+}

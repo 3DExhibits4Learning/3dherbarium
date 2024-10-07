@@ -31,7 +31,6 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
     const species = useRef<string>()
     const description = useRef<string>('')
     const files = useRef<HTMLInputElement>()
-    const positionRef = useRef<LatLngLiteral>()
     const date = useRef<HTMLInputElement>()
     const time = useRef<HTMLInputElement>()
 
@@ -48,7 +47,7 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
     }
 
     const postEnable = () => {
-        if (species.current && positionRef.current && files.current?.files && date.current?.value && time.current?.value) setPostDisabled(false)
+        if (species.current && position && files.current?.files && date.current?.value && time.current?.value) setPostDisabled(false)
         else { setPostDisabled(true) }
         const a = (date.current as HTMLInputElement).value + ' ' + (time.current as HTMLInputElement).value
     }
@@ -69,8 +68,8 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
         }
 
         data.set('species', species.current as string)
-        data.set('latitude', (positionRef.current as LatLngLiteral).lat.toString())
-        data.set('longitude', (positionRef.current as LatLngLiteral).lng.toString())
+        data.set('latitude', (position as LatLngLiteral).lat.toString())
+        data.set('longitude', (position as LatLngLiteral).lng.toString())
         data.set('observed_on', (date.current as HTMLInputElement).value + ' ' + (time.current as HTMLInputElement).value)
 
         setSending(true)
@@ -150,7 +149,7 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
                                             <tr>
                                                 <td className="align-middle">Location<span className="text-red-700"> *</span></td>
                                                 <td className="align-middle py-4">
-                                                    <FormMap position={position} setPosition={setPosition} ref={positionRef} enabler={postEnable} className="h-[300px] w-4/5 z-10 rounded-xl" />
+                                                    <FormMap position={position} setPosition={setPosition} enabler={postEnable} className="h-[300px] w-4/5 z-10 rounded-xl" />
                                                 </td>
                                             </tr>
 
