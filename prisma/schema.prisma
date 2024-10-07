@@ -172,7 +172,7 @@ model submittalAttempt {
 model submittalSoftware {
   id            String
   software      String
-  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], map: "submittalSoftwareFk")
+  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], onDelete: Cascade, map: "submittalSoftwareFk")
 
   @@id([id, software])
 }
@@ -180,7 +180,7 @@ model submittalSoftware {
 model submittalTags {
   id            String
   tag           String
-  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], map: "submittalTagsFk")
+  userSubmittal userSubmittal @relation(fields: [id], references: [confirmation], onDelete: Cascade, map: "submittalTagsFk")
 
   @@id([id, tag])
 }

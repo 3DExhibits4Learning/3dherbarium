@@ -15,15 +15,16 @@ import { model } from "@prisma/client"
 const getUniqueModelers = (models: model[]): string[] => {
   const uniqueModelers = new Set<string>();
   models.forEach(model => uniqueModelers.add(model.modeled_by as string))
-  return Array.from(uniqueModelers);
-};
+  return Array.from(uniqueModelers)
+}
 
 
 const getUniqueAnnotators = (models: model[]): string[] => {
-  const uniqueAnnotators = new Set<string>();
-  models.forEach(model => uniqueAnnotators.add(model.annotator as string))
-  return Array.from(uniqueAnnotators);
-};
+  const uniqueAnnotators = new Set<string>()
+  // Filter only necessary because unannotated models appear on the collections page in development environments
+  models.filter(model => model.annotator !== null).forEach(model => uniqueAnnotators.add(model.annotator as string))
+  return Array.from(uniqueAnnotators)
+}
 
 // Main Component
 
@@ -53,6 +54,7 @@ const SearchPageContent = () => {
         siteReadyModels.current = json.response
         let a = getUniqueModelers(siteReadyModels.current as model[])
         let b = getUniqueAnnotators(siteReadyModels.current as model[])
+        console.log(b)
         a.unshift('All'); b.unshift('All')
         setModeledByList(a)
         setAnnotatedByList(b)
