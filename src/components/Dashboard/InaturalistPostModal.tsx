@@ -9,7 +9,7 @@ import checkToken from "@/utils/checkToken"
 import { LegacyRef } from "react"
 import FormMap from "../Map/Form"
 import { LatLngLiteral } from "leaflet"
-import Autocomplete from "../Shared/AutoComplete"
+import Autocomplete from "../Shared/AutoCompleteRef"
 
 export default function InaturalistPostModal(props: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
 

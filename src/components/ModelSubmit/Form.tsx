@@ -14,13 +14,15 @@ import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
 import Leaflet from 'leaflet';
 import FormMap from '../Map/Form';
+import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
+import TextInput from '../Shared/TextInput';
 
 export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab:{ organizationUid: string, projectUid: string} }) {
 
     // Variable initialization
 
-    const speciesName = useRef<string>('')
-    const artistName = useRef<string>('')
+    const [speciesName, setSpeciesName] = useState<string>('')
+    const [artistName, setArtistName] = useState<string>('')
     const mobileValue = useRef<string>('')
     const radioValue = useRef<string>('')
     const software = useRef<string>('')
@@ -41,7 +43,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
     // Handler that is called everytime a field is updated; it checks all mandatory fields for values, enabling the upload button if those fields exist
 
     const isUploadable = () => {
-            if (speciesName.current && artistName.current && mobileValue.current && radioValue.current && software.current && file.current && positionRef.current) { setUploadDisabled(false) }
+            if (speciesName && artistName && mobileValue.current && radioValue.current && software.current && file.current && positionRef.current) { setUploadDisabled(false) }
             else { setUploadDisabled(true) }
     }
 
@@ -58,8 +60,8 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
                 const data = {
                     email: props.email,
-                    artist: artistName.current,
-                    species: speciesName.current,
+                    artist: artistName,
+                    species: speciesName,
                     isMobile: mobileValue.current,
                     methodology: radioValue.current,
                     uid: uid,
@@ -120,13 +122,13 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                     <p className='ml-12 text-3xl'>Specimen Data</p>
                 </div>
                 <Divider className='mb-6' />
-                <SpeciesName ref={speciesName} handler={isUploadable} />
+                <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required/>
                 <FormMap position={position} setPosition={setPosition} ref={positionRef} title/>
                 <TagInput ref={tagArray} />
                 <Divider className='mt-8' />
                 <h1 className='ml-12 text-3xl mt-4 mb-4'>Model Data</h1>
-                <Divider />
-                <ArtistName ref={artistName} handler={isUploadable} />
+                <Divider className='mb-8'/>
+                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12'/>
                 <MobileSelect ref={mobileValue} handler={isUploadable} />
                 <ProcessSelect ref={radioValue} handler={isUploadable} />
                 <Software ref={software} handler={isUploadable} />

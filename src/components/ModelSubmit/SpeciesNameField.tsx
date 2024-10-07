@@ -1,5 +1,5 @@
 import { MutableRefObject, forwardRef, ForwardedRef, useState } from "react"
-import Autocomplete from "../Shared/AutoComplete"
+import Autocomplete from "../Shared/AutoCompleteRef"
 
 const SpeciesName = forwardRef((props: { handler: Function, edit?: boolean, defaultValue?: string }, ref: ForwardedRef<string>) => {
     const speciesRef = ref as MutableRefObject<string>

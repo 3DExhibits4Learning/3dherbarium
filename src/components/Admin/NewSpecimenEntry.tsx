@@ -3,7 +3,7 @@ import { useRef, LegacyRef, useState, useEffect } from "react"
 import { Button } from "@nextui-org/react"
 import DataTransferModal from "../Shared/DataTransferModal"
 import { specimenInsertion } from "@/api/types"
-import AutoComplete from "../Shared/AutoComplete"
+import AutoComplete from "../Shared/AutoCompleteRef"
 
 export default function NewSpecimenEntry() {
 

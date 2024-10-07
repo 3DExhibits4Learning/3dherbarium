@@ -2,10 +2,11 @@
 
 import { SetStateAction, Dispatch } from "react"
 
-export default function TextInput(props: { value: string, setValue: Dispatch<SetStateAction<string>>, title: string, required?: boolean, leftMargin?: string }) {
+export default function TextInput(props: { value: string, setValue: Dispatch<SetStateAction<string>>, title: string, required?: boolean, leftMargin?: string, textSize?: string }) {
+    const textSize = props.textSize ?? 'text-xl'
     return (
         <>
-            <p className={`text-2xl mb-1 ${props.leftMargin}`}>{props.title}
+            <p className={`mb-1 ${props.leftMargin} ${textSize}`}>{props.title}
                 
                 {
                     props.required &&

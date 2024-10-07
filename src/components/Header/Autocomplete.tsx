@@ -1,7 +1,7 @@
 'use client'
 
 import { NavbarItem } from "@nextui-org/react"
-import Autocomplete from "../Shared/AutoComplete"
+import Autocomplete from "../Shared/AutoCompleteRef"
 import { forwardRef, MutableRefObject } from "react"
 import { useRouter } from "next/navigation"
 import { SearchIcon } from "./SearchIcon"
