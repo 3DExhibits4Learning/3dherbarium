@@ -334,9 +334,9 @@ const AnnotationEntry = (props: {
             if (!file) data.set('url', url)
             //
             else {
-                data.set('dir', `public/data/Herbarium/${props.uid}/${annotationId}`)
-                data.set('path', `public/data/Herbarium/${props.uid}/${annotationId}/${file.name}`)
-                data.set('url', `/data/Herbarium/${props.uid}/${annotationId}/${file.name}`)
+                data.set('dir', `public/data/Herbarium/Annotations/${props.uid}/${annotationId}`)
+                data.set('path', `public/data/Herbarium/Annotations/${props.uid}/${annotationId}/${file.name}`)
+                data.set('url', `/data/Herbarium/Annotations/${props.uid}/${annotationId}/${file.name}`)
             }
 
             // Route handler data
@@ -432,9 +432,9 @@ const AnnotationEntry = (props: {
             if (!file || mediaType === 'url') data.set('url', url)
             else {
                 data.set('specimenName', props.specimenName as string)
-                data.set('dir', `public/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}`)
-                data.set('path', `public/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
-                data.set('url', `/data/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
+                data.set('dir', `public/data/Herbarium/Annotations/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}`)
+                data.set('path', `public/data/Herbarium/Annotations/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
+                data.set('url', `/data/Herbarium/Annotations/${props.uid}/${(props.activeAnnotation as photo_annotation | video_annotation).annotation_id}/${file.name}`)
                 // Temporary until database binaries are all eliminated/updated
                 if ((props.activeAnnotation as photo_annotation | video_annotation).url.startsWith('/data'))
                     console.log(`public${data.get('oldUrl')}`)
@@ -468,7 +468,7 @@ const AnnotationEntry = (props: {
         const requestObj = {
             annotation_id: props.activeAnnotation?.annotation_id,
             modelUid: props.uid,
-            path: (props.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium') ? `public/data/Herbarium/${props.uid}/${props.activeAnnotation?.annotation_id}` : ''
+            path: (props.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium') ? `public/data/Herbarium/Annotations/${props.uid}/${props.activeAnnotation?.annotation_id}` : ''
         }
 
         // Open transfer modal and set spinner

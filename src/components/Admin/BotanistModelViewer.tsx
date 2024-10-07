@@ -65,7 +65,6 @@ const BotanistModelViewer = forwardRef((props: {
                 if (info.position3D) {
                     const positionArray = Array.from(info.position3D)
                     props.setPosition3D(JSON.stringify([positionArray, camera.position, camera.target]))
-                    console.log(JSON.stringify([positionArray, camera.position, camera.target]))
 
                     if (props.activeAnnotationIndex !== 'new') props.setActiveAnnotationIndex('new')
 

@@ -14,7 +14,7 @@ import {
     updateModelAnnotation,
     deleteModelAnnotation
 } from "@/api/queries"
-import { mkdir, unlink, writeFile, rmdir, rm } from "fs/promises"
+import { mkdir, unlink, writeFile, rm } from "fs/promises"
 
 
 
