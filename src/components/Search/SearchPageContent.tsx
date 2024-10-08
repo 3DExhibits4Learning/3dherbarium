@@ -54,7 +54,6 @@ const SearchPageContent = () => {
         siteReadyModels.current = json.response
         let a = getUniqueModelers(siteReadyModels.current as model[])
         let b = getUniqueAnnotators(siteReadyModels.current as model[])
-        console.log(b)
         a.unshift('All'); b.unshift('All')
         setModeledByList(a)
         setAnnotatedByList(b)

@@ -1,47 +1,41 @@
 'use client'
 
-import { useState, useRef } from 'react';
+import { useState, memo, SetStateAction, Dispatch, useEffect } from 'react';
 import axios, { AxiosHeaderValue } from 'axios';
 import ProgressModal from '@/components/ModelSubmit/ProgressModal';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
-import Software from './SoftwareField';
 import { Button } from "@nextui-org/react";
-import AdditionalSoftware from './AdditionalSoftwareField';
 import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
 import Leaflet from 'leaflet';
-import FormMap from '../Map/Form';
+import dynamic from 'next/dynamic';
+const FormMap = dynamic(() => import('../Map/Form'))
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
+import PhotoInput from '../Shared/Form Fields/PhotoInput';
 
-export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab:{ organizationUid: string, projectUid: string} }) {
+export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab: { organizationUid: string, projectUid: string } }) {
 
     // Variable initialization
+
+    var uid: string
+
+    const Map = memo(FormMap)
 
     const [speciesName, setSpeciesName] = useState<string>('')
     const [position, setPosition] = useState<Leaflet.LatLngExpression | null>(null)
     const [artistName, setArtistName] = useState<string>('')
     const [madeWithMobile, setMadeWithMobile] = useState<string>()
     const [buildMethod, setBuildMethod] = useState<string>()
+    const [softwareArr, setSoftwareArr] = useState<object[]>([])
+    const [tagArr, setTagArr] = useState<object[]>([])
     const [file, setFile] = useState<File | null>(null)
-    const [additionalSoftware, setAdditionalSoftware] = useState(0)
+    const [photo, setPhoto] = useState<File>()
     const [uploadDisabled, setUploadDisabled] = useState<boolean>(true)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
     const [success, setSuccess] = useState<boolean | null>(null)
     const [errorMsg, setErrorMsg] = useState<string>('')
-
-    const softwareArray = useRef<object[]>([])
-    const tagArray = useRef<object[]>([])
-
-    var uid: string
-
-    // Handler that is called everytime a field is updated; it checks all mandatory fields for values, enabling the upload button if those fields exist
-
-    const isUploadable = () => {
-            if (speciesName && artistName && madeWithMobile && buildMethod && softwareArray.current.length > 0 && file && position) { setUploadDisabled(false) }
-            else { setUploadDisabled(true) }
-    }
 
     // Upload handler
 
@@ -49,8 +43,8 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
         e.preventDefault()
 
         // This is the database entry handler
-
         const modelDbEntry = async () => {
+            
             try {
 
                 const data = {
@@ -60,8 +54,8 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                     isMobile: madeWithMobile,
                     methodology: buildMethod,
                     uid: uid,
-                    software: softwareArray.current,
-                    tags: tagArray.current,
+                    software: softwareArr,
+                    tags: tagArr,
                     position: position
                 }
 
@@ -76,8 +70,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             }
         }
 
-        // Handler for fileUpload
-
+        // First, we upload the model to sketchfab
         if (!file) return
 
         try {
@@ -85,7 +78,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             data.set('orgProject', props.sketchfab.projectUid)
             data.set('modelFile', file)
             data.set('visibility', 'private')
-            data.set('options', JSON.stringify({background: {color:"#000000"}}))
+            data.set('options', JSON.stringify({ background: { color: "#000000" } }))
 
             const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${props.sketchfab.organizationUid}/models`
 
@@ -96,42 +89,53 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                 }
             })
             uid = res.data.uid
+            modelDbEntry()
             setSuccess(true)
         }
         catch (e: any) {
             setErrorMsg(e.message)
             setSuccess(false)
-            return
         }
-
-        // We then make a post request to our route handler which creates a db record containing the metadata associated with the model
-        modelDbEntry()
     }
+
+    // This effect checks all necessary fields upon update to enable/disable the upload button
+    useEffect(() => {
+
+        if (speciesName && photo && position && artistName && madeWithMobile && buildMethod && softwareArr.length > 0 && file) { setUploadDisabled(false) }
+        else { setUploadDisabled(true) }
+
+    }, [speciesName, photo, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
 
     return (
         <>
             <ProgressModal progress={uploadProgress} success={success} errorMsg={errorMsg} />
             <h1 className='hidden lg:block ml-[20%] text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
             <form className='w-full lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
-                
+
                 <Divider />
-                
+
                 <div className='flex items-center h-[75px]'>
                     <p className='ml-12 text-3xl'>Specimen Data</p>
                 </div>
 
                 <Divider className='mb-6' />
-                <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required/>
-                <FormMap position={position} setPosition={setPosition} title/>
-                <TagInput ref={tagArray} title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)"/>
-                <Divider className='mt-8' />
+
+                <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
+                <PhotoInput setFile={setPhoto as Dispatch<SetStateAction<File>>} title="Upload a photo of the specimen for community ID" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
+                <Map position={position} setPosition={setPosition} title required />
+                <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
+
+                <Divider className='mt-12' />
+
                 <h1 className='ml-12 text-3xl mt-4 mb-4'>Model Data</h1>
-                <Divider className='mb-8'/>
-                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12'/>
+
+                <Divider className='mb-12' />
+
+                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12' />
                 <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
                 <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
-                <TagInput ref={softwareArray} title="Enter software used to create the model (must enter at least one)"/>
-                
+                <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<object[]>>} />
+
                 <div className='my-8 mx-12'>
                     <p className='text-2xl mb-6'>Select your 3D model file.
                         The supported file formats can be found <a href='https://support.fab.com/s/article/Supported-3D-File-Formats' target='_blank'><u>here</u></a>.
@@ -139,15 +143,14 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                     <input onChange={(e) => {
                         if (e.target.files?.[0])
                             setFile(e.target.files[0])
-                        isUploadable()
                     }}
-                        type='file' 
+                        type='file'
                         name='file'
                         id='formFileInput'
-                        >
+                    >
                     </input>
                 </div>
-                
+
                 <Button
                     isDisabled={uploadDisabled}
                     color='primary'

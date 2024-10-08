@@ -1,24 +1,28 @@
 'use client'
 
-import { MutableRefObject, forwardRef, useCallback, ForwardedRef } from 'react'
+import { MutableRefObject, forwardRef, useCallback, ForwardedRef, SetStateAction, Dispatch } from 'react'
 //@ts-ignore
 import Tags from '@yaireo/tagify/dist/react.tagify' // React-wrapper file
 import '@yaireo/tagify/dist/tagify.css' // Tagify CSS
 
-const TagInput = forwardRef((props: { defaultValues?: string, title: string }, ref: ForwardedRef<object[]>) => {
+export default function TagInput(props: { defaultValues?: string, title: string, required?: boolean, setTags: Dispatch<SetStateAction<object[]>> }){
 
-    const tags = ref as MutableRefObject<object[]>
 
     const onChange = useCallback((e: any) => {
         // e.detail.tagify.value // Array where each tag includes tagify's (needed) extra properties
         // e.detail.tagify.getCleanValue() // Same as above, without the extra properties (Plain array of string objects {value: '[tag]'})
         // e.detail.value // a string representing the tags
-        tags.current = e.detail.tagify.getCleanValue()
+        props.setTags(e.detail.tagify.getCleanValue())
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         <>
-            <h1 className='ml-12 text-2xl mb-2'>{props.title}</h1>
+            <h1 className='ml-12 text-2xl mb-2'>{props.title}
+                {
+                    props.required &&
+                    <span className="text-red-600 ml-1">*</span>
+                }
+            </h1>
             <Tags
                 id='tags'
                 className='w-4/5 h-[150px] bg-white ml-12 dark:bg-[#181818] dark:text-white'
@@ -35,6 +39,4 @@ const TagInput = forwardRef((props: { defaultValues?: string, title: string }, r
             />
         </>
     )
-})
-TagInput.displayName = 'tags'
-export default TagInput
+}

@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 
 
-export default function FormMap(props: { position: any, setPosition: any, className?: string, title?: boolean, enabler?: Function }){
+export default function FormMap(props: { position: any, setPosition: any, className?: string, title?: boolean, enabler?: Function, required?: boolean }) {
 
   // This clause ensures that this code doesn't run server side; it will throw an error if it does (it uses the window object)
   if (typeof window !== 'undefined') {
@@ -38,7 +38,12 @@ export default function FormMap(props: { position: any, setPosition: any, classN
       <>
         {
           props.title &&
-          <h1 className='ml-12 text-2xl mb-2'>Click the map at the location where your specimen was found</h1>
+          <h1 className='ml-12 text-2xl mb-2'>Click the map at the location where your specimen was found
+            {
+              props.required &&
+              <span className="text-red-600 ml-1">*</span>
+            }
+          </h1>
         }
         <MapContainer className={`${className}`} center={[40.875781, -124.07856]} zoom={9} scrollWheelZoom={false}>
           <TileLayer

@@ -9,7 +9,7 @@ import { handlePlantIdSubmit } from '@/api/fetchFunctions';
 import { PlantIdApiResponse, PlantIdSuggestion } from '@/api/types';
 import { trimString } from '@/utils/trimString';
 import Header from '@/components/Header/Header';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import PageWrapper from '@/components/Shared/PageWrapper';
 import { useIsClient } from '@/utils/isClient';
 import Foot from '@/components/Shared/Foot';
@@ -18,13 +18,13 @@ var searchTerm: string | null;
 
 const PlantIdPage = () => {
 
-  const isClient: boolean = useIsClient();
+  const isClient: boolean = useIsClient()
 
   if (isClient) {
-    searchTerm = sessionStorage.getItem("searchTerm");
+    searchTerm = sessionStorage.getItem("searchTerm")
     if (!searchTerm) {
-      sessionStorage.setItem("searchTerm", "sequoia sempervirens");
-      searchTerm = "sequoia sempervirens";
+      sessionStorage.setItem("searchTerm", "sequoia sempervirens")
+      searchTerm = "sequoia sempervirens"
     }
   }
 
@@ -43,9 +43,9 @@ const PlantIdPage = () => {
   const handlePlantIdSubmitWithTimeout = async (base64Strings: string[]): Promise<void> => {
     try {
       const plantIdPromise = handlePlantIdSubmit(base64Strings);
-      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 15000));
+      const timeoutPromise = new Promise((resolve) => setTimeout(resolve, 15000))
 
-      const result = await Promise.race([plantIdPromise, timeoutPromise]);
+      const result = await Promise.race([plantIdPromise, timeoutPromise])
 
       if (result === timeoutPromise) {
         console.error("handlePlantIdSubmit timed out");
@@ -53,9 +53,9 @@ const PlantIdPage = () => {
         setPlantIdResults(result as PlantIdApiResponse);
       }
     } catch (error) {
-      console.error("Error occurred during plant identification", error);
+      console.error("Error occurred during plant identification", error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -68,33 +68,29 @@ const PlantIdPage = () => {
    * @param {React.ChangeEvent<HTMLInputElement>} event 
    */
   const handleImageSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event) return;
-    setPlantIdResults(null);
+    if (!event) return
+    setPlantIdResults(null)
     try {
-      const files = event.target.files;
-      if (!files || !files.length) return;
+      const files = event.target.files
+      if (!files || !files.length) return
 
-      const blobsArr = Array.from(files);
+      const filesArr = Array.from(files)
       setSelectedPhoto(URL.createObjectURL(files[0]));
       setLoading(true);
 
       const base64Strings = await Promise.all(
-        blobsArr.map((file) => {
+        filesArr.map((file) => {
           return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              if (reader.result) {
-                const base64String = reader.result.toString();
-                resolve(base64String.split(',')[1]);
-              } else {
-                reject(new Error('Failed to read the file'));
-              }
-            };
+            const reader = new FileReader()
+            reader.onload = (e) => { 
+                const base64String = e.target?.result;
+                resolve(base64String)
+            }
             reader.onerror = () => reject(new Error('Problem reading the file'));
             reader.readAsDataURL(file);
-          });
+          })
         }),
-      );
+      )
       await handlePlantIdSubmitWithTimeout(base64Strings as string[]);
     } catch (error) {
       console.error("Error processing images", error);
