@@ -1,5 +1,6 @@
 import { uid } from 'uid'
 import { prismaClient } from "@/api/queries";
+import { ModelUploadBody } from '@/api/types';
 
 const prisma = prismaClient()
 
@@ -7,7 +8,7 @@ export async function POST(request: Request) {
 
     try {
         // Get request body
-        const body = await request.json()
+        const body: ModelUploadBody = await request.json()
 
         // Variable initializtion
         const isMobile = body.isMobile == 'Yes' ? true : false
@@ -19,14 +20,18 @@ export async function POST(request: Request) {
         const requestHeader: HeadersInit = new Headers()
         requestHeader.set('Authorization', process.env.SKETCHFAB_API_TOKEN as string)
 
-        // Get model thumbnail - note that the thumbnail must be saved first!!!
-        const res = await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`, {
+        // Get model thumbnail
+        await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`, {
             headers: requestHeader
         })
             .then(res => res.json())
             .then(data => thumbUrl = data.thumbnails.images[0].url)
+            .catch((e) => {
+                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                throw new Error("Couldn't get thumbnail")
+            })
 
-        // Insert data into database
+        // Insert model data into database
         const insert = await prisma.userSubmittal.create({
             data: {
                 confirmation: confirmation,
@@ -41,26 +46,39 @@ export async function POST(request: Request) {
                 lat: body.position.lat,
                 lng: body.position.lng
             }
+        }).catch((e) => {
+            if (process.env.NODE_ENV === 'development') console.error(e.message)
+            throw new Error("Couldn't create database record")
         })
 
-        // Insert software and tag data into database
+        // Insert model software into database
         for (let software in body.software) {
             await prisma.submittalSoftware.create({
                 data: {
                     id: confirmation,
-                    software: body.software[software]
+                    software: software
                 }
+            }).catch((e) => {
+                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                throw new Error("Couldn't create software database record")
             })
         }
+
+        // Insert model tags into database
         for (let tag in body.tags) {
             await prisma.submittalTags.create({
                 data: {
                     id: confirmation,
-                    tag: body.tags[tag].value
+                    tag: tag
                 }
+            }).catch((e) => {
+                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                throw new Error("Couldn't create tag database record")
             })
+    
         }
-        return Response.json({ data: 'Model Added', response: insert })
+        
+        return Response.json({ data: 'Model uploaded sucessfully', response: insert })
     }
-    catch(e: any) {return Response.json({data:'error', response:e.message}, {status:400, statusText:'Error'})}
+    catch (e: any) { return Response.json({ data: 'error', response: e.message }, { status: 400, statusText: 'Error' }) }
 }

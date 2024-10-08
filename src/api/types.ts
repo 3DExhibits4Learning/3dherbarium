@@ -6,6 +6,7 @@
 import { Dispatch} from "react";
 import { SetStateAction } from "react";
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
+import { LatLngLiteral } from "leaflet";
 
 export interface SearchHeaderProps {
   headerTitle: string,
@@ -306,5 +307,17 @@ export interface fullAnnotation extends annotations {
 export interface fullUserSubmittal extends userSubmittal{
   tags: string[],
   software: string[]
+}
+
+export interface ModelUploadBody{
+  email: string,
+  artist: string,
+  species: string,
+  isMobile: string,
+  methodology: string,
+  uid: string,
+  software: string[],
+  tags: string[],
+  position: LatLngLiteral
 }
 

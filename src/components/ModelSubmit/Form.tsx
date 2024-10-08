@@ -1,76 +1,80 @@
 'use client'
 
-import { useState, memo, SetStateAction, Dispatch, useEffect } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import axios, { AxiosHeaderValue } from 'axios';
-import ProgressModal from '@/components/ModelSubmit/ProgressModal';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
 import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
-import Leaflet from 'leaflet';
+import Leaflet, { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
 const FormMap = dynamic(() => import('../Map/Form'))
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
+import { ModelUploadBody } from '@/api/types';
+import ModelInput from './ModelInput';
+import DataTransfer from './DataTransfer';
 
 export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab: { organizationUid: string, projectUid: string } }) {
 
     // Variable initialization
+    var uid: string // uid set by upload handler upon model upload
 
-    var uid: string
-
-    const Map = memo(FormMap)
-
+    // Form field states
     const [speciesName, setSpeciesName] = useState<string>('')
     const [position, setPosition] = useState<Leaflet.LatLngExpression | null>(null)
     const [artistName, setArtistName] = useState<string>('')
     const [madeWithMobile, setMadeWithMobile] = useState<string>()
     const [buildMethod, setBuildMethod] = useState<string>()
-    const [softwareArr, setSoftwareArr] = useState<object[]>([])
-    const [tagArr, setTagArr] = useState<object[]>([])
+    const [softwareArr, setSoftwareArr] = useState<{ value: string }[]>([])
+    const [tagArr, setTagArr] = useState<{ value: string }[]>([])
     const [file, setFile] = useState<File | null>(null)
     const [photo, setPhoto] = useState<File>()
     const [uploadDisabled, setUploadDisabled] = useState<boolean>(true)
+
+    // Data transfer states
+    const [open, setOpen] = useState<boolean>(false)
     const [uploadProgress, setUploadProgress] = useState<number>(0)
+    const [transferring, setTransferring] = useState<boolean>(false)
+    const [result, setResult] = useState<string>('')
     const [success, setSuccess] = useState<boolean | null>(null)
-    const [errorMsg, setErrorMsg] = useState<string>('')
 
-    // Upload handler
+    // This is the database entry handler
+    const enterModelIntoDb = async () => {
 
-    const handleUpload = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
+        const software = softwareArr.map(software => software.value)
+        const tags = tagArr.map(tag => tag.value)
 
-        // This is the database entry handler
-        const modelDbEntry = async () => {
-            
-            try {
-
-                const data = {
-                    email: props.email,
-                    artist: artistName,
-                    species: speciesName,
-                    isMobile: madeWithMobile,
-                    methodology: buildMethod,
-                    uid: uid,
-                    software: softwareArr,
-                    tags: tagArr,
-                    position: position
-                }
-
-                const res = await fetch('/api/modelSubmit', {
-                    method: 'POST',
-                    body: JSON.stringify(data)
-                })
-                if (!res.ok) throw new Error(await res.text())
-            }
-            catch (e: any) {
-                console.error(e)
-            }
+        const data: ModelUploadBody = {
+            email: props.email,
+            artist: artistName,
+            species: speciesName,
+            isMobile: madeWithMobile as string,
+            methodology: buildMethod as string,
+            uid: uid,
+            software: software,
+            tags: tags,
+            position: position as LatLngLiteral
         }
 
-        // First, we upload the model to sketchfab
+        await fetch('/api/modelSubmit', {
+            method: 'POST',
+            body: JSON.stringify(data)
+        }).catch((e) => {
+            if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') console.error(e.message)
+            throw new Error("Couldn't enter model data into database")
+        })
+    }
+
+    // Upload handler
+    const handleUpload = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
+        setOpen(true)
+        setTransferring(true)
+
+        // First, we upload the model to sketchfab with axios (https://www.npmjs.com/package/react-axios)
         if (!file) return
 
         try {
@@ -88,12 +92,17 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                     'Authorization': props.token as AxiosHeaderValue
                 }
             })
+
+            // Grab the uid, then enter model data into database
             uid = res.data.uid
-            modelDbEntry()
+            enterModelIntoDb()
             setSuccess(true)
+            setTransferring(false)
         }
         catch (e: any) {
-            setErrorMsg(e.message)
+            if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') console.error(e.message)
+            setResult("Couldn't upload 3D model")
+            setTransferring(false)
             setSuccess(false)
         }
     }
@@ -108,7 +117,8 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
     return (
         <>
-            <ProgressModal progress={uploadProgress} success={success} errorMsg={errorMsg} />
+            <DataTransfer open={open} transferring={transferring} result={result} progress={uploadProgress} success={success} />
+
             <h1 className='hidden lg:block ml-[20%] text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
             <form className='w-full lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
 
@@ -122,7 +132,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
                 <PhotoInput setFile={setPhoto as Dispatch<SetStateAction<File>>} title="Upload a photo of the specimen for community ID" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
-                <Map position={position} setPosition={setPosition} title required />
+                <FormMap position={position} setPosition={setPosition} title required />
                 <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
 
                 <Divider className='mt-12' />
@@ -134,22 +144,9 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                 <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12' />
                 <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
                 <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
-                <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<object[]>>} />
+                <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<{ value: string }[]>>} />
 
-                <div className='my-8 mx-12'>
-                    <p className='text-2xl mb-6'>Select your 3D model file.
-                        The supported file formats can be found <a href='https://support.fab.com/s/article/Supported-3D-File-Formats' target='_blank'><u>here</u></a>.
-                        If your format requires more than one file, zip the files then upload the folder. Maximum upload size is 500 MB.</p>
-                    <input onChange={(e) => {
-                        if (e.target.files?.[0])
-                            setFile(e.target.files[0])
-                    }}
-                        type='file'
-                        name='file'
-                        id='formFileInput'
-                    >
-                    </input>
-                </div>
+                <ModelInput setFile={setFile as Dispatch<SetStateAction<File>>} />
 
                 <Button
                     isDisabled={uploadDisabled}

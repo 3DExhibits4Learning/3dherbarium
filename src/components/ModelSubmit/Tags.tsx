@@ -1,11 +1,11 @@
 'use client'
 
-import { MutableRefObject, forwardRef, useCallback, ForwardedRef, SetStateAction, Dispatch } from 'react'
+import { useCallback, SetStateAction, Dispatch } from 'react'
 //@ts-ignore
 import Tags from '@yaireo/tagify/dist/react.tagify' // React-wrapper file
 import '@yaireo/tagify/dist/tagify.css' // Tagify CSS
 
-export default function TagInput(props: { defaultValues?: string, title: string, required?: boolean, setTags: Dispatch<SetStateAction<object[]>> }){
+export default function TagInput(props: { defaultValues?: string, title: string, required?: boolean, setTags: Dispatch<SetStateAction<{value: string}[]>> }){
 
 
     const onChange = useCallback((e: any) => {
