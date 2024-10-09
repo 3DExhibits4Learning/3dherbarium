@@ -315,10 +315,10 @@ export interface ModelUploadBody{
   species: string,
   isMobile: string,
   methodology: string,
-  uid: string,
-  software: string[],
-  tags: string[],
+  software: string,
+  tags: string,
   position: LatLngLiteral
   file: string
 }
+
 

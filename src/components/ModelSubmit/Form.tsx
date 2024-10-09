@@ -9,7 +9,7 @@ import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
 import Leaflet, { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
-const FormMap = dynamic(() => import('../Map/Form'), {ssr:false})
+const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
@@ -20,7 +20,6 @@ import DataTransfer from './DataTransfer';
 export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab: { organizationUid: string, projectUid: string } }) {
 
     // Variable initialization
-    var uid: string // uid set by upload handler upon model upload
 
     // Form field states
     const [speciesName, setSpeciesName] = useState<string>('')
@@ -41,66 +40,87 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
     const [result, setResult] = useState<string>('')
     const [success, setSuccess] = useState<boolean | null>(null)
 
-    // This is the database entry handler
-    const enterModelIntoDb = async () => {
+    // Promise tracker for to determine when model upload is complete
+    // This allows us to not await the model upload, thereby enabling the do while loop below to get upload progress
+    const trackPromise = (promise: any) => {
+        let isResolved = false
+        let isRejected = false
 
-        const software = softwareArr.map(software => software.value)
-        const tags = tagArr.map(tag => tag.value)
-
-        const bytes = await (file as File).arrayBuffer()
-        const buffer = Buffer.from(bytes)
-        const photoString = buffer.toString('base64')
-
-        const data: ModelUploadBody = {
-            email: props.email,
-            artist: artistName,
-            species: speciesName,
-            isMobile: madeWithMobile as string,
-            methodology: buildMethod as string,
-            uid: uid,
-            software: software,
-            tags: tags,
-            position: position as LatLngLiteral,
-            file: photoString
-        }
-
-        await fetch('/api/modelSubmit', {
-            method: 'POST',
-            body: JSON.stringify(data)
-        }).catch((e) => {
-            if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') console.error(e.message)
-            throw new Error("Couldn't enter model data into database")
-        })
-    }
-
-    // Upload handler
-    const handleUpload = async (e: React.MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
-        setOpen(true)
-        setTransferring(true)
-
-        // First, we upload the model to sketchfab with axios (https://www.npmjs.com/package/react-axios)
-        if (!file) return
-
-        try {
-            const data = new FormData()
-            data.set('orgProject', props.sketchfab.projectUid)
-            data.set('modelFile', file)
-            data.set('visibility', 'private')
-            data.set('options', JSON.stringify({ background: { color: "#000000" } }))
-
-            const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${props.sketchfab.organizationUid}/models`
-
-            const res = await axios.post(orgModelUploadEnd, data, {
-                onUploadProgress: (axiosProgressEvent) => setUploadProgress(axiosProgressEvent.progress as number),
-                headers: {
-                    'Authorization': props.token as AxiosHeaderValue
-                }
+        // A wrapper promise that tracks the state
+        const wrappedPromise = promise
+            .then((result: any) => {
+                isResolved = true;
+                return result;
+            })
+            .catch((error: any) => {
+                isRejected = true;
+                if (process.env.NODE_ENV === 'development') console.error(error.message)
+                throw new Error("Couldn't upload 3D model")
             })
 
-            // Grab the uid, then enter model data into database
-            uid = res.data.uid
-            enterModelIntoDb()
+        // Method to check if resolved or rejected
+        wrappedPromise.isResolved = () => isResolved;
+        wrappedPromise.isRejected = () => isRejected;
+
+        return wrappedPromise
+    }
+
+    // // Get and set upload progress
+    // const getUploadProgress = async () => {
+    //     setUploadProgress(parseFloat(await fetch('/api/modelSubmit').then(res => res.json()).then(json => json)))
+    // }
+
+    const pause = async () => {
+        return new Promise((resolve) => setTimeout(resolve, 2000))
+    }
+
+    // This is the model upload handler
+    const uploadModelAndEnterIntoDb = async (e: React.MouseEvent<HTMLButtonElement>) => {
+
+        try {
+
+            e.preventDefault()
+            setOpen(true)
+            setTransferring(true)
+
+            const software = JSON.stringify(softwareArr.map(software => software.value))
+            const tags = JSON.stringify(tagArr.map(tag => tag.value))
+            const pos = JSON.stringify(position)
+
+            const data = new FormData()
+            data.set('email', props.email)
+            data.set('artist', artistName)
+            data.set('species', speciesName)
+            data.set('isMobile', madeWithMobile as string)
+            data.set('methodology', buildMethod as string)
+            data.set('software', software)
+            data.set('tags', tags)
+            data.set('position', pos)
+            data.set('file', file as File)
+
+            let result: any
+
+            const upload = fetch('/api/modelSubmit', {
+                method: 'POST',
+                body: data
+            }).then(res => res.json()).then(json => result = json.data)
+
+            const trackedUpload = trackPromise(upload)
+            globalThis.uploadProgress = 0
+
+            do {
+                // await getUploadProgress()
+                // console.log('GOT PROGRESS')
+                setUploadProgress(globalThis.uploadProgress)
+                await pause()
+                console.log('AWAITED PAUSE')
+            }
+            while (!trackedUpload.isResolved() && !trackedUpload.isRejected())
+            
+            console.log(trackedUpload.isResolved())
+            console.log(result)
+
+            setResult(result)
             setSuccess(true)
             setTransferring(false)
         }
@@ -119,6 +139,14 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
         else { setUploadDisabled(true) }
 
     }, [speciesName, photo, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
+
+    // useEffect(() => {
+    //     const testfn = async() => {
+    //         const test = await fetch('/api/modelSubmit').then(res => res.json()).then(json => json)
+    //         console.log(test)
+    //     }
+    //     testfn()
+    // },[])
 
     return (
         <>
@@ -156,7 +184,7 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
                 <Button
                     isDisabled={uploadDisabled}
                     color='primary'
-                    onClick={handleUpload}
+                    onClick={uploadModelAndEnterIntoDb}
                     onPress={() => document.getElementById('progressModalButton')?.click()}
                     className='text-white text-xl mb-24 mt-8 ml-12'>Upload 3D Model
                 </Button>
@@ -164,3 +192,16 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
         </>
     )
 }
+
+// // Example Usage
+// const examplePromise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+// const trackedPromise = trackPromise(examplePromise);
+
+// setTimeout(() => {
+//     console.log('Is Resolved:', trackedPromise.isResolved()); // After 1 second: false
+// }, 1000);
+
+// setTimeout(() => {
+//     console.log('Is Resolved:', trackedPromise.isResolved()); // After 3 seconds: true
+// }, 3000);

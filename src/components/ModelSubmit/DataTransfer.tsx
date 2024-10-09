@@ -7,12 +7,12 @@ export default function DataTransfer(props: { open: boolean, transferring: boole
 
     const NewModelOrDashboard = () => {
         return (
-            <div className="flex justify-around mb-8">
+            <div className="flex w-full justify-around mb-8">
                 <div>
                     <Button color="primary" onPress={() => {
                         if (typeof window !== undefined) {
                             window.scrollTo(0, 0)
-                            location.reload
+                            location.reload()
                         }
                     }}>
                         Submit New Model
@@ -45,7 +45,7 @@ export default function DataTransfer(props: { open: boolean, transferring: boole
                                 }
                                 {
                                     !props.transferring &&
-                                    <p>{props.result}</p>
+                                    <p className="mt-6">{props.result}</p>
                                 }
                             </ModalBody>
                             <ModalFooter className="flex justify-center">
