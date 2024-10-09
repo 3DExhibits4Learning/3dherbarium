@@ -319,5 +319,6 @@ export interface ModelUploadBody{
   software: string[],
   tags: string[],
   position: LatLngLiteral
+  file: string
 }
 

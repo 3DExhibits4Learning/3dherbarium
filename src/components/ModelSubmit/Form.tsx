@@ -9,7 +9,7 @@ import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
 import Leaflet, { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
-const FormMap = dynamic(() => import('../Map/Form'))
+const FormMap = dynamic(() => import('../Map/Form'), {ssr:false})
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
@@ -47,6 +47,10 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
         const software = softwareArr.map(software => software.value)
         const tags = tagArr.map(tag => tag.value)
 
+        const bytes = await (file as File).arrayBuffer()
+        const buffer = Buffer.from(bytes)
+        const photoString = buffer.toString('base64')
+
         const data: ModelUploadBody = {
             email: props.email,
             artist: artistName,
@@ -56,7 +60,8 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             uid: uid,
             software: software,
             tags: tags,
-            position: position as LatLngLiteral
+            position: position as LatLngLiteral,
+            file: photoString
         }
 
         await fetch('/api/modelSubmit', {

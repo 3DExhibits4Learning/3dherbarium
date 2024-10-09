@@ -1,8 +1,11 @@
 import { uid } from 'uid'
 import { prismaClient } from "@/api/queries";
 import { ModelUploadBody } from '@/api/types';
+import axios from 'axios';
 
 const prisma = prismaClient()
+
+
 
 export async function POST(request: Request) {
 
@@ -15,6 +18,24 @@ export async function POST(request: Request) {
         var thumbUrl: string = ''
         const modelUid = body.uid as string
         const confirmation = uid()
+
+        const data = new FormData()
+        data.set('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
+        data.set('modelFile', body.file)
+        data.set('visibility', 'private')
+        data.set('options', JSON.stringify({ background: { color: "#000000" } }))
+
+        const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${props.sketchfab.organizationUid}/models`
+
+        const res = await axios.post(orgModelUploadEnd, data, {
+            onUploadProgress: (axiosProgressEvent) => setUploadProgress(axiosProgressEvent.progress as number),
+            headers: {
+                'Authorization': props.token as AxiosHeaderValue
+            }
+        })
+
+        // Grab the uid, then enter model data into database
+        uid = res.data.uid
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()

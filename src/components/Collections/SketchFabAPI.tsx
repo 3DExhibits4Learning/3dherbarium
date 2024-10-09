@@ -67,6 +67,12 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     annotationControl(api, annotations, (event.target as HTMLInputElement).checked)
   }
 
+  // Set imgSrc from NFS storage
+  const setImageFromNfs = async (url: string) => {
+    const path = process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' ? `X:${url.slice(5)}` : `public${url}`
+    setImgSrc(`/api/annotations/photos?path=${path}`)
+  }
+
   // This effect initializes the sketchfab client and instantiates the specimen:Herbarium object; it also ensures the page begins from the top upon load
   useEffect(() => {
 
@@ -87,7 +93,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       setS(sRef.current)
       setAnnotations(sRef.current.annotations.annotations)
     }
-    
+
     instantiateHerbarium()
 
     document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -140,10 +146,14 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     }
   }, [api, annotations, s])
 
+
   // This effect sets the imgSrc if necessary upon change of annotation index
   useEffect(() => {
-
-    if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && annotations && (annotations[index - 1].annotation as photo_annotation)?.photo) {
+    
+    if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && (annotations[index - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')) {
+      setImageFromNfs((annotations[index - 1].annotation as photo_annotation)?.url)
+    }
+    else if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && (annotations[index - 1].annotation as photo_annotation)?.photo) {
       const base64String = Buffer.from((annotations[index - 1].annotation as photo_annotation).photo as Buffer).toString('base64');
       const dataUrl = `data:image/jpeg;base64,${base64String}`
       setImgSrc(dataUrl)
@@ -258,7 +268,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
               }
 
               {
-                !!index && annotations[index - 1].annotation_type === 'video' && 
+                !!index && annotations[index - 1].annotation_type === 'video' &&
                 <div className="w-full h-full" id="annotationDivVideo">
                   {/*@ts-ignore - align works on iframe just fine*/}
                   <iframe align='left' className='fade w-[calc(100%-15px)] h-full' src={annotations[index - 1].url}></iframe>
@@ -266,7 +276,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
               }
 
               {
-                !!index && annotations[index - 1].annotation_type === 'model' && 
+                !!index && annotations[index - 1].annotation_type === 'model' &&
                 <>
                   <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>
                     <ModelAnnotation uid={(annotations[index - 1].annotation as model_annotation).uid} />
