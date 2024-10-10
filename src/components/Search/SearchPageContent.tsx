@@ -30,12 +30,12 @@ const getUniqueAnnotators = (models: model[]): string[] => {
 const SearchPageContent = () => {
 
   const siteReadyModels = useRef<model[]>()
-  
+
   const [communityModels, setCommunityModels] = useState<fullUserSubmittal[]>()
   const [modeledByList, setModeledByList] = useState<string[]>()
   const [annotatedByList, setAnnotatedByList] = useState<string[]>()
-  const [selectedModeler, setSelectedModeler] = useState<string | undefined>('')
-  const [selectedAnnotator, setSelectedAnnotator] = useState<string | undefined>('')
+  const [selectedModeler, setSelectedModeler] = useState<string>('All')
+  const [selectedAnnotator, setSelectedAnnotator] = useState<string>('All')
   const [order, setOrder] = useState<string>('Newest First')
 
   useEffect(() => {
@@ -43,16 +43,16 @@ const SearchPageContent = () => {
     let promises = []
 
     const getModels = fetch('/api/collections/models')
-    .then(res => res.json())
-    .then(json => {
-        
+      .then(res => res.json())
+      .then(json => {
+
         siteReadyModels.current = json.response
-        
+
         let a = getUniqueModelers(siteReadyModels.current as model[])
         let b = getUniqueAnnotators(siteReadyModels.current as model[])
-        
+
         a.unshift('All'); b.unshift('All')
-        
+
         setModeledByList(a)
         setAnnotatedByList(b)
       })
@@ -60,8 +60,8 @@ const SearchPageContent = () => {
     const getCommunityModels = fetch('/api/collections/models/community').then(res => res.json()).then(json => setCommunityModels(json.response))
 
     promises.push(getModels, getCommunityModels)
-    
-    const getAllModels = async() => {
+
+    const getAllModels = async () => {
       await Promise.all(promises)
     }
 
@@ -72,12 +72,21 @@ const SearchPageContent = () => {
   return (
     <>
       {
-        modeledByList && annotatedByList && communityModels && 
+        modeledByList && annotatedByList && communityModels &&
         <>
-          <SubHeader modeledByList={modeledByList} annotatedByList={annotatedByList} setSelectedModeler={setSelectedModeler} setSelectedAnnotator={setSelectedAnnotator} setOrder={setOrder as Dispatch<SetStateAction<string>>} />
+          <SubHeader
+            modeledByList={modeledByList}
+            annotatedByList={annotatedByList}
+            setSelectedModeler={setSelectedModeler}
+            setSelectedAnnotator={setSelectedAnnotator}
+            order={order}
+            setOrder={setOrder as Dispatch<SetStateAction<string>>}
+            modeler={selectedModeler}
+            annotator={selectedAnnotator}
+          />
           <br />
-            <SearchPageModelList models={siteReadyModels.current as model[]} selectedModeler={selectedModeler} selectedAnnotator={selectedAnnotator} communityModels={communityModels} order={order} />
-            <br />
+          <SearchPageModelList models={siteReadyModels.current as model[]} selectedModeler={selectedModeler} selectedAnnotator={selectedAnnotator} communityModels={communityModels} order={order} />
+          <br />
         </>
       }
     </>

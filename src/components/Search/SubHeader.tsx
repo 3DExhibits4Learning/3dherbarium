@@ -1,15 +1,19 @@
 'use client'
 
-import { Navbar, NavbarContent, Select, SelectItem, NavbarMenuItem, Button } from "@nextui-org/react"
+import { Navbar, NavbarContent, SelectItem, NavbarMenuItem, Button } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
-import { SetStateAction, Dispatch } from "react"
+import { SetStateAction, Dispatch, useState } from "react"
+import Select from "../Shared/Form Fields/ModelSelect"
 
 interface SubHeaderProps {
   modeledByList: string[]
   annotatedByList: string[]
+  order: string
   setOrder: Dispatch<SetStateAction<string>>
-  setSelectedModeler: Dispatch<SetStateAction<string | undefined>>
-  setSelectedAnnotator: Dispatch<SetStateAction<string | undefined>>
+  modeler: string
+  setSelectedModeler: Dispatch<SetStateAction<string>>
+  annotator: string
+  setSelectedAnnotator: Dispatch<SetStateAction<string>>
 }
 
 const SubHeader = (props: SubHeaderProps) => {
@@ -17,7 +21,6 @@ const SubHeader = (props: SubHeaderProps) => {
   const router = useRouter()
   const modeledByList: string[] = props.modeledByList
   const annotatedByList: string[] = props.annotatedByList
-  const orderOptions = ['Newest First', 'Alphabetical', 'Reverse Alphabetical']
 
   return (
     <Navbar isBordered className="z-0 w-full bg-[#00856A] dark:bg-[#212121]">
@@ -27,46 +30,43 @@ const SubHeader = (props: SubHeaderProps) => {
           <Button color='primary' className="hidden lg:inline-block w-[200px]" onClick={() => router.push('/modelSubmit')}>Contribute a 3D Model</Button>
         </NavbarMenuItem>
 
-        <div className="flex w-full gap-4 justify-center lg:justify-end">
+        <div className="flex w-full gap-4 justify-center lg:justify-end h-full items-center">
 
-        <Select
-            size="sm"
-            label="Order By"
-            className="w-[47.5%] lg:w-[25%] max-w-[200px]"
-            selectedKeys={new Set(['Newest First'])}
+          <select
+            value={props.order}
             onChange={(e) => props.setOrder(e.target.value)}
+            className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}
           >
-                <SelectItem key={'Newest First'} value={"Newest First"}>Newest First</SelectItem>
-                <SelectItem key={'Alphabetical'} value={"Alphabetical"}>Alphabetical</SelectItem>
-                <SelectItem key={'Reverse Alphabetical'} value={"Reverse Alphabetical"}>Reverse Alphabetical</SelectItem>
-          </Select>
+            <option className='hover:bg-[#00856A]' key={'Newest First'} value={"Newest First"}>Newest First</option>
+            <option key={'Alphabetical'} value={"Alphabetical"}>Alphabetical</option>
+            <option key={'Reverse Alphabetical'} value={"Reverse Alphabetical"}>Reverse Alphabetical</option>
+          </select>
 
-          <Select
-            size="sm"
-            label="Modeled By"
-            className="w-[47.5%] lg:w-[25%] max-w-[200px]"
+          <select
+            value={props.modeler}
             onChange={(e) => props.setSelectedModeler(e.target.value)}
+            className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}
           >
+            <option value="All" disabled selected>Modeled by</option>
             {
-              modeledByList.map((modeler: string, index: number) => (
-                <SelectItem key={modeler} value={modeler}>{modeler}</SelectItem>
+              modeledByList.map((modeler: string) => (
+                <option key={modeler} value={modeler}>{modeler}</option>
               ))
             }
-          </Select>
+          </select>
 
-          <Select
-            size="sm"
-            label="Annotated By"
-            className="w-[47.5%] lg:w-[25%] max-w-[200px]"
-            classNames={{ mainWrapper: "h-[40px]" }}
+          <select
+            value={props.annotator}
             onChange={(e) => props.setSelectedAnnotator(e.target.value)}
+            className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}
           >
+            <option value="All" disabled selected>Annotated by</option>
             {
-              annotatedByList.map((modeler: string, index: number) => (
-                <SelectItem key={modeler} value={modeler} >{modeler}</SelectItem>
+              annotatedByList.map((annotator: string) => (
+                <option key={annotator} value={annotator}>{annotator}</option>
               ))
             }
-          </Select>
+          </select>
 
         </div>
 

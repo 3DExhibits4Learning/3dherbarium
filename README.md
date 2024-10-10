@@ -20,7 +20,7 @@ in the code in coming updates.
 
 ## 3D Models
 
-Check back here for updates regarding or most recent [3D modeling documentation](https://drive.google.com/file/d/1UczhLGaHn3Hm4OysZDC9kVEzkHBfAWrA/view?usp=sharing). [Sketchfab](https://sketchfab.com/developers/viewer) is our 3D model hosting provider; a premium account is required for many of the viewer api initialization options in the code (such as watermark removal)
+Check back here for updates regarding or most recent 3D modeling [documentation](https://drive.google.com/file/d/1UczhLGaHn3Hm4OysZDC9kVEzkHBfAWrA/view?usp=sharing). [Sketchfab](https://sketchfab.com/developers/viewer) is our 3D model hosting provider; a premium account is required for many of the viewer api initialization options in the code (such as watermark removal)
 
 ## Getting Started
 
