@@ -5,20 +5,20 @@
 
 'use client'
 
-import { useEffect, useState, useRef } from "react"
-import PageWrapper from "../Shared/PageWrapper"
+import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react"
 import SearchPageModelList from "./SearchPageModelList"
 import SubHeader from "./SubHeader"
 import { fullUserSubmittal } from "@/api/types"
 import { model } from "@prisma/client"
 
+// For filtering
 const getUniqueModelers = (models: model[]): string[] => {
   const uniqueModelers = new Set<string>();
   models.forEach(model => uniqueModelers.add(model.modeled_by as string))
   return Array.from(uniqueModelers)
 }
 
-
+// For filtering
 const getUniqueAnnotators = (models: model[]): string[] => {
   const uniqueAnnotators = new Set<string>()
   // Filter only necessary because unannotated models appear on the collections page in development environments
@@ -27,34 +27,32 @@ const getUniqueAnnotators = (models: model[]): string[] => {
 }
 
 // Main Component
-
 const SearchPageContent = () => {
 
   const siteReadyModels = useRef<model[]>()
+  
   const [communityModels, setCommunityModels] = useState<fullUserSubmittal[]>()
-
   const [modeledByList, setModeledByList] = useState<string[]>()
   const [annotatedByList, setAnnotatedByList] = useState<string[]>()
   const [selectedModeler, setSelectedModeler] = useState<string | undefined>('')
   const [selectedAnnotator, setSelectedAnnotator] = useState<string | undefined>('')
-
-  const handleModelerSelect = (modeler: string | undefined): void => {
-    setSelectedModeler(modeler)
-  };
-
-  const handleAnnotatorSelect = (annotator: string | undefined): void => {
-    setSelectedAnnotator(annotator)
-  };
+  const [order, setOrder] = useState<string>('Newest First')
 
   useEffect(() => {
 
     let promises = []
 
-    const getModels = fetch('/api/collections/models').then(res => res.json()).then(json => {
+    const getModels = fetch('/api/collections/models')
+    .then(res => res.json())
+    .then(json => {
+        
         siteReadyModels.current = json.response
+        
         let a = getUniqueModelers(siteReadyModels.current as model[])
         let b = getUniqueAnnotators(siteReadyModels.current as model[])
+        
         a.unshift('All'); b.unshift('All')
+        
         setModeledByList(a)
         setAnnotatedByList(b)
       })
@@ -66,6 +64,7 @@ const SearchPageContent = () => {
     const getAllModels = async() => {
       await Promise.all(promises)
     }
+
     getAllModels()
 
   }, [])
@@ -75,16 +74,14 @@ const SearchPageContent = () => {
       {
         modeledByList && annotatedByList && communityModels && 
         <>
-          <SubHeader modeledByList={modeledByList} annotatedByList={annotatedByList} handleModelerSelect={handleModelerSelect} handleAnnotatorSelect={handleAnnotatorSelect} />
+          <SubHeader modeledByList={modeledByList} annotatedByList={annotatedByList} setSelectedModeler={setSelectedModeler} setSelectedAnnotator={setSelectedAnnotator} setOrder={setOrder as Dispatch<SetStateAction<string>>} />
           <br />
-          {/* <PageWrapper> */}
-            <SearchPageModelList models={siteReadyModels.current as model[]} selectedModeler={selectedModeler} selectedAnnotator={selectedAnnotator} communityModels={communityModels} />
+            <SearchPageModelList models={siteReadyModels.current as model[]} selectedModeler={selectedModeler} selectedAnnotator={selectedAnnotator} communityModels={communityModels} order={order} />
             <br />
-          {/* </PageWrapper> */}
         </>
       }
     </>
   )
-};
+}
 
-export default SearchPageContent;
+export default SearchPageContent

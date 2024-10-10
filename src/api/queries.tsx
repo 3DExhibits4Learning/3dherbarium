@@ -148,7 +148,7 @@ export const getAllSiteReadyModels = async (development: boolean): Promise<model
   const models = await prisma.model.findMany({
     where: whereClause,
     orderBy: {
-      spec_name: 'asc'
+      spec_acquis_date: 'desc'
     }
   })
 

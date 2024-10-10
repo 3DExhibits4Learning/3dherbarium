@@ -6,12 +6,13 @@ import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
 
-type SearchPageModelListProps = {
+interface SearchPageModelListProps {
   models: model[]
   communityModels: fullUserSubmittal[]
   selectedModeler: string | undefined
   selectedAnnotator: string | undefined
-};
+  order: string
+}
 
 const SearchPageModelList = (props: SearchPageModelListProps) => {
 
@@ -27,7 +28,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
   let filteredModels: Array<fullUserSubmittal | model> = models.filter(model =>
     (selectionCheck(props.selectedModeler) || model.modeled_by === selectedModeler) &&
     (selectionCheck(props.selectedAnnotator) || model.annotator === selectedAnnotator)
-  );
+  )
 
   if (selectionCheck(props.selectedModeler) && selectionCheck(props.selectedAnnotator)) {
     filteredModels.push(...props.communityModels)
@@ -36,13 +37,70 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
 
       let returnValue
 
-      if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
-        const value = a.speciesName.localeCompare(b.spec_name) as number
-        returnValue = value
-      }
-      else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
-        const value = a.spec_name.localeCompare(b.speciesName) as number
-        returnValue = value
+      switch (props.order) {
+
+        case 'Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+
+          if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
+            const value = a.speciesName.localeCompare(b.spec_name) as number
+            returnValue = value
+          }
+          else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
+            const value = a.spec_name.localeCompare(b.speciesName) as number
+            returnValue = value
+          }
+          else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
+            const value = a.speciesName.localeCompare(b.speciesName) as number
+            returnValue = value
+          }
+          else {
+            const value = a.spec_name.localeCompare(b.spec_name) as number
+            returnValue = value
+          }
+  
+          break
+
+        case 'Newest First':
+
+          if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_aquis_date')) {
+            const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
+            returnValue = -value
+          }
+          else if (Object.keys(a).includes('spec_acquis_date') && Object.keys(b).includes('dateTime')) {
+            const value = a.spec_acquis_date.localeCompare(b.dateTime) as number
+            returnValue = -value
+          }
+          else if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('dateTime')) {
+            const value = a.dateTime.localeCompare(b.dateTime) as number
+            returnValue = -value
+          }
+          else {
+            const value = a.spec_acquis_date.localeCompare(b.spec_acquis_date) as number
+            returnValue = -value
+          }
+          
+          break
+
+          case 'Reverse Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+
+          if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
+            const value = a.speciesName.localeCompare(b.spec_name) as number
+            returnValue = -value
+          }
+          else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
+            const value = a.spec_name.localeCompare(b.speciesName) as number
+            returnValue = -value
+          }
+          else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
+            const value = a.speciesName.localeCompare(b.speciesName) as number
+            returnValue = -value
+          }
+          else {
+            const value = a.spec_name.localeCompare(b.spec_name) as number
+            returnValue = -value
+          }
+    
+          break
       }
 
       return returnValue as number
@@ -92,6 +150,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
                   </article>
                 </div>
               }
+
               {
                 Object.keys(model).includes('speciesName') &&
                 <div key={index} className='noselect'>
