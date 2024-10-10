@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Bu
 import { Progress } from "@nextui-org/progress";
 import { SetStateAction, Dispatch } from "react";
 
-export default function DataTransfer(props: { open: boolean, transferring: boolean, result: string, progress: number, success: boolean | null }) {
+export default function DataTransfer(props: { open: boolean, transferring: boolean, result: string, success: boolean | null }) {
 
     const NewModelOrDashboard = () => {
         return (
@@ -39,8 +39,6 @@ export default function DataTransfer(props: { open: boolean, transferring: boole
                                     props.transferring &&
                                     <>
                                         <Spinner label="Uploading 3D Model" />
-                                        <p><Progress aria-label="Loading..." value={props.progress * 100} className="max-w-md" /></p>
-                                        <p>{'Upload is ' + Math.round(props.progress * 100) + '% Complete'}</p>
                                     </>
                                 }
                                 {

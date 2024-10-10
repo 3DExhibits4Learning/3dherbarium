@@ -1,10 +1,19 @@
 import { uid } from 'uid'
 import { prismaClient } from "@/api/queries";
-import axios, { AxiosHeaderValue } from 'axios';
+import { ModelUploadResponse } from '@/api/types';
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { redirect } from "next/navigation"
 
 const prisma = prismaClient()
 
 export async function POST(request: Request) {
+
+    const session = await getServerSession(authOptions)
+    
+    if (!session || !session.user) {
+        redirect('/api/auth/signin')
+    }
 
     try {
 
@@ -12,9 +21,15 @@ export async function POST(request: Request) {
         const body = await request.formData()
 
         // Variable initializtion
-        const isMobile = body.get('isMobile') == 'Yes' ? true : false
-        var thumbUrl: string = ''
+        var thumbUrl = ''
+
         const confirmation = uid()
+        const isMobile = body.get('isMobile') == 'Yes' ? true : false
+        const email = session.user.email
+        const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
+        const position = JSON.parse(body.get('position') as string)
+        const softwareArr = JSON.parse(body.get('software') as string)
+        const tags = JSON.parse(body.get('tags') as string)
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()
@@ -27,37 +42,21 @@ export async function POST(request: Request) {
         data.set('visibility', 'private')
         data.set('options', JSON.stringify({ background: { color: "#000000" } }))
 
-        const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
-        const position = JSON.parse(body.get('position') as string)
-        const softwareArr = JSON.parse(body.get('software') as string)
-        const tags = JSON.parse(body.get('tags') as string)
-
-        const req = new Request(`https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`, {
-            method: 'POST',
-            headers: requestHeader,
-            body: data
-        })
-
         // Upload 3D Model, setting uploadProgress in the process
-        const res = await axios.post(orgModelUploadEnd, data, {
-            onUploadProgress: (axiosProgressEvent) => {
-                //@ts-ignore
-                globalThis.uploadProgress = axiosProgressEvent.progress as number
-                console.log(axiosProgressEvent.progress)
-                //@ts-ignore
-                console.log(globalThis.uploadProgress)
-            },
+        const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
             headers: {
-                'Authorization': process.env.SKETCHFAB_API_TOKEN as AxiosHeaderValue
-            }
-        }).catch((e) => {
-            if (process.env.NODE_ENV === 'development') console.error(e.message)
-            throw new Error("Couldn't upload 3D model")
-        })
+                'Authorization': process.env.SKETCHFAB_API_TOKEN as string
+            },
+            method: 'POST',
+            body: data
+        }).then(res => res.json()).then(json => json)
+            .catch((e) => {
+                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                throw new Error("Couldn't upload 3D model")
+            })
 
         // Grab the uid, then enter model data into database
-        const modelUid = res.data.uid
-
+        const modelUid = sketchfabUpload.uid
 
         // Get model thumbnail
         await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`, {
@@ -74,7 +73,7 @@ export async function POST(request: Request) {
         const insert = await prisma.userSubmittal.create({
             data: {
                 confirmation: confirmation,
-                email: body.get('email') as string,
+                email: email,
                 artistName: body.get('artist') as string,
                 speciesName: body.get('species') as string,
                 createdWithMobile: isMobile,

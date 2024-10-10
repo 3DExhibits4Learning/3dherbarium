@@ -309,16 +309,9 @@ export interface fullUserSubmittal extends userSubmittal{
   software: string[]
 }
 
-export interface ModelUploadBody{
-  email: string,
-  artist: string,
-  species: string,
-  isMobile: string,
-  methodology: string,
-  software: string,
-  tags: string,
-  position: LatLngLiteral
-  file: string
+export interface ModelUploadResponse{
+    options_errors: string,
+    uri: string,
+    uid: string,
+  
 }
-
-

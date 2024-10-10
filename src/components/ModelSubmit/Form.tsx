@@ -1,23 +1,21 @@
 'use client'
 
 import { useState, SetStateAction, Dispatch, useEffect } from 'react';
-import axios, { AxiosHeaderValue } from 'axios';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
 import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
-import Leaflet, { LatLngLiteral } from 'leaflet';
+import Leaflet from 'leaflet';
 import dynamic from 'next/dynamic';
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
-import { ModelUploadBody } from '@/api/types';
 import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
 
-export default function ModelSubmitForm(props: { token: AxiosHeaderValue | string, email: string, isSketchfabLinked: boolean, sketchfab: { organizationUid: string, projectUid: string } }) {
+export default function ModelSubmitForm() {
 
     // Variable initialization
 
@@ -35,44 +33,9 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
     // Data transfer states
     const [open, setOpen] = useState<boolean>(false)
-    const [uploadProgress, setUploadProgress] = useState<number>(0)
     const [transferring, setTransferring] = useState<boolean>(false)
     const [result, setResult] = useState<string>('')
     const [success, setSuccess] = useState<boolean | null>(null)
-
-    // Promise tracker for to determine when model upload is complete
-    // This allows us to not await the model upload, thereby enabling the do while loop below to get upload progress
-    const trackPromise = (promise: any) => {
-        let isResolved = false
-        let isRejected = false
-
-        // A wrapper promise that tracks the state
-        const wrappedPromise = promise
-            .then((result: any) => {
-                isResolved = true;
-                return result;
-            })
-            .catch((error: any) => {
-                isRejected = true;
-                if (process.env.NODE_ENV === 'development') console.error(error.message)
-                throw new Error("Couldn't upload 3D model")
-            })
-
-        // Method to check if resolved or rejected
-        wrappedPromise.isResolved = () => isResolved;
-        wrappedPromise.isRejected = () => isRejected;
-
-        return wrappedPromise
-    }
-
-    // // Get and set upload progress
-    // const getUploadProgress = async () => {
-    //     setUploadProgress(parseFloat(await fetch('/api/modelSubmit').then(res => res.json()).then(json => json)))
-    // }
-
-    const pause = async () => {
-        return new Promise((resolve) => setTimeout(resolve, 2000))
-    }
 
     // This is the model upload handler
     const uploadModelAndEnterIntoDb = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -88,7 +51,6 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             const pos = JSON.stringify(position)
 
             const data = new FormData()
-            data.set('email', props.email)
             data.set('artist', artistName)
             data.set('species', speciesName)
             data.set('isMobile', madeWithMobile as string)
@@ -98,34 +60,19 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
             data.set('position', pos)
             data.set('file', file as File)
 
-            let result: any
-
-            const upload = fetch('/api/modelSubmit', {
+            const result = await fetch('/api/modelSubmit', {
                 method: 'POST',
                 body: data
-            }).then(res => res.json()).then(json => result = json.data)
-
-            const trackedUpload = trackPromise(upload)
-            globalThis.uploadProgress = 0
-
-            do {
-                // await getUploadProgress()
-                // console.log('GOT PROGRESS')
-                setUploadProgress(globalThis.uploadProgress)
-                await pause()
-                console.log('AWAITED PAUSE')
-            }
-            while (!trackedUpload.isResolved() && !trackedUpload.isRejected())
-            
-            console.log(trackedUpload.isResolved())
-            console.log(result)
+            })
+            .then(res => res.json())
+            .then(json => json.data)
+            .catch((e) => {throw Error(e.message)})
 
             setResult(result)
             setSuccess(true)
             setTransferring(false)
         }
         catch (e: any) {
-            if (process.env.NEXT_PUBLIC_NODE_ENV === 'development') console.error(e.message)
             setResult("Couldn't upload 3D model")
             setTransferring(false)
             setSuccess(false)
@@ -140,17 +87,9 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
 
     }, [speciesName, photo, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
 
-    // useEffect(() => {
-    //     const testfn = async() => {
-    //         const test = await fetch('/api/modelSubmit').then(res => res.json()).then(json => json)
-    //         console.log(test)
-    //     }
-    //     testfn()
-    // },[])
-
     return (
         <>
-            <DataTransfer open={open} transferring={transferring} result={result} progress={uploadProgress} success={success} />
+            <DataTransfer open={open} transferring={transferring} result={result} success={success} />
 
             <h1 className='hidden lg:block ml-[20%] text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
             <form className='w-full lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
@@ -192,16 +131,3 @@ export default function ModelSubmitForm(props: { token: AxiosHeaderValue | strin
         </>
     )
 }
-
-// // Example Usage
-// const examplePromise = new Promise((resolve) => setTimeout(resolve, 2000));
-
-// const trackedPromise = trackPromise(examplePromise);
-
-// setTimeout(() => {
-//     console.log('Is Resolved:', trackedPromise.isResolved()); // After 1 second: false
-// }, 1000);
-
-// setTimeout(() => {
-//     console.log('Is Resolved:', trackedPromise.isResolved()); // After 3 seconds: true
-// }, 3000);
