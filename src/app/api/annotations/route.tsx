@@ -97,7 +97,7 @@ export async function POST(request: Request) {
                             if (process.env.LOCAL_ENV) console.error(e.message)
                             throw Error("Couldn't make directory")
                         })
-
+                        //@ts-ignore
                         await writeFile(data.get('path') as string, photoBuffer).catch((e) => {
                             if (process.env.LOCAL_ENV) console.error(e.message)
                             throw Error("Couldn't write file")
@@ -110,7 +110,7 @@ export async function POST(request: Request) {
 
                     // Database annotation creation
                     const newAnnotation = await createAnnotation(data.get('uid') as string, data.get('position') as string, data.get('url') as string, parseInt(data.get('annotation_no') as string), data.get('annotation_type') as string, data.get('annotation_id') as string, data.get('title') as string)
-                    const newPhotoAnnotation = await createPhotoAnnotation(data.get('url') as string, data.get('author') as string, data.get('license') as string, data.get('annotator') as string, data.get('annotation') as string, data.get('annotation_id') as string, website as string | undefined, title as string | undefined, photoBuffer)
+                    const newPhotoAnnotation = await createPhotoAnnotation(data.get('url') as string, data.get('author') as string, data.get('license') as string, data.get('annotator') as string, data.get('annotation') as string, data.get('annotation_id') as string, website as string | undefined, title as string | undefined)
 
                     // Successful response returns message as the data value and response objects from prisma as the response values
                     return Response.json({ data: 'Annotation created', response: { newAnnotation, newPhotoAnnotation } })
@@ -225,7 +225,7 @@ export async function PATCH(request: Request) {
                             if (process.env.LOCAL_ENV) console.error(e.message)
                             throw Error("Couldn't make directory")
                         })
-
+                        //@ts-ignore
                         await writeFile(data.get('path') as string, photoBuffer).catch((e) => {
                             if (process.env.LOCAL_ENV) console.error(e.message)
                             throw Error("Couldn't write file")

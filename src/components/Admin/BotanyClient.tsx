@@ -69,8 +69,8 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     }, [activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
+        
         // Set relevant model data; this is called onPress of the Accordion
-
         const getAnnotationsObj = async () => {
             const modelAnnotations = await ModelAnnotations.retrieve(uid as string)
             let annotationPosition
