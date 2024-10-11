@@ -32,7 +32,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
     (selectionCheck(props.selectedAnnotator) || model.annotator === selectedAnnotator)
   )
   //@ts-ignore
-  if(query) filteredModels = filteredModels.filter(model => model.spec_name.startsWith(query) || model.pref_comm_name.startsWith(query))
+  if(query) filteredModels = filteredModels.filter(model => model.spec_name.includes(query) || model.pref_comm_name.includes(query))
 
   if (selectionCheck(props.selectedModeler) && selectionCheck(props.selectedAnnotator)) {
     filteredModels.push(...props.communityModels)
