@@ -80,7 +80,7 @@ const AnnotationEntry = (props: {
     // Set imgSrc from NFS storage
     const setImgSrc = async () => {
         const annotation = props.activeAnnotation as photo_annotation
-        const path = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? `X:${annotation.url.slice(5)}` : `public${annotation.url}`
+        const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${annotation.url.slice(5)}` : `public${annotation.url}`
         setImageSource(`/api/annotations/photos?path=${path}`)
     }
 
