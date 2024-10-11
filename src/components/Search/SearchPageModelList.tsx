@@ -1,6 +1,6 @@
 import noImage from '../../../public/noImage.png'
 import { handleImgError } from '@/utils/imageHandler'
-import { SyntheticEvent } from 'react'
+import { ChangeEvent, SyntheticEvent, useState } from 'react'
 import { model } from '@prisma/client'
 import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
@@ -19,6 +19,12 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
   const models = props.models
   const selectedModeler: string | undefined = props.selectedModeler
   const selectedAnnotator = props.selectedAnnotator
+  const queryElement = document.getElementById('autoCompleteRef') as HTMLInputElement
+  const [query, setQuery] = useState<string>(queryElement.value)
+
+  queryElement.addEventListener('change', (e: any) => {
+    setQuery(e.target.value)
+  })
 
   const selectionCheck = (selection: string | undefined) => {
     if (selection === 'All' || selection === '' || selection === undefined) return true

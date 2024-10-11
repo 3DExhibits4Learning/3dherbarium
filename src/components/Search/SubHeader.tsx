@@ -37,7 +37,7 @@ const SubHeader = (props: SubHeaderProps) => {
             onChange={(e) => props.setOrder(e.target.value)}
             className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}
           >
-            <option className='hover:bg-[#00856A]' key={'Newest First'} value={"Newest First"}>Newest First</option>
+            <option className='!hover:bg-[#00856A]' key={'Newest First'} value={"Newest First"}>Newest First</option>
             <option key={'Alphabetical'} value={"Alphabetical"}>Alphabetical</option>
             <option key={'Reverse Alphabetical'} value={"Reverse Alphabetical"}>Reverse Alphabetical</option>
           </select>

@@ -26,7 +26,6 @@ import { SearchHeaderProps } from "@/api/types"
 const Header = (props: SearchHeaderProps) => {
 
   // Variable declarations
-
   const params = useParams()
   const { data: session } = useSession()
 
@@ -154,4 +153,4 @@ const Header = (props: SearchHeaderProps) => {
   );
 };
 
-export default Header;
+export default Header

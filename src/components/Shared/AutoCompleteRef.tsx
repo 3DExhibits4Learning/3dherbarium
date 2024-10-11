@@ -131,6 +131,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
                     onChange={(e) => changeHandler(e)}
                     onKeyDown={autocompleteKeyHandler}
                     defaultValue={props.defaultValue}
+                    id='autoCompleteRef'
                 >
                 </input>
                 {
