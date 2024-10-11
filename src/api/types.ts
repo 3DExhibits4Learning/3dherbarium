@@ -6,7 +6,6 @@
 import { Dispatch} from "react";
 import { SetStateAction } from "react";
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
-import { LatLngLiteral } from "leaflet";
 
 export interface SearchHeaderProps {
   headerTitle: string,
@@ -14,7 +13,7 @@ export interface SearchHeaderProps {
   searchTerm?: string;
   page?: string;
   hasModel?: boolean
-};
+}
 
 
 export interface iNatApiResponse {
@@ -22,7 +21,7 @@ export interface iNatApiResponse {
   page: number;
   per_page: number;
   results: any[];
-};
+}
 
 export interface iNatSpecimenObservation {
   photoUrl: string;
@@ -32,13 +31,13 @@ export interface iNatSpecimenObservation {
   userHrefLink: string;
   observedOnDate: string;
   location: string;
-};
+}
 
 export interface iNatSpecimenLeader {
   count?: number;
   observation_count?: number;
   user: string;
-};
+}
 
 export interface GbifResponse{
   usageKey?: number;

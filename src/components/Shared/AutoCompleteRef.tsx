@@ -3,15 +3,16 @@
 
 'use client'
 
-import { ChangeEvent, LegacyRef, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent } from "react"
+import { ChangeEvent, LegacyRef, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent, useContext } from "react"
 import { useRouter } from "next/navigation"
+import { QueryContext } from "../Search/SearchClient"
 
 const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, width?: string, defaultValue?: string, className?: string, listWidth?: string, search?: boolean }, ref) => {
 
     // Variable Declarations
 
     const router = useRouter()
-
+    const setQuery = useContext(QueryContext).setQuery
     const valueRef = ref as MutableRefObject<string>
     const selectedValue = useRef<HTMLInputElement>()
     const options = useRef<HTMLUListElement>()
@@ -22,6 +23,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
 
     const changeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
         setOptionsVisible(true)
+        setQuery(e.target.value)
         valueRef.current = e.target.value
         await props.changeFn()
     }
@@ -110,7 +112,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
             if (optionsVisible) document.addEventListener('click', handleOutsideClick);
             else document.removeEventListener('click', handleOutsideClick)
         }
-    }, [optionsVisible]) 
+    }, [optionsVisible])
 
     // If options have become less than highlighted index onChange, reset index
 
@@ -131,7 +133,6 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
                     onChange={(e) => changeHandler(e)}
                     onKeyDown={autocompleteKeyHandler}
                     defaultValue={props.defaultValue}
-                    id='autoCompleteRef'
                 >
                 </input>
                 {

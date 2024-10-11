@@ -2,11 +2,11 @@
 
 import { NavbarItem } from "@nextui-org/react"
 import Autocomplete from "../Shared/AutoCompleteRef"
-import { forwardRef, MutableRefObject } from "react"
+import { forwardRef, MutableRefObject, SetStateAction, Dispatch } from "react"
 import { useRouter } from "next/navigation"
 import { SearchIcon } from "./SearchIcon"
 
-const AutoComplete = forwardRef((props:{autocompleteOptions: any[], fetchAutoCompleteOptions: Function, width?: string, listWidth?: string}, ref) => {
+const AutoComplete = forwardRef((props:{autocompleteOptions: any[], fetchAutoCompleteOptions: Function, width?: string, listWidth?: string, query?: string, setQuery?: Dispatch<SetStateAction<string>>}, ref) => {
     const searchQuery = ref as MutableRefObject<string>
     const router = useRouter()
     return (

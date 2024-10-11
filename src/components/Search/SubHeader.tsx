@@ -2,8 +2,7 @@
 
 import { Navbar, NavbarContent, SelectItem, NavbarMenuItem, Button } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
-import { SetStateAction, Dispatch, useState } from "react"
-import Select from "../Shared/Form Fields/ModelSelect"
+import { SetStateAction, Dispatch } from "react"
 
 interface SubHeaderProps {
   modeledByList: string[]

@@ -1,10 +1,11 @@
 import noImage from '../../../public/noImage.png'
 import { handleImgError } from '@/utils/imageHandler'
-import { ChangeEvent, SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useContext} from 'react'
 import { model } from '@prisma/client'
 import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
+import { QueryContext } from './SearchClient'
 
 interface SearchPageModelListProps {
   models: model[]
@@ -19,12 +20,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
   const models = props.models
   const selectedModeler: string | undefined = props.selectedModeler
   const selectedAnnotator = props.selectedAnnotator
-  const queryElement = document.getElementById('autoCompleteRef') as HTMLInputElement
-  const [query, setQuery] = useState<string>(queryElement.value)
-
-  queryElement.addEventListener('change', (e: any) => {
-    setQuery(e.target.value)
-  })
+  const query = useContext(QueryContext).query
 
   const selectionCheck = (selection: string | undefined) => {
     if (selection === 'All' || selection === '' || selection === undefined) return true
@@ -35,6 +31,8 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
     (selectionCheck(props.selectedModeler) || model.modeled_by === selectedModeler) &&
     (selectionCheck(props.selectedAnnotator) || model.annotator === selectedAnnotator)
   )
+  //@ts-ignore
+  if(query) filteredModels = filteredModels.filter(model => model.spec_name.startsWith(query) || model.pref_comm_name.startsWith(query))
 
   if (selectionCheck(props.selectedModeler) && selectionCheck(props.selectedAnnotator)) {
     filteredModels.push(...props.communityModels)
