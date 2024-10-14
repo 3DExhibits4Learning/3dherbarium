@@ -208,15 +208,15 @@ export type PlantIdApiResponse = PlantIdApiResponseSuccess | PlantIdApiResponseE
 
 
 export interface Models {
-    confirmation: string;
-    email: string;
-    artistName: string;
-    speciesName: string;
-    createdWithMobile: boolean;
-    methodology: string;
-    modeluid: string;
-    dateTime: Date;
-    status: string;
+    confirmation: string
+    email: string
+    artistName: string
+    speciesName: string
+    createdWithMobile: boolean
+    methodology: string
+    modeluid: string
+    dateTime: Date | string
+    status: string
     thumbnail: string
     lat: number
     lng: number

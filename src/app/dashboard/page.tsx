@@ -118,8 +118,9 @@ export default async function Page() {
     return (
         <>
             <Header headerTitle="Dashboard" pageRoute="collections" />
-            <DashboardClient pendingModels={pendingModels}
-                publishedModels={publishedModels}
+            <DashboardClient 
+                pendingModels={JSON.stringify(pendingModels)}
+                publishedModels={JSON.stringify(publishedModels)}
                 anyPendingModels={anyPendingModels}
                 anyPublishedModels={anyPublishedModels}
                 latestPublishedModelUid={latestPublishedModelUid}

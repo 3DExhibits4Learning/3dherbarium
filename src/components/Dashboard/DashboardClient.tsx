@@ -11,8 +11,8 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 
 interface DashboardClientProps {
-    pendingModels: ModelsWithTagsAndSoftware[],
-    publishedModels: ModelsWithTagsAndSoftware[],
+    pendingModels: string,
+    publishedModels: string,
     anyPendingModels: boolean,
     anyPublishedModels: boolean,
     latestPublishedModelUid: string,
@@ -27,9 +27,11 @@ export default function DashboardClient(props: DashboardClientProps) {
     const router = useRouter()
     let uid = ''
     const anyModels = props.anyPendingModels || props.anyPublishedModels ? true : false
+    const pendingModels : ModelsWithTagsAndSoftware[] = JSON.parse(props.pendingModels)
+    const publishedModels : ModelsWithTagsAndSoftware[] = JSON.parse(props.publishedModels)
     
     if(anyModels){
-        uid = props.latestPublishedModelUid ? props.latestPublishedModelUid : props.pendingModels[0].modeluid
+        uid = props.latestPublishedModelUid ? props.latestPublishedModelUid : pendingModels[0].modeluid
     }
 
     const [viewerUid, setViewerUid] = useState<string>(uid)
@@ -62,17 +64,16 @@ export default function DashboardClient(props: DashboardClientProps) {
             <div className="flex min-h-[calc(100vh-177px)] lg:w-full lg:max-h-[calc(100vh-177px)] overflow-hidden">
                 <div className="w-full lg:w-[30%] h-full lg:max-h-[calc(100vh-177px)] overflow-y-auto overflow-x-hidden">
 
-
                     {
                         props.anyPendingModels &&
                         <>
                             <div className="flex justify-between items-center">
                                 <p className='text-2xl my-4 ml-2'>Pending 3D Models</p>
-                                <div className="flex bg-[#00856A] text-white w-[25px] h-[28px] text-center rounded-md mr-12 items-center justify-center text-xl">{props.pendingModels.length}</div>
+                                <div className="flex bg-[#00856A] text-white w-[25px] h-[28px] text-center rounded-md mr-12 items-center justify-center text-xl">{pendingModels.length}</div>
                             </div>
                             <Divider />
                             <PendingModels
-                                models={props.pendingModels}
+                                models={pendingModels}
                                 setViewerUid={setViewerUid}
                                 selectedKeys={pendingSelectedKeys}
                                 setSelectedKeys={setPendingSelectedKeys}
@@ -91,7 +92,7 @@ export default function DashboardClient(props: DashboardClientProps) {
                             </div>
                             <Divider />
                             <PublishedModels
-                                models={props.publishedModels}
+                                models={publishedModels}
                                 setViewerUid={setViewerUid}
                                 selectedKeys={publishedSelectedKeys}
                                 setSelectedKeys={setPublishedSelectedKeys}

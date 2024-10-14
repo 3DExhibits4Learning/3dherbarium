@@ -26,7 +26,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   const [index, setIndex] = useState<number | null>(null);
   const [mobileIndex, setMobileIndex] = useState<number | null>(null);
   const [imgSrc, setImgSrc] = useState<string>()
-  var [annotationTitle, setAnnotationTitle] = useState("")
+  const [annotationTitle, setAnnotationTitle] = useState("")
 
   const sRef = useRef<Herbarium>()
   const modelViewer = useRef<HTMLIFrameElement>()

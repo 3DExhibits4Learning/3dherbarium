@@ -21,7 +21,7 @@ export default function PendingModels(props: PendingModelProps) {
                         </div>
                         <p>Confirmation Number: {model.confirmation}</p>
                         <p>Artist: {model.artistName}</p>
-                        <p>Submitted: {model.dateTime.toDateString()}</p>
+                        <p>Submitted: {(model.dateTime as string).slice(0,10)}</p>
                     </AccordionItem>
                 )
             })}
