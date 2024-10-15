@@ -3,6 +3,7 @@ import { ModelUploadResponse } from '@/api/types';
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
+import { mkdir, writeFile } from "fs/promises";
 
 const prisma = prismaClient()
 
@@ -10,7 +11,7 @@ export async function POST(request: Request) {
 
     // Typical auth redirect
     const session = await getServerSession(authOptions)
-    
+
     if (!session || !session.user) {
         redirect('/api/auth/signin')
     }
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
         // Get request body
         const body = await request.formData()
 
-        // Variable initializtion
+        // Variable initialization
         var thumbUrl = ''
         const confirmation = body.get('confirmation') as string
         const isMobile = body.get('isMobile') == 'Yes' ? true : false
@@ -29,6 +30,31 @@ export async function POST(request: Request) {
         const position = JSON.parse(body.get('position') as string)
         const softwareArr = JSON.parse(body.get('software') as string)
         const tags = JSON.parse(body.get('tags') as string)
+
+        // Write photos to tmp storage
+        const path = `public/data/Herbarium/tmp/submittal/${confirmation}`
+        const writePhotos = []
+
+        // Function to write ID photos to tmp storage
+        const writePhoto = async (file: File) => {
+
+            const bytes = await file.arrayBuffer()
+            const buffer = Buffer.from(bytes)
+            const filePath = path + `/${file.name}`
+            //@ts-ignore - Typescript thinks writeFile can't write with a buffer
+            writeFile(filePath, buffer).catch((e) => {
+                console.error(e.message)
+                throw new Error("Couldn't write file")
+            })
+        }
+
+        for (let i = 0; i < parseInt(body.get('numberOfPhotos') as string); i++) {
+
+            if (i === 0) await mkdir(path)
+            writePhotos.push(writePhoto(body.get(`photo${i}`) as File))
+        }
+
+        await Promise.all(writePhotos)
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()
@@ -50,7 +76,7 @@ export async function POST(request: Request) {
             body: data
         }).then(res => res.json()).then(json => json)
             .catch((e) => {
-                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                console.error(e.message)
                 throw new Error("Couldn't upload 3D model")
             })
 
@@ -64,7 +90,7 @@ export async function POST(request: Request) {
             .then(res => res.json())
             .then(data => thumbUrl = data.thumbnails.images[0].url)
             .catch((e) => {
-                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                console.error(e.message)
                 throw new Error("Couldn't get thumbnail")
             })
 
@@ -84,7 +110,7 @@ export async function POST(request: Request) {
                 lng: position.lng
             }
         }).catch((e) => {
-            if (process.env.NODE_ENV === 'development') console.error(e.message)
+            console.error(e.message)
             throw new Error("Couldn't create database record")
         })
 
@@ -96,7 +122,7 @@ export async function POST(request: Request) {
                     software: software
                 }
             }).catch((e) => {
-                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                console.error(e.message)
                 throw new Error("Couldn't create software database record")
             })
         }
@@ -109,7 +135,7 @@ export async function POST(request: Request) {
                     tag: tag
                 }
             }).catch((e) => {
-                if (process.env.NODE_ENV === 'development') console.error(e.message)
+                console.error(e.message)
                 throw new Error("Couldn't create tag database record")
             })
 

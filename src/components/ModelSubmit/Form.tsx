@@ -29,7 +29,7 @@ export default function ModelSubmitForm() {
     const [softwareArr, setSoftwareArr] = useState<{ value: string }[]>([])
     const [tagArr, setTagArr] = useState<{ value: string }[]>([])
     const [file, setFile] = useState<File | null>(null)
-    const [photo, setPhoto] = useState<File>()
+    const [photos, setPhotos] = useState<FileList>()
     const [uploadDisabled, setUploadDisabled] = useState<boolean>(true)
 
     // Data transfer states
@@ -53,6 +53,17 @@ export default function ModelSubmitForm() {
             const confirmation = uid()
 
             const data = new FormData()
+            var count = 0
+
+            if (photos && photos.length) {
+                
+                data.set('numberOfPhotos', photos.length.toString())
+                
+                for (let i = 0; i < photos.length; i++) {
+                    data.set(`photo${count}`, photos[i])
+                }
+            }
+
             data.set('artist', artistName)
             data.set('species', speciesName)
             data.set('isMobile', madeWithMobile as string)
@@ -96,10 +107,10 @@ export default function ModelSubmitForm() {
     // This effect checks all necessary fields upon update to enable/disable the upload button
     useEffect(() => {
 
-        if (speciesName && photo && position && artistName && madeWithMobile && buildMethod && softwareArr.length > 0 && file) { setUploadDisabled(false) }
+        if (speciesName && photos && photos.length && position && artistName && madeWithMobile && buildMethod && softwareArr.length > 0 && file) { setUploadDisabled(false) }
         else { setUploadDisabled(true) }
 
-    }, [speciesName, photo, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
+    }, [speciesName, photos, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
 
     return (
         <>
@@ -117,7 +128,7 @@ export default function ModelSubmitForm() {
                 <Divider className='mb-6' />
 
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
-                <PhotoInput setFile={setPhoto as Dispatch<SetStateAction<File>>} title="Upload a photo of the specimen for community ID" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
+                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
                 <FormMap position={position} setPosition={setPosition} title required />
                 <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
 

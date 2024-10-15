@@ -23,7 +23,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
 
     const changeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
         setOptionsVisible(true)
-        setQuery(e.target.value)
+        if(setQuery)setQuery(e.target.value)
         valueRef.current = e.target.value
         await props.changeFn()
     }
