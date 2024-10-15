@@ -20,17 +20,17 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
 
     // Typical ref update for input onChange
-
     const changeHandler = async (e: ChangeEvent<HTMLInputElement>) => {
+        
         setOptionsVisible(true)
-        if(setQuery)setQuery(e.target.value)
+        if(setQuery) setQuery(e.target.value)
         valueRef.current = e.target.value
         await props.changeFn()
     }
 
     // If an option is selected from the autocomplete list with a click, populate the input value field with that option
-
     const listSelect = (option: string) => {
+        
         if (selectedValue.current) {
             selectedValue.current.value = option
             valueRef.current = option
@@ -39,8 +39,8 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     }
 
     // Handle clicks outside of the autocomplete component
-
     const handleOutsideClick = (e: MouseEvent) => {
+        
         if (options.current && !options.current.contains(e.target as Node)) {
             setOptionsVisible(false)
         }
@@ -48,7 +48,6 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
 
     // Autocomplete keypress handler
     // Note e.stopPropagation() is only for the arrowup key on the admin pages with the wrapper being the accordion from nextui
-
     const autocompleteKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
 
         if (e.key === 'Enter' && valueRef.current && props.search) {

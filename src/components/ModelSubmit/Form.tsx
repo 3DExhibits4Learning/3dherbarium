@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, SetStateAction, Dispatch, useEffect, useRef } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
@@ -38,32 +38,34 @@ export default function ModelSubmitForm() {
     const [result, setResult] = useState<string>('')
     const [success, setSuccess] = useState<boolean | null>(null)
 
-    // This is the model upload handler; in addition to uploading the model and db entry, it sends a confirmation email to user and admin
+    // This is the model upload handler; in addition to uploading the model, photos and doing db entry, it sends a confirmation email to user and admin
     const uploadModelAndEnterIntoDb = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
         try {
 
+            // Prevent default, set data transfer states
             e.preventDefault()
             setOpen(true)
             setTransferring(true)
 
+            // Stringifying the arrays and position, creating the uid and formData
             const software = JSON.stringify(softwareArr.map(software => software.value))
             const tags = JSON.stringify(tagArr.map(tag => tag.value))
             const pos = JSON.stringify(position)
             const confirmation = uid()
-
             const data = new FormData()
-            var count = 0
-
+            
+            // Checking photos/length for ts, set number of photos and photo files
             if (photos && photos.length) {
                 
                 data.set('numberOfPhotos', photos.length.toString())
                 
                 for (let i = 0; i < photos.length; i++) {
-                    data.set(`photo${count}`, photos[i])
+                    data.set(`photo${i}`, photos[i])
                 }
             }
 
+            // Set remaining data
             data.set('artist', artistName)
             data.set('species', speciesName)
             data.set('isMobile', madeWithMobile as string)
@@ -74,30 +76,38 @@ export default function ModelSubmitForm() {
             data.set('file', file as File)
             data.set('confirmation', confirmation)
 
+            // Route handler fetch
             const result = await fetch('/api/modelSubmit', {
                 method: 'POST',
                 body: data
             })
-                .then(res => res.json())
+                .then(res => {
+                    if(!res.ok) throw Error(res.statusText)
+                    return res.json()
+                })
                 .then(json => json.data)
                 .catch((e) => { throw Error(e.message) })
-
+            
+            // User email confirmation promise
             const emailUser = fetch(`api/email/model?confirmation=${confirmation}`, {
                 method: 'POST',
             }).catch((e) => { if (process.env.NEXT_PUBLIC_LOCAL_ENV === 'development') console.error(e.message) })
-
+            
+            // Admin email confirmation promise
             const emailAdmin = fetch(`api/email/admin/modelContributed?confirmation=${confirmation}`, {
                 method: 'POST',
             }).catch((e) => { if (process.env.NEXT_PUBLIC_LOCAL_ENV === 'development') console.error(e.message) })
+            
+            // Await email promises
+            await Promise.all([emailUser, emailAdmin])
 
-            const emailPromises = [emailUser, emailAdmin]
-            await Promise.all(emailPromises)
-
+            // Set success results
             setResult(result)
             setSuccess(true)
             setTransferring(false)
         }
         catch (e: any) {
+            // Set fail results
             setResult("Couldn't upload 3D model")
             setTransferring(false)
             setSuccess(false)

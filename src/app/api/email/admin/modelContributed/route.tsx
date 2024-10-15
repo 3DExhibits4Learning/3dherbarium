@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
         // Throw error if either is missing
         if (!email || !confirmation) {
-            if (process.env.LOCAL_ENV === 'development') { console.error('Email or confirmation missing when trying to send confirmation email') }
+            console.error('Email or confirmation missing when trying to send confirmation email')
             throw new Error("Missing email or confirmation")
         }
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
             <br><br>
             Confirmation: ${confirmation}`
         }).catch((e: any) => {
-            if (process.env.LOCAL_ENV === 'development') { console.error(e.message) }
+            console.error(e.message)
             throw Error("Couldn't send email")
         })
 
@@ -40,5 +40,5 @@ export async function POST(request: Request) {
         return Response.json({ data: 'Email Sent', response: "Email Sent" })
     }
     // Typical fail return
-    catch (e: any) { return Response.json({ data: e.message, response: e.message }) }
+    catch (e: any) { return Response.json({ data: e.message, response: e.message }, {status:400, statusText: e.message}) }
 }

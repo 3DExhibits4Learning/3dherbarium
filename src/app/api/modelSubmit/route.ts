@@ -31,30 +31,50 @@ export async function POST(request: Request) {
         const softwareArr = JSON.parse(body.get('software') as string)
         const tags = JSON.parse(body.get('tags') as string)
 
-        // Write photos to tmp storage
-        const path = `public/data/Herbarium/tmp/submittal/${confirmation}`
-        const writePhotos = []
-
         // Function to write ID photos to tmp storage
-        const writePhoto = async (file: File) => {
+        const writePhotos = async () => {
 
-            const bytes = await file.arrayBuffer()
-            const buffer = Buffer.from(bytes)
-            const filePath = path + `/${file.name}`
-            //@ts-ignore - Typescript thinks writeFile can't write with a buffer
-            writeFile(filePath, buffer).catch((e) => {
+            // Variables
+            const writePromises = []
+            const path = `public/data/Herbarium/tmp/submittal/${confirmation}`
+
+            // Iterate through photos
+            for (let i = 0; i < parseInt(body.get('numberOfPhotos') as string); i++) {
+
+                // Make the directory if this is the first photo
+                if (i === 0) await mkdir(path, { recursive: true }).catch((e) => {
+                    console.error(e.message)
+                    throw Error("Couldn't make directory")
+                })
+                // Get file
+                const file = body.get(`photo${i}`) as File
+
+                // Create arrayBuffer
+                const bytes = await file.arrayBuffer().catch((e) => {
+                    console.error(e.message)
+                    throw Error("Couldn't create arrayBuffer")
+                })
+
+                // Create buffer and filepath then push promise onto array
+                const buffer = Buffer.from(bytes)
+                const filePath = path + `/${file.name}`
+
+                //@ts-ignore - Typescript thinks writeFile can't write with a buffer
+                writePromises.push(writeFile(filePath, buffer))
+            }
+
+            // Await all the file writings
+            await Promise.all(writePromises).catch((e) => {
                 console.error(e.message)
                 throw new Error("Couldn't write file")
             })
         }
 
-        for (let i = 0; i < parseInt(body.get('numberOfPhotos') as string); i++) {
-
-            if (i === 0) await mkdir(path)
-            writePhotos.push(writePhoto(body.get(`photo${i}`) as File))
-        }
-
-        await Promise.all(writePhotos)
+        // Write ID photos to tmp storage
+        await writePhotos().catch((e) => {
+            console.error(e.message)
+            throw new Error(e.message)
+        })
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()
@@ -140,8 +160,9 @@ export async function POST(request: Request) {
             })
 
         }
-
+        // Typical success response
         return Response.json({ data: 'Model uploaded sucessfully', response: insert })
     }
+    // Typical fail response
     catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }
 }
