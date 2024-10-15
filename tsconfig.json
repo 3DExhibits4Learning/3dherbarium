@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/api/annotations/photos"  ],
+, "src/app/api/annotations/photos", "src/utils/Email/transporter.js"  ],
   "exclude": [
     "node_modules"
   ]

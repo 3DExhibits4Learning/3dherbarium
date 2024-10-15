@@ -1,4 +1,3 @@
-import { uid } from 'uid'
 import { prismaClient } from "@/api/queries";
 import { ModelUploadResponse } from '@/api/types';
 import { getServerSession } from "next-auth/next"
@@ -9,6 +8,7 @@ const prisma = prismaClient()
 
 export async function POST(request: Request) {
 
+    // Typical auth redirect
     const session = await getServerSession(authOptions)
     
     if (!session || !session.user) {
@@ -22,8 +22,7 @@ export async function POST(request: Request) {
 
         // Variable initializtion
         var thumbUrl = ''
-
-        const confirmation = uid()
+        const confirmation = body.get('confirmation') as string
         const isMobile = body.get('isMobile') == 'Yes' ? true : false
         const email = session.user.email
         const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`

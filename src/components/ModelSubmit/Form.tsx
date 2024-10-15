@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, SetStateAction, Dispatch, useEffect } from 'react';
+import { useState, SetStateAction, Dispatch, useEffect, useRef } from 'react';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
@@ -14,6 +14,7 @@ import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
 import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
+import { uid } from 'uid';
 
 export default function ModelSubmitForm() {
 
@@ -37,7 +38,7 @@ export default function ModelSubmitForm() {
     const [result, setResult] = useState<string>('')
     const [success, setSuccess] = useState<boolean | null>(null)
 
-    // This is the model upload handler
+    // This is the model upload handler; in addition to uploading the model and db entry, it sends a confirmation email to user and admin
     const uploadModelAndEnterIntoDb = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
         try {
@@ -49,6 +50,7 @@ export default function ModelSubmitForm() {
             const software = JSON.stringify(softwareArr.map(software => software.value))
             const tags = JSON.stringify(tagArr.map(tag => tag.value))
             const pos = JSON.stringify(position)
+            const confirmation = uid()
 
             const data = new FormData()
             data.set('artist', artistName)
@@ -59,14 +61,26 @@ export default function ModelSubmitForm() {
             data.set('tags', tags)
             data.set('position', pos)
             data.set('file', file as File)
+            data.set('confirmation', confirmation)
 
             const result = await fetch('/api/modelSubmit', {
                 method: 'POST',
                 body: data
             })
-            .then(res => res.json())
-            .then(json => json.data)
-            .catch((e) => {throw Error(e.message)})
+                .then(res => res.json())
+                .then(json => json.data)
+                .catch((e) => { throw Error(e.message) })
+
+            const emailUser = fetch(`api/email/model?confirmation=${confirmation}`, {
+                method: 'POST',
+            }).catch((e) => { if (process.env.NEXT_PUBLIC_LOCAL_ENV === 'development') console.error(e.message) })
+
+            const emailAdmin = fetch(`api/email/admin/modelContributed?confirmation=${confirmation}`, {
+                method: 'POST',
+            }).catch((e) => { if (process.env.NEXT_PUBLIC_LOCAL_ENV === 'development') console.error(e.message) })
+
+            const emailPromises = [emailUser, emailAdmin]
+            await Promise.all(emailPromises)
 
             setResult(result)
             setSuccess(true)
@@ -124,7 +138,6 @@ export default function ModelSubmitForm() {
                     isDisabled={uploadDisabled}
                     color='primary'
                     onClick={uploadModelAndEnterIntoDb}
-                    onPress={() => document.getElementById('progressModalButton')?.click()}
                     className='text-white text-xl mb-24 mt-8 ml-12'>Upload 3D Model
                 </Button>
             </form>
