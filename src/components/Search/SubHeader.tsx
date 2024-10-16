@@ -13,6 +13,8 @@ interface SubHeaderProps {
   setSelectedModeler: Dispatch<SetStateAction<string>>
   annotator: string
   setSelectedAnnotator: Dispatch<SetStateAction<string>>
+  communityIncluded: boolean
+  setCommunityIncluded: Dispatch<SetStateAction<boolean>>
 }
 
 const SubHeader = (props: SubHeaderProps) => {
@@ -30,6 +32,11 @@ const SubHeader = (props: SubHeaderProps) => {
         </NavbarMenuItem>
 
         <div className="flex w-full gap-4 justify-center lg:justify-end h-full items-center">
+
+          <div className="mr-2 flex justify-center items-center">
+            <label className="text-white mr-2 font-medium">Include Community Models</label>
+            <input type='checkbox' checked={props.communityIncluded} onChange={() => props.setCommunityIncluded(!props.communityIncluded)}></input>
+          </div>
 
           <select
             value={props.order}

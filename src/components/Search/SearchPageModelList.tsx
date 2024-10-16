@@ -1,115 +1,120 @@
 import noImage from '../../../public/noImage.png'
 import { handleImgError } from '@/utils/imageHandler'
-import { SyntheticEvent, useContext} from 'react'
+import { SyntheticEvent, useContext } from 'react'
 import { model } from '@prisma/client'
 import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
 import { QueryContext } from './SearchClient'
 
+// Props interface
 interface SearchPageModelListProps {
   models: model[]
   communityModels: fullUserSubmittal[]
-  selectedModeler: string | undefined
+  selectedModeler: string
   selectedAnnotator: string | undefined
   order: string
+  communityIncluded: boolean
 }
 
 const SearchPageModelList = (props: SearchPageModelListProps) => {
 
+  // Variable declarations
   const models = props.models
-  const selectedModeler: string | undefined = props.selectedModeler
+  const selectedModeler: string = props.selectedModeler
   const selectedAnnotator = props.selectedAnnotator
   const query = useContext(QueryContext).query
+  var communityModels = props.communityModels
 
-  const selectionCheck = (selection: string | undefined) => {
-    if (selection === 'All' || selection === '' || selection === undefined) return true
-    else return false
-  }
-
-  let filteredModels: Array<fullUserSubmittal | model> = models.filter(model =>
-    (selectionCheck(props.selectedModeler) || model.modeled_by === selectedModeler) &&
-    (selectionCheck(props.selectedAnnotator) || model.annotator === selectedAnnotator)
+  // Filter by modeler and annotator
+  var filteredModels: Array<fullUserSubmittal | model> = models.filter(model =>
+    (selectedModeler === 'All' || model.modeled_by === selectedModeler) &&
+    (selectedAnnotator === 'All' || model.annotator === selectedAnnotator)
   )
-  //@ts-ignore
-  if(query) filteredModels = filteredModels.filter(model => model.spec_name.includes(query) || model.pref_comm_name.includes(query))
 
-  if (selectionCheck(props.selectedModeler) && selectionCheck(props.selectedAnnotator)) {
-    filteredModels.push(...props.communityModels)
-
-    filteredModels = filteredModels.sort((a: any, b: any) => {
-
-      let returnValue
-
-      switch (props.order) {
-
-        case 'Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
-
-          if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
-            const value = a.speciesName.localeCompare(b.spec_name) as number
-            returnValue = value
-          }
-          else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
-            const value = a.spec_name.localeCompare(b.speciesName) as number
-            returnValue = value
-          }
-          else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
-            const value = a.speciesName.localeCompare(b.speciesName) as number
-            returnValue = value
-          }
-          else {
-            const value = a.spec_name.localeCompare(b.spec_name) as number
-            returnValue = value
-          }
-  
-          break
-
-        case 'Newest First':
-
-          if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_acquis_date')) {
-            const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
-            returnValue = -value
-          }
-          else if (Object.keys(a).includes('spec_acquis_date') && Object.keys(b).includes('dateTime')) {
-            const value = a.spec_acquis_date.localeCompare(b.dateTime) as number
-            returnValue = -value
-          }
-          else if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('dateTime')) {
-            const value = a.dateTime.localeCompare(b.dateTime) as number
-            returnValue = -value
-          }
-          else {
-            const value = a.spec_acquis_date.localeCompare(b.spec_acquis_date) as number
-            returnValue = -value
-          }
-          
-          break
-
-          case 'Reverse Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
-
-          if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
-            const value = a.speciesName.localeCompare(b.spec_name) as number
-            returnValue = -value
-          }
-          else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
-            const value = a.spec_name.localeCompare(b.speciesName) as number
-            returnValue = -value
-          }
-          else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
-            const value = a.speciesName.localeCompare(b.speciesName) as number
-            returnValue = -value
-          }
-          else {
-            const value = a.spec_name.localeCompare(b.spec_name) as number
-            returnValue = -value
-          }
-    
-          break
-      }
-
-      return returnValue as number
-    })
+  // Filter by search query
+  if (query) {
+    filteredModels = filteredModels.filter(model => (model as model).spec_name.includes(query) || (model as model).pref_comm_name.includes(query))
+    communityModels = communityModels.filter(model => model.speciesName.includes(query) || model.commonName.includes(query))
   }
+
+  // Join and organize herbarium models and community models if there is no selected modeler or annotator
+  if (selectedModeler === 'All' && selectedAnnotator === 'All' && props.communityIncluded) {
+    filteredModels.push(...communityModels)
+  }
+
+  filteredModels = filteredModels.sort((a: any, b: any) => {
+
+    var returnValue
+
+    switch (props.order) {
+
+      case 'Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+
+        if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
+          const value = a.speciesName.localeCompare(b.spec_name) as number
+          returnValue = value
+        }
+        else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
+          const value = a.spec_name.localeCompare(b.speciesName) as number
+          returnValue = value
+        }
+        else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
+          const value = a.speciesName.localeCompare(b.speciesName) as number
+          returnValue = value
+        }
+        else {
+          const value = a.spec_name.localeCompare(b.spec_name) as number
+          returnValue = value
+        }
+
+        break
+
+      case 'Newest First': // These two data names should be unified in the database to avoid further blocks such as this one
+
+        if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_acquis_date')) {
+          const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
+          returnValue = -value
+        }
+        else if (Object.keys(a).includes('spec_acquis_date') && Object.keys(b).includes('dateTime')) {
+          const value = a.spec_acquis_date.localeCompare(b.dateTime) as number
+          returnValue = -value
+        }
+        else if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('dateTime')) {
+          const value = a.dateTime.localeCompare(b.dateTime) as number
+          returnValue = -value
+        }
+        else {
+          const value = a.spec_acquis_date.localeCompare(b.spec_acquis_date) as number
+          returnValue = -value
+        }
+
+        break
+
+      case 'Reverse Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+
+        if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
+          const value = a.speciesName.localeCompare(b.spec_name) as number
+          returnValue = -value
+        }
+        else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
+          const value = a.spec_name.localeCompare(b.speciesName) as number
+          returnValue = -value
+        }
+        else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
+          const value = a.speciesName.localeCompare(b.speciesName) as number
+          returnValue = -value
+        }
+        else {
+          const value = a.spec_name.localeCompare(b.spec_name) as number
+          returnValue = -value
+        }
+
+        break
+    }
+
+    return returnValue as number
+  })
 
   return (
     <>
@@ -137,17 +142,17 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
                         />
                       </a>
                     </section>
-                    <section className='bg-[#98B8AD] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
+                    <section className='bg-[#CDDAD5] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
                       <section className='flex items-center space-x-0.5rem'>
                         <a
                           href={"/collections/" + (model as model).spec_name}
                           rel='noopener noreferrer'
                           className='text-[#004C46] dark:text-[#C3D5D1] text-xl'
                         >
-                          <i className='text-lg'>{(model as model).spec_name.charAt(0).toUpperCase() + (model as model).spec_name.slice(1)}</i>
+                          <i className='font-medium'>{(model as model).spec_name.charAt(0).toUpperCase() + (model as model).spec_name.slice(1)}</i>
                         </a>
                       </section>
-                      <section className='text-sm text-black dark:text-white'>
+                      <section className='text-md font-medium text-black dark:text-white'>
                         {toUpperFirstLetter((model as model).pref_comm_name)}
                       </section>
                     </section>
@@ -171,17 +176,17 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
                         />
                       </a>
                     </section>
-                    <section className='bg-[#98B8AD] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
+                    <section className='bg-[#CDDAD5] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
                       <section className='flex items-center space-x-0.5rem'>
                         <a
                           href={"/collections/" + (model as fullUserSubmittal).speciesName}
                           rel='noopener noreferrer'
                           className='text-[#004C46] dark:text-[#C3D5D1] text-xl'
                         >
-                          <i className='text-lg'>{(model as fullUserSubmittal).speciesName.charAt(0).toUpperCase() + (model as fullUserSubmittal).speciesName.slice(1)}</i>
+                          <i className='font-medium'>{(model as fullUserSubmittal).speciesName.charAt(0).toUpperCase() + (model as fullUserSubmittal).speciesName.slice(1)}</i>
                         </a>
                       </section>
-                      <section className='text-sm text-black dark:text-white'>
+                      <section className='text-sm font-medium text-black dark:text-white'>
                         {toUpperFirstLetter((model as fullUserSubmittal).commonName)}
                       </section>
                     </section>

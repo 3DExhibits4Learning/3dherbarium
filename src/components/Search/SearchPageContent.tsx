@@ -37,6 +37,7 @@ const SearchPageContent = () => {
   const [selectedModeler, setSelectedModeler] = useState<string>('All')
   const [selectedAnnotator, setSelectedAnnotator] = useState<string>('All')
   const [order, setOrder] = useState<string>('Newest First')
+  const [communityIncluded, setCommunityIncluded] = useState<boolean>(true)
 
   useEffect(() => {
 
@@ -83,9 +84,18 @@ const SearchPageContent = () => {
             setOrder={setOrder as Dispatch<SetStateAction<string>>}
             modeler={selectedModeler}
             annotator={selectedAnnotator}
+            communityIncluded={communityIncluded}
+            setCommunityIncluded={setCommunityIncluded}
           />
           <br />
-          <SearchPageModelList models={siteReadyModels.current as model[]} selectedModeler={selectedModeler} selectedAnnotator={selectedAnnotator} communityModels={communityModels} order={order} />
+          <SearchPageModelList
+            models={siteReadyModels.current as model[]}
+            selectedModeler={selectedModeler}
+            selectedAnnotator={selectedAnnotator}
+            communityModels={communityModels}
+            order={order}
+            communityIncluded={communityIncluded}
+          />
           <br />
         </>
       }
