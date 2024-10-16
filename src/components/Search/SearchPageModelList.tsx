@@ -66,7 +66,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
 
         case 'Newest First':
 
-          if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_aquis_date')) {
+          if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_acquis_date')) {
             const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
             returnValue = -value
           }
@@ -161,7 +161,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
                   <article className='rounded-md overflow-hidden mx-1'>
                     <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white'>Community</Chip>
                     <section className='rounded shadow-md mx-auto'>
-                      <a href={"/collections/" + (model as fullUserSubmittal).speciesName} tabIndex={-1}>
+                      <a href={"/collections/" + (model as fullUserSubmittal).speciesName + `?communityId=${(model as fullUserSubmittal).modeluid}`} tabIndex={-1}>
                         <img
                           alt={'Image of ' + (model as fullUserSubmittal).speciesName}
                           role='button'

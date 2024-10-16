@@ -474,17 +474,34 @@ export const getPublishedUserSubmittals = async () => {
 
 /**
  * @function getPublishedUserSubmittalsBySpecies
- * @description returns a user account based on the userId and the provider
+ * @description returns user submitted models by species
  * 
  */
 export const getPublishedUserSubmittalsBySpecies = async (speciesName: string) => {
 
   const submittals = await prisma.userSubmittal.findMany({
     where: {
-      speciesName: speciesName
+      speciesName: speciesName,
+      status: 'published'
     },
   })
   return submittals
+}
+
+/**
+ * @function getPublishedUserSubmittalsByUid
+ * @description returns user submitted models by uid
+ * 
+ */
+export const getPublishedUserSubmittalsByUid = async (uid: string) => {
+
+  const submittal = await prisma.userSubmittal.findUnique({
+    where: {
+      modeluid: uid,
+      status: 'published'
+    },
+  })
+  return submittal
 }
 
 /**

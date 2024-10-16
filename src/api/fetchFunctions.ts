@@ -279,12 +279,12 @@ export const fetchGbifImages = async (key: number | undefined, rank: string): Pr
  * @returns {Promise<GbifImageResponse[]>} Returns image data from GBIF for specimens that have been imaged by the HSC
  */
 export const fetchHSCImages = async (species: string): Promise<GbifImageResponse[]> => {
-  const endpoint: string = "https://api.gbif.org/v1/occurrence/search?datasetKey=6958627a-e1cd-489f-b4f3-6e7760203b9d&mediaType=StillImage&scientificName=" + species;
-  const gbifOccurrences: GbifMediaResponse = await basicFetch<GbifMediaResponse>(endpoint);
+  const endpoint: string = "https://api.gbif.org/v1/occurrence/search?datasetKey=6958627a-e1cd-489f-b4f3-6e7760203b9d&mediaType=StillImage&scientificName=" + species
+  const gbifOccurrences: GbifMediaResponse = await basicFetch<GbifMediaResponse>(endpoint)
 
-  if (gbifOccurrences.count == 0) return [];
+  if (gbifOccurrences.count == 0) return []
 
-  const gbifOccurrenceArray: GbifImageResponse[] = [];
+  const gbifOccurrenceArray: GbifImageResponse[] = []
 
   for (let result of gbifOccurrences.results) {
     if (!result) continue;
@@ -299,9 +299,8 @@ export const fetchHSCImages = async (species: string): Promise<GbifImageResponse
     gbifOccurrenceArray.push(specimenObservationInfo);
   }
 
-
   return gbifOccurrenceArray;
-};
+}
 
 
 /**

@@ -38,7 +38,8 @@ export default function PublishedModels(props: PublishedModelProps) {
                             </div>
                             <div className='grid grid-cols-2 text-center'>
                                 <p className="border-b">Artist</p> <p className="border-b">{model.artistName}</p>
-                                <p className="border-b">Submitted</p> <p className="border-b"> {model.dateTime.toDateString()}</p>
+                                {/*@ts-ignore - ts thinkds dateTime is a Date object*/}
+                                <p className="border-b">Submitted</p> <p className="border-b"> {model.dateTime.slice(0,10)}</p>
                                 <p className="border-b">Build Method</p> <p className="border-b"> {toUpperFirstLetter(model.methodology)}</p>
                                 {Boolean(model.createdWithMobile) && <><p className="border-b">Created with Mobile App</p> <p className="border-b">Yes</p></>}
                                 {!Boolean(model.createdWithMobile) && <><p className="border-b">Created with Mobile App</p> <p className="border-b">No</p></>}

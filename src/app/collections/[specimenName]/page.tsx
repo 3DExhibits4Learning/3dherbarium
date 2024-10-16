@@ -12,9 +12,9 @@ import Foot from '@/components/Shared/Foot'
 import dynamic from "next/dynamic"
 import { model } from "@prisma/client"
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
-const CollectionsWrapper = dynamic(() => import('@/utils/CollectionsWrapper'), { ssr: false })
+const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
 
-export default async function Page({ params }: { params: { specimenName: string } }) {
+export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: {communityId: string} }) {
 
   // Variable declarations
   let redirectUrl: string | null = null;
@@ -29,6 +29,7 @@ export default async function Page({ params }: { params: { specimenName: string 
   promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName))
 
   await Promise.all(promises).then(results => {
+    
     gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse },
     _3dmodel = results[1] as model[],
     images = fetchHSCImages(params.specimenName)

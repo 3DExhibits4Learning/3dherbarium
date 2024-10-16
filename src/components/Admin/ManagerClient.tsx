@@ -78,16 +78,6 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
         })
     }
 
-    // var imgSrc = 'C:/Users/ab632/Pictures/Screenshots/Xylem'
-    const [src, setSrc] = useState<string>()
-
-    useEffect(() => {
-        const getPhoto = async() => {
-            setSrc('/api/test?path=X:/Herbarium/Annotations/bae2326300c94ea4af9a400d4f656dc1/81f2d1fd-1f66-4e26-ae34-e3fccb47467a/Metashape Server Error.png')
-        }
-        getPhoto()
-    })
-
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel="Updating Thumbnail" result={result} />
@@ -124,9 +114,6 @@ export default function ManagerClient(props: { pendingModels: userSubmittal[], k
                     >
                         Create Task
                     </Button>
-                </div>
-                <div className="h-full w-1/3 flex flex-col items-center border">
-                    <div><img src={src}></img></div>
                 </div>
             </div>
 

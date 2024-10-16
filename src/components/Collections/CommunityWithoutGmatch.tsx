@@ -4,16 +4,14 @@ import { fullUserSubmittal } from "@/api/types"
 import { Divider } from "@nextui-org/react"
 import { userSubmittal } from "@prisma/client"
 import dynamic from "next/dynamic"
-const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'))
-const CommunityModalMap = dynamic(() => import('@/components/Map/CommunityModalMap'))
+const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), {ssr: false})
+const CommunityModalMap = dynamic(() => import('@/components/Map/CommunityModalMap'), {ssr: false})
 import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function CommunityModelWithoutGmatch(props: { communityModel: userSubmittal }) {
 
     const [model, setModel] = useState<userSubmittal | fullUserSubmittal>(props.communityModel)
-
-    console.log(props.communityModel)
 
     useEffect(() => {
 
@@ -29,6 +27,7 @@ export default function CommunityModelWithoutGmatch(props: { communityModel: use
         getFullUserSubmittal()
 
     }, [])
+
 return (
     <>
         <div className="bg-black flex h-[calc(100vh-177px)] w-full">
@@ -36,7 +35,6 @@ return (
             <section className="w-full lg:w-3/5 h-full">
                 <ModelViewer uid={model.modeluid} />
             </section>
-
 
             <section className="hidden lg:w-2/5 text-[#F5F3E7] h-full lg:flex lg:flex-col items-center">
 
@@ -51,7 +49,8 @@ return (
                     <Divider />
                     <p className="lg:text-lg my-2">Artist: {model.artistName}</p>
                     <Divider />
-                    {/* <p className="lg:text-lg my-2">Date: {model.dateTime.toDateString()}</p> */}
+                    {/*@ts-ignore - ts thinks dateTime is a Date object*/}
+                    <p className="lg:text-lg my-2">Date: {model.dateTime.slice(0,10)}</p>
                     <Divider />
                     <p className="lg:text-lg my-2">Method: {model.methodology}</p>
                     <Divider />
