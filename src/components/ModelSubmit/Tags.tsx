@@ -5,8 +5,16 @@ import { useCallback, SetStateAction, Dispatch } from 'react'
 import Tags from '@yaireo/tagify/dist/react.tagify' // React-wrapper file
 import '@yaireo/tagify/dist/tagify.css' // Tagify CSS
 
-export default function TagInput(props: { defaultValues?: string, title: string, required?: boolean, setTags: Dispatch<SetStateAction<{value: string}[]>> }){
+export default function TagInput(props: { defaultValues?: {value: string}[], title: string, required?: boolean, setTags: Dispatch<SetStateAction<{value: string}[]>> }){
 
+        var tagString: string = ''
+
+        if(props.defaultValues){
+            for (let i = 0; i < props.defaultValues?.length; i++) {
+                tagString += props.defaultValues[i].value + ','
+            }
+            tagString = tagString.slice(0, -1)
+        }
 
     const onChange = useCallback((e: any) => {
         // e.detail.tagify.value // Array where each tag includes tagify's (needed) extra properties
@@ -34,7 +42,7 @@ export default function TagInput(props: { defaultValues?: string, title: string,
                         enabled: 0 // always show suggestions dropdown
                     }
                 }}
-                defaultValue={props.defaultValues}
+                defaultValue={tagString}
                 onChange={onChange}
             />
         </>

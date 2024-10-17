@@ -6,7 +6,7 @@ import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
 import { Divider } from '@nextui-org/react';
 import TagInput from './Tags';
-import Leaflet from 'leaflet';
+import Leaflet, { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
@@ -15,6 +15,17 @@ import PhotoInput from '../Shared/Form Fields/PhotoInput';
 import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
 import { uid } from 'uid';
+
+interface ModelSubmitFormProps{
+    edit?: boolean
+    speciesName?: string
+    position?: LatLngLiteral
+    artistName?: string
+    madeWithMobile?: string
+    buildMethod?: string
+    softwareArr?: string[]
+    tagsArr?: string[]
+}
 
 export default function ModelSubmitForm() {
 

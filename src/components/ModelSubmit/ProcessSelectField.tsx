@@ -1,6 +1,6 @@
 import { useEffect, SetStateAction, Dispatch } from "react"
 
-export default function ProcessSelect(props: { value: string | undefined, setValue: Dispatch<SetStateAction<string | undefined>>, defaultValue?: string}){
+export default function ProcessSelect(props: { value: string | undefined, setValue: Dispatch<SetStateAction<string | undefined>> | Dispatch<SetStateAction<string>>, defaultValue?: string}){
     
     useEffect(() => {
         if(props.defaultValue){

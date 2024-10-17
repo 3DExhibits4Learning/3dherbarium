@@ -55,7 +55,7 @@ export default async function Page() {
             tagString += tags[tag] + ','
         }
         tagString = tagString.slice(0, -1)
-        pendingModels[model].tags = tagString
+        pendingModels[model].tags = tags
     }
 
 
@@ -76,7 +76,7 @@ export default async function Page() {
             tagString += tags[tag] + ','
         }
         tagString = tagString.slice(0, -1)
-        publishedModels[model].tags = tagString
+        publishedModels[model].tags = tags
     }
 
     // Get/Set the name of the species active in the model viewer, or an empty string if none

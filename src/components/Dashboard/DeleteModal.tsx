@@ -1,11 +1,10 @@
-import { Modal, ModalContent, ModalBody, useDisclosure, Button } from "@nextui-org/react"
-import { useState } from "react";
+import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
+import { SetStateAction, useState, Dispatch } from "react";
 import { Spinner } from "@nextui-org/react";
 
-export default function Delete(props: { type: string, confirmation: string, modelUid: string }) {
-    
+export default function Delete(props: { confirmation: string, modelUid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
+
     //Variable initialization
-    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const [areTheySure, setAreTheySure] = useState<boolean>(false)
     const [deleted, setDeleted] = useState<boolean>(false)
     const [msg, setMsg] = useState<any>('')
@@ -16,7 +15,6 @@ export default function Delete(props: { type: string, confirmation: string, mode
             const deleteMessage = await fetch('/api/editModel', {
                 method: 'POST',
                 body: JSON.stringify({
-                    type: props.type,
                     confirmation: props.confirmation,
                     modelUid: props.modelUid
                 })
@@ -31,44 +29,43 @@ export default function Delete(props: { type: string, confirmation: string, mode
     }
     return (
         <>
-            <Button className='hidden' onPress={onOpen} id='openDeleteModal'>Open Modal</Button>
-            <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+            <Modal isOpen={props.open}>
                 <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalBody className="font-medium text-center">
-                                {
-                                    !areTheySure &&
-                                    <>
-                                        <p className="mt-8">Are you SURE you want to delete your 3D model?</p>
-                                        <p className="mb-8">This action can NOT be undone!</p>
-                                        <div className="flex justify-around mb-8">
-                                            <Button id='editModal' className="text-white" onPress={onClose}>Cancel</Button>
-                                            <Button id='editModal' color='danger' variant='light' onClick={() => {
-                                                setAreTheySure(true)
-                                                deleteModel()
-                                            }}>Delete</Button>
-                                        </div>
-                                    </>
-                                }
-                                {
-                                    areTheySure && !deleted &&
-                                    <Spinner label='Deleting 3D Model' />
-                                }
-                                {
-                                    areTheySure && deleted &&
-                                    <>
-                                        <p className="mb-8">{msg}</p>
-                                        <div>
-                                            <a href='/dashboard'><Button id='editModal' className="text-white">Close</Button></a>
-                                        </div>
-                                    </>
-                                }
-                            </ModalBody>
-                        </>
-                    )}
+                    <ModalBody className="font-medium text-center">
+                        
+                        {
+                            !areTheySure &&
+                            <>
+                                <p className="mt-8">Are you SURE you want to delete your 3D model?</p>
+                                <p className="mb-8">This action can NOT be undone!</p>
+                                <div className="flex justify-around mb-8">
+                                    <Button id='editModal' className="text-white" onPress={() => props.setOpen(false)}>Cancel</Button>
+                                    <Button id='editModal' color='danger' variant='light' onClick={() => {
+                                        setAreTheySure(true)
+                                        deleteModel()
+                                    }}>Delete</Button>
+                                </div>
+                            </>
+                        }
+                        
+                        {
+                            areTheySure && !deleted &&
+                            <Spinner label='Deleting 3D Model' />
+                        }
+                        
+                        {
+                            areTheySure && deleted &&
+                            <>
+                                <p className="mb-8">{msg}</p>
+                                <div>
+                                    <a href='/dashboard'><Button id='editModal' className="text-white">Close</Button></a>
+                                </div>
+                            </>
+                        }
+
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </>
-    );
+    )
 }

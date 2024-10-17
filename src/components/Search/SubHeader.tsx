@@ -1,6 +1,6 @@
 'use client'
 
-import { Navbar, NavbarContent, SelectItem, NavbarMenuItem, Button } from "@nextui-org/react"
+import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
 import { SetStateAction, Dispatch } from "react"
 
@@ -34,7 +34,7 @@ const SubHeader = (props: SubHeaderProps) => {
         <div className="flex w-full gap-4 justify-center lg:justify-end h-full items-center">
 
           <div className="mr-2 flex justify-center items-center">
-            <label className="text-white mr-2 font-medium">Include Community Models</label>
+            <label className="text-white mr-2">Include Community Models</label>
             <input type='checkbox' checked={props.communityIncluded} onChange={() => props.setCommunityIncluded(!props.communityIncluded)}></input>
           </div>
 
