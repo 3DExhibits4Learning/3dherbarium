@@ -1,5 +1,5 @@
 import { prismaClient } from "@/api/queries";
-import { ModelUpdateObject } from "@/api/types";
+import { ModelDeleteObject, ModelUpdateObject } from "@/api/types";
 import { NextRequest } from "next/server";
 const prisma = prismaClient()
 
@@ -88,25 +88,25 @@ export async function DELETE(request: NextRequest) {
     try {
 
         // Get request JSON
-        const body = await request.json()
+        const body: ModelDeleteObject = await request.json()
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()
         requestHeader.set('Authorization', process.env.SKETCHFAB_API_TOKEN as string)
 
         // First we delete the 3D Model from sketchfab
-        const deleteModelResult = await fetch(`https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORAGANIZATION}/models/${body.modelUid}`, {
+        const deleteModelResult = await fetch(`https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models/${body.modelUid}`, {
             headers: requestHeader,
             method: 'DELETE',
         }).catch((e) => {
-            console.error(e.message)
+            console.error('SketchFab: ', e.message)
             throw Error("Counldn't delete 3D model")
         })
 
         // Throw error and log to the console on bad request
         if (!deleteModelResult.ok) {
             const deleteModelError = await deleteModelResult.text()
-            console.error(deleteModelError)
+            console.error("Bad Request, text() = ", deleteModelError)
             throw Error("Couldn't delete 3D model")
         }
 
@@ -125,5 +125,5 @@ export async function DELETE(request: NextRequest) {
     }
 
     // Typical fail response
-    catch (e: any) { return Response.json({ data: e.message }, { status: 400, statusText: 'Unable to delete 3D Model Data' }) }
+    catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }
 }

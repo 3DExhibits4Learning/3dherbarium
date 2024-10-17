@@ -325,3 +325,8 @@ export interface ModelUpdateObject{
   position: LatLngLiteral,
   confirmation: string
 }
+
+export interface ModelDeleteObject{
+  confirmation: string,
+  modelUid: string
+}

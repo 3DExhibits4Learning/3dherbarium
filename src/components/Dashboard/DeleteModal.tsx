@@ -1,6 +1,7 @@
 import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
 import { SetStateAction, useState, Dispatch } from "react";
 import { Spinner } from "@nextui-org/react";
+import { ModelDeleteObject } from "@/api/types";
 
 export default function Delete(props: { confirmation: string, modelUid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
 
@@ -11,24 +12,27 @@ export default function Delete(props: { confirmation: string, modelUid: string, 
 
     // Delete 3D Model
     const deleteModel = async () => {
+
         try {
-            const deleteMessage = await fetch('/api/editModel', {
+            
+            const deleteObject: ModelDeleteObject = {
+                confirmation: props.confirmation,
+                modelUid: props.modelUid
+            }
+
+            const deleteMessage = await fetch('/api/dashboard/edit', {
                 method: 'DELETE',
-                body: JSON.stringify({
-                    confirmation: props.confirmation,
-                    modelUid: props.modelUid
-                })
-            })
-                .then(res => {
-                    if (!res.ok) { throw new Error(res.statusText) }
-                    return res.json()
-                })
-                .then(json => json.data)
+                body: JSON.stringify(deleteObject)
+            }).then(res => {
+                if (!res.ok) { throw new Error(res.statusText) }
+                return res.json()
+            }).then(json => json.data)
                 .catch((e) => { throw Error(e.message) })
 
             setMsg(deleteMessage)
             setDeleted(true)
         }
+       
         catch (e: any) {
             setMsg(e.message)
             setDeleted(true)
@@ -58,7 +62,7 @@ export default function Delete(props: { confirmation: string, modelUid: string, 
 
                         {
                             areTheySure && !deleted &&
-                            <Spinner label='Deleting 3D Model' />
+                            <Spinner className="mb-8" label='Deleting 3D Model' />
                         }
 
                         {

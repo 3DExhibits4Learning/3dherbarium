@@ -12,11 +12,6 @@ export default function EditModal(props: { model: ModelsWithTagsAndSoftware, ope
     const softwareArr = props.model.software.map(software => ({ value: software }))
     const tagArr = props.model.tags.map(tag => ({ value: tag }))
 
-    // Delete checker modal called when 'delete 3D model' is clicked
-    const deleteCheck = () => {
-        document.getElementById('openDeleteModal')?.click()
-    }
-
     return (
         <Modal className='overflow-x-hidden bg-[#D5CB9F] dark:bg-[#181818]' size='4xl' isOpen={props.open} scrollBehavior="outside" hideCloseButton>
             <ModalContent>
