@@ -18,9 +18,8 @@ export default function EditModal(props: { model: ModelsWithTagsAndSoftware, ope
     }
 
     return (
-        <Modal className='overflow-x-hidden bg-[#D5CB9F] dark:bg-[#181818]' size='4xl' isOpen={props.open} scrollBehavior="outside" isDismissable={false}>
+        <Modal className='overflow-x-hidden bg-[#D5CB9F] dark:bg-[#181818]' size='4xl' isOpen={props.open} scrollBehavior="outside" hideCloseButton>
             <ModalContent>
-
                 <ModalHeader className="flex flex-col gap-1 mb-4">Editing: {props.model.speciesName}</ModalHeader>
                 <ModalBody>
                     <ModelEditForm

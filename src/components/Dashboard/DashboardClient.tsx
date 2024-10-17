@@ -88,7 +88,7 @@ export default function DashboardClient(props: DashboardClientProps) {
                         <>
                             <div className="flex justify-between items-center">
                                 <p className='text-2xl my-4 ml-2'>Published 3D Models</p>
-                                <div className="flex bg-[#00856A] text-white w-[25px] h-[28px] text-center rounded-md mr-12 items-center justify-center text-xl">{props.publishedModels.length}</div>
+                                <div className="flex bg-[#00856A] text-white w-[25px] h-[28px] text-center rounded-md mr-12 items-center justify-center text-xl">{publishedModels.length}</div>
                             </div>
                             <Divider />
                             <PublishedModels

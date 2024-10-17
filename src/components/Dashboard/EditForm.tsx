@@ -6,12 +6,12 @@ import ProcessSelect from '@/components/ModelSubmit/ProcessSelectField';
 import { Button } from "@nextui-org/react";
 import { Divider } from '@nextui-org/react';
 import TagInput from '@/components/ModelSubmit/Tags';
-import Leaflet, { LatLngLiteral } from 'leaflet';
+import { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
-import DataTransfer from '@/components/ModelSubmit/DataTransfer';
+import DataTransferModal from '../Shared/DataTransferModal';
 import Delete from './DeleteModal';
 import { ModelUpdateObject } from '@/api/types';
 
@@ -31,7 +31,6 @@ interface EditModelFormProps {
 export default function ModelEditForm(props: EditModelFormProps) {
 
     // Variable initialization
-
     // Form field states
     const [speciesName, setSpeciesName] = useState<string>(props.speciesName)
     const [position, setPosition] = useState<LatLngLiteral | null>(props.position)
@@ -47,10 +46,12 @@ export default function ModelEditForm(props: EditModelFormProps) {
     const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
     const [result, setResult] = useState<string>('')
-    const [success, setSuccess] = useState<boolean | null>(null)
 
     // Defaults stringified for comparison
-    const defaultFormValues = JSON.stringify([props.speciesName, props.position, props.artistName, props.madeWithMobile, props.buildMethod, props.softwareArr, props.tagsArr])
+    const defaultFormValuesString = JSON.stringify([props.speciesName, props.position, props.artistName, props.madeWithMobile, props.buildMethod, props.softwareArr, props.tagsArr])
+
+    // Truthy Fn
+    const truthy = (value: any) => value ? true : false
 
     // Function to save any data changes
     const saveChanges = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -62,6 +63,7 @@ export default function ModelEditForm(props: EditModelFormProps) {
             setOpen(true)
             setTransferring(true)
 
+            // Update object
             const updateObject: ModelUpdateObject = {
                 species: speciesName,
                 artist: artistName,
@@ -87,30 +89,29 @@ export default function ModelEditForm(props: EditModelFormProps) {
 
             // Set success results
             setResult(result)
-            setSuccess(true)
             setTransferring(false)
         }
         catch (e: any) {
             // Set fail results
             setResult("Couldn't upload 3D model")
             setTransferring(false)
-            setSuccess(false)
         }
     }
 
     // This effect checks all necessary fields upon update to enable/disable the update button
     useEffect(() => {
 
-        const currentFormValues = JSON.stringify([speciesName, position, artistName, madeWithMobile, buildMethod, softwareArr, tagArr])
+        const currentRequiredFormValues = [speciesName, position, artistName, madeWithMobile, buildMethod, softwareArr]
+        const currentFormValuesString = JSON.stringify([speciesName, position, artistName, madeWithMobile, buildMethod, softwareArr, tagArr])
 
-        if (speciesName && position && artistName && madeWithMobile && buildMethod && softwareArr.length && currentFormValues !== defaultFormValues) { setUpdateDisabled(false) }
-        else { setUpdateDisabled(true) }
+        if (currentRequiredFormValues.every(truthy) && currentFormValuesString !== defaultFormValuesString) setUpdateDisabled(false)
+        else setUpdateDisabled(true)
 
     }, [speciesName, position, artistName, madeWithMobile, buildMethod, softwareArr, tagArr])
 
     return (
         <>
-            <DataTransfer open={open} transferring={transferring} result={result} success={success} />
+            <DataTransferModal open={open} transferring={transferring} result={result} loadingLabel='Updating Model' href='/dashboard'/>
             <Delete confirmation={props.confirmation} modelUid={props.modelUid} open={deleteModalOpen} setOpen={setDeleteModalOpen}/>
             
             <form className='w-full m-auto bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>

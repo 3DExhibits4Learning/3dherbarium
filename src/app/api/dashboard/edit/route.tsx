@@ -115,6 +115,9 @@ export async function DELETE(request: NextRequest) {
             where: {
                 confirmation: body.confirmation
             }
+        }).catch((e) => {
+            console.error(e.message)
+            throw Error("Counldn't delete 3D model data")
         })
 
         // Typical success response
