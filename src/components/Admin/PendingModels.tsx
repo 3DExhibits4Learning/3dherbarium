@@ -52,7 +52,6 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
                                     {
                                         approving &&
                                         <Spinner label='Approving 3D Model' />
-
                                     }
                                     {
                                         !approving &&
@@ -77,7 +76,8 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
     return (
         <>
             <ApprovingModal />
-            <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} isCompact={true} fullWidth={false}>
+            <h1 className="text-3xl font-medium mt-4 border-b-1 border-[#004C46] pb-4 mb-4">Pending Models</h1>
+            <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} isCompact={true} fullWidth={false} title="Pending Models">
                 {props.pendingModels.map((model, index) => {
                     return (
                         <AccordionItem className='font-medium' key={index} aria-label={model.speciesName} title={model.speciesName} classNames={{ title: 'italic' }} onPress={() => updateAccordionItemState(index)}>

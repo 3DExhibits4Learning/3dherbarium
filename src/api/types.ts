@@ -216,7 +216,7 @@ export interface Models {
     createdWithMobile: boolean
     methodology: string
     modeluid: string
-    dateTime: Date | string
+    dateTime: Date
     status: string
     thumbnail: string
     lat: number

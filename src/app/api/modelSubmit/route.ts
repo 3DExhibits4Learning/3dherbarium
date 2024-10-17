@@ -82,7 +82,7 @@ export async function POST(request: Request) {
 
         // Set from data
         const data = new FormData()
-        data.set('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
+        data.set('orgProject', process.env.SKETCHFAB_PROJECT_COMMUNITY as string)
         data.set('modelFile', body.get('file') as File)
         data.set('visibility', 'private')
         data.set('options', JSON.stringify({ background: { color: "#000000" } }))
