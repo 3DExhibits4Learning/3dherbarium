@@ -13,6 +13,7 @@ export async function POST(request: Request) {
             console.error(e.message)
             throw new Error("Couldn't get session")
         })
+        
         const account = await getAccount(session.user.id, 'inaturalist').catch((e) => {
             console.error(e.message)
             throw new Error("Couldn't get account")

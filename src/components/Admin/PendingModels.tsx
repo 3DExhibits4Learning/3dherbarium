@@ -1,12 +1,14 @@
 'use client'
 
-import { Models } from "@/api/types"
+import { ApproveModelObject, Models } from "@/api/types"
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
+import checkToken from "@/utils/checkToken";
+import DataTransferModal from "../Shared/DataTransferModal";
 
 const ModelViewer = dynamic(() => import('../Shared/ModelViewer'), { ssr: false })
 
@@ -16,9 +18,9 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
     const approvable = props.pendingModels[0]?.thumbnail.includes('models')
     const [approvalDisabled, setApprovalDisabled] = useState<boolean>(!approvable)
     const [selectedKeys, setSelectedKeys] = useState<any>(new Set(["0"]))
-    const [approvalModalOpen, setApprovalModalOpen] = useState<boolean>(false)
-    const [approving, setApproving] = useState<boolean>(false)
-    const [approvalResponse, setApprovalResponse] = useState<string>('')
+    const [open, setOpen] = useState<boolean>(false)
+    const [transferring, setTransferring] = useState<boolean>(false)
+    const [result, setResult] = useState<string>('')
     const [photoFiles, setPhotoFiles] = useState<string[]>()
 
     const updateAccordionItemState = (index: number) => {
@@ -27,119 +29,118 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
     }
 
     const approve = async (index: number) => {
-        setApproving(true)
-        setApprovalModalOpen(true)
-        await fetch('/api/approveModel', {
-            method: 'POST',
-            body: JSON.stringify({ confirmation: props.pendingModels[index].confirmation })
-        })
-            .then(res => res.json())
-            .then(json => {
-                setApprovalResponse(json.data)
-                setApproving(false)
+
+        try{
+            
+            checkToken('inaturalist')
+            setTransferring(true)
+            setOpen(true)
+            const model = props.pendingModels[index]
+            
+            const approveModelObject: ApproveModelObject = {
+                confirmation: model.confirmation,
+                species: model.speciesName,
+                latitude: model.lat,
+                longitude: model.lng,
+                files: photoFiles as string[]
+            }
+            
+            await fetch('/api/approveModel', {
+                method: 'POST',
+                body: JSON.stringify(approveModelObject)
             })
+                .then(res => {
+                    if(!res.ok ){ throw Error(res.statusText)}
+                    return res.json()
+                })
+                .then(json => {
+                    setResult(json.data)
+                    setTransferring(false)
+                })
+                .catch((e) => {throw Error(e.message)})
+        }
+        catch(e: any){
+            setResult(e.message)
+            setTransferring(false)
+        }
     }
 
     const getPhotoFiles = async (confirmation: string) => {
-        
-        const fileNames = await fetch(`/api/admin/manager/photoFiles?path=public/data/Herbarium/tmp/submittal/${confirmation}`)
+
+        await fetch(`/api/admin/manager/photoFiles?path=public/data/Herbarium/tmp/submittal/${confirmation}`)
             .then(res => res.json())
-            .then(json => json.response)
-
-        setPhotoFiles(fileNames)
-
-        return fileNames
+            .then(json => setPhotoFiles(json.response))
     }
 
-    // Modal that appears when 'approve' is clicked
-    const ApprovingModal = () => {
-        const { onOpenChange } = useDisclosure();
-        return (
-            <>
-                <Modal isOpen={approvalModalOpen} onOpenChange={onOpenChange} isDismissable={false}>
-                    <ModalContent>
-                        {(onClose) => (
-                            <>
-                                <ModalBody className="text-center">
-                                    {
-                                        approving &&
-                                        <Spinner label='Approving 3D Model' />
-                                    }
-                                    {
-                                        !approving &&
-                                        <p className="text-2xl">{approvalResponse}</p>
-                                    }
-                                </ModalBody>
-                                <ModalFooter className="flex justify-center">
-                                    {
-                                        !approving &&
-                                        <Button color="primary" onPress={router.refresh}>
-                                            OK
-                                        </Button>
-                                    }
-                                </ModalFooter>
-                            </>
-                        )}
-                    </ModalContent>
-                </Modal>
-            </>
-        );
-    }
+    useEffect(() => {
+        getPhotoFiles(props.pendingModels[0].confirmation)
+    }, [])
+
+    console.log(new Date().toISOString().slice(0,10) + ' ' + new Date().toTimeString().slice(0,5))
+
     return (
         <>
-            <ApprovingModal />
+            <DataTransferModal open={open} setOpen={setOpen} transferring={transferring} loadingLabel='Approving 3D Model' result={result}/>
             <h1 className="text-3xl mt-4 border-b-1 border-[#004C46] pb-4 mb-4">Pending Models</h1>
             <Accordion selectedKeys={selectedKeys} onSelectionChange={setSelectedKeys} isCompact={true} fullWidth={false} title="Pending Models">
-                {props.pendingModels.map((model, index) => {
-                    return (
-                        <AccordionItem className='font-medium' 
-                        key={index} 
-                        aria-label={model.speciesName} 
-                        title={model.speciesName} 
-                        classNames={{ title: 'italic' }} 
-                        onPress={() => {
-                            updateAccordionItemState(index)
-                            getPhotoFiles(model.confirmation)
-                        }}>
+                {
+                    props.pendingModels.map((model, index) =>
+
+                        <AccordionItem className='font-medium'
+                            key={index}
+                            aria-label={model.speciesName}
+                            title={model.speciesName}
+                            classNames={{ title: 'italic' }}
+                            onPress={() => {
+                                updateAccordionItemState(index)
+                                getPhotoFiles(model.confirmation)
+                            }}
+                        >
+
                             <div className="flex flex-col">
 
                                 <section className="flex justify-around items-center">
+
                                     <div className="w-1/3 flex text-center flex-col">
                                         <p>Confirmation Number: {model.confirmation}</p>
                                         <p>Artist: {model.artistName}</p>
                                         <p>Submitted: {model.dateTime.toDateString()}</p>
                                     </div>
+
                                     <div className="w-1/3 h-[300px] mb-4">
                                         <ModelViewer uid={model.modeluid} />
                                     </div>
+
                                     <div className="w-1/3 flex justify-center items-center flex-col">
+
                                         <div className="mb-12">
                                             <Button isDisabled={approvalDisabled} className="text-white font-medium" onPress={() => approve(index)}>Approve</Button>
                                         </div>
+
                                         <div>
                                             <Button color='danger' variant='light' className="font-medium" onPress={() => approve(index)}>Quick Approve</Button>
                                         </div>
+
                                     </div>
+
                                 </section>
 
-                                <section className="w-full h-[300px]">
+                                <section className="w-full h-[300px] flex">
+                                    
                                     {
-                                        photoFiles && !!photoFiles.length && 
-                                        photoFiles.map((fileName) => {
-                                            return(
-                                                <>
-                                                <div className="w-[18%] h-[300px]">
-                                                    <img className='w-full h-full' key={Math.random()} src={`/api/nfs?path=public/data/Herbarium/tmp/submittal/${model.confirmation}/${fileName}`}></img>
-                                                </div>
-                                                </>
-                                            )
-                                        })
+                                        photoFiles && !!photoFiles.length &&
+
+                                        photoFiles.map((fileName) =>
+                                            <div className="w-[18%] h-[300px] mx-[1%]">
+                                                <img className='w-full h-full' key={Math.random()} src={`/api/nfs?path=public/data/Herbarium/tmp/submittal/${model.confirmation}/${fileName}`}></img>
+                                            </div>
+                                        )
                                     }
+
                                 </section>
                             </div>
                         </AccordionItem>
-                    )
-                })}
+                    )}
             </Accordion>
         </>
     )

@@ -330,3 +330,11 @@ export interface ModelDeleteObject{
   confirmation: string,
   modelUid: string
 }
+
+export interface ApproveModelObject{
+  confirmation: string,
+  species: string,
+  latitude: number,
+  longitude: number,
+  files: string[]
+}

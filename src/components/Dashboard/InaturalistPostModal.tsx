@@ -57,6 +57,7 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
             .then(res => res.json()).then(json => json.results)
         setAutocompleteOptions(speciesOptions)
     }
+
     const postObservation = async () => {
 
         const data = new FormData()
@@ -204,10 +205,3 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
         </>
     )
 }
-
-// const getExif = async (file: File) => {
-//     const tags = await ExifReader.load(file)
-//     const imageDate = tags['DateTimeOriginal']?.description ?? file.lastModified
-//     const unprocessedTagValue = tags['DateTimeOriginal']?.value
-//     const lat = tags['GPSInfo']
-// }

@@ -12,9 +12,14 @@ export async function GET(request: Request) {
             .then(data => thumbUrl = data.thumbnails.images[0].url)
 
         let updateResponse
+        
         if(searchParams.get('nonCommunity')) updateResponse = await updateThumbUrl(thumbUrl, undefined, uid, true)
         else updateResponse = await updateThumbUrl(thumbUrl, undefined, uid)
+        
+        // Typical success response
         return Response.json({data:'Thumbnail Updated', response: updateResponse})
     }
+    
+    // Typical catch response
     catch (e: any) { return Response.json({data: 'Error updating Thumbnail', response:e.message}, {status:400, statusText:'Error Updating Thumbnail'}) }
 }
