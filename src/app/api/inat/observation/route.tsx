@@ -5,14 +5,26 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 
 export async function POST(request: Request) {
 
-    const session = await getServerSession(authOptions)
-    //@ts-ignore
-    const account = await getAccount(session.user.id, 'inaturalist') as Account
-    const iNatToken = account.access_token
-    const requestData = await request.formData()
-    const data = new FormData()
-
     try {
+
+        const data = new FormData()
+
+        const session = await getServerSession(authOptions).catch((e) => {
+            console.error(e.message)
+            throw new Error("Couldn't get session")
+        })
+        const account = await getAccount(session.user.id, 'inaturalist').catch((e) => {
+            console.error(e.message)
+            throw new Error("Couldn't get account")
+        }) as Account
+
+        const iNatToken = account.access_token
+
+        const requestData = await request.formData().catch((e) => {
+            console.error(e.message)
+            throw new Error("No form data")
+        })
+
         const postObj = {
             observation: {
                 species_guess: requestData.get('species') as string,
@@ -31,10 +43,13 @@ export async function POST(request: Request) {
         })
             .then(res => res.json())
             .then(json => json)
+            .catch((e) => {
+                console.error(e.message)
+                throw new Error("Error posting observation")
+            })
 
-        if (Object.keys(postObservation).includes('error')) {
-            return Response.json({ data: "Error, couldn't send message", response: postObservation.error.original.error ?? 'error' }, { status: 400, statusText: "Error, couldn't send message" })
-        }
+
+        if (Object.keys(postObservation).includes('error')) { throw Error(postObservation.error.original.error ?? 'error') }
 
         let promises = []
         let results: any = []
@@ -51,20 +66,23 @@ export async function POST(request: Request) {
                 },
                 body: data
             })
-                .then(res => res.json()).then(json => json)
+                .then(res => res.json())
+                .then(json => json)
             ))
         }
 
-        results = await Promise.all(promises)
+        results = await Promise.all(promises).catch((e) => {
+            console.error(e.message)
+            throw new Error("Error posting observation photo")
+        })
+
 
         for (let i = 0; i < results.length; i++) {
-            if (Object.keys(results[i]).includes('error')) {
-                return Response.json({ data: "Error, couldn't post a photo to the observation", response: results }, { status: 400, statusText: "Error, couldn't post a photo to the observation" })
-            }
+            if (Object.keys(results[i]).includes('error')) { throw Error('Error posting photo to observation') }
         }
 
         return Response.json({ data: 'Observation Posted!', response: results })
 
     }
-    catch (e: any) { return Response.json({ data: 'error', response: e.message }, { status: 400, statusText: 'Error' }) }
+    catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }
 }

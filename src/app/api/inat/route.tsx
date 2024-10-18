@@ -2,8 +2,6 @@ import { getAccount } from "@/api/queries";
 import { Account } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { writeFile } from 'fs/promises'
-import { join } from 'path'
 
 export async function GET(request: Request) {
 

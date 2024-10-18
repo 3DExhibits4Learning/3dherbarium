@@ -11,7 +11,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     // First we parse the strigified pending models and reacreate the Date objects
     const models = JSON.parse(props.pendingModels)
 
-    for(let model in models){
+    for (let model in models) {
         const time = Date.parse(models[model].dateTime)
         models[model].dateTime = new Date(time)
     }
@@ -26,12 +26,16 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const [result, setResult] = useState<string>('')
     const [taskee, setTaskee] = useState<string>('Hunter')
 
-    const updateThumbnail = async (uid: string) => {
+    //getPhotoFiles('public/data/Herbarium/tmp/submittal/002bc551285')
+
+    const updateThumbnail = async (uid: string, community: boolean) => {
 
         setOpenModal(true)
         setTransferring(true)
 
-        await fetch(`/api/sketchfab/thumbnail?uid=${uid}&nonCommunity=true`)
+        const path = community ? `/api/sketchfab/thumbnail?uid=${uid}` : `/api/sketchfab/thumbnail?uid=${uid}&nonCommunity=true`
+
+        await fetch(path)
             .then(res => res.json())
             .then(res => {
                 console.log(res.response)
@@ -93,23 +97,9 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel="Updating Thumbnail" result={result} />
-            <div className="flex h-48 w-full">
-                <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
-                    <label className='text-2xl block mb-2'>Update Model Thumbnail</label>
-                    <input
-                        ref={uid as LegacyRef<HTMLInputElement>}
-                        type='text'
-                        className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
-                        placeholder="Enter UID"
-                    >
-                    </input>
-                    <Button
-                        className="w-1/2 text-white"
-                        onClick={() => updateThumbnail((uid.current as HTMLInputElement).value)}
-                    >
-                        Update
-                    </Button>
-                </div>
+
+            <div className="flex h-48 w-full mt-8">
+
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                     <label className='text-2xl block mb-2'>Create Procurement Task</label>
                     <select
@@ -121,13 +111,50 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                         <option value="Kat">Kat</option>
                     </select>
                     <Button
-                        className="w-1/2 text-white"
+                        className="w-1/2 text-white bg-[#004C46]"
                         onClick={() => createProcurementTask(taskee)}
                     >
                         Create Task
                     </Button>
                 </div>
+
+                <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
+                    <label className='text-2xl block mb-2'>Update Model Thumbnail</label>
+                    <input
+                        ref={uid as LegacyRef<HTMLInputElement>}
+                        type='text'
+                        className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
+                        placeholder="Enter UID"
+                    >
+                    </input>
+                    <Button
+                        className="w-1/2 text-white bg-[#004C46]"
+                        onClick={() => updateThumbnail((uid.current as HTMLInputElement).value, false)}
+                    >
+                        Update
+                    </Button>
+                </div>
+
+                <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
+                    <label className='text-2xl block mb-2'>Update Community Thumbnail</label>
+                    <input
+                        ref={uid as LegacyRef<HTMLInputElement>}
+                        type='text'
+                        className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
+                        placeholder="Enter UID"
+                    >
+                    </input>
+                    <Button
+                        className="w-1/2 text-white bg-[#004C46]"
+                        onClick={() => updateThumbnail((uid.current as HTMLInputElement).value, true)}
+                    >
+                        Update
+                    </Button>
+                </div>
+
             </div>
+
+
 
             {
                 pendingModels &&
