@@ -20,6 +20,8 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
 
     // Variable initialization
     const uid = useRef<HTMLInputElement>()
+    const communityUid = useRef<HTMLInputElement>()
+
 
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
@@ -30,17 +32,14 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
 
     const updateThumbnail = async (uid: string, community: boolean) => {
 
-        console.log(uid)
-
         setOpenModal(true)
         setTransferring(true)
 
-        const path = community ? `/api/sketchfab/thumbnail?uid=${uid}` : `/api/sketchfab/thumbnail?uid=${uid}&community=true`
+        const path = community ? `/api/sketchfab/thumbnail?uid=${uid}&community=true` : `/api/sketchfab/thumbnail?uid=${uid}`
 
         await fetch(path)
             .then(res => res.json())
             .then(res => {
-                console.log(res.response)
                 setResult(res.data)
                 setTransferring(false)
             })
@@ -140,7 +139,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                     <label className='text-2xl block mb-2'>Update Community Thumbnail</label>
                     <input
-                        ref={uid as LegacyRef<HTMLInputElement>}
+                        ref={communityUid as LegacyRef<HTMLInputElement>}
                         type='text'
                         className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                         placeholder="Enter UID"
@@ -148,7 +147,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     </input>
                     <Button
                         className="w-1/2 text-white bg-[#004C46]"
-                        onClick={() => updateThumbnail((uid.current as HTMLInputElement).value, true)}
+                        onClick={() => updateThumbnail((communityUid.current as HTMLInputElement).value, true)}
                     >
                         Update
                     </Button>
