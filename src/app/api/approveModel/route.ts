@@ -53,86 +53,94 @@ export async function POST(request: Request) {
 
             // Update dateTimeOriginal if data is available
             if (!dateTimeOriginal) {
+                
+                // Load buffer into exif reader
                 const tags = ExifReader.load(buffer)
-                if(tags['DateTimeOriginal']) dateTimeOriginal = tags['DateTimeOriginal'].description ? tags['DateTimeOriginal'].description : ''
+                
+                // Format and add dateTimeOriginal if available
+                if (tags['DateTimeOriginal'] && tags['DateTimeOriginal'].description) {
+                    const date = dateTimeOriginal.slice(0, 10).replace(/:/g, "-")
+                    const time = dateTimeOriginal.slice(-8).slice(0, 5)
+                    dateTimeOriginal = date + ' ' + time
+                }
             }
 
-            // Add buffer to array
-            photoBuffers.push(buffer)
-        }
+        // Add buffer to array
+        photoBuffers.push(buffer)
+    }
 
         // iNaturalist post body object
         const postObj = {
-            observation: {
-                species_guess: requestData.species as string,
-                latitude: requestData.latitude as number,
-                longitude: requestData.longitude as number,
-                observed_on_string: dateTimeOriginal ? dateTimeOriginal: new Date().toISOString().slice(0,10) + ' ' + new Date().toTimeString().slice(0,5)
-            }
+        observation: {
+            species_guess: requestData.species as string,
+            latitude: requestData.latitude as number,
+            longitude: requestData.longitude as number,
+            observed_on_string: dateTimeOriginal ? dateTimeOriginal : new Date().toISOString().slice(0, 10) + ' ' + new Date().toTimeString().slice(0, 5)
         }
+    }
 
-        console.log(postObj.observation.observed_on_string)
+    console.log(postObj.observation.observed_on_string)
 
-        // iNaturalist observation post
-        const postObservation = await fetch('https://api.inaturalist.org/v1/observations', {
+    // iNaturalist observation post
+    const postObservation = await fetch('https://api.inaturalist.org/v1/observations', {
+        method: 'POST',
+        headers: {
+            'Authorization': iNatToken as string
+        },
+        body: JSON.stringify(postObj)
+    })
+        .then(res => res.json())
+        .then(json => json)
+        .catch((e) => {
+            console.error(e.message)
+            throw new Error("Error posting observation")
+        })
+
+    // iNaturalist sends a 200 status code with error keys on bad request
+    if (Object.keys(postObservation).includes('error')) { throw Error(postObservation.error.original.error ?? 'error') }
+
+    // Set observation ID in formdaata (so iNaturalist knows what observation the photos belong to)
+    data.set('observation_photo[observation_id]', postObservation.id)
+
+    // Iterate through photoBuffers, pushing photo post promise onto the promises array each iteration
+    for (let i = 0; i < photoBuffers.length; i++) {
+
+        // Convert buffer to blob
+        const uint8Array = new Uint8Array(photoBuffers[i])
+        const blob = new Blob([uint8Array])
+        data.set(`file`, blob)
+
+        // Push photo post promise to array
+        promises.push((fetch('https://api.inaturalist.org/v1/observation_photos', {
             method: 'POST',
             headers: {
                 'Authorization': iNatToken as string
             },
-            body: JSON.stringify(postObj)
+            body: data
         })
             .then(res => res.json())
             .then(json => json)
-            .catch((e) => {
-                console.error(e.message)
-                throw new Error("Error posting observation")
-            })
-
-        // iNaturalist sends a 200 status code with error keys on bad request
-        if (Object.keys(postObservation).includes('error')) { throw Error(postObservation.error.original.error ?? 'error') }
-
-        // Set observation ID in formdaata (so iNaturalist knows what observation the photos belong to)
-        data.set('observation_photo[observation_id]', postObservation.id)
-
-        // Iterate through photoBuffers, pushing photo post promise onto the promises array each iteration
-        for (let i = 0; i < photoBuffers.length; i++) {
-
-            // Convert buffer to blob
-            const uint8Array = new Uint8Array(photoBuffers[i])
-            const blob = new Blob([uint8Array])
-            data.set(`file`, blob)
-
-            // Push photo post promise to array
-            promises.push((fetch('https://api.inaturalist.org/v1/observation_photos', {
-                method: 'POST',
-                headers: {
-                    'Authorization': iNatToken as string
-                },
-                body: data
-            })
-                .then(res => res.json())
-                .then(json => json)
-            ))
-        }
-
-        // Await photo posts
-        results = await Promise.all(promises).catch((e) => {
-            console.error(e.message)
-            throw new Error("Error posting observation photo")
-        })
-
-        // iNaturalist sends a 200 status code with error keys on bad request
-        for (let i = 0; i < results.length; i++) { if (Object.keys(results[i]).includes('error')) { throw Error('Error posting photo to observation') } }
-
-        // Finally, mark the 3D model as approved in the database
-        const approved = await approveModel(requestData.confirmation).catch((e) => {
-            console.error(e.message)
-            throw new Error("Error approving 3D model")
-        })
-
-        // Typical success response
-        return Response.json({ data: '3D Model Approved', response: approved })
+        ))
     }
+
+    // Await photo posts
+    results = await Promise.all(promises).catch((e) => {
+        console.error(e.message)
+        throw new Error("Error posting observation photo")
+    })
+
+    // iNaturalist sends a 200 status code with error keys on bad request
+    for (let i = 0; i < results.length; i++) { if (Object.keys(results[i]).includes('error')) { throw Error('Error posting photo to observation') } }
+
+    // Finally, mark the 3D model as approved in the database
+    const approved = await approveModel(requestData.confirmation).catch((e) => {
+        console.error(e.message)
+        throw new Error("Error approving 3D model")
+    })
+
+    // Typical success response
+    return Response.json({ data: '3D Model Approved', response: approved })
+}
 
     // Typical fail response
     catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }

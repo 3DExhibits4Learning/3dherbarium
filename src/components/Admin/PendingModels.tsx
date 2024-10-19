@@ -32,7 +32,7 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
 
         try{
             
-            checkToken('inaturalist')
+            await checkToken('inaturalist')
             setTransferring(true)
             setOpen(true)
             const model = props.pendingModels[index]
@@ -75,8 +75,6 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
     useEffect(() => {
         getPhotoFiles(props.pendingModels[0].confirmation)
     }, [])
-
-    console.log(new Date().toISOString().slice(0,10) + ' ' + new Date().toTimeString().slice(0,5))
 
     return (
         <>

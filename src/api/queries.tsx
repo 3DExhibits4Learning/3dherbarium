@@ -164,7 +164,7 @@ export const getAllSiteReadyModels = async (development: boolean): Promise<model
 export const getAllAnnotationModels = async (): Promise<model[]> => {
 
   const models = await prisma.model.findMany({
-    where: {site_ready: true, base_model: false},
+    where: { site_ready: true, base_model: false },
     orderBy: {
       spec_name: 'asc'
     }
@@ -195,7 +195,7 @@ export const markAsAnnotated = async (uid: string) => {
 
   const updated = await prisma.model.update({
     where: { uid: uid },
-    data: { annotated: true, annotator: "Kat Lim"}
+    data: { annotated: true, annotator: "Kat Lim" }
   })
   return updated
 }
@@ -250,30 +250,15 @@ export const getPublishedModels = async (email: string) => {
  * @description update thumbnail url of the model with the corresponding confirmation string (preferably) or the model uid.
  * 
  */
-export const updateThumbUrl = async (thumbUrl: string, confirmation?: string, uid?: string, nonCommunity?: boolean) => {
+export const updateThumbUrl = async (thumbUrl: string, uid: string, community?: boolean) => {
 
-  if (nonCommunity && uid) {
-    await prisma.model.update({ where: { uid: uid }, data: { thumbnail: thumbUrl } })
-  }
+  var result
 
-  else {
+  if (!community) { result = await prisma.model.update({ where: { uid: uid }, data: { thumbnail: thumbUrl } }) }
+  else { result = await prisma.userSubmittal.update({ where: { modeluid: uid }, data: { thumbnail: thumbUrl } }) }
 
-    if (confirmation) {
-      await prisma.userSubmittal.update({
-        where: { confirmation: confirmation },
-        data: { thumbnail: thumbUrl }
-      })
-    }
-
-    else if (uid) {
-      await prisma.userSubmittal.update({
-        where: { modeluid: uid },
-        data: { thumbnail: thumbUrl }
-      });
-    }
-  }
+  return result
 }
-
 
 /**
  * @function getAccounts

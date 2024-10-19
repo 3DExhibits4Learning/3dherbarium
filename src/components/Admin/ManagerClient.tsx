@@ -30,10 +30,12 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
 
     const updateThumbnail = async (uid: string, community: boolean) => {
 
+        console.log(uid)
+
         setOpenModal(true)
         setTransferring(true)
 
-        const path = community ? `/api/sketchfab/thumbnail?uid=${uid}` : `/api/sketchfab/thumbnail?uid=${uid}&nonCommunity=true`
+        const path = community ? `/api/sketchfab/thumbnail?uid=${uid}` : `/api/sketchfab/thumbnail?uid=${uid}&community=true`
 
         await fetch(path)
             .then(res => res.json())
