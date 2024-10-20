@@ -14,6 +14,7 @@ import { model } from "@prisma/client"
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
 
+// communityId to be used here in the future
 export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: {communityId: string} }) {
 
   // Variable declarations

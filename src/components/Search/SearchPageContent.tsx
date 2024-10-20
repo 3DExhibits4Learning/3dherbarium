@@ -10,6 +10,7 @@ import SearchPageModelList from "./SearchPageModelList"
 import SubHeader from "./SubHeader"
 import { fullUserSubmittal } from "@/api/types"
 import { model } from "@prisma/client"
+import MobileSearchFilters from "./MobileFilters"
 
 // For filtering
 const getUniqueModelers = (models: model[]): string[] => {
@@ -87,7 +88,22 @@ const SearchPageContent = () => {
             communityIncluded={communityIncluded}
             setCommunityIncluded={setCommunityIncluded}
           />
+
+          <MobileSearchFilters
+            modeledByList={modeledByList}
+            annotatedByList={annotatedByList}
+            setSelectedModeler={setSelectedModeler}
+            setSelectedAnnotator={setSelectedAnnotator}
+            order={order}
+            setOrder={setOrder as Dispatch<SetStateAction<string>>}
+            modeler={selectedModeler}
+            annotator={selectedAnnotator}
+            communityIncluded={communityIncluded}
+            setCommunityIncluded={setCommunityIncluded}
+          />
+
           <br />
+
           <SearchPageModelList
             models={siteReadyModels.current as model[]}
             selectedModeler={selectedModeler}

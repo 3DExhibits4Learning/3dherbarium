@@ -3,6 +3,7 @@
 import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
 import { SetStateAction, Dispatch } from "react"
+import { Accordion, AccordionItem } from "@nextui-org/react"
 
 interface SubHeaderProps {
   modeledByList: string[]
@@ -24,7 +25,7 @@ const SubHeader = (props: SubHeaderProps) => {
   const annotatedByList: string[] = props.annotatedByList
 
   return (
-    <Navbar isBordered className="z-0 w-full bg-[#00856A] dark:bg-[#212121]">
+    <Navbar isBordered className="hidden md:flex z-0 w-full bg-[#00856A] dark:bg-[#212121]">
       <NavbarContent>
 
         <NavbarMenuItem>

@@ -1,3 +1,5 @@
+// This class will be moved back server side
+
 'use client'
 
 import { GbifImageResponse, GbifMediaResponse, GbifProfile } from "@/api/types"

@@ -1,17 +1,23 @@
-import { getSoftwares, getImageSet } from '@/api/queries'
-import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary, fetchHSCImages } from "@/api/fetchFunctions";
+import { getSoftwares, getImageSet, getModelByUid } from '@/api/queries'
+import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/api/fetchFunctions";
+import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
 
 export async function GET(request: Request) {
+
+    var results: any[] = []
+
     try {
 
+        // Variable ini
         const { searchParams } = new URL(request.url)
-
         const uid = searchParams.get('uid') as string
         const usageKey = parseInt(searchParams.get('usageKey') as string)
         const specimenName = searchParams.get('specimenName') as string
 
-        var results: any[] = []
+        // Throw error if data is missing
+        if(!uid || !usageKey || !specimenName){throw Error('/api/collections/herbarium: Missing input data')}
 
+        // Specimen metadata promises
         const promises = [
             fetchGbifVernacularNames(usageKey),
             getSoftwares(uid),
@@ -20,9 +26,20 @@ export async function GET(request: Request) {
             fetchWikiSummary(specimenName),
         ]
 
-        await Promise.all(promises).then(res => results.push(...res))
+        // Await promises, throw error if there are issues gathering metadata
+        await Promise.all(promises).then(res => results.push(...res)).catch((e) =>{
+            console.error(e.message)
+            throw Error('/api/collections/herbarium: Error getting specimen metadata')
+        })
+
+        if(!results[0].length){
+            results[0] = await getModelByUid(uid).then(model => [toUpperFirstLetter(model?.pref_comm_name as string)]).catch((e) =>{
+                console.error(e.message)
+                throw Error('/api/collections/herbarium: Error getting model by uid')
+            })
+        }
 
         return Response.json({data:"Success", response: results})
     }
-    catch (e: any) { return Response.json({ data: 'Success', response: e.message }, {status:400, statusText:'Fetching error'}) }
+    catch (e: any) { return Response.json({ data: e.message, response: results }, {status:400, statusText:e.message}) }
 }

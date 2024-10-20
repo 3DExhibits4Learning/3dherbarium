@@ -29,8 +29,20 @@ export async function getModel(species: string) {
     where: { spec_name: species, site_ready: true, base_model: true }
   });
 
-  return models;
+  return models
 };
+
+/**
+ * @function getModelByUid
+ * @description returns a model object that matched the provided uid
+ * 
+ * @param {uid} uid of the model
+ */
+export async function getModelByUid(uid: string) {
+  const models = await prisma.model.findUnique({ where: { uid: uid } })
+
+  return models
+}
 
 
 /**
