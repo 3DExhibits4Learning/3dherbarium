@@ -297,6 +297,6 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
         }
       </div>
     </>
-  );
-};
-export default SFAPI;
+  )
+}
+export default SFAPI

@@ -94,7 +94,7 @@ export default function AnnotationModal(props: annotationModalProps) {
                     <span>
                       <p id="modalText">
                         <br></br>
-                        <p dangerouslySetInnerHTML={{ __html: annotations[props.index - 1].annotation }} className="m-auto text-center fade"></p>
+                        <p dangerouslySetInnerHTML={{ __html: (annotations[props.index - 1].annotation as photo_annotation).annotation }} className="m-auto text-center fade"></p>
                       </p>
                       <p id="modalCitation">
                         <br></br>

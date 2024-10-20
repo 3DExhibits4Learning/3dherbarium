@@ -7,7 +7,6 @@ export const boolRinse = (bool: boolean | string) => {
 
 export const addCommas = (stringArray: Array<string>) => {
   if (stringArray.length) {
-    console.log(stringArray)
     const commaSeparated = stringArray.map((str) => str + ', ');
     commaSeparated[commaSeparated.length - 1] = commaSeparated[commaSeparated.length - 1].replace(',', '');
     return commaSeparated
@@ -23,6 +22,10 @@ export const arrayFromObjects = (objectArray: Array<any>) => {
 }
 
 export function setViewerWidth(modelViewer: any, annotationDiv: any, annotationsChecked: any) {
+
+  if(!annotationDiv) annotationDiv = document.getElementById('annotationDiv')
+    console.log(annotationDiv.current)
+
   if (annotationsChecked) {
     annotationDiv.style.setProperty("width", "40%")
     modelViewer.style.setProperty("width", "60%")
