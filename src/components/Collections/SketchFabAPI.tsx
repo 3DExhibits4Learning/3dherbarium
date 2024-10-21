@@ -63,7 +63,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     annotationControl(api, annotations, (event.target as HTMLInputElement).checked)
   }
   const annotationSwitchMobileListener = (event: Event) => {
-    setViewerWidth(modelViewer, annotationDiv, (event.target as HTMLInputElement).checked)
+    setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
     annotationControl(api, annotations, (event.target as HTMLInputElement).checked)
   }
 

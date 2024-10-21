@@ -14,6 +14,8 @@ export interface SearchHeaderProps {
   searchTerm?: string;
   page?: string;
   hasModel?: boolean
+  annotationsEnabled?: boolean
+  setAnnotationsEnabled?: Dispatch<SetStateAction<boolean>>
 }
 
 

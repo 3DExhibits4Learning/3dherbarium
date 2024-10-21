@@ -1,7 +1,7 @@
 "use client"
 
 export const boolRinse = (bool: boolean | string) => {
-  var rinsed = bool || bool ==='true' ? "Yes" : "No";
+  var rinsed = bool || bool === 'true' ? "Yes" : "No";
   return rinsed
 }
 
@@ -22,9 +22,6 @@ export const arrayFromObjects = (objectArray: Array<any>) => {
 }
 
 export function setViewerWidth(modelViewer: any, annotationDiv: any, annotationsChecked: any) {
-
-  if(!annotationDiv) annotationDiv = document.getElementById('annotationDiv')
-    console.log(annotationDiv.current)
 
   if (annotationsChecked) {
     annotationDiv.style.setProperty("width", "40%")

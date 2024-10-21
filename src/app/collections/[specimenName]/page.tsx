@@ -70,11 +70,11 @@ export default async function Page({ params, searchParams }: { params: { specime
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
       <title>3D Herbarium Collections</title>
 
-      <Header
+      {/* <Header
         searchTerm={params.specimenName}
         headerTitle={params.specimenName}
         hasModel={!!_3dmodel.length}
-        pageRoute="collections" />
+        pageRoute="collections" /> */}
 
       <CollectionsWrapper
         redirectUrl={redirectUrl}

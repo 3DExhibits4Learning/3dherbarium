@@ -75,9 +75,12 @@ const Header = (props: SearchHeaderProps) => {
 
         {/* Hidden switch for annotation switch reference */}
 
-        <NavbarContent className="justify-start hidden">
-          <Switch defaultSelected id="annotationSwitchMobileHidden" isSelected={isSelected} color='secondary' onValueChange={setIsSelected}></Switch>
-        </NavbarContent>
+        {
+          props.setAnnotationsEnabled &&
+          <NavbarContent className="justify-start hidden">
+            <Switch defaultSelected id="annotationSwitchMobileHidden" isSelected={props.annotationsEnabled} color='secondary' onValueChange={props.setAnnotationsEnabled}></Switch>
+          </NavbarContent>
+        }
 
         {/* Autocomplete search bar*/}
 
@@ -145,7 +148,11 @@ const Header = (props: SearchHeaderProps) => {
 
           {/* Mobile rendering conditional on whether there is a model */}
 
-          <MobileModelOptions hasModel={props.hasModel} isSelected={isSelected} setIsSelected={setIsSelected} />
+          {
+            props.setAnnotationsEnabled &&
+            <MobileModelOptions hasModel={props.hasModel} isSelected={props.annotationsEnabled} setIsSelected={props.setAnnotationsEnabled} />
+          }
+
 
         </NavbarMenu>
       </Navbar >

@@ -14,6 +14,7 @@ import { isMobileOrTablet } from '@/utils/isMobile';
 const SketchfabApi = dynamic(() => import('@/components/Collections/SketchFabAPI'), { ssr: false })
 import { model, userSubmittal } from '@prisma/client';
 import { GbifResponse, GbifImageResponse } from '@/api/types';
+import Header from '../Header/Header';
 
 export default function MainWrap(props: {
   redirectUrl: string | null,
@@ -101,13 +102,22 @@ export default function MainWrap(props: {
       </>
     )
   }
-  
+
   else {
     return (
       <>
         {
           !!props.model.length && !communityId &&
           <>
+            <Header
+              searchTerm={props.specimenName}
+              headerTitle={props.specimenName}
+              hasModel={!!props.model.length}
+              pageRoute="collections" 
+              annotationsEnabled={isSelected}
+              setAnnotationsEnabled={setIsSelected}
+              />
+
             <div className="hidden lg:flex h-10 bg-[#00856A] dark:bg-[#212121] text-white items-center justify-between ">
               <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#imageSection"><u>Images</u></a> <a href="#mapSection"><u>iNaturalist Observations</u></a></p>
               <Switch style={{ paddingRight: "2.5%" }} defaultSelected id="annotationSwitch" isSelected={isSelected} color='secondary' onValueChange={setIsSelected}>
