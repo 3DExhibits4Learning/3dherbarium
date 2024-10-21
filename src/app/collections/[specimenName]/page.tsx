@@ -13,9 +13,12 @@ import dynamic from "next/dynamic"
 import { model } from "@prisma/client"
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
+import { readFile } from "fs/promises"
 
 // communityId to be used here in the future
 export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: {communityId: string} }) {
+
+  
 
   // Variable declarations
   let redirectUrl: string | null = null;
@@ -44,7 +47,7 @@ export default async function Page({ params, searchParams }: { params: { specime
   }
 
   // If there is a 3d model for the searched specimen or image data for the specimen searched, continue
-  if (_3dmodel.length || images) { }
+  if (_3dmodel.length || images) {}
 
   // If there are no models, search for common name information. If there is no common name information, display appropriate message. If there is, populate the redirect url.
   else {
@@ -69,12 +72,6 @@ export default async function Page({ params, searchParams }: { params: { specime
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
       <title>3D Herbarium Collections</title>
-
-      {/* <Header
-        searchTerm={params.specimenName}
-        headerTitle={params.specimenName}
-        hasModel={!!_3dmodel.length}
-        pageRoute="collections" /> */}
 
       <CollectionsWrapper
         redirectUrl={redirectUrl}

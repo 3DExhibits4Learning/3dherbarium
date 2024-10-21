@@ -106,18 +106,17 @@ export default function MainWrap(props: {
   else {
     return (
       <>
+        <Header
+          searchTerm={props.specimenName}
+          headerTitle={props.specimenName}
+          hasModel={!!props.model.length}
+          pageRoute="collections"
+          annotationsEnabled={isSelected}
+          setAnnotationsEnabled={setIsSelected}
+        />
         {
           !!props.model.length && !communityId &&
           <>
-            <Header
-              searchTerm={props.specimenName}
-              headerTitle={props.specimenName}
-              hasModel={!!props.model.length}
-              pageRoute="collections" 
-              annotationsEnabled={isSelected}
-              setAnnotationsEnabled={setIsSelected}
-              />
-
             <div className="hidden lg:flex h-10 bg-[#00856A] dark:bg-[#212121] text-white items-center justify-between ">
               <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#imageSection"><u>Images</u></a> <a href="#mapSection"><u>iNaturalist Observations</u></a></p>
               <Switch style={{ paddingRight: "2.5%" }} defaultSelected id="annotationSwitch" isSelected={isSelected} color='secondary' onValueChange={setIsSelected}>
@@ -190,7 +189,7 @@ export default function MainWrap(props: {
         }
 
         {
-          !props.model.length && !userModel && props.gMatch.hasInfo && userModel !== undefined &&
+          !props.model.length && props.gMatch.hasInfo && userModel === undefined &&
           <>
             <div className="flex flex-col m-auto" style={{ width: "100vw", maxWidth: viewWidthInPx, margin: "0 auto !important" }}>
               {/* lg breakpoint in tailwind not working here, hence id and hard coded breakpoint in globals */}
