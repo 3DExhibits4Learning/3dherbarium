@@ -5,12 +5,6 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { management } from "@/utils/devAuthed"
 import ManagerClient from "@/components/Admin/ManagerClient"
-import { readFile, CreateReadStreamOptions, writeFile } from "fs/promises";
-import ExifReader from 'exifreader';
-import fs from 'fs'
-import * as readline from 'node:readline/promises';
-import { stdin as input, stdout as output } from 'node:process';
-import prisma from "@/utils/prisma";
 
 
 export default async function Page() {
