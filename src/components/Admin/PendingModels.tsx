@@ -72,9 +72,9 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
             .then(json => setPhotoFiles(json.response))
     }
 
-    useEffect(() => {
-        getPhotoFiles(props.pendingModels[0].confirmation)
-    }, [])
+    // useEffect(() => {
+    //     getPhotoFiles(props.pendingModels[0].confirmation)
+    // }, [])
 
     return (
         <>

@@ -5,8 +5,12 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { management } from "@/utils/devAuthed"
 import ManagerClient from "@/components/Admin/ManagerClient"
-import { readFile } from "fs/promises";
+import { readFile, CreateReadStreamOptions, writeFile } from "fs/promises";
 import ExifReader from 'exifreader';
+import fs from 'fs'
+import * as readline from 'node:readline/promises';
+import { stdin as input, stdout as output } from 'node:process';
+import prisma from "@/utils/prisma";
 
 
 export default async function Page() {
@@ -30,6 +34,50 @@ export default async function Page() {
     // const unprocessedTagValue = tags['DateTimeOriginal'].value;
     // console.log(imageDate.slice(0,10).replace(/:/g, "-"))
     // console.log(imageDate.slice(-8).slice(0,5))
+
+    // // Get the absolute path to the file
+    // const filePath = '/Users/ab632/Documents/Annotation Numbers'
+
+    // // Create a readable stream
+    // const fileStream = fs.createReadStream(filePath);
+
+    // // Create an interface to read the file line by line
+    // const rl = readline.createInterface({
+    //     input: fileStream,
+    //     crlfDelay: Infinity
+    // });
+
+    // const lines = [];
+
+    // // Read each line and store it in an array
+    // for await (const line of rl) {
+    //     lines.push(line);
+    // }
+
+    // // Respond with the file content
+    // console.log(lines[0])
+    // console.log(lines[1])
+
+    // for (let i = 0; i < lines.length; i++) {
+    //     if (i % 2 === 0) {
+    //         const annotation = await prisma.annotations.findFirst({ where: { url: lines[i] } })
+    //         if (annotation) {
+    //             await prisma.annotations.update({
+    //                 where: {
+    //                     annotation_id: annotation?.annotation_id
+    //                 },
+    //                 data: {
+    //                     annotation_no: parseInt(lines[i + 1])
+    //                 }
+    //             })
+
+    //             console.log(`annotation ${annotation?.annotation_id}`)
+    //         }
+    //     }
+    // }
+
+    // const content = 'Words\non\nnew\nlines'
+    // await writeFile('/Users/ab632/Documents/info.php', content )
 
     return (
         <>

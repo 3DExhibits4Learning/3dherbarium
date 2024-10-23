@@ -186,7 +186,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
                           <i className='font-medium'>{(model as fullUserSubmittal).speciesName.charAt(0).toUpperCase() + (model as fullUserSubmittal).speciesName.slice(1)}</i>
                         </a>
                       </section>
-                      <section className='text-sm font-medium text-black dark:text-white'>
+                      <section className='text-md font-medium text-black dark:text-white'>
                         {toUpperFirstLetter((model as fullUserSubmittal).commonName)}
                       </section>
                     </section>
