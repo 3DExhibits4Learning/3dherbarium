@@ -39,10 +39,10 @@ const SearchPageContent = () => {
   const [selectedAnnotator, setSelectedAnnotator] = useState<string>('All')
   const [order, setOrder] = useState<string>('Newest First')
   const [communityIncluded, setCommunityIncluded] = useState<boolean>(true)
-
+  
   useEffect(() => {
 
-    let promises = []
+    let promises: any = []
 
     const getModels = fetch('/api/collections/models')
       .then(res => res.json())

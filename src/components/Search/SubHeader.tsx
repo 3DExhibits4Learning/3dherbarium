@@ -3,7 +3,6 @@
 import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@nextui-org/react"
 import { useRouter } from "next/navigation"
 import { SetStateAction, Dispatch } from "react"
-import { Accordion, AccordionItem } from "@nextui-org/react"
 
 interface SubHeaderProps {
   modeledByList: string[]

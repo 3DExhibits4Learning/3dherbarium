@@ -129,7 +129,7 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
                                         photoFiles && !!photoFiles.length &&
 
                                         photoFiles.map((fileName) =>
-                                            <div className="w-[18%] h-[300px] mx-[1%]">
+                                            <div key={Math.random()} className="w-[18%] h-[300px] mx-[1%]">
                                                 <img className='w-full h-full' key={Math.random()} src={`/api/nfs?path=public/data/Herbarium/tmp/submittal/${model.confirmation}/${fileName}`}></img>
                                             </div>
                                         )

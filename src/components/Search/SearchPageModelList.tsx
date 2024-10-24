@@ -6,6 +6,7 @@ import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
 import { QueryContext } from './SearchClient'
+import { useSearchParams } from 'next/navigation'
 
 // Props interface
 interface SearchPageModelListProps {
@@ -20,6 +21,7 @@ interface SearchPageModelListProps {
 const SearchPageModelList = (props: SearchPageModelListProps) => {
 
   // Variable declarations
+  const params = useSearchParams()
   const models = props.models
   const selectedModeler: string = props.selectedModeler
   const selectedAnnotator = props.selectedAnnotator
