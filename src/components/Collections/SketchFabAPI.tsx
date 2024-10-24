@@ -14,6 +14,7 @@ import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
 import { model, model_annotation, photo_annotation } from '@prisma/client';
 import Herbarium from '@/utils/HerbariumClass';
 import { fullAnnotation, GbifImageResponse, GbifResponse } from '@/api/types';
+import { isMobileOrTablet } from '@/utils/isMobile';
 
 const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model: model, images: GbifImageResponse[], imageTitle: string }) => {
 
@@ -80,7 +81,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     const client = new Sketchfab(modelViewer.current);
 
     // Choose initialization success object based on screen size
-    if (window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
+    if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
       client.init(sketchFabLink, successObj);
     }
     else {
