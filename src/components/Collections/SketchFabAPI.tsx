@@ -83,9 +83,11 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     // Choose initialization success object based on screen size
     if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
       client.init(sketchFabLink, successObj);
+      console.log("Mobile Success Object used")
     }
     else {
-      client.init(sketchFabLink, successObjDesktop);
+      client.init(sketchFabLink, successObjDesktop)
+      console.log("Desktop Success Object used")
     }
 
     // Instantiate/set herbarium and set annotations
@@ -108,7 +110,11 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       // Create the first annotation if it exists
       if (s.model.annotationPosition) {
         const position = JSON.parse(s.model.annotationPosition)
-        api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (err: any, index: any) => { api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, function (err: any, index: any) { }) })
+        api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (err: any, index: any) => {
+          if (!(isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches)) {
+            api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, function (err: any, index: any) { })
+          }
+        })
 
         // Create any futher annotations that exist
         for (let i = 0; i < annotations.length; i++) {
@@ -133,6 +139,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
         if (index != -1) {
           setIndex(index);
         }
+
         // Mobile annotation state management
         if (index != -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
           document.getElementById("annotationButton")?.click()
@@ -150,7 +157,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
   // This effect sets the imgSrc if necessary upon change of annotation index
   useEffect(() => {
-    
+
     if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && (annotations[index - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')) {
       setImageFromNfs((annotations[index - 1].annotation as photo_annotation)?.url)
     }
