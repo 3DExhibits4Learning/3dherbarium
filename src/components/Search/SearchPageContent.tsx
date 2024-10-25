@@ -11,6 +11,7 @@ import SubHeader from "./SubHeader"
 import { fullUserSubmittal } from "@/api/types"
 import { model } from "@prisma/client"
 import MobileSearchFilters from "./MobileFilters"
+import { useSearchParams } from "next/navigation"
 
 // For filtering
 const getUniqueModelers = (models: model[]): string[] => {
@@ -30,7 +31,13 @@ const getUniqueAnnotators = (models: model[]): string[] => {
 // Main Component
 const SearchPageContent = () => {
 
+  const params = useSearchParams()
+
   const siteReadyModels = useRef<model[]>()
+
+  const modeler = params.get('modeler')
+  const annotator = params.get('annotator')
+  const orderParam = params.get('order')
 
   const [communityModels, setCommunityModels] = useState<fullUserSubmittal[]>()
   const [modeledByList, setModeledByList] = useState<string[]>()
@@ -54,6 +61,10 @@ const SearchPageContent = () => {
         let b = getUniqueAnnotators(siteReadyModels.current as model[])
 
         a.unshift('All'); b.unshift('All')
+
+        if(modeler && a.includes(modeler)) setSelectedModeler(modeler)
+        if(annotator && b.includes(annotator)) setSelectedModeler(annotator)
+        if(orderParam && ['Newest First', 'Alphabetical', 'Reverse Alphabetical'].includes(orderParam)) setOrder(orderParam)
 
         setModeledByList(a)
         setAnnotatedByList(b)
