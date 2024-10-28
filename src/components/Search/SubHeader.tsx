@@ -78,7 +78,7 @@ const SubHeader = (props: SubHeaderProps) => {
 
       </NavbarContent>
     </Navbar>
-  );
-};
+  )
+}
 
 export default SubHeader

@@ -93,6 +93,10 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
                                     <div className='w-[65%] py-[20px] justify-center items-center text-center'>
                                         <p>Modeler: {s.model.artistName}</p>
                                         <p>Build method: {s.model.methodology}</p>
+                                        {
+                                            s.model.communityId &&
+                                            <p>Community ID: {s.model.communityId}</p>
+                                        }
 
                                         {
                                             s.model.createdWithMobile &&

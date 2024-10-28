@@ -807,6 +807,20 @@ export const deleteModelAnnotation = async (id: string) => {
   return deletion
 }
 
+/**
+ * @function updateCommunityId
+ * @description update the communityId (inat post id) for a user submittal
+ * 
+ */
+export const updateCommunityId = async (confirmation: string, id: string) => {
+
+  const update = await prisma.userSubmittal.update({
+    where: { confirmation: confirmation },
+    data:{communityId: id}
+  })
+  return update
+}
+
 
 // /**
 //  * @function getAnnotationPositionsAndTitles

@@ -339,4 +339,5 @@ export interface ApproveModelObject{
   latitude: number,
   longitude: number,
   files: string[]
+  wild: boolean
 }

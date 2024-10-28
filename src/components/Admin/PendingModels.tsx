@@ -5,8 +5,6 @@ import { Accordion, AccordionItem } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
-import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure } from "@nextui-org/react";
-import { useRouter } from "next/navigation";
 import checkToken from "@/utils/checkToken";
 import DataTransferModal from "../Shared/DataTransferModal";
 
@@ -14,7 +12,6 @@ const ModelViewer = dynamic(() => import('../Shared/ModelViewer'), { ssr: false 
 
 export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
 
-    const router = useRouter()
     const approvable = props.pendingModels[0]?.thumbnail.includes('models')
     const [approvalDisabled, setApprovalDisabled] = useState<boolean>(!approvable)
     const [selectedKeys, setSelectedKeys] = useState<any>(new Set(["0"]))
@@ -28,7 +25,7 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
         setApprovalDisabled(!approvable)
     }
 
-    const approve = async (index: number) => {
+    const approve = async (index: number, wild: boolean) => {
 
         try{
             
@@ -42,7 +39,8 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
                 species: model.speciesName,
                 latitude: model.lat,
                 longitude: model.lng,
-                files: photoFiles as string[]
+                files: photoFiles as string[],
+                wild: wild
             }
             
             await fetch('/api/approveModel', {
@@ -72,9 +70,9 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
             .then(json => setPhotoFiles(json.response))
     }
 
-    // useEffect(() => {
-    //     getPhotoFiles(props.pendingModels[0].confirmation)
-    // }, [])
+    useEffect(() => {
+        getPhotoFiles(props.pendingModels[0].confirmation)
+    }, [])
 
     return (
         <>
@@ -112,11 +110,15 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[] }) {
                                     <div className="w-1/3 flex justify-center items-center flex-col">
 
                                         <div className="mb-12">
-                                            <Button isDisabled={approvalDisabled} className="text-white font-medium" onPress={() => approve(index)}>Approve</Button>
+                                            <Button isDisabled={approvalDisabled} className="text-white font-medium" onPress={() => approve(index, false)}>Approve</Button>
+                                        </div>
+
+                                        <div className="mb-12">
+                                            <Button isDisabled={approvalDisabled} className="text-white font-medium" onPress={() => approve(index, true)}>Approve Wild</Button>
                                         </div>
 
                                         <div>
-                                            <Button color='danger' variant='light' className="font-medium" onPress={() => approve(index)}>Quick Approve</Button>
+                                            <Button color='danger' variant='light' className="font-medium" onPress={() => approve(index, true)}>Quick Approve</Button>
                                         </div>
 
                                     </div>
