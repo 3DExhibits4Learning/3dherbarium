@@ -29,7 +29,7 @@ model Account {
 }
 
 model annotations {
-  url              String?           @db.VarChar(1000)
+  url              String            @db.VarChar(1000)
   uid              String            @db.VarChar(100)
   annotation_no    Int               @db.TinyInt
   annotation_type  String            @db.Char(5)
@@ -198,6 +198,7 @@ model userSubmittal {
   thumbnail         String
   lat               Decimal
   lng               Decimal
+  communityId       String?
   commonName        String @default("")
   submittalSoftware submittalSoftware[]
   submittalTags     submittalTags[]
