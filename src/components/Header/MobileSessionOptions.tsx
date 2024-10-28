@@ -2,6 +2,7 @@
 
 import { signIn, signOut } from "next-auth/react"
 import { NavbarMenuItem, Avatar, Button, } from "@nextui-org/react"
+import Link from "next/link"
 
 export default function MobileSessionOptions(props: { session: any, userItems: string[] }) {
     return (
@@ -24,12 +25,12 @@ export default function MobileSessionOptions(props: { session: any, userItems: s
                 props.session &&
                 props.userItems.map((item, index) =>
                     <NavbarMenuItem key={`${item}-${index}`}>
-                        <a
+                        <Link
                             className="w-full text-[#004C46] dark:text-white   "
                             href={index === 0 ? "/dashboard" : index === 1 ? `/modelSubmit` : '#'}
                         >
                             {item}
-                        </a>
+                        </Link>
                     </NavbarMenuItem>
                 )
             }

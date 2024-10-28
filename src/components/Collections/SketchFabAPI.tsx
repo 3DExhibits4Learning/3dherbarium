@@ -15,6 +15,7 @@ import { model, model_annotation, photo_annotation } from '@prisma/client';
 import Herbarium from '@/utils/HerbariumClass';
 import { fullAnnotation, GbifImageResponse, GbifResponse } from '@/api/types';
 import { isMobileOrTablet } from '@/utils/isMobile';
+import { uid } from 'uid';
 
 const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model: model, images: GbifImageResponse[], imageTitle: string }) => {
 
@@ -32,6 +33,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   const sRef = useRef<Herbarium>()
   const modelViewer = useRef<HTMLIFrameElement>()
   const annotationDiv = useRef<HTMLDivElement>()
+  const tmpId = useRef<string>()
 
   const annotationSwitch = document.getElementById("annotationSwitch");
   const annotationSwitchMobile = document.getElementById("annotationSwitchMobileHidden");
@@ -70,8 +72,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
   // Set imgSrc from NFS storage
   const setImageFromNfs = async (url: string) => {
-    const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${url.slice(5)}` : `public${url}`
-    setImgSrc(`/api/annotations/photos?path=${path}`)
+    setImgSrc(url.replace('data', `tmp/${tmpId.current}`))
   }
 
   // This effect initializes the sketchfab client and instantiates the specimen:Herbarium object; it also ensures the page begins from the top upon load
@@ -82,12 +83,10 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
     // Choose initialization success object based on screen size
     if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
-      client.init(sketchFabLink, successObj);
-      console.log("Mobile Success Object used")
+      client.init(sketchFabLink, successObj)
     }
     else {
       client.init(sketchFabLink, successObjDesktop)
-      console.log("Desktop Success Object used")
     }
 
     // Instantiate/set herbarium and set annotations
@@ -95,11 +94,63 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model, props.images, props.imageTitle)
       setS(sRef.current)
       setAnnotations(sRef.current.annotations.annotations)
+
+          // Write annotation photos to tmp storage in the application
+
+    const writePhotosToTmp = async () => {
+      const annos = (sRef.current as Herbarium).annotations.annotations
+      const modelUid = (sRef.current as Herbarium).model.uid
+      const tmpUid = uid()
+      const tmpWrites = []
+
+      for (let i = 0; i < annos.length; i++) {
+
+        if (annos[i].annotation_type === 'photo' && annos[i].url?.startsWith('/data')) {
+
+          const body = {
+            path: annos[i].url,
+            dir: `public/data/Herbarium/Annotations/${modelUid}/${annos[i].annotation_id}`,
+            id: tmpUid
+          }
+
+          tmpWrites.push(fetch('/api/tmp/writeAnnotation', {
+            method: 'POST',
+            body: JSON.stringify(body)
+          }))
+        }
+      }
+
+      await Promise.all(tmpWrites).then(res => res[0].json()).then(json => tmpId.current = json.response)
+    }
+
+    writePhotosToTmp()
     }
 
     instantiateHerbarium()
 
-    document.body.scrollTop = document.documentElement.scrollTop = 0;
+    document.body.scrollTop = document.documentElement.scrollTop = 0
+
+    return () => {
+
+      const deleteTmpPhotos = async () => {
+
+        const annos = (sRef.current as Herbarium).annotations.annotations
+        const tmpDeletes = []
+
+        for (let i = 0; i < annos.length; i++) {
+
+          if (annos[i].annotation_type === 'photo' && annos[i].url?.startsWith('/data')) { 
+                
+            tmpDeletes.push(fetch(`/api/tmp/deleteAnnotation?path=${'public' + annos[i].url?.replace('data', `tmp/${tmpId.current}`)}`, {method: 'DELETE'}))
+          }
+        }
+
+        await Promise.all(tmpDeletes)
+      }
+
+      deleteTmpPhotos()
+    }
+
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // This effect implements any databased annotations and adds annotationSwitch event listeners and sets related mobile states

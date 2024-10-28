@@ -8,6 +8,7 @@ import { NavbarContent, Button, Dropdown, DropdownTrigger, DropdownMenu, Dropdow
 import Image from "next/image"
 import { signIn, signOut, useSession, } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import {admin} from "@/utils/devAuthed"
 
 export default function LogoAndSignIn() {
@@ -16,9 +17,9 @@ export default function LogoAndSignIn() {
     return (
         <>
             <NavbarContent className="hidden lg:flex pl-[0.5vw]" justify="end">
-                <a href='/'>
+                <Link href='/'>
                     <Image src="../../../libLogo.svg" width={70} height={70} alt="Logo" className="pt-[3px]" />
-                </a>
+                </Link>
                 {!session && <Button variant='ghost' color='secondary' onClick={() => signIn()}>Sign In</Button>}
                 {session &&
                     <Dropdown>

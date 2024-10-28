@@ -1,5 +1,6 @@
 import { Divider } from '@nextui-org/react'
 import Image from 'next/image'
+import Link from 'next/link';
 
 function Foot() {
   return (
@@ -17,30 +18,30 @@ function Foot() {
 
             {/* IMLS Logo*/}
             <section className='ml-8'>
-              <a href="https://www.imls.gov/" rel="noopener" target="_blank">
+              <Link href="https://www.imls.gov/" rel="noopener" target="_blank">
                 <div className="h-full relative w-[164px]">
                   <Image src="/imls_logo_white.svg" alt='IMLS Logo' fill />
                 </div>
-              </a>
+              </Link>
             </section>
 
             {/* CPH Logo*/}
             <section className="ml-8 mt-6">
-              <a href="https://humboldt.edu" rel="noopener" target="_blank">
+              <Link href="https://humboldt.edu" rel="noopener" target="_blank">
                 <div className="h-8 relative w-[164px] bottom-[5px]">
                   <Image src="/humSvg.svg" alt='Cal Poly Humboldt Logo' fill />
                 </div>
-              </a>
+              </Link>
             </section>
 
           </section>
 
           {/* Links in lower right hand corner on large screens */}
           <section className="text-white flex mx-8 justify-around items-center mt-5">
-            <p className='mx-4'><a href="/about">About</a></p>
-            <p className='mx-4'><a href="/contribute">Contribute</a></p>
-            <p className='mx-4'><a href="/licensing">License</a></p>
-            <p className='ml-4'><a href="/contact">Contact</a></p>
+            <p className='mx-4'><Link href="/about">About</Link></p>
+            <p className='mx-4'><Link href="/contribute">Contribute</Link></p>
+            <p className='mx-4'><Link href="/licensing">License</Link></p>
+            <p className='ml-4'><Link href="/contact">Contact</Link></p>
           </section>
 
         </section>
@@ -67,11 +68,11 @@ function Foot() {
 
             {/* IMLS Logo*/}
             <section className='h-16 w-1/2'>
-              <a href="https://www.imls.gov/" rel="noopener" target="_blank">
+              <Link href="https://www.imls.gov/" rel="noopener" target="_blank">
                 <div className="h-full relative w-full">
                   <Image src="/imls_logo_white.svg" alt='IMLS Logo' fill />
                 </div>
-              </a>
+              </Link>
             </section>
 
             {/* CPH Logo*/}
@@ -85,10 +86,10 @@ function Foot() {
 
           {/* Links */}
           <div className="text-white flex justify-between mx-2">
-            <p className='mx-2 text-center'><a href="/about">About</a></p>
-            <p className='mx-2 text-center'><a href="/contribute">Contribute</a></p>
-            <p className='mx-2 text-center'><a href="/licensing">License</a></p>
-            <p className='mx-2 text-center'><a href="/contact">Contact</a></p>
+            <p className='mx-2 text-center'><Link href="/about">About</Link></p>
+            <p className='mx-2 text-center'><Link href="/contribute">Contribute</Link></p>
+            <p className='mx-2 text-center'><Link href="/licensing">License</Link></p>
+            <p className='mx-2 text-center'><Link href="/contact">Contact</Link></p>
           </div>
 
         </section>
