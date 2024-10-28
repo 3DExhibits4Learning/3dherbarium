@@ -50,7 +50,10 @@ const SubHeader = (props: SubHeaderProps) => {
 
           <select
             value={props.modeler}
-            onChange={(e) => props.setSelectedModeler(e.target.value)}
+            onChange={(e) => {
+              props.setSelectedModeler(e.target.value)
+              history.replaceState(null, '', `${window.location.hostname}/collections/search?modeler=${e.target.value}`)
+            }}
             className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}
           >
             <option value="All" disabled selected>Modeled by</option>

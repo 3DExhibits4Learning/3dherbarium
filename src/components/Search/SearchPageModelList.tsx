@@ -21,7 +21,6 @@ interface SearchPageModelListProps {
 const SearchPageModelList = (props: SearchPageModelListProps) => {
 
   // Variable declarations
-  const params = useSearchParams()
   const models = props.models
   const selectedModeler: string = props.selectedModeler
   const selectedAnnotator = props.selectedAnnotator

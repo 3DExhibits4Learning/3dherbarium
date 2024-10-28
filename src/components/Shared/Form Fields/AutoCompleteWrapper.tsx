@@ -8,7 +8,7 @@ export default function AutoCompleteWrapper(props: { value: string, setValue: Di
     const [speciesOptions, setSpeciesOptions] = useState<any[]>([])
 
     const fetchAutoCompleteSpecies = async () => {
-        const speciesOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=1&rank=species&q=${props.value}`)
+        const speciesOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=47126&rank=species&q=${props.value}`)
             .then(res => res.json()).then(json => json.results)
         setSpeciesOptions(speciesOptions)
     }

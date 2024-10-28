@@ -94,7 +94,13 @@ export async function POST(request: Request) {
             },
             method: 'POST',
             body: data
-        }).then(res => res.json()).then(json => json)
+        })
+            .then(res => {
+                console.error(res.statusText)
+                if(!res.ok) throw Error('Bad model host request')
+                return res.json()
+            })
+            .then(json => json)
             .catch((e) => {
                 console.error(e.message)
                 throw new Error("Couldn't upload 3D model")
