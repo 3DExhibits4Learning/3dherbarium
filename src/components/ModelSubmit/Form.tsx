@@ -119,6 +119,7 @@ export default function ModelSubmitForm() {
         }
         catch (e: any) {
             // Set fail results
+            if(process.env.NEXT_PUBLIC_LOCAL_ENV && ['test', 'development'].includes(process.env.NEXT_PUBLIC_LOCAL_ENV)) console.error(e.message)
             setResult("Couldn't upload 3D model")
             setTransferring(false)
             setSuccess(false)

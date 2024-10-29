@@ -16,7 +16,7 @@ export default function ModelInput(props:{setFile: Dispatch<SetStateAction<File>
                     type='file'
                     name='file'
                     id='formFileInput'
-                    accept=".fbx,.blend,.obj,.dae,.3ds,.ply,.stl,.gltf,.glb,.zip"
+                    accept=".fbx,.blend,.obj,.dae,.3ds,.ply,.stl,.gltf,.glb,.zip,.usdz,.usdc"
                 >
                 </input>
             </div>

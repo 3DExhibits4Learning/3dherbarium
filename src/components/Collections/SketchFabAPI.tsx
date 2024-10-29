@@ -15,7 +15,6 @@ import { model, model_annotation, photo_annotation } from '@prisma/client';
 import Herbarium from '@/utils/HerbariumClass';
 import { fullAnnotation, GbifImageResponse, GbifResponse } from '@/api/types';
 import { isMobileOrTablet } from '@/utils/isMobile';
-import { Skeleton } from '@nextui-org/react';
 
 const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model: model, images: GbifImageResponse[], imageTitle: string }) => {
 
@@ -73,7 +72,6 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   // Set imgSrc from NFS storage
   const setImageFromNfs = async (url: string) => {
     const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${url.slice(5)}` : `public${url}`
-    setSkeletonClassname('bg-black h-full')
     setImgSrc(`/api/annotations/photos?path=${path}`)
   }
 
@@ -161,6 +159,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   useEffect(() => {
 
     if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && (annotations[index - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')) {
+      setSkeletonClassname('bg-black h-full')
       setImageFromNfs((annotations[index - 1].annotation as photo_annotation)?.url)
     }
     else if (!!index && annotations && annotations[index - 1].annotation_type == 'photo' && (annotations[index - 1].annotation as photo_annotation)?.photo) {
@@ -256,18 +255,17 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
               }
 
               {
-                !!index && annotations[index - 1].annotation_type === 'photo' &&
+                !!index && annotations[index - 1].annotation_type === 'photo' && skeletonClassname &&
                 <>
                   <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>
-                    <Skeleton isLoaded={false} className={`${skeletonClassname}`} />
-                    <div className='w-full h-full text-center fade'>
-                      <img key={Math.random()} className='fade center w-[98%] h-full pr-[2%] pt-[1%]'
-                        src={imgSrc}
-                        alt={`Image for annotation number ${annotations[index - 1].annotation_no}`}
-                        onLoad={() => setSkeletonClassname('bg-black h-full hidden')}
-                      >
-                      </img>
-                    </div>
+
+                      <div className='w-full h-full text-center fade'>
+                        <img key={Math.random()} className='fade center w-[98%] h-full pr-[2%] pt-[1%]'
+                          src={imgSrc}
+                          alt={`Image for annotation number ${annotations[index - 1].annotation_no}`}
+                        >
+                        </img>
+                      </div>
 
                   </div>
 
@@ -310,7 +308,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
             </div>
           </>
         }
-      </div>
+      </div >
     </>
   )
 }
