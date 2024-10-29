@@ -15,7 +15,7 @@ import { model, model_annotation, photo_annotation } from '@prisma/client';
 import Herbarium from '@/utils/HerbariumClass';
 import { fullAnnotation, GbifImageResponse, GbifResponse } from '@/api/types';
 import { isMobileOrTablet } from '@/utils/isMobile';
-import { uid } from 'uid';
+import { Skeleton } from '@nextui-org/react';
 
 const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model: model, images: GbifImageResponse[], imageTitle: string }) => {
 
@@ -29,11 +29,11 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   const [mobileIndex, setMobileIndex] = useState<number | null>(null);
   const [imgSrc, setImgSrc] = useState<string>()
   const [annotationTitle, setAnnotationTitle] = useState("")
+  const [skeletonClassname, setSkeletonClassname] = useState('bg-black h-full hidden')
 
   const sRef = useRef<Herbarium>()
   const modelViewer = useRef<HTMLIFrameElement>()
   const annotationDiv = useRef<HTMLDivElement>()
-  const tmpId = useRef<string>()
 
   const annotationSwitch = document.getElementById("annotationSwitch");
   const annotationSwitchMobile = document.getElementById("annotationSwitchMobileHidden");
@@ -72,7 +72,9 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
   // Set imgSrc from NFS storage
   const setImageFromNfs = async (url: string) => {
-    setImgSrc(url.replace('data', `tmp/${tmpId.current}`))
+    const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${url.slice(5)}` : `public${url}`
+    setSkeletonClassname('bg-black h-full')
+    setImgSrc(`/api/annotations/photos?path=${path}`)
   }
 
   // This effect initializes the sketchfab client and instantiates the specimen:Herbarium object; it also ensures the page begins from the top upon load
@@ -94,62 +96,11 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model, props.images, props.imageTitle)
       setS(sRef.current)
       setAnnotations(sRef.current.annotations.annotations)
-
-          // Write annotation photos to tmp storage in the application
-
-    const writePhotosToTmp = async () => {
-      const annos = (sRef.current as Herbarium).annotations.annotations
-      const modelUid = (sRef.current as Herbarium).model.uid
-      const tmpUid = uid()
-      const tmpWrites = []
-
-      for (let i = 0; i < annos.length; i++) {
-
-        if (annos[i].annotation_type === 'photo' && annos[i].url?.startsWith('/data')) {
-
-          const body = {
-            path: annos[i].url,
-            dir: `public/data/Herbarium/Annotations/${modelUid}/${annos[i].annotation_id}`,
-            id: tmpUid
-          }
-
-          tmpWrites.push(fetch('/api/tmp/writeAnnotation', {
-            method: 'POST',
-            body: JSON.stringify(body)
-          }))
-        }
-      }
-
-      await Promise.all(tmpWrites).then(res => res[0].json()).then(json => tmpId.current = json.response)
-    }
-
-    writePhotosToTmp()
     }
 
     instantiateHerbarium()
 
     document.body.scrollTop = document.documentElement.scrollTop = 0
-
-    return () => {
-
-      const deleteTmpPhotos = async () => {
-
-        const annos = (sRef.current as Herbarium).annotations.annotations
-        const tmpDeletes = []
-
-        for (let i = 0; i < annos.length; i++) {
-
-          if (annos[i].annotation_type === 'photo' && annos[i].url?.startsWith('/data')) { 
-                
-            tmpDeletes.push(fetch(`/api/tmp/deleteAnnotation?path=${'public' + annos[i].url?.replace('data', `tmp/${tmpId.current}`)}`, {method: 'DELETE'}))
-          }
-        }
-
-        await Promise.all(tmpDeletes)
-      }
-
-      deleteTmpPhotos()
-    }
 
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -226,6 +177,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     <>
 
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
+      <meta name="description" content={`An annotated 3D model of ${props.model.spec_name}`}></meta>
 
       {s && <AnnotationModal {...props} title={annotationTitle} index={mobileIndex} specimen={s} />}
 
@@ -307,14 +259,18 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
                 !!index && annotations[index - 1].annotation_type === 'photo' &&
                 <>
                   <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>
+                    <Skeleton isLoaded={false} className={`${skeletonClassname}`} />
                     <div className='w-full h-full text-center fade'>
                       <img key={Math.random()} className='fade center w-[98%] h-full pr-[2%] pt-[1%]'
                         src={imgSrc}
                         alt={`Image for annotation number ${annotations[index - 1].annotation_no}`}
+                        onLoad={() => setSkeletonClassname('bg-black h-full hidden')}
                       >
                       </img>
                     </div>
+
                   </div>
+
                   <div id="annotationDivText">
                     <br></br>
                     <p dangerouslySetInnerHTML={{ __html: (annotations[index - 1].annotation as photo_annotation).annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade' />
