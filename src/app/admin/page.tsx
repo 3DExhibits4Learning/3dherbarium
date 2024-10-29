@@ -14,7 +14,7 @@ export default async function Page() {
     const isAdmin = await userIsAdmin(email)
     
 
-    if (isAdmin) {
+    if (!isAdmin) {
         return <h1>NOT AUTHORIZED</h1>
     }
     

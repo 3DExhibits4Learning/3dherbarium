@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { getServerSession } from 'next-auth'
 import SessionProvider from '@/components/Shared/SessionProvider'
 import { redirect } from 'next/navigation'
-import {admin} from '@/utils/devAuthed'
+import { userIsAdmin } from "@/api/queries";
 
 import './globals.css';
 
@@ -21,7 +21,8 @@ export default async function RootLayout({
     }
     else {
       let email = session.user.email as string
-      if (!admin.includes(email)) {
+      const isAdmin = userIsAdmin(email)
+      if (!isAdmin) {
         return <h1>NOT AUTHORIZED</h1>
       }
     }
