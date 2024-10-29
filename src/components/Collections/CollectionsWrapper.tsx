@@ -118,7 +118,7 @@ export default function MainWrap(props: {
           !!props.model.length && !communityId &&
           <>
             <div className="hidden lg:flex h-10 bg-[#00856A] dark:bg-[#212121] text-white items-center justify-between ">
-              <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#imageSection"><u>Images</u></a> <a href="#mapSection"><u>iNaturalist Observations</u></a></p>
+              <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#images"><u>Images</u></a> <a href="#observations"><u>iNaturalist Observations</u></a></p>
               <Switch style={{ paddingRight: "2.5%" }} defaultSelected id="annotationSwitch" isSelected={isSelected} color='secondary' onValueChange={setIsSelected}>
                 <span className="text-white">Annotations</span>
               </Switch>
@@ -133,14 +133,14 @@ export default function MainWrap(props: {
                 />
               </div>
               {/* Tailwind utility class "mb" was literally broken here. Anything less than mb-4 was treated as zero margin. Only style would work. */}
-              <div id="imageSection" style={{ marginBottom: "14px" }} className="mt-4">
+              <div id="images" style={{ marginBottom: "14px" }} className="mt-4">
                 <ComponentDivider title={props.noModelData.title} />
               </div>
               <div style={{ maxHeight: viewportHeightInPx }}>
                 <OccurrenceSwiper
                   info={props.noModelData.images} swiperHeight={swiperHeight} imageHeight={imgHeight} />
               </div>
-              <div className="mt-4">
+              <div className="mt-4" id='observations'>
                 <ComponentDivider title={'Observations from iNaturalist'} />
               </div>
               <div style={{ height: "calc(100vh - 176px)", maxHeight: viewportHeightInPx, minHeight: '750px' }}>
@@ -155,21 +155,21 @@ export default function MainWrap(props: {
           (!props.model.length || communityId) && userModel && props.gMatch.hasInfo &&
           <>
             <div className="hidden lg:flex h-10 bg-[#00856A] dark:bg-[#212121] text-white items-center justify-between ">
-              <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#imageSection"><u>Images</u></a> <a href="#mapSection"><u>iNaturalist Observations</u></a></p>
+              <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#images"><u>Images</u></a> <a href="#observations"><u>iNaturalist Observations</u></a></p>
             </div>
             <div className="flex flex-col m-auto" style={{ width: "100vw", maxWidth: viewWidthInPx, margin: "0 auto !important" }}>
               <div style={{ height: modelHeight, maxHeight: viewportHeightInPx }}>
                 <CommunitySFAPI model={userModel} gMatch={props.gMatch} images={props.noModelData.images} imageTitle={props.noModelData.title} />
               </div>
               {/* Tailwind utility class "mb" was literally broken here. Anything less than mb-4 was treated as zero margin. Only style would work. */}
-              <div id="imageSection" style={{ marginBottom: "14px" }} className="mt-4">
+              <div id="images" style={{ marginBottom: "14px" }} className="mt-4">
                 <ComponentDivider title={props.noModelData.title} />
               </div>
               <div style={{ maxHeight: viewportHeightInPx }}>
                 <OccurrenceSwiper
                   info={props.noModelData.images} swiperHeight={swiperHeight} imageHeight={imgHeight} />
               </div>
-              <div className="mt-4">
+              <div id='obseravtions' className="mt-4">
                 <ComponentDivider title={'Observations from iNaturalist'} />
               </div>
               <div style={{ height: "calc(100vh - 176px)", maxHeight: viewportHeightInPx, minHeight: '750px' }}>

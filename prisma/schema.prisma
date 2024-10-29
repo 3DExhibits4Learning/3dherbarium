@@ -44,6 +44,11 @@ model annotations {
   @@index([uid], map: "uid")
 }
 
+model authed {
+  email         String  @id
+  role          String  @db.VarChar(25)
+}
+
 model common_names {
   spec_name   String  @db.VarChar(100)
   common_name String  @db.VarChar(100)

@@ -821,6 +821,34 @@ export const updateCommunityId = async (confirmation: string, id: string) => {
   return update
 }
 
+/**
+ * @function userIsAdmin
+ * @description return boolean value indicating whether or not the email argument belongs to an administrator
+ * 
+ */
+export const userIsAdmin = async (email: string) => {
+
+  const user = await prisma.authed.findUnique({
+    where: { email: email },
+  })
+
+  return user !== null ? true : false
+}
+
+/**
+ * @function getAdmin
+ * @description return admin object or null
+ * 
+ */
+export const getAdmin = async (email: string) => {
+
+  const user = await prisma.authed.findUnique({
+    where: { email: email },
+  })
+
+  return user
+}
+
 
 // /**
 //  * @function getAnnotationPositionsAndTitles

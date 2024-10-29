@@ -4,7 +4,8 @@ import ModelerDash from "@/components/Admin/ModelerDash";
 import { getSpecimenWithoutPhotos, getSpecimenToModel } from "@/api/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { management, modeler } from "@/utils/devAuthed"
+import { getAdmin } from "@/api/queries";
+import { authed } from "@prisma/client";
 
 export default async function Page() {
 
@@ -12,12 +13,15 @@ export default async function Page() {
 
     const session = await getServerSession(authOptions)
     let email = session?.user?.email as string
-    if (!management.includes(email) && !modeler.includes(email)) {
+    const admin = await getAdmin(email) as authed
+    
+    if (!['Director', '3D Modeler'].includes(admin.role)) {
         return <h1>NOT AUTHORIZED</h1>
     }
 
     const specimenToImage: any = await getSpecimenWithoutPhotos()
     const specimenToModel: any = await getSpecimenToModel()
+
     return (
         <>
             <Header pageRoute="/collections" headerTitle='3D Model Admin' />

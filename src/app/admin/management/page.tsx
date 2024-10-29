@@ -3,8 +3,9 @@ import Foot from "@/components/Shared/Foot";
 import { getAllPendingModels } from "@/api/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { management } from "@/utils/devAuthed"
 import ManagerClient from "@/components/Admin/ManagerClient"
+import { getAdmin } from "@/api/queries";
+import { authed } from "@prisma/client";
 
 
 export default async function Page() {
@@ -13,8 +14,9 @@ export default async function Page() {
 
     const session = await getServerSession(authOptions)
     let email = session?.user?.email as string
+    const admin = await getAdmin(email) as authed
 
-    if (!management.includes(email)) {
+    if (admin.role !== 'Director') {
         return <h1>NOT AUTHORIZED</h1>
     }
     // Model array must be stringified due to the following warning from next.js:

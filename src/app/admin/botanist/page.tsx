@@ -4,13 +4,16 @@ import BotanyClient from "@/components/Admin/BotanyClient"
 import { getAllAnnotationModels, getModelsToAnnotate, getTestModel } from "@/api/queries"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { management, botanist } from "@/utils/devAuthed"
+import { getAdmin } from "@/api/queries"
+import { authed } from "@prisma/client"
 
 export default async function Page() {
 
     const session = await getServerSession(authOptions)
     let email = session?.user?.email as string
-    if (!management.includes(email) && !botanist.includes(email)) {
+    const admin = await getAdmin(email) as authed
+    
+    if (!['Director', 'Botanist'].includes(admin.role)) {
         return <h1>NOT AUTHORIZED</h1>
     }
 
