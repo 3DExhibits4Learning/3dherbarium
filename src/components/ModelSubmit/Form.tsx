@@ -132,10 +132,10 @@ export default function ModelSubmitForm() {
     // This effect checks all necessary fields upon update to enable/disable the upload button
     useEffect(() => {
 
-        if (speciesName && photos && photos.length && position && artistName && madeWithMobile && buildMethod && softwareArr.length > 0 && file) { setUploadDisabled(false) }
+        if (speciesName && photos && photos.length && position && artistName && madeWithMobile && buildMethod && softwareArr.length > 0 && file && wildOrCultivated) { setUploadDisabled(false) }
         else { setUploadDisabled(true) }
 
-    }, [speciesName, photos, position, artistName, madeWithMobile, buildMethod, softwareArr, file])
+    }, [speciesName, photos, position, artistName, madeWithMobile, buildMethod, softwareArr, file, wildOrCultivated])
 
     return (
         <>
