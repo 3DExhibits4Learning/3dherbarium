@@ -59,11 +59,13 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   Object.assign(successObjDesktop, { annotation: 1 })
   successObjDesktop.ui_fadeout = 1
 
-  // Annotation switch event listeners
+  // Annotation switch event listener
   const annotationSwitchListener = (event: Event) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
     annotationControl(api, annotations, (event.target as HTMLInputElement).checked)
   }
+
+  // Mobile annotation switch event listener
   const annotationSwitchMobileListener = (event: Event) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
     annotationControl(api, annotations, (event.target as HTMLInputElement).checked)
@@ -178,9 +180,13 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
       <meta name="description" content={`An annotated 3D model of ${props.model.spec_name}`}></meta>
 
-      {s && <AnnotationModal {...props} title={annotationTitle} index={mobileIndex} specimen={s} />}
+      {
+        s &&
+        <AnnotationModal {...props} title={annotationTitle} index={mobileIndex} specimen={s} />
+      }
 
       <div id="iframeDiv" className="flex bg-black m-auto min-h-[150px]" style={{ height: "100%", width: "100%" }}>
+        
         <iframe src={props.model.uid} frameBorder="0" id="model-viewer" title={"Model Viewer for " + ''}
           allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking="true"
           execution-while-out-of-viewport="true" execution-while-not-rendered="true" web-share="true"
@@ -189,8 +195,9 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
           ref={modelViewer as LegacyRef<HTMLIFrameElement>}
         />
 
-        {s && annotations &&
-          <>
+        {
+          s && annotations && <>
+
             <div id="annotationDiv" ref={annotationDiv as LegacyRef<HTMLDivElement>} style={{ width: "40%", backgroundColor: "black", transition: "width 1.5s", color: "#F5F3E7", zIndex: "1", overflowY: "auto", overflowX: "hidden" }}>
 
               {
@@ -259,13 +266,13 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
                 <>
                   <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>
 
-                      <div className='w-full h-full text-center fade'>
-                        <img key={Math.random()} className='fade center w-[98%] h-full pr-[2%] pt-[1%]'
-                          src={imgSrc}
-                          alt={`Image for annotation number ${annotations[index - 1].annotation_no}`}
-                        >
-                        </img>
-                      </div>
+                    <div className='w-full h-full text-center fade'>
+                      <img key={Math.random()} className='fade center w-[98%] h-full pr-[2%] pt-[1%]'
+                        src={imgSrc}
+                        alt={`Image for annotation number ${annotations[index - 1].annotation_no}`}
+                      >
+                      </img>
+                    </div>
 
                   </div>
 

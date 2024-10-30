@@ -204,6 +204,7 @@ model userSubmittal {
   lat               Decimal
   lng               Decimal
   communityId       String?
+  wild              Boolean  @default(false)
   commonName        String @default("")
   submittalSoftware submittalSoftware[]
   submittalTags     submittalTags[]
