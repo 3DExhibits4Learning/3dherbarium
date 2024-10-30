@@ -15,6 +15,7 @@ import PhotoInput from '../Shared/Form Fields/PhotoInput';
 import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
 import { uid } from 'uid';
+import WildSelect from './Wild';
 
 interface ModelSubmitFormProps{
     edit?: boolean
@@ -42,6 +43,7 @@ export default function ModelSubmitForm() {
     const [file, setFile] = useState<File | null>(null)
     const [photos, setPhotos] = useState<FileList>()
     const [uploadDisabled, setUploadDisabled] = useState<boolean>(true)
+    const [wildOrCultivated, setWildOrCultivated] = useState<string>()
 
     // Data transfer states
     const [open, setOpen] = useState<boolean>(false)
@@ -86,6 +88,7 @@ export default function ModelSubmitForm() {
             data.set('position', pos)
             data.set('file', file as File)
             data.set('confirmation', confirmation)
+            data.set('wildOrCultivated', wildOrCultivated as string)
 
             // Route handler fetch
             const result = await fetch('/api/modelSubmit', {
@@ -149,6 +152,7 @@ export default function ModelSubmitForm() {
 
                 <Divider className='mb-6' />
 
+                <WildSelect setValue={setWildOrCultivated as Dispatch<SetStateAction<string>>}/>
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
                 <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
                 <FormMap position={position} setPosition={setPosition} title required />

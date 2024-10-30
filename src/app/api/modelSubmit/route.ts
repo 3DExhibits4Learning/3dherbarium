@@ -46,6 +46,7 @@ export async function POST(request: Request) {
                     console.error(e.message)
                     throw Error("Couldn't make directory")
                 })
+
                 // Get file
                 const file = body.get(`photo${i}`) as File
 
@@ -133,7 +134,8 @@ export async function POST(request: Request) {
                 status: 'Pending',
                 thumbnail: thumbUrl,
                 lat: position.lat,
-                lng: position.lng
+                lng: position.lng,
+                wild: body.get('wild') === 'wild' ? true : false,
             }
         }).catch((e) => {
             console.error(e.message)
