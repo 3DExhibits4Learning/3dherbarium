@@ -203,7 +203,7 @@ model userSubmittal {
   thumbnail         String
   lat               Decimal
   lng               Decimal
-  communityId       String?
+  communityId       Int?
   wild              Boolean  @default(false)
   commonName        String @default("")
   submittalSoftware submittalSoftware[]

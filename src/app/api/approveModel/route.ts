@@ -13,6 +13,7 @@ import { ApproveModelObject } from "@/api/types"
 import { fetchSpecimenGbifInfo } from "@/api/fetchFunctions"
 import { updateCommunityId } from "@/api/queries"
 
+// POST route handler
 export async function POST(request: Request) {
 
     try {
@@ -24,6 +25,7 @@ export async function POST(request: Request) {
         let promises = []
         let results: any = []
 
+        // Grab request data
         const requestData: ApproveModelObject = await request.json().catch((e) => {
             console.error(e.message)
             throw new Error("Couldn't get body data")
@@ -138,7 +140,11 @@ export async function POST(request: Request) {
             // iNaturalist sends a 200 status code with error keys on bad request
             for (let i = 0; i < results.length; i++) { if (Object.keys(results[i]).includes('error')) { throw Error('Error posting photo to observation') } }
 
-            await updateCommunityId(requestData.confirmation, postObservation.id)
+            // Update community (inat) ID
+            await updateCommunityId(requestData.confirmation, postObservation.id).catch((e) => {
+                console.error(e.message)
+                throw new Error("Error updating community ID")
+            })
         }
 
         // Finally, mark the 3D model as approved in the database
@@ -152,5 +158,5 @@ export async function POST(request: Request) {
     }
 
     // Typical fail response
-    catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }
+    catch (e: any) {return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message })}
 }
