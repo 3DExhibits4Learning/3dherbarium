@@ -63,7 +63,7 @@ const SearchPageContent = () => {
         a.unshift('All'); b.unshift('All')
 
         if(modeler && a.includes(modeler)) setSelectedModeler(modeler)
-        if(annotator && b.includes(annotator)) setSelectedModeler(annotator)
+        if(annotator && b.includes(annotator)) setSelectedAnnotator(annotator)
         if(orderParam && ['Newest First', 'Alphabetical', 'Reverse Alphabetical'].includes(orderParam)) setOrder(orderParam)
 
         setModeledByList(a)
