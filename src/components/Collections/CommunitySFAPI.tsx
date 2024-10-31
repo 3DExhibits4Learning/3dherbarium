@@ -21,6 +21,7 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
 
     const [s, setS] = useState<CommunityHerbarium>() // s = specimen
     const [mobileDataOpen, setMobileDataOpen] = useState<boolean>(false)
+    const [grade, setGrade] = useState<string>()
 
     useEffect(() => {
         document.body.scrollTop = document.documentElement.scrollTop = 0;
@@ -29,13 +30,29 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
             setS(await CommunityHerbarium.model(props.model, props.gMatch, props.images, props.imageTitle))
         }
         instantiateHerbarium()
-    }, []);
+    }, [])
+
+    useEffect(() => {
+
+        const setQualityGrade = async () => {
+
+            if (s) {
+                const grade = await fetch(`https://api.inaturalist.org/v1/observations/${s.model.communityId}`)
+                    .then(res => res.json()).then(json => json.results[0].quality_grade)
+
+                setGrade(toUpperFirstLetter(grade))
+            }
+        }
+
+        setQualityGrade()
+
+    }, [s])
 
     return (
         <>
             <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
 
-           {s && <CommunityDataModal specimen={s} open={mobileDataOpen} setOpen={setMobileDataOpen} />}
+            {s && <CommunityDataModal specimen={s} open={mobileDataOpen} setOpen={setMobileDataOpen} />}
 
             <div className="flex bg-black m-auto min-h-[150px]" style={{ height: "100%", width: "100%" }}>
 
@@ -44,7 +61,7 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
                         color='secondary'
                         className='z-[1] absolute ml-4 mt-4 lg:ml-8 lg:mt-8 text-black'
                         onClick={() => {
-                            if(window.matchMedia('(max-width: 1023.5px)').matches)setMobileDataOpen(true)
+                            if (window.matchMedia('(max-width: 1023.5px)').matches) setMobileDataOpen(true)
                         }}
                     >
                         Community
@@ -92,17 +109,23 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
                                     </div>
                                     <div className='w-[65%] py-[20px] justify-center items-center text-center'>
                                         <p>Modeler: {s.model.artistName}</p>
-                                        <p>Build method: {s.model.methodology}</p>
+                                        <p>Build method: {toUpperFirstLetter(s.model.methodology)}</p>
+                                        
                                         {
-                                            s.model.communityId &&
-                                            <p>Community ID: {s.model.communityId}</p>
+                                            !s.model.wild &&
+                                            <p>Quality Grade: Casual</p>
+                                        }
+
+                                        {
+                                            grade && s.model.wild &&
+                                            <p>Quality Grade: <u><a href={`https://inaturalist.org/observations/${s.model.communityId}`} target='_blank'>{grade}</a></u></p>
                                         }
 
                                         {
                                             s.model.createdWithMobile &&
                                             <>
                                                 <div className="flex items-center justify-center">
-                                                    <div className='relative h-[24px] w-[24px] inline-block my-2'>
+                                                    <div className='relative h-[24px] w-[24px] inline-block my-3'>
                                                         <Image src='../../../cellPhone.svg' alt='Mobile Device Icon' fill></Image>
                                                     </div>
                                                     <span className="ml-1">Made with mobile app</span>

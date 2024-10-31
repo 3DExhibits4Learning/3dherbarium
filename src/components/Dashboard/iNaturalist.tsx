@@ -81,7 +81,7 @@ export default function InaturalistDash(props: { iNatAccountLinked: boolean, tok
         }
     }, [props.activeSpeciesName]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    if (!props.iNatAccountLinked) return <div className="h-full w-[30%]">Link your iNaturalist Account to post an observation, message other iNat users and more!</div>
+    if (!props.iNatAccountLinked) return <div className="h-full w-full text-center mt-12 text-xl">Link your iNaturalist Account to post an observation, message other iNat users and more!</div>
 
     return (
         <>

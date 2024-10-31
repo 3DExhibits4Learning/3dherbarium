@@ -67,10 +67,11 @@ export default function InatMap(props: { activeSpecies: string, observations: an
                                                         <p className='text-center text-[20px] !mt-0 !mb-[12px] text-[#004C46] dark:text-[#F5F3E7]'>{toUpperFirstLetter(observation.taxon.preferred_common_name)}</p>
                                                         <p className='text-[14px] !mt-0 !mb-[12px]'>Observer: {observation.user.login}</p>
                                                         <p className='text-[14px] !m-0 !mb-[12px]'>Date: {observation.observed_on_details.date}</p>
-                                                        <p className='text-[14px] !m-0 hover:underline hover:cursor-pointer'>
+                                                        {/* <p className='text-[14px] !m-0 hover:underline hover:cursor-pointer'>
                                                             <div className=' relative h-[24px] w-[24px] mr-1'>
                                                                 <Image src='/messageIcon.png' alt='Message Icon' fill></Image>
-                                                            </div>Message {observation.user.login}</p>
+                                                            </div>Message {observation.user.login}
+                                                        </p> */}
                                                     </div>
                                                     <img src={observation.photos[0].url.replace('square', 'small')} alt="observation photo" className='inline-block w-[125px] h-[150px]' />
                                                 </div>

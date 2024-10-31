@@ -51,7 +51,7 @@ export default function DashMap(props: { observations: any[], position: LatLngEx
                                                 <p className='text-center text-[20px] !mt-0 !mb-[12px] text-[#004C46] dark:text-[#F5F3E7]'>{toUpperFirstLetter(observation.taxon.preferred_common_name)}</p>
                                                 <p className='text-[14px] !mt-0 !mb-[12px]'>Observer: {observation.user.login}</p>
                                                 <p className='text-[14px] !m-0 !mb-[12px]'>Date: {observation.observed_on_details?.date ?? ''}</p>
-                                                <p className='text-[14px] !m-0 hover:underline hover:cursor-pointer'
+                                                {/* <p className='text-[14px] !m-0 hover:underline hover:cursor-pointer'
                                                     onClick={() => {
                                                         setMessageRecipient(observation.user.login_exact ?? observation.user.login)
                                                         setOpenMessageSend(true)
@@ -59,7 +59,7 @@ export default function DashMap(props: { observations: any[], position: LatLngEx
                                                 >
                                                     <div className='h-[24px] w-[24px] relative mr-1'><Image src='/messageIcon.png' alt='Message Icon' fill></Image></div>
                                                     Message {observation.user.login}
-                                                </p>
+                                                </p> */}
                                             </div>
                                             <img src={observation.photos[0].url.replace('square', 'small')} alt="observation photo" className='inline-block w-[125px] h-[150px]' />
                                         </div>

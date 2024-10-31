@@ -147,7 +147,7 @@ export async function POST(request: Request) {
             await prisma.submittalSoftware.create({
                 data: {
                     id: confirmation,
-                    software: software
+                    software: softwareArr[software]
                 }
             }).catch((e) => {
                 console.error(e.message)
@@ -160,7 +160,7 @@ export async function POST(request: Request) {
             await prisma.submittalTags.create({
                 data: {
                     id: confirmation,
-                    tag: tag
+                    tag: tags[tag]
                 }
             }).catch((e) => {
                 console.error(e.message)

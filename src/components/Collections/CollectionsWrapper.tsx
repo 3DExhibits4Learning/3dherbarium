@@ -169,7 +169,7 @@ export default function MainWrap(props: {
                 <OccurrenceSwiper
                   info={props.noModelData.images} swiperHeight={swiperHeight} imageHeight={imgHeight} />
               </div>
-              <div id='obseravtions' className="mt-4">
+              <div id='observations' className="mt-4">
                 <ComponentDivider title={'Observations from iNaturalist'} />
               </div>
               <div style={{ height: "calc(100vh - 176px)", maxHeight: viewportHeightInPx, minHeight: '750px' }}>
