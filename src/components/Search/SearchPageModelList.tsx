@@ -35,8 +35,8 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
 
   // Filter by search query
   if (query) {
-    filteredModels = filteredModels.filter(model => (model as model).spec_name.includes(query) || (model as model).pref_comm_name.includes(query))
-    communityModels = communityModels.filter(model => model.speciesName.includes(query.toLowerCase()) || model.commonName.includes(query.toLowerCase()))
+    filteredModels = filteredModels.filter(model => (model as model).spec_name.toLowerCase().includes(query.toLowerCase()) || (model as model).pref_comm_name.toLowerCase().includes(query.toLowerCase()))
+    communityModels = communityModels.filter(model => model.speciesName.toLowerCase().includes(query.toLowerCase()) || model.commonName.toLowerCase().includes(query.toLowerCase()))
   }
 
   // Join and organize herbarium models and community models if there is no selected modeler or annotator

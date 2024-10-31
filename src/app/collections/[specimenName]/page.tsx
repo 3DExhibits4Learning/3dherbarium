@@ -45,12 +45,11 @@ export default async function Page({ params, searchParams }: { params: { specime
   }
 
   // If there is a 3d model for the searched specimen or image data for the specimen searched, continue
-  if (_3dmodel.length || images) { }
+  if (_3dmodel.length || images.length) {}
 
   // If there are no models, search for common name information. If there is no common name information, display appropriate message. If there is, populate the redirect url.
   else {
     const commonNameInfo = await fetchCommonNameInfo(params.specimenName);
-
     if (commonNameInfo.length <= 0) {
       
       return (

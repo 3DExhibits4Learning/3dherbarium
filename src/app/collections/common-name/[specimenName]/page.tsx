@@ -5,7 +5,7 @@
  */
 
 import { fetchCommonNameInfo } from "@/api/fetchFunctions";
-import { CommonNameInfo, SiteReadyModels } from "@/api/types";
+import { CommonNameInfo } from "@/api/types";
 
 import CommonNameList from "@/components/CommonName/CommonNameList";
 import dynamic from "next/dynamic";
