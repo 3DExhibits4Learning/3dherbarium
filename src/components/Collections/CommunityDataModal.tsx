@@ -5,6 +5,7 @@ import CommunityHerbarium from "@/utils/Community3dModel";
 import { addCommas, boolRinse } from "./SketchfabDom";
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
 import Image from "next/image";
+import { Divider } from "@nextui-org/react";
 
 export default function CommunityDataModal(props: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, specimen: CommunityHerbarium }) {
     const s = props.specimen
@@ -16,11 +17,14 @@ export default function CommunityDataModal(props: { open: boolean, setOpen: Disp
                         <>
                             <ModalBody className="text-center">
                                 <div className="w-full" style={{ display: "block" }}>
-                                    <div className='fade flex w-[99%] mt-[25px]'>
-                                        <div className='annotationBorder w-[35%] flex text-[1.5rem] justify-center items-center py-[20px] border-r'>
+                                    <div className='fade flex flex-col w-[99%] mt-[25px]'>
+                                        <div className='w-full flex text-[1.5rem] justify-center items-center py-[20px]'>
                                             <p> Classification </p>
                                         </div>
-                                        <div className='w-[65%] py-[20px] justify-center items-center text-center'>
+
+                                        <Divider />
+
+                                        <div className='w-full py-[20px] justify-center items-center text-center'>
                                             <p>Species: <i><span className='text-[#FFC72C]'>{s.gMatch.data?.species}</span></i></p>
                                             <p>Kingdom: {s.gMatch.data?.kingdom}</p>
                                             <p>Phylum: {s.gMatch.data?.phylum}</p>
@@ -30,11 +34,14 @@ export default function CommunityDataModal(props: { open: boolean, setOpen: Disp
                                         </div>
                                     </div>
 
-                                    <div className='fade flex w-[99%] mt-[25px]'>
-                                        <div className='annotationBorder w-[35%] flex text-[1.5rem] justify-center items-center py-[20px] border-r'>
+                                    <div className='fade flex flex-col w-[99%] mt-[25px]'>
+                                        <div className='w-full flex text-[1.5rem] justify-center items-center py-[20px]'>
                                             <p> Profile </p>
                                         </div>
-                                        <div className='w-[65%] py-[20px] justify-center items-center text-center px-[2%]'>
+
+                                        <Divider />
+
+                                        <div className='w-full py-[20px] justify-center items-center text-center px-[2%]'>
                                             {s.commonNames.length > 1 && <p>Common Names: {addCommas(s.commonNames)}</p>}
                                             {s.commonNames.length == 1 && <p>Common Names: {s.commonNames[0]}</p>}
                                             {s.profile.extinct !== '' && <p>Extinct: {boolRinse(s.profile.extinct)}</p>}
@@ -44,11 +51,14 @@ export default function CommunityDataModal(props: { open: boolean, setOpen: Disp
                                         </div>
                                     </div>
 
-                                    <div className='fade flex w-[99%] mt-[25px]'>
-                                        <div className='annotationBorder w-[35%] flex text-[1.5rem] justify-center items-center py-[20px] border-r'>
+                                    <div className='fade flex flex-col w-[99%] mt-[25px]'>
+                                        <div className='w-full flex text-[1.5rem] justify-center items-center py-[20px]'>
                                             <p> 3D Model </p>
                                         </div>
-                                        <div className='w-[65%] py-[20px] justify-center items-center text-center'>
+
+                                        <Divider />
+
+                                        <div className='w-full py-[20px] justify-center items-center text-center'>
                                             <p>Modeler: {s.model.artistName}</p>
                                             <p>Build method: {s.model.methodology}</p>
 
