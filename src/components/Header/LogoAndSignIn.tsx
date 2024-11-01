@@ -53,7 +53,7 @@ export default function LogoAndSignIn() {
                         <DropdownItem key="modelSubmit" onClick={() => router.push('/modelSubmit')}>Submit 3D Model</DropdownItem>
 
                         {
-                            isAdministrator && (process.env.LOCAL_ENV === 'development' || session.user?.email === 'ab632@humboldt.edu') &&
+                            isAdministrator && (process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' || session.user?.email === 'ab632@humboldt.edu') &&
                             <DropdownItem key="modelSubmit" onClick={() => router.push('/admin')}>Admin</DropdownItem>
                         }
 
