@@ -34,9 +34,11 @@ export default async function Page({ params, searchParams }: { params: { specime
   await Promise.all(promises).then(results => {
     gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse }
     _3dmodel = results[1] as model[]
-    images = fetchHSCImages(params.specimenName)
-    noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
   })
+
+  // Grab HSC images for the species parameter (if they exist)
+  images = await fetchHSCImages(params.specimenName)
+  noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
 
   // Fetch general GBIF images if the HSC (CPH Vascular plant herbarium) doens't have any for the searched specimen
   if (!images.length && gMatch.hasInfo) {
