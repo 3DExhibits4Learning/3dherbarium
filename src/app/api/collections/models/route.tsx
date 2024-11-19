@@ -1,4 +1,5 @@
 import { getAllSiteReadyModels } from "@/api/queries"
+export const dynamic = 'force-dynamic'
 
 // Returns all SiteReadyModels
 export async function GET() {
