@@ -812,7 +812,7 @@ export const deleteModelAnnotation = async (id: string) => {
  * @description update the communityId (inat post id) for a user submittal
  * 
  */
-export const updateCommunityId = async (confirmation: string, id: string) => {
+export const updateCommunityId = async (confirmation: string, id: number) => {
 
   const update = await prisma.userSubmittal.update({
     where: { confirmation: confirmation },
@@ -860,8 +860,6 @@ export const getAdmin = async (email: string) => {
 //   const positionsAndTitles : {position: string, }
 
 //   const firstAnnotationPosition = getFirstAnnotationPostion(uid)
-
-
 // }
 
 

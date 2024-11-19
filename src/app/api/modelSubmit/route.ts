@@ -97,8 +97,10 @@ export async function POST(request: Request) {
             body: data
         })
             .then(res => {
-                console.error(res.statusText)
-                if(!res.ok) throw Error('Bad model host request')
+                if (!res.ok) {
+                    console.error(res.statusText)
+                    throw Error('Bad SF request')
+                }
                 return res.json()
             })
             .then(json => json)
