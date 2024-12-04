@@ -4,20 +4,23 @@
  * Contains the 3D model (if it exists), images and occurrence map.
  */
 
+// Typical imports
 import { GbifImageResponse, GbifResponse } from "@/api/types"
 import { getModel } from '@/api/queries'
 import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions"
 import { fetchHSCImages } from "@/api/fetchFunctions"
+import { model } from "@prisma/client"
+
+// Default imports
 import Foot from '@/components/Shared/Foot'
 import dynamic from "next/dynamic"
-import { model } from "@prisma/client"
+
+// Dynamic imports
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
 
-// communityId to be used here in the future
+// Main JSX (communityId to be used here in the future)
 export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: { communityId: string } }) {
-
-
 
   // Variable declarations
   let redirectUrl: string | null = null;

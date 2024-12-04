@@ -141,6 +141,10 @@ img {
   margin-right: 10px;
 }
 
+.swiper-pagination{
+  margin-bottom: 0.35%;
+}
+
 .swiper-button-next:hover,
 .swiper-button-prev:hover {
   background-color: rgb(245, 243, 231, 0.8);

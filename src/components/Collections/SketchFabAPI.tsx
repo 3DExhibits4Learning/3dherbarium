@@ -72,7 +72,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   }
 
   // Set imgSrc from NFS storage
-  const setImageFromNfs = async (url: string) => {
+  const setImageFromNfs = (url: string) => {
     const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${url.slice(5)}` : `public${url}`
     setImgSrc(`/api/annotations/photos?path=${path}`)
   }

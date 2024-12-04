@@ -1,21 +1,38 @@
-"use client";
+/**
+ * @file  src/components/Collections/CollectionsWrapper.tsx
+ * 
+ * @fileoverview client wrapper for the collections page
+ */
 
-import { useEffect, useState } from 'react'
+"use client"
+
+// Typical imports
+import { useEffect, useState, createContext, useReducer } from 'react'
+import { useRouter, useSearchParams } from "next/navigation"
+import { isMobileOrTablet } from '@/utils/isMobile';
+import { model, userSubmittal } from '@prisma/client';
+import { GbifResponse, GbifImageResponse } from '@/api/types';
+import { CollectionsWrapperData } from '@/ts/reducer';
+
+// Default imports
+import Header from '../Header/Header';
+import CollectionsSubheader from './SubHeader';
 import ComponentDivider from '@/components/Shared/ComponentDivider'
 import OccurrenceSwiper from "@/components/Collections/GbifSwiper"
-import Foot from '@/components/Shared/Foot'
-import { Switch } from "@nextui-org/react"
-import { useRouter, useSearchParams } from "next/navigation"
 import Inaturalist from '@/components/Collections/iNaturalist'
 import dynamic from 'next/dynamic'
 import CommunitySFAPI from '@/components/Collections/CommunitySFAPI'
 import CommunityModelWithoutGmatch from '@/components/Collections/CommunityWithoutGmatch';
-import { isMobileOrTablet } from '@/utils/isMobile';
-const SketchfabApi = dynamic(() => import('@/components/Collections/SketchFabAPI'), { ssr: false })
-import { model, userSubmittal } from '@prisma/client';
-import { GbifResponse, GbifImageResponse } from '@/api/types';
-import Header from '../Header/Header';
+import collectionsMediaReducer from '@/functions/client/reducers/CollectionsMediaStateReducer';
+import Foot from '@/components/Shared/Foot'
 
+// Dynamic imports
+const SketchfabApi = dynamic(() => import('@/components/Collections/SketchFabAPI'), { ssr: false })
+
+// Exported context
+export const CollectionsContext = createContext<'' | CollectionsWrapperData>('')
+
+// Main JSX
 export default function MainWrap(props: {
   redirectUrl: string | null,
   model: model[],
@@ -27,18 +44,31 @@ export default function MainWrap(props: {
   // Variable Declarations
   const redirectUrl: string | null = props.redirectUrl
   const router = useRouter();
-  //const mediaQuery = window.matchMedia('(max-width: 1023.5px)')
-  var modelHeight = isMobileOrTablet() ? "calc(100vh - 160px)" : "calc(100vh - 104.67px)"
+  var modelHeight = isMobileOrTablet() ? "calc(100vh - 160px)" : "calc(100vh - 216.67px)"
   const searchParams = useSearchParams()
 
-  const [isSelected, setIsSelected] = useState(true)
+  // Height states
   const [viewWidthInPx, setViewWidthInPx] = useState(window.outerWidth)
   const [viewportHeightInPx, setViewportHeightInPx] = useState(window.outerHeight + 200)
   const [swiperHeight, setSwiperHeight] = useState(window.outerHeight - 96)
   const [imgHeight, setImageHeight] = useState(window.outerHeight - 208)
+
+  // User models, community id param, id error state
   const [userModel, setUserModels] = useState<userSubmittal>()
   const [communityId] = useState<string | null>(searchParams.get('communityId'))
   const [idError, setIdError] = useState<boolean>(false)
+
+  // Annotation switch bool
+  const [isSelected, setIsSelected] = useState(true)
+
+  const initialMediaState = {
+    modelChecked: true,
+    observationsChecked: false,
+    photosChecked: false
+  }
+
+  const [mediaState, mediaStateDispatch] = useReducer(collectionsMediaReducer, initialMediaState)
+  const collectionsContext = { mediaState, mediaStateDispatch }
 
   useEffect(() => {
     if (redirectUrl) {
@@ -116,39 +146,36 @@ export default function MainWrap(props: {
         />
         {
           !!props.model.length && !communityId &&
-          <>
-            <div className="hidden lg:flex h-10 bg-[#00856A] dark:bg-[#212121] text-white items-center justify-between ">
-              <p style={{ paddingLeft: "2.5%" }}>Also on this page: <a className="mx-4" href="#images"><u>Images</u></a> <a href="#observations"><u>iNaturalist Observations</u></a></p>
-              <Switch style={{ paddingRight: "2.5%" }} defaultSelected id="annotationSwitch" isSelected={isSelected} color='secondary' onValueChange={setIsSelected}>
-                <span className="text-white">Annotations</span>
-              </Switch>
-            </div>
+          <CollectionsContext.Provider value={collectionsContext}>
+            <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} title={props.noModelData.title}/>
             <div className="flex flex-col m-auto" style={{ width: "100vw", maxWidth: viewWidthInPx, margin: "0 auto !important" }}>
-              <div style={{ height: modelHeight, maxHeight: viewportHeightInPx }}>
-                <SketchfabApi
-                  model={props.model[0]}
-                  gMatch={props.gMatch}
-                  images={props.noModelData.images}
-                  imageTitle={props.noModelData.title}
-                />
-              </div>
-              {/* Tailwind utility class "mb" was literally broken here. Anything less than mb-4 was treated as zero margin. Only style would work. */}
-              <div id="images" style={{ marginBottom: "14px" }} className="mt-4">
-                <ComponentDivider title={props.noModelData.title} />
-              </div>
-              <div style={{ maxHeight: viewportHeightInPx }}>
-                <OccurrenceSwiper
-                  info={props.noModelData.images} swiperHeight={swiperHeight} imageHeight={imgHeight} />
-              </div>
-              <div className="mt-4" id='observations'>
-                <ComponentDivider title={'Observations from iNaturalist'} />
-              </div>
-              <div style={{ height: "calc(100vh - 176px)", maxHeight: viewportHeightInPx, minHeight: '750px' }}>
-                <Inaturalist activeSpecies={props.specimenName} />
-              </div>
+              {
+                mediaState.modelChecked &&
+                <div style={{ height: modelHeight, maxHeight: viewportHeightInPx }}>
+                  <SketchfabApi
+                    model={props.model[0]}
+                    gMatch={props.gMatch}
+                    images={props.noModelData.images}
+                    imageTitle={props.noModelData.title}
+                  />
+                </div>
+              }
+              {
+                mediaState.photosChecked &&
+                  <div style={{ maxHeight: viewportHeightInPx }}>
+                    <OccurrenceSwiper
+                      info={props.noModelData.images} swiperHeight={swiperHeight} imageHeight={imgHeight} />
+                  </div>
+              }
+              {
+                mediaState.observationsChecked &&
+                  <div style={{ height: "calc(100vh - 217px)", maxHeight: viewportHeightInPx, minHeight: '750px' }}>
+                    <Inaturalist activeSpecies={props.specimenName} />
+                  </div>
+              }
               <Foot />
             </div>
-          </>
+          </CollectionsContext.Provider>
         }
 
         {

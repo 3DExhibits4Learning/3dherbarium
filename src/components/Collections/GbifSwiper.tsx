@@ -36,7 +36,7 @@ const OccurrenceSwiper: React.FC<GbifOccurrenceSwiperProps> = (props) => {
   return (
     <Swiper
       ref={swiperRef}
-      className='mt-1 w-full h-[calc(100vh-212px)] lg:h-[calc(100vh-112px)] min-h-[300px]'
+      className='mt-1 w-full h-[calc(100vh-212px)] lg:h-[calc(100vh-222px)] min-h-[300px]'
       style={{
         maxHeight: props.swiperHeight,
         '--swiper-pagination-bottom': '1px',
@@ -72,7 +72,7 @@ const OccurrenceSwiper: React.FC<GbifOccurrenceSwiperProps> = (props) => {
                   <img
                     alt={'Specimen Observation Photo ' + index}
                     src={observation.url}
-                    className='w-full h-[calc(100vh-348px)] lg:h-[calc(100vh-248px)] z-5 min-h-[200px]'
+                    className='w-full h-[calc(100vh-348px)] lg:h-[calc(100vh-363px)] z-5 min-h-[200px]'
                     style={{ maxHeight: props.imageHeight }}
                     tabIndex={0}
                     onError={(e) => { handleImgError(e.currentTarget); }}

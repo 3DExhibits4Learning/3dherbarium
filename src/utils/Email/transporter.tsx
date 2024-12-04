@@ -5,6 +5,9 @@
 
 import nodemailer from 'nodemailer'
 
+/**
+ * @deprecated use sendHTMLEmail
+ */
 export const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_SERVER_HOST,
     port: parseInt(process.env.EMAIL_SERVER_PORT as string),
