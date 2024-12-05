@@ -1,5 +1,6 @@
 import { Dispatch } from "react"
 import { CollectionsWrapperProps } from "./collections"
+import { userSubmittal } from "@prisma/client"
 
 export interface CollectionsMediaObject {
     modelChecked: boolean,
@@ -14,5 +15,7 @@ export interface CollectionsMediaAction {
 export interface CollectionsWrapperData{
     mediaState: CollectionsMediaObject,
     mediaStateDispatch: Dispatch<CollectionsMediaAction>,
-    collectionsWrapperProps: CollectionsWrapperProps
+    collectionsWrapperProps: CollectionsWrapperProps,
+    userModel: userSubmittal | undefined,
+    
 }

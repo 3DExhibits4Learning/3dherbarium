@@ -30,7 +30,6 @@ export default async function Page({ params, searchParams }: { params: { specime
   try {
 
     // Variable declarations
-    let redirectUrl: string | null = null;
     const promises = []
     var gMatch: any
     var _3dmodel: any
@@ -64,8 +63,8 @@ export default async function Page({ params, searchParams }: { params: { specime
       const commonNameInfo = await fetchCommonNameInfo(params.specimenName)
         .catch(e => serverErrorHandler(path, e.message, "Couldn't get vernacular name data", "fetchCommonNameInfo()", false)) as CommonNameInfo[]
 
-      // If there is common name data, redirect to common name search; else display error component
-      if (commonNameInfo.length) redirect(`/collections/common-name/${params.specimenName}`)
+      // If there is common name data, redirect to common name search; else display error component (redirect throws an internal error, hence the try-catch wrapper)
+      if (commonNameInfo.length) {try{redirect(`/collections/common-name/${params.specimenName}`)}catch(e){}}
       else return <NoDataFound specimenName={params.specimenName} />
     }
 
