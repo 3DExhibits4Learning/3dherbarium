@@ -1,5 +1,6 @@
 /**
  * @file src/components/Collections/CollectionsWrapper.tsx
+ * 
  * @fileoverview client wrapper for the collections page
  * 
  */

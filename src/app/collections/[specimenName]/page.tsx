@@ -1,5 +1,6 @@
 /**
  * @file src/app/collections/[specimenName]/page.tsx
+ * 
  * @fileoverview the collections page for when users are viewing a specific specimen (genus or species).
  * Contains the 3D model (if it exists), images, and iNaturalist observations.
  */
@@ -41,14 +42,12 @@ export default async function Page({ params, searchParams }: { params: { specime
     promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName), fetchHSCImages(params.specimenName))
 
     // Await promises, populate noModelData object
-    await Promise.all(promises)
-      .then(results => {
-        gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse }
-        _3dmodel = results[1] as model[]
-        images = results[2] as GbifImageResponse[]
-        noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
-      })
-      .catch(e => serverErrorHandler(path, e.message, "Couldn't load initial data", "Promise.all()", false))
+    await Promise.all(promises).then(results => {
+      gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse }
+      _3dmodel = results[1] as model[]
+      images = results[2] as GbifImageResponse[]
+      noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
+    }).catch(e => serverErrorHandler(path, e.message, "Couldn't load initial data", "Promise.all()", false))
 
     // Fetch general GBIF images if the HSC (CPH Vascular plant herbarium) doens't have any for the searched specimen, but a GBIF match WAS found
     if (gMatch.hasInfo && !images.length) {
@@ -64,7 +63,7 @@ export default async function Page({ params, searchParams }: { params: { specime
         .catch(e => serverErrorHandler(path, e.message, "Couldn't get vernacular name data", "fetchCommonNameInfo()", false)) as CommonNameInfo[]
 
       // If there is common name data, redirect to common name search; else display error component (redirect throws an internal error, hence the try-catch wrapper)
-      if (commonNameInfo.length) {try{redirect(`/collections/common-name/${params.specimenName}`)}catch(e){}}
+      if (commonNameInfo.length) { try { redirect(`/collections/common-name/${params.specimenName}`) } catch (e) { } }
       else return <NoDataFound specimenName={params.specimenName} />
     }
 
