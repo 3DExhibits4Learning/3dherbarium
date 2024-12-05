@@ -59,12 +59,8 @@ export default function MainWrap(props: CollectionsWrapperProps) {
   const initialMediaState = { modelChecked: true, observationsChecked: false, photosChecked: false }
   const [mediaState, mediaStateDispatch] = useReducer(collectionsMediaReducer, initialMediaState)
 
-  const collectionsContext: CollectionsWrapperData = {
-    mediaState,
-    mediaStateDispatch,
-    collectionsWrapperProps,
-    userModel,
-  }
+  // Context object
+  const collectionsContext: CollectionsWrapperData = { mediaState, mediaStateDispatch, collectionsWrapperProps, userModel }
 
   // Check for community model if there is a community ID parameter or no herbarium 3D model found for the searched specimen name
   useEffect(() => { if (communityId || !props.model.length) getCommunityModel(collectionsWrapperProps, communityId, setUserModels, setIdError) }, [])

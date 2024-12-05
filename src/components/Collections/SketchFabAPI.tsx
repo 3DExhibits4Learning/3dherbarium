@@ -84,7 +84,7 @@ const SFAPI = () => {
 
   // Set imgSrc from NFS storage
   const setImageFromNfs = (url: string) => {
-    const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? `X:${url.slice(5)}` : `public${url}`
+    const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? process.env.NEXT_PUBLIC_MAC ? `/Users/ab632/X/data${url.slice(5)}` : `X:${url.slice(5)}` : `public${url}`
     setImgSrc(`/api/annotations/photos?path=${path}`)
   }
 
