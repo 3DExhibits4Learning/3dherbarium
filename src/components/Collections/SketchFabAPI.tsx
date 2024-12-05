@@ -3,24 +3,33 @@
  * @fileoverview Client component which renders the 3D models and annotations.
  */
 
-"use client";
+"use client"
 
-import Sketchfab from '@sketchfab/viewer-api';
-import { useEffect, useState, useRef, LegacyRef } from 'react';
-import AnnotationModal from '@/components/Collections/AnnotationModal';
-import { setViewerWidth, annotationControl, boolRinse, addCommas, arrayFromObjects } from './SketchfabDom';
-import ModelAnnotation from './AnnotationModel';
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
-import { model, model_annotation, photo_annotation } from '@prisma/client';
-import Herbarium from '@/utils/HerbariumClass';
-import { fullAnnotation, GbifImageResponse, GbifResponse } from '@/api/types';
+// Typical imports
+import { fullAnnotation, GbifResponse } from '@/api/types';
 import { isMobileOrTablet } from '@/utils/isMobile';
+import { useEffect, useState, useRef, LegacyRef, useContext } from 'react';
+import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
+import { model_annotation, photo_annotation } from '@prisma/client';
+import { setViewerWidth, annotationControl, boolRinse, addCommas, arrayFromObjects } from './SketchfabDom';
+import { CollectionsContext } from './CollectionsWrapper';
+import { CollectionsWrapperData } from '@/ts/reducer';
 
-const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model: model, images: GbifImageResponse[], imageTitle: string }) => {
+// Default imports
+import Sketchfab from '@sketchfab/viewer-api';
+import AnnotationModal from '@/components/Collections/AnnotationModal';
+import ModelAnnotation from './AnnotationModel';
+import Herbarium from '@/utils/HerbariumClass';
+
+// Main JSX
+const SFAPI = () => {
+
+  const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
 
   // Variable Declarations
   const gMatch = props.gMatch.data as GbifResponse
 
+  // States
   const [s, setS] = useState<Herbarium>() // s = specimen due to constant repetition
   const [annotations, setAnnotations] = useState<fullAnnotation[]>()
   const [api, setApi] = useState<any>()
@@ -30,13 +39,16 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   const [annotationTitle, setAnnotationTitle] = useState("")
   const [skeletonClassname, setSkeletonClassname] = useState('bg-black h-full hidden')
 
+  // Refs
   const sRef = useRef<Herbarium>()
   const modelViewer = useRef<HTMLIFrameElement>()
   const annotationDiv = useRef<HTMLDivElement>()
 
+  // Direct dom references (needs to be updated)
   const annotationSwitch = document.getElementById("annotationSwitch");
   const annotationSwitchMobile = document.getElementById("annotationSwitchMobileHidden");
 
+  // Succes object for init method of Sketchfab object (mobile settings)
   const successObj = {
     success: (api: any) => {
       api.start()
@@ -55,9 +67,8 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     ui_fadeout: 0
   }
 
-  let successObjDesktop = { ...successObj }
-  Object.assign(successObjDesktop, { annotation: 1 })
-  successObjDesktop.ui_fadeout = 1
+  // Desktop success object for init mehtod of Sketchfab object
+  const successObjDesktop = { ...successObj, annotation: 1, ui_fadeout: 1 }
 
   // Annotation switch event listener
   const annotationSwitchListener = (event: Event) => {
@@ -80,8 +91,8 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
   // This effect initializes the sketchfab client and instantiates the specimen:Herbarium object; it also ensures the page begins from the top upon load
   useEffect(() => {
 
-    const sketchFabLink = props.model.uid
-    const client = new Sketchfab(modelViewer.current);
+    const sketchFabLink = props.model[0].uid
+    const client = new Sketchfab(modelViewer.current)
 
     // Choose initialization success object based on screen size
     if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
@@ -93,7 +104,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
     // Instantiate/set herbarium and set annotations
     const instantiateHerbarium = async () => {
-      sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model, props.images, props.imageTitle)
+      sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title)
       setS(sRef.current)
       setAnnotations(sRef.current.annotations.annotations)
     }
@@ -178,7 +189,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
     <>
 
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
-      <meta name="description" content={`An annotated 3D model of ${props.model.spec_name}`}></meta>
+      <meta name="description" content={`An annotated 3D model of ${props.model[0].spec_name}`}></meta>
 
       {
         s &&
@@ -187,7 +198,7 @@ const SFAPI = (props: { gMatch: { hasInfo: boolean; data?: GbifResponse }, model
 
       <div id="iframeDiv" className="flex bg-black m-auto min-h-[150px]" style={{ height: "100%", width: "100%" }}>
         
-        <iframe src={props.model.uid} frameBorder="0" id="model-viewer" title={"Model Viewer for " + ''}
+        <iframe src={props.model[0].uid} frameBorder="0" id="model-viewer" title={"Model Viewer for " + ''}
           allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking="true"
           execution-while-out-of-viewport="true" execution-while-not-rendered="true" web-share="true"
           allowFullScreen

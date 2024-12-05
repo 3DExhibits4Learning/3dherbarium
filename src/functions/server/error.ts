@@ -46,18 +46,6 @@ export function routeHandlerTypicalCatch(errorMessage: string) {
 }
 
 /**
- * @deprecated use serverErrorHandler
- * 
- * @param errorMessage message from the error object
- * @param clientErrorMessage error message displayed to the client
- * @description logs an error to the console and throws an error with client error message
- */
-export function serverAsyncErrorHandler(errorMessage: string, clientErrorMessage: string) {
-    console.error(errorMessage)
-    throw Error(clientErrorMessage)
-}
-
-/**
  * @param errorMessage message from the error object
  * @param clientErrorMessage error message displayed to the client
  * @description uses routeHandlerError to log errors

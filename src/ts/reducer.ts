@@ -1,4 +1,5 @@
 import { Dispatch } from "react"
+import { CollectionsWrapperProps } from "./collections"
 
 export interface CollectionsMediaObject {
     modelChecked: boolean,
@@ -12,5 +13,6 @@ export interface CollectionsMediaAction {
 
 export interface CollectionsWrapperData{
     mediaState: CollectionsMediaObject,
-    mediaStateDispatch: Dispatch<CollectionsMediaAction>
+    mediaStateDispatch: Dispatch<CollectionsMediaAction>,
+    collectionsWrapperProps: CollectionsWrapperProps
 }

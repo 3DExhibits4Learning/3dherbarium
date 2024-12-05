@@ -1,93 +1,91 @@
 /**
- * @file /app/collections/[specimenName]/page.tsx
+ * @file src/app/collections/[specimenName]/page.tsx
  * @fileoverview the collections page for when users are viewing a specific specimen (genus or species).
- * Contains the 3D model (if it exists), images and occurrence map.
+ * Contains the 3D model (if it exists), images, and iNaturalist observations.
  */
 
 // Typical imports
-import { GbifImageResponse, GbifResponse } from "@/api/types"
+import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/api/types"
 import { getModel } from '@/api/queries'
 import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions"
 import { fetchHSCImages } from "@/api/fetchFunctions"
 import { model } from "@prisma/client"
+import { redirect } from "next/navigation"
+import { serverErrorHandler } from "@/functions/server/error"
 
 // Default imports
-import Foot from '@/components/Shared/Foot'
 import dynamic from "next/dynamic"
+import NoDataFound from "@/components/Collections/NoData"
+import FullPageError from "@/components/Error/FullPageError"
+
+// Path
+const path = 'src/app/collections/[specimenName]/page.tsx'
 
 // Dynamic imports
-const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
 
-// Main JSX (communityId to be used here in the future)
+// Main JSX (communityId to be used here in the future, hence searchParams)
 export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: { communityId: string } }) {
 
-  // Variable declarations
-  let redirectUrl: string | null = null;
-  var promises = []
-  var gMatch: any
-  var _3dmodel: any
-  var noModelData: any
-  var images: any
-  const decodedSpecimenName = decodeURI(params.specimenName)
+  try {
 
-  // Populate promises then await the results
-  promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName))
+    // Variable declarations
+    let redirectUrl: string | null = null;
+    const promises = []
+    var gMatch: any
+    var _3dmodel: any
+    var noModelData: any
+    var images: any
+    const decodedSpecimenName = decodeURI(params.specimenName)
 
-  await Promise.all(promises).then(results => {
-    gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse }
-    _3dmodel = results[1] as model[]
-  })
+    // Push initial promises onto array (GBIF data, 3D model data, HSC images)
+    promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName), fetchHSCImages(params.specimenName))
 
-  // Grab HSC images for the species parameter (if they exist)
-  images = await fetchHSCImages(params.specimenName)
-  noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
+    // Await promises, populate noModelData object
+    await Promise.all(promises)
+      .then(results => {
+        gMatch = results[0] as { hasInfo: boolean; data?: GbifResponse }
+        _3dmodel = results[1] as model[]
+        images = results[2] as GbifImageResponse[]
+        noModelData = { title: 'Images from the Cal Poly Humboldt Vascular Plant Herbarium', images: images }
+      })
+      .catch(e => serverErrorHandler(path, e.message, "Couldn't load initial data", "Promise.all()", false))
 
-  // Fetch general GBIF images if the HSC (CPH Vascular plant herbarium) doens't have any for the searched specimen
-  if (!images.length && gMatch.hasInfo) {
-    images = await fetchGbifImages(gMatch.data.usageKey, gMatch.data.rank)
-    noModelData = { title: 'Images from the Global Biodiversity Information Facility', images: images }
-  }
-
-  // If there is a 3d model for the searched specimen or image data for the specimen searched, continue
-  if (_3dmodel.length || images.length) {}
-
-  // If there are no models, search for common name information. If there is no common name information, display appropriate message. If there is, populate the redirect url.
-  else {
-    const commonNameInfo = await fetchCommonNameInfo(params.specimenName);
-    if (commonNameInfo.length <= 0) {
-      
-      return (
-        <>
-          <Header headerTitle={params.specimenName} pageRoute="collections" />
-          <div className="h-[calc(100vh-177px)] w-full flex justify-center items-center text-center text-2xl px-5">
-            <p>No data found for search term &quot;{decodeURI(params.specimenName)}.&quot; Try a species, genus or vernacular name.</p>
-          </div>
-          <Foot />
-        </>
-      )
+    // Fetch general GBIF images if the HSC (CPH Vascular plant herbarium) doens't have any for the searched specimen, but a GBIF match WAS found
+    if (gMatch.hasInfo && !images.length) {
+      images = await fetchGbifImages(gMatch.data.usageKey, gMatch.data.rank).catch(e => serverErrorHandler(path, e.message, "Couldn't get images", "fetchGbifImages()", false))
+      noModelData = { title: 'Images from the Global Biodiversity Information Facility', images: images }
     }
-    
-    else {
-      redirectUrl = `/collections/common-name/${params.specimenName}`
+
+    // If there are no models or images, search for common name information. If there is no common name information, display appropriate message. If there is, redirect to common name search.
+    if (!(_3dmodel.length || images.length)) {
+
+      // Fetch common name info
+      const commonNameInfo = await fetchCommonNameInfo(params.specimenName)
+        .catch(e => serverErrorHandler(path, e.message, "Couldn't get vernacular name data", "fetchCommonNameInfo()", false)) as CommonNameInfo[]
+
+      // If there is common name data, redirect to common name search; else display error component
+      if (commonNameInfo.length) redirect(`/collections/common-name/${params.specimenName}`)
+      else return <NoDataFound specimenName={params.specimenName} />
     }
+
+    // Typical client wrapper
+    return (
+      <>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
+        <title>3D Herbarium Collections</title>
+
+        <CollectionsWrapper
+          model={_3dmodel}
+          gMatch={gMatch}
+          specimenName={params.specimenName}
+          noModelData={noModelData as { title: string, images: GbifImageResponse[] }}
+        />
+      </>
+    )
   }
-
-  return (
-    <>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
-      <title>3D Herbarium Collections</title>
-
-      <CollectionsWrapper
-        redirectUrl={redirectUrl}
-        model={_3dmodel}
-        gMatch={gMatch}
-        specimenName={params.specimenName}
-        noModelData={noModelData as { title: string, images: GbifImageResponse[] }}
-      />
-
-    </>
-  )
+  // Typical error component catch
+  catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
 }
 
 
