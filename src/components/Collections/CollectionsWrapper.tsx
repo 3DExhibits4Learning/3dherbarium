@@ -3,6 +3,8 @@
  * 
  * @fileoverview client wrapper for the collections page
  * 
+ * @todo move community model fetch server side, eliminating the useEffect hook
+ * 
  */
 
 "use client"

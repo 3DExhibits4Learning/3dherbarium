@@ -8,6 +8,10 @@ import { SetStateAction } from "react";
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
 import { LatLngLiteral } from "leaflet";
 
+export interface action{
+  type: string
+}
+
 export interface SearchHeaderProps {
   headerTitle: string,
   pageRoute: string;
