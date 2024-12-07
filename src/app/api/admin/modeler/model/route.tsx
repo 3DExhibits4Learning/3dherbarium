@@ -1,10 +1,12 @@
 import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+
 import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
 import createTask from "@/utils/Jira/createTask"
-const prisma = prismaClient()
 import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
+
+const prisma = prismaClient()
 
 export async function POST(request: Request) {
 

@@ -43,9 +43,7 @@ export async function POST(request: Request) {
 
             const sendMessage = await fetch('https://api.inaturalist.org/v1/messages', {
                 method: 'POST',
-                headers: {
-                    'Authorization': iNatToken as string
-                },
+                headers: {'Authorization': iNatToken as string},
                 body: JSON.stringify(messageObj)
             })
                 .then(res => res.json())

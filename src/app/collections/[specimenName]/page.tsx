@@ -3,6 +3,8 @@
  * 
  * @fileoverview the collections page for when users are viewing a specific specimen (genus or species).
  * Contains the 3D model (if it exists), images, and iNaturalist observations.
+ * 
+ * @todo move community model fetch logic here from client (CollectionsWrapper.tsx)
  */
 
 // Typical imports

@@ -1,34 +1,9 @@
 'use client'
 
 import { sketchfabApiData } from "@/ts/collections";
-import { action, fullAnnotation } from "@/api/types";
-import Herbarium from "@/utils/HerbariumClass";
+import { sketchfabApiReducerAction, setStringOrNumberAction, setSpecimenAction, setMobileAnnotationAction, setApiAction } from "@/ts/collections";
 
-export interface setStringOrNumberAction extends action {
-    field: string,
-    value: string | number
-}
-
-export interface setNumberAction extends action {
-    field: string,
-    value: number
-}
-
-export interface setSpecimenAction extends action {
-    specimen: Herbarium
-    annotations: fullAnnotation[]
-}
-
-export interface setApiAction extends action {
-    api: any
-}
-
-export interface setMobileAnnotationAction extends action {
-    index: number,
-    title: string
-}
-
-export default function sketchFabApiReducer(apiState: sketchfabApiData, action: any): sketchfabApiData {
+export default function sketchFabApiReducer(apiState: sketchfabApiData, action: sketchfabApiReducerAction): sketchfabApiData {
 
     switch (action.type) {
 
@@ -39,7 +14,7 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
 
             return {
                 ...apiState,
-                [action.field]: action.value
+                [setStringAction.field]: setStringAction.value
             }
 
         case 'setSpecimen':

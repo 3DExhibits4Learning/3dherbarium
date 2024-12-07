@@ -1,8 +1,13 @@
+'use client'
+
 import { setViewerWidth, annotationControl } from "@/components/Collections/SketchfabDom"
-import { CollectionsWrapperProps, sketchfabApiData } from "@/ts/collections"
-import { MutableRefObject } from "react"
+import { CollectionsWrapperProps, sketchfabApiData, sketchfabApiReducerAction } from "@/ts/collections"
+import { MutableRefObject, Dispatch } from "react"
 import { isMobileOrTablet } from "@/utils/isMobile"
 import Herbarium from "@/utils/HerbariumClass"
+import { photo_annotation } from "@prisma/client"
+
+export const isDataStoragePhoto = (sketchfabApi: any) => (sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')
 
 export const annotationSwitchListener = (event: Event, sketchfabApiData: sketchfabApiData, modelViewer: MutableRefObject<HTMLIFrameElement | undefined>, annotationDiv: MutableRefObject<HTMLDivElement | undefined>) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
@@ -31,6 +36,93 @@ export const initializeModelViewer = (client: any, uid: string, successObj: any,
 }
 
 export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, dispatch: any) => {
-        sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title)
-        dispatch({ type: 'setSpecimen', specimen: sRef.current, annotations: sRef.current.annotations.annotations })
+    sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title)
+    dispatch({ type: 'setSpecimen', specimen: sRef.current, annotations: sRef.current.annotations.annotations })
+}
+
+export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData) => {
+
+    // Parse position string
+    const position = JSON.parse(sketchfabApi.s?.model.annotationPosition as string)
+
+    // Create annotation from position
+    sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (err: any, index: any) => {
+        if (err) throw Error("3D Model Viewer Error")
+
+        // Go to first annotation based on screen size and user agent
+        if (!(isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches)) {
+            sketchfabApi.api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, (err: any, index: any) => { if (err) throw Error("3D Model Viewer Error") })
+        }
+    })
+}
+
+export const createAnnotationsGreaterThan1 = (sketchfabApi: any) => {
+
+    // Iterate annotations
+    for (let i = 0; i < sketchfabApi.annotations.length; i++) {
+
+        // Create annotations greater than 1 (if they exist)
+        if (sketchfabApi.annotations[i].position) {
+
+            // Parse position string
+            const position = JSON.parse(sketchfabApi.annotations[i].position as string)
+
+            // Create annotation
+            sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], `${sketchfabApi.annotations[i].title}`, '', (err: any, index: any) => { if (err) throw Error("3D Model Viewer Error") })
+        }
+    }
+}
+
+export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
+    // Set index when an annotation is selected
+    sketchfabApi.api.addEventListener('annotationSelect', function (index: number) {
+
+        const mediaQueryWidth = window.matchMedia('(max-width: 1023.5px)')
+        const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
+
+        // this event is still triggered even when an annotation is not selected; an index of -1 is returned
+        if (index !== -1) sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
+
+        // Mobile annotation state management
+        if (index !== -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
+
+            document.getElementById("annotationButton")?.click()
+
+            sketchfabApi.api.getAnnotation(index, function (err: any, information: any) {
+                if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name })
+            })
+        }
+    })
+}
+
+export const addAnnotationSwitchListeners = (annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener) => {
+    annotationSwitch.addEventListener("change", annotationSwitchWrapper)
+    annotationSwitchMobile.addEventListener("change", mobileAnnotationSwitchWrapper)
+}
+
+export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
+
+    if (!!sketchfabApi.index && sketchfabApi.annotations && sketchfabApi.annotations[sketchfabApi.index - 1].annotation_type == 'photo') {
+
+        if (isDataStoragePhoto(sketchfabApi)) setImageFromNfs((sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url, sketchfabApiDispatch)
+        else sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'imgSrc', value: sketchfabApi.annotations[sketchfabApi.index - 1].url as string })
+    }
+}
+
+export const initializeCollections = (client: any, successObj: any, successObjDesktop: any, sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
+    // Initialize and instantiate
+    initializeModelViewer(client, props.model[0].uid, successObj, successObjDesktop)
+    instantiateHerbarium(sRef, props, sketchfabApiDispatch)
+}
+
+export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener) => {
+    if (sketchfabApi.s && sketchfabApi.annotations && sketchfabApi.api) {
+
+        // Create annotations an go to first annotation if client appears to be on desktop
+        if (sketchfabApi.s.model.annotationPosition) createAndMaybeGoToFirstAnnotation(sketchfabApi); createAnnotationsGreaterThan1(sketchfabApi)
+
+        // Add both annotation switch and annotation select event listeners
+        addAnnotationSwitchListeners(annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper)
+        addAnnotationSelectEventListener(sketchfabApi, sketchfabApiDispatch)
+    }
 }

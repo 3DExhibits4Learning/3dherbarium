@@ -39,6 +39,8 @@ export async function GET(request: Request) {
             })
         }
 
+        console.log('SOFTWARE', results[1])
+
         return Response.json({data:"Success", response: results})
     }
     catch (e: any) { return Response.json({ data: e.message, response: results }, {status:400, statusText:e.message}) }

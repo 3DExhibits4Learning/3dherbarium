@@ -1,7 +1,9 @@
 import { model } from "@prisma/client"
 import { GbifResponse, GbifImageResponse } from "@/api/types"
-import Herbarium from "@/utils/HerbariumClass"
 import { fullAnnotation } from "@/api/types"
+import { action } from "@/api/types"
+
+import Herbarium from "@/utils/HerbariumClass"
 
 export interface CollectionsWrapperProps {
     model: model[],
@@ -20,4 +22,25 @@ export interface sketchfabApiData {
     annotationTitle: string,
     skeletonClassName: string
 }
+
+export interface setStringOrNumberAction extends action {
+    field: string,
+    value: string | number
+}
+
+export interface setSpecimenAction extends action {
+    specimen: Herbarium
+    annotations: fullAnnotation[]
+}
+
+export interface setApiAction extends action {
+    api: any
+}
+
+export interface setMobileAnnotationAction extends action {
+    index: number,
+    title: string
+}
+
+export type sketchfabApiReducerAction = setMobileAnnotationAction | setSpecimenAction | setApiAction | setStringOrNumberAction
 

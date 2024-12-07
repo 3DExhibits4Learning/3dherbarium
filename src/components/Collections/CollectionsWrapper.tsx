@@ -100,7 +100,7 @@ export default function MainWrap(props: CollectionsWrapperProps) {
           </>
         }
         {
-          // Displayed for specimens where no external data is found (such as ornamental plants)
+          // Displayed for community specimens where no external data is found (such as ornamental plants)
           (!props.model.length || communityId) && userModel && !props.gMatch.hasInfo &&
           <>
             <CommunityModelWithoutGmatch communityModel={userModel} />
@@ -108,6 +108,7 @@ export default function MainWrap(props: CollectionsWrapperProps) {
           </>
         }
         {
+          // Displayed when no 3D models are available (only images and observations are displayed)
           !props.model.length && props.gMatch.hasInfo && userModel === undefined &&
           <>
             <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
