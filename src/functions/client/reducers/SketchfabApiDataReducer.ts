@@ -49,6 +49,26 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
                 api: setApiAction.api
             }
 
+        case 'setPhotoLoading':
+            
+            return {
+                ...apiState,
+                loadingPhoto: true,
+                imgSrc: undefined
+            }
+
+        case 'photoLoaded':
+
+            const photoLoadedAction = action as setStringOrNumberAction
+            if(!(photoLoadedAction.value)) throw Error("Action missing data")
+
+            return {
+                ...apiState,
+                imgSrc: photoLoadedAction.value as string,
+                loadingPhoto: false
+            }
+
+
         default:
             throw Error("Unknown action type")
     }

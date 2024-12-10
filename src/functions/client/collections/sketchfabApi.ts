@@ -1,13 +1,30 @@
+/**
+ *@file  src/functions/client/collections/sketchfabApi.ts
+
+ @fileoverview logic file corresponding to SketchFabAPI.tsx
+
+ @todo comment remaining uncommented functions
+ */
+
 'use client'
 
+// Typical imports
 import { setViewerWidth, annotationControl } from "@/components/Collections/SketchfabDom"
 import { CollectionsWrapperProps, sketchfabApiData, sketchfabApiReducerAction } from "@/ts/collections"
 import { MutableRefObject, Dispatch } from "react"
 import { isMobileOrTablet } from "@/utils/isMobile"
-import Herbarium from "@/utils/HerbariumClass"
 import { photo_annotation } from "@prisma/client"
+import { fullAnnotation } from "@/api/types"
 
-export const isDataStoragePhoto = (sketchfabApi: any) => (sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')
+// Default imports
+import Herbarium from "@/utils/HerbariumClass"
+
+/**
+ * 
+ * @param sketchfabApi context data from SketchFabApi
+ * @returns boolean indicating whether or not a photo has been retrievd from the NFS data storage container
+ */
+export const isDataStoragePhoto = (sketchfabApi: sketchfabApiData) => ((sketchfabApi.annotations as fullAnnotation[])[sketchfabApi.index as number - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')
 
 export const annotationSwitchListener = (event: Event, sketchfabApiData: sketchfabApiData, modelViewer: MutableRefObject<HTMLIFrameElement | undefined>, annotationDiv: MutableRefObject<HTMLDivElement | undefined>) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
@@ -19,9 +36,21 @@ export const annotationSwitchMobileListener = (event: Event, sketchfabApiData: s
     annotationControl(sketchfabApiData.api, sketchfabApiData.annotations, (event.target as HTMLInputElement).checked)
 }
 
-export const setImageFromNfs = (url: string, dispatch: any) => {
+export const setImageFromNfs = async (url: string, dispatch: any) => {
+
+    // Declare src variable, set loading state true 
+    var src; dispatch({ type: 'setPhotoLoading' })
+
+    // Get appropriate path and await buffer
     const path = process.env.NEXT_PUBLIC_LOCAL === 'true' ? process.env.NEXT_PUBLIC_MAC ? `/Users/ab632/X/data${url.slice(5)}` : `X:${url.slice(5)}` : `public${url}`
-    dispatch({ type: 'setStringOrNumber', field: 'imgSrc', value: `/api/annotations/photos?path=${path}` })
+    const response = await fetch(`/api/nfs?path=${path}`)
+
+    // If buffer is found, convert to blob and create object url, else use default photo (not found)
+    if (!response.ok) src = '/noImage.png'
+    else { const blob = await response.blob(); src = URL.createObjectURL(blob) }
+
+    // Dispatch new image src, set loading state false
+    dispatch({ type: 'photoLoaded', field: 'imgSrc', value: src })
 }
 
 export const initializeModelViewer = (client: any, uid: string, successObj: any, successObjDesktop: any) => {

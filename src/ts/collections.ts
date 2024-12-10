@@ -20,7 +20,8 @@ export interface sketchfabApiData {
     mobileIndex: number | null,
     imgSrc: string | undefined,
     annotationTitle: string,
-    skeletonClassName: string
+    skeletonClassName: string,
+    loadingPhoto: boolean
 }
 
 export interface setStringOrNumberAction extends action {

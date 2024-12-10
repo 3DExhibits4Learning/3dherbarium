@@ -1,3 +1,9 @@
+/**
+ * @file src/app/api/admin/modeler/model/route.tsx
+ * 
+ * @fileoverview route handler for 3D modeler to enter a newly created 3D model into the database
+ */
+
 import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
