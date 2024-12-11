@@ -95,17 +95,9 @@ export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData
 }
 
 export const createAnnotationsGreaterThan1 = (sketchfabApi: any) => {
-
-    // Iterate annotations
     for (let i = 0; i < sketchfabApi.annotations.length; i++) {
-
-        // Create annotations greater than 1 (if they exist)
         if (sketchfabApi.annotations[i].position) {
-
-            // Parse position string
             const position = JSON.parse(sketchfabApi.annotations[i].position as string)
-
-            // Create annotation
             sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], `${sketchfabApi.annotations[i].title}`, '', (err: any, index: any) => { if (err) throw Error("3D Model Viewer Error") })
         }
     }
@@ -118,17 +110,13 @@ export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApi
         const mediaQueryWidth = window.matchMedia('(max-width: 1023.5px)')
         const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
 
-        // this event is still triggered even when an annotation is not selected; an index of -1 is returned
+        // **Note** this event is still triggered even when an annotation is not selected; an index of -1 is returned in that case
         if (index !== -1) sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
 
         // Mobile annotation state management
         if (index !== -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
-
             document.getElementById("annotationButton")?.click()
-
-            sketchfabApi.api.getAnnotation(index, function (err: any, information: any) {
-                if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name })
-            })
+            sketchfabApi.api.getAnnotation(index, function (err: any, information: any) {if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name })})
         }
     })
 }
