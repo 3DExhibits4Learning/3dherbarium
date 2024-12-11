@@ -45,6 +45,7 @@ export const SketchfabApiContext = createContext<sketchfabApiData>(initialData)
 export default function SFAPI() {
 
   try {
+    
     // Get context
     const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
     const gMatch = props.gMatch.data as GbifResponse
