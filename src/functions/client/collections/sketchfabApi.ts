@@ -22,10 +22,19 @@ import Herbarium from "@/utils/HerbariumClass"
 /**
  * 
  * @param sketchfabApi context data from SketchFabApi
+ * @description will be deprecated after all photos are transitioned to data storage
  * @returns boolean indicating whether or not a photo has been retrievd from the NFS data storage container
  */
 export const isDataStoragePhoto = (sketchfabApi: sketchfabApiData) => ((sketchfabApi.annotations as fullAnnotation[])[sketchfabApi.index as number - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')
 
+/**
+ * 
+ * @param event Event passed from listener
+ * @param sketchfabApiData sketchfab data context
+ * @param modelViewer a ref to the modelViewer component
+ * @param annotationDiv a ref to the div with id: 'annotatonDiv'
+ * @description sets the viewer width accordingly and removes/restores annotations upon press of the annotation switch
+ */
 export const annotationSwitchListener = (event: Event, sketchfabApiData: sketchfabApiData, modelViewer: MutableRefObject<HTMLIFrameElement | undefined>, annotationDiv: MutableRefObject<HTMLDivElement | undefined>) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
     annotationControl(sketchfabApiData.api, sketchfabApiData.annotations, (event.target as HTMLInputElement).checked)
