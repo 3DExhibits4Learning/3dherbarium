@@ -7,7 +7,8 @@
  */
 
 "use client"
-import { Button } from "flowbite-react"
+
+import { Button } from "@nextui-org/react"
 
 interface NavButtonProps {
   label: string

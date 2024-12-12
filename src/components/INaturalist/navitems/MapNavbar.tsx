@@ -10,7 +10,6 @@
 //todo before push remove flowbite
 //default imports
 import { useContext } from "react";
-import { Navbar } from "flowbite-react";
 import { NavButton } from "./NavButton";
 import { MapContext, MapContextData } from '@/components/Collections/iNaturalist';
 
@@ -33,13 +32,11 @@ export function MapNavbar() {
 
 
     return (
-        <Navbar className="lg:hidden bg-old-growth-green py-2 px-4 min-h-[60px]" fluid rounded border>
-            <div className="flex justify-evenly items-center w-full lg:hidden">
+        <div className="lg:hidden bg-old-growth-green py-2 px-4 min-h-[60px]">
                 <NavButton label="Locations" onClick={() => handleClick("locations")} />
                 <NavButton label="Images" onClick={() => handleClick("images")} />
                 <NavButton label="Leader Board" onClick={() => handleClick("leaderboard")} />
-            </div>
-        </Navbar>
+        </div>
     );
 }
 
