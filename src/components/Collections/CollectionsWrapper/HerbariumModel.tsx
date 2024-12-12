@@ -34,7 +34,7 @@ export default function CollectionsHerbariumModel(props:{sizes: any, modelHeight
             }
             {
                 mediaState.observationsChecked &&
-                <div style={{ height: "calc(100vh - 217px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '750px' }}>
+                <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '500px' }}>
                     <Inaturalist activeSpecies={collectionsProps.specimenName} />
                 </div>
             }

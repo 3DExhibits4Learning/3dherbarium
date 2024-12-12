@@ -102,7 +102,7 @@ export function MapOptions() {
             <label htmlFor="date-since" className="block text-gray-700 mb-2">Since date</label>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 accent-[#00856A]">
             <input 
                 id="use-my-location"
                 type="checkbox" 
@@ -130,7 +130,7 @@ export function MapOptions() {
                 
             <label htmlFor="grade-type" className="block text-gray-700 mb-2"> Grade type </label>
 
-            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
+            <button type="submit" className="bg-[#004C46] text-white py-2 px-4 rounded">
                 Submit
             </button>
         </div>

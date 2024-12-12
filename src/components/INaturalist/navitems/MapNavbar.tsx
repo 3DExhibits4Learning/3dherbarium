@@ -30,7 +30,6 @@ export function MapNavbar() {
             })
     }
 
-
     return (
         <div className="lg:hidden bg-old-growth-green py-2 px-4 min-h-[60px]">
                 <NavButton label="Locations" onClick={() => handleClick("locations")} />

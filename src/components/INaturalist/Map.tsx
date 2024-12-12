@@ -92,7 +92,7 @@ export default function Map() {
         
         <button 
             onClick={() => setShowMapOptions((prev) => !prev)} 
-            className="bg-blue-500 text-white p-2 rounded absolute top-4 right-4 z-10 shadow-md"
+            className="bg-[#004C46] text-white p-2 rounded absolute top-4 right-4 z-10 shadow-md"
         >
             Toggle Map Options
         </button>
