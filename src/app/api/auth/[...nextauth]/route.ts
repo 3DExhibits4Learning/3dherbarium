@@ -1,13 +1,23 @@
-import NextAuth from "next-auth"
+/**
+ * @file src/app/api/auth/[...nextauth]/route.ts
+ * 
+ * @fileoverview nextauth route handler
+ */
+
+// Typical imports
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import GoogleProvider from "next-auth/providers/google"
-import EmailProvider from "next-auth/providers/email";
 import { Adapter } from "next-auth/adapters";
 import { SessionStrategy } from "next-auth";
-import iNaturalistProvider from "@/api/iNatualistProvider";
-import SketchfabProvider from "@/api/sketchfabProvider";
 import { prismaClient } from "@/api/queries";
 
+// Default imports
+import NextAuth from "next-auth"
+import GoogleProvider from "next-auth/providers/google"
+import EmailProvider from "next-auth/providers/email";
+import iNaturalistProvider from "@/api/iNatualistProvider";
+import SketchfabProvider from "@/api/sketchfabProvider";
+
+// singleton prisma client
 const prisma = prismaClient()
 
 export const authOptions = {
@@ -15,21 +25,29 @@ export const authOptions = {
   adapter: PrismaAdapter(prismaClient()) as Adapter,
   session: { strategy: 'jwt' as SessionStrategy },
   providers: [
+    
+    // Google
     GoogleProvider({
       clientId: process.env.GOOGLE_ID as string,
       clientSecret: process.env.GOOGLE_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
+
+    // Sketchfab
     SketchfabProvider({
       clientId: process.env.SKETCHFAB_ID as string,
       clientSecret: process.env.SKETCHFAB_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
+
+    // iNaturalist
     iNaturalistProvider({
       clientId: process.env.INATURALIST_ID as string,
       clientSecret: process.env.INATURALIST_SECRET as string,
       allowDangerousEmailAccountLinking: true,
     }),
+
+    // Email
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,

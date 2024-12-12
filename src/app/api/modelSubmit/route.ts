@@ -1,12 +1,28 @@
+/**
+ * @file src/app/api/modelSubmit/route.ts
+ * 
+ * @fileoverview route handler for 3D model submission
+ */
+
+// Imports
 import { prismaClient } from "@/api/queries";
 import { ModelUploadResponse } from '@/api/types';
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
 import { mkdir, writeFile } from "fs/promises";
+import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
+import { routeHandlerTypicalResponse } from "@/functions/server/response";
 
+// Singleton prisma client, path
 const prisma = prismaClient()
+const path = 'src/app/api/modelSubmit/route.ts'
 
+/**
+ * 
+ * @param request HTTP request
+ * @returns affirmation message and model insert response or error message
+ */
 export async function POST(request: Request) {
 
     // Typical auth redirect
@@ -38,44 +54,26 @@ export async function POST(request: Request) {
             const writePromises = []
             const path = `public/data/Herbarium/tmp/submittal/${confirmation}`
 
-            // Iterate through photos
+            // Iterator
             for (let i = 0; i < parseInt(body.get('numberOfPhotos') as string); i++) {
 
-                // Make the directory if this is the first photo
-                if (i === 0) await mkdir(path, { recursive: true }).catch((e) => {
-                    console.error(e.message)
-                    throw Error("Couldn't make directory")
-                })
-
-                // Get file
+                // Make the directory if this is the first photo; get file and create arrayBuffer
+                if (i === 0) await mkdir(path, { recursive: true }).catch(e => routeHandlerErrorHandler(path, e.message, "mkdir()", "Coulnd't make directory"))
                 const file = body.get(`photo${i}`) as File
-
-                // Create arrayBuffer
-                const bytes = await file.arrayBuffer().catch((e) => {
-                    console.error(e.message)
-                    throw Error("Couldn't create arrayBuffer")
-                })
+                const bytes = await file.arrayBuffer().catch(e => routeHandlerErrorHandler(path, e.message, "file.arrayBuffer()", "Couldn't create arrayBuffer")) as ArrayBuffer
 
                 // Create buffer and filepath then push promise onto array
                 const buffer = Buffer.from(bytes)
                 const filePath = path + `/${file.name}`
-
-                //@ts-ignore - Typescript thinks writeFile can't write with a buffer
                 writePromises.push(writeFile(filePath, buffer))
             }
 
             // Await all the file writings
-            await Promise.all(writePromises).catch((e) => {
-                console.error(e.message)
-                throw new Error("Couldn't write file")
-            })
+            await Promise.all(writePromises).catch(e => routeHandlerErrorHandler(path, e.message, "Promise.all(writePromises)", "Coulnd't write photo file"))
         }
 
         // Write ID photos to tmp storage
-        await writePhotos().catch((e) => {
-            console.error(e.message)
-            throw new Error(e.message)
-        })
+        await writePhotos().catch(e => routeHandlerErrorHandler(path, e.message, "writePhotos()", "Coulnd't write photo files"))
 
         // Typescript satisfied header
         const requestHeader: HeadersInit = new Headers()
@@ -90,38 +88,24 @@ export async function POST(request: Request) {
 
         // Upload 3D Model, setting uploadProgress in the process
         const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
-            headers: {
-                'Authorization': process.env.SKETCHFAB_API_TOKEN as string
-            },
+            headers: { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string },
             method: 'POST',
             body: data
         })
             .then(res => {
-                if (!res.ok) {
-                    console.error(res.statusText)
-                    throw Error('Bad SF request')
-                }
+                if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request")
                 return res.json()
             })
             .then(json => json)
-            .catch((e) => {
-                console.error(e.message)
-                throw new Error("Couldn't upload 3D model")
-            })
+            .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
 
-        // Grab the uid, then enter model data into database
+        // Grab the uid and thumbnail, then enter model data into database
         const modelUid = sketchfabUpload.uid
 
-        // Get model thumbnail
-        await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`, {
-            headers: requestHeader
-        })
+        await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`, { headers: requestHeader })
             .then(res => res.json())
             .then(data => thumbUrl = data.thumbnails.images[0].url)
-            .catch((e) => {
-                console.error(e.message)
-                throw new Error("Couldn't get thumbnail")
-            })
+            .catch(e => routeHandlerErrorHandler(path, e.message, `fetch(https://api.sketchfab.com/v3/models/${modelUid})`, "Coulnd't get model thumbmnail"))
 
         // Insert model data into database
         const insert = await prisma.userSubmittal.create({
@@ -139,10 +123,7 @@ export async function POST(request: Request) {
                 lng: position.lng,
                 wild: body.get('wild') === 'wild' ? true : false,
             }
-        }).catch((e) => {
-            console.error(e.message)
-            throw new Error("Couldn't create database record")
-        })
+        }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.userSubmitaal.create()", "Coulnd't insert model into the database"))
 
         // Insert model software into database
         for (let software in softwareArr) {
@@ -151,10 +132,7 @@ export async function POST(request: Request) {
                     id: confirmation,
                     software: softwareArr[software]
                 }
-            }).catch((e) => {
-                console.error(e.message)
-                throw new Error("Couldn't create software database record")
-            })
+            }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.submittalSoftware.create()", "Coulnd't insert software into the database"))
         }
 
         // Insert model tags into database
@@ -164,15 +142,14 @@ export async function POST(request: Request) {
                     id: confirmation,
                     tag: tags[tag]
                 }
-            }).catch((e) => {
-                console.error(e.message)
-                throw new Error("Couldn't create tag database record")
-            })
+            }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.submittalTags.create()", "Coulnd't insert tags into the database"))
 
         }
+
         // Typical success response
-        return Response.json({ data: 'Model uploaded sucessfully', response: insert })
+        return routeHandlerTypicalResponse('Model uploaded sucessfully', insert)
     }
-    // Typical fail response
-    catch (e: any) { return Response.json({ data: e.message, response: e.message }, { status: 400, statusText: e.message }) }
+
+    // Typical catch
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

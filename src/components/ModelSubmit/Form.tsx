@@ -1,21 +1,32 @@
+/**
+ * @file src/components/ModelSubmit/Form.tsx
+ * 
+ * @fileoverview form allowing submission of 3D models
+ */
+
 'use client'
 
+//  Typical imports
 import { useState, SetStateAction, Dispatch, useEffect } from 'react';
-import MobileSelect from './MobileSelectField';
-import ProcessSelect from './ProcessSelectField';
 import { Button } from "@nextui-org/react";
 import { Divider } from '@nextui-org/react';
+import { uid } from 'uid';
+
+// [Mostly] default imports
+import MobileSelect from './MobileSelectField';
+import ProcessSelect from './ProcessSelectField';
 import TagInput from './Tags';
 import Leaflet, { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';
-const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import PhotoInput from '../Shared/Form Fields/PhotoInput';
 import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
-import { uid } from 'uid';
 import WildSelect from './Wild';
+
+// Dynamic imports
+const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
 
 interface ModelSubmitFormProps{
     edit?: boolean
