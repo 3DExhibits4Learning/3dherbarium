@@ -10,6 +10,7 @@ import { Account } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
+import { routeHandlerTypicalResponse } from "@/functions/server/response";
 
 // Path
 const path = 'src/app/api/inat/route.tsx'
@@ -81,7 +82,7 @@ export async function POST(request: Request) {
             }
 
             // Affirmation and inat response sent for potential debugging
-            return Response.json({ data: 'Message sent', response: sendMessage })
+            return routeHandlerTypicalResponse('Message sent', sendMessage)
         }
 
         // Typical catch
