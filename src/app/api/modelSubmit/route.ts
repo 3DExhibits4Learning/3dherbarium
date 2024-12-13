@@ -11,8 +11,9 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
 import { mkdir, writeFile } from "fs/promises";
-import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
+import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
 import { routeHandlerTypicalResponse } from "@/functions/server/response";
+import { sendHTMLEmail } from "@/functions/server/email";
 
 // Singleton prisma client, path
 const prisma = prismaClient()
@@ -40,12 +41,12 @@ export async function POST(request: Request) {
         // Variable initialization
         var thumbUrl = ''
         const confirmation = body.get('confirmation') as string
-        const isMobile = body.get('isMobile') == 'Yes' ? true : false
-        const email = session.user.email
-        const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
         const position = JSON.parse(body.get('position') as string)
         const softwareArr = JSON.parse(body.get('software') as string)
         const tags = JSON.parse(body.get('tags') as string)
+        const isMobile = body.get('isMobile') == 'Yes' ? true : false
+        const email = session.user.email
+        const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
         // Function to write ID photos to tmp storage
         const writePhotos = async () => {
@@ -92,10 +93,7 @@ export async function POST(request: Request) {
             method: 'POST',
             body: data
         })
-            .then(res => {
-                if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request")
-                return res.json()
-            })
+            .then(res => { if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request"); return res.json() })
             .then(json => json)
             .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
 
@@ -145,6 +143,23 @@ export async function POST(request: Request) {
             }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.submittalTags.create()", "Coulnd't insert tags into the database"))
 
         }
+
+        // Finally, send confirmation emails
+        const clientEmailHtml = `Thank you for contributing to the 3D Herbarium!
+            <br><br>
+            You can view the model in your dashboard under "Pending Models" and it should be published in a business day or two.
+            <br><br>
+            Confirmation: ${confirmation}
+            <br>
+            Status: Pending`
+
+        const adminEmailHtml = `User Email: ${email}
+            <br><br>
+            Confirmation: ${confirmation}`
+
+        // Note that this is a nonFatal error catch
+        await Promise.all([sendHTMLEmail(email, "3D Model Submitted", clientEmailHtml), sendHTMLEmail('ab632@humboldt.edu', "3D Model Submitted", adminEmailHtml)])
+        .catch(e => console.error(routeHandlerError(path, e.message, "sendHTMLEmail()", 'POST', true)))
 
         // Typical success response
         return routeHandlerTypicalResponse('Model uploaded sucessfully', insert)

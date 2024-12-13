@@ -1,14 +1,38 @@
-import { getPublishedUserSubmittalsBySpecies } from "@/api/queries";
+/**
+ * @file src/app/api/collections/models/community/speciesSearch/route.tsx
+ * 
+ * @fileoverview route handler to get published user submittals
+ */
 
+// Dynamic route
+export const dynamic = 'force-dynamic'
+
+// Imports
+import { getPublishedUserSubmittalsBySpecies } from "@/api/queries";
+import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
+import { routeHandlerTypicalResponse } from "@/functions/server/response";
+
+// Path
+const path = 'src/app/api/collections/models/community/speciesSearch/route.tsx'
+
+/**
+ * 
+ * @param request HTTP request
+ * @returns response with affirmation message and database response object or response with error message
+ */
 export async function GET(request: Request) {
 
     try {
-        const { searchParams } = new URL(request.url)
-        const speciesName = searchParams.get('species')
+        // Get species name from params
+        const { searchParams } = new URL(request.url); const speciesName = searchParams.get('species')
 
+        // Await community models
         const communityModels = await getPublishedUserSubmittalsBySpecies(speciesName as string)
+            .catch(e => routeHandlerErrorHandler(path, e.message, "getPublishedSubmittals()", "Counln't get models"))
 
-        return Response.json({ data: 'Success', response: communityModels })
+        // Typical response
+        return routeHandlerTypicalResponse('Success', communityModels)
     }
-    catch (e: any) { return Response.json({ data: 'Error', response: e.message }, { status: 400, statusText: "Error" }) }
+    // Typical catch
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }
