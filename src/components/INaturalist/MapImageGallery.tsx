@@ -42,12 +42,12 @@ export const MapImageGallery = () => {
         {state.observations.length > 0 && (
                     <>  
 
-                        <div className="my-[10px]">
+                        <div className="my-[10px] 2xl:my-[30px]">
                             <a  
                                 id="herb-anchor" 
                                 href={observationTaxonUrl + state.observationTaxonId} 
                                 target="_blank"
-                                className="flex w-full justify-center items-center !text-2xl"
+                                className="flex w-full justify-center items-center !text-2xl 2xl:!text-5xl"
                                                         >
                                 {toUpperFirstLetter(state.observationTaxon)}
                                 </a>    
@@ -59,8 +59,8 @@ export const MapImageGallery = () => {
                                 onPlay={(currentIndex) => setCredentials(currentIndex, state, dispatch)
                                 }/>
                         </div>
-                        <div className="flex flex-col items-center justify-center h-[160px] mt-[5px] w-full">
-                            <div id='observationCredentials' className='flex flex-col h-[20%] xl:h-[30%] w-4/5 text-center items-center justify-center text-base xl:text-lg'>
+                        <div className="flex flex-col items-center justify-center h-[25%] mt-[5px] w-full">
+                            <div id='observationCredentials' className='flex flex-col h-[20%] xl:h-[40%] w-4/5 text-center items-center justify-center text-base 2xl:text-3xl'>
                                 <p className="">{state.observationLocation}</p>
                                 <p className="">{state.observationDate}</p>
                                 <p className='mt-1'>
