@@ -408,6 +408,11 @@ input[type="file"]::file-selector-button {
   width: 100% !important;
 }
 
+#herb-anchor:focus {
+  outline: none !important;
+  border-radius: 0 !important;
+}
+
 @media (max-width: 1024px) {
   #inaturalist {
     height: calc(100vh - 177px) !important;

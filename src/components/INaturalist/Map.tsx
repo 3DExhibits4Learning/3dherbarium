@@ -98,7 +98,7 @@ export default function Map() {
         </button>
 
         {showMapOptions && 
-            <div className="absolute top-16 right-4 z-50 bg-white shadow-md p-4 rounded">
+            <div className="absolute top-16 right-4 z-50 bg-[#D5CB9F] dark:bg-[#212121] dark:text-white shadow-md p-4 rounded">
                 <MapOptions 
                 />
             </div>
@@ -135,22 +135,22 @@ export default function Map() {
                                     icon={observationIcon}
                                 >
                                    <Popup>
-                                        <div className="flex h-[200px] w-[300px] justify-between text-[#004C46">
+                                        <div className="flex h-[200px] w-[300px] justify-between !text-[#004C46]">
                                             <div className="flex flex-col justify-between text-old-growth-green">            
                                                 <a  
                                                         id="herb-anchor" 
                                                         href={observationTaxonUrl + observation.taxon_id} 
                                                         target="_blank"
-                                                        className="text-center !m-0 !text-lg"
+                                                        className="text-center !m-0 !text-lg !text-[#004C46] dark:!text-white"
                                                     >
                                                        {observation.taxon_name}
                                                     </a>
-                                                <div className="h-[80%] flex flex-col justify-evenly dark:text-[#D5CB9F]">
+                                                <div className="h-[80%] flex flex-col justify-evenly text-[#004C46] dark:text-white ">
                                                     <a 
                                                         id="herb-anchor" 
                                                         href={userPageUrl + observation.user.userName} 
                                                         target="_blank"
-                                                        className="text-sm"
+                                                        className="text-sm !text-[#004C46] dark:!text-white"
                                                     >
                                                         Observer: {observation.user.userName}
                                                     </a>

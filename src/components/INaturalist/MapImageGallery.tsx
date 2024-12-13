@@ -70,7 +70,7 @@ export const MapImageGallery = () => {
                                         style={{ display: 'inline-block', marginRight: '1rem' }}
                                         />
                                     <span className="">
-                                        <a href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
+                                        <a id='herb-anchor' href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
                                     </span>
                                 </p>
                             </div>

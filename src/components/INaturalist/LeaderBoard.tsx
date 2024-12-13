@@ -36,7 +36,7 @@ export function LeaderBoard(props : {identifiers : iNatLeadingUser[], observers 
                         <React.Fragment key={index}>
                             <div className="flex justify-center items-center">{index + 1}</div>
                             <div className="flex justify-center items-center">  
-                                <a id='' href={userPageUrl + observer.user.userName} 
+                                <a id='herb-anchor' href={userPageUrl + observer.user.userName} 
                                                         target="_blank">{observer.user.userName}</a></div>
                             <div className="flex justify-center items-center">{observer.count}</div>
                         </React.Fragment>
@@ -55,7 +55,7 @@ export function LeaderBoard(props : {identifiers : iNatLeadingUser[], observers 
                  {props.identifiers.map((identifier, index) => (
                         <React.Fragment key={index}>
                             <div className="flex justify-center items-center">{index + 1}</div>
-                            <div className="flex justify-center items-center"> <a id='' href={userPageUrl + identifier.user.userName} 
+                            <div className="flex justify-center items-center"> <a id='herb-anchor' href={userPageUrl + identifier.user.userName} 
                                                         target="_blank">{identifier.user.userName}</a></div>
                             <div className="flex justify-center items-center">{identifier.count}</div>
                         </React.Fragment>

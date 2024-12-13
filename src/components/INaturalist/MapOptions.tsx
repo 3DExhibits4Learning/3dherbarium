@@ -49,7 +49,7 @@ export function MapOptions() {
     
     return (
     <>
-    <form onSubmit={handleSubmit}>
+    <form className="" onSubmit={handleSubmit}>
         <div className="mb-4">
             <input
                 id="radius"
@@ -58,10 +58,10 @@ export function MapOptions() {
                 onChange={(e) => setRadius(Number(e.target.value))}
                 min={1}
                 max={75}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-300"
+                className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             />
 
-            <label htmlFor="radius" className="block text-gray-700 mb-2">Radius of search</label>
+            <label htmlFor="radius" className="block mb-2">Radius of search</label>
         </div>
 
         <div className="mb-4">
@@ -72,10 +72,10 @@ export function MapOptions() {
                 onChange={(e) => setDisplayAmount(Number(e.target.value))}
                 max={30}
                 min={1}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-300"
+                className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             />
 
-            <label htmlFor="display" className="block text-gray-700 mb-2">Max Occurrences</label>
+            <label htmlFor="display" className="block mb-2">Max Occurrences</label>
         </div>
 
         <div className="mb-4">
@@ -84,10 +84,10 @@ export function MapOptions() {
                 type="date"
                 value={beforeDate !== '' ? new Date(beforeDate).toISOString().split('T')[0] : ''}
                 onChange={(e) => setBeforeDate(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-300"
+                className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             />
 
-            <label htmlFor="date-before" className="block text-gray-700 mb-2">Before date</label>
+            <label htmlFor="date-before" className="block mb-2">Before date</label>
         </div>
 
         <div className="mb-4">
@@ -96,10 +96,10 @@ export function MapOptions() {
                 type="date"
                 value={sinceDate !== '' ? new Date(sinceDate).toISOString().split('T')[0] : ''}
                 onChange={(e) => setSinceDate(e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-300"
+                className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             />
 
-            <label htmlFor="date-since" className="block text-gray-700 mb-2">Since date</label>
+            <label htmlFor="date-since" className="block mb-2">Since date</label>
         </div>
 
         <div className="mb-4 accent-[#00856A]">
@@ -111,9 +111,9 @@ export function MapOptions() {
                     const newValue = !useCurrentLocation;
                     setUseCurrentLocation(newValue);
                 }}
-                className="mt-1 border border-gray-300 rounded-md p-2"
+                className="mt-1 dark:bg-[#27272a] rounded-md p-2"
             />
-             <label htmlFor="use-my-location" className=" text-gray-700 mb-2 pl-2">Use My Location</label>
+             <label htmlFor="use-my-location" className=" mb-2 pl-2">Use My Location</label>
         </div>
 
         <div className="mb-4">
@@ -121,14 +121,14 @@ export function MapOptions() {
             id="grade-type"
             value={gradeType}
             onChange={(e) => setGradeType(e.target.value)}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring focus:ring-blue-300"
+            className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             >
                 <option value="needs_id,research,casual">None</option>
                 <option value="needs_id,research">Verifiable</option>
                 <option value="research">Researched</option>
             </select>
                 
-            <label htmlFor="grade-type" className="block text-gray-700 mb-2"> Grade type </label>
+            <label htmlFor="grade-type" className="block mb-2"> Grade type </label>
 
             <button type="submit" className="bg-[#004C46] text-white py-2 px-4 rounded">
                 Submit
