@@ -4,6 +4,7 @@
  * @fileoverview 
  * 
  * @todo move ID props from env or add NEXT_PUBLIC; they are not sensitive data
+ * @todo consolidate update thumbnail components into one with a checkbox for community flag
  */
 
 'use client'
@@ -13,7 +14,7 @@ import * as fn from "@/functions/client/admin/manager"
 
 // Typical imports
 import { userSubmittal } from "@prisma/client";
-import { useRef, LegacyRef, useState, ChangeEvent} from "react";
+import { useState} from "react";
 import { Button } from "@nextui-org/react";
 
 // Default imports
@@ -32,16 +33,16 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     for (let model in models) {const time = Date.parse(models[model].dateTime); models[model].dateTime = new Date(time)}
     const pendingModels: userSubmittal[] = models
 
-    // Refs
-    const uid = useRef<HTMLInputElement>()
-    const communityUid = useRef<HTMLInputElement>()
-
-    // States
+    // Task field states
+    const [taskee, setTaskee] = useState<string>('Hunter')
+    const [uid, setUid] = useState<string>('')
+    const [communityUid, setCommunityUid] = useState<string>('')
+    
+    // Data transfer states
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
     const [result, setResult] = useState<string>('')
     const [loadingLabel, setLoadingLabel] = useState<string>('')
-    const [taskee, setTaskee] = useState<string>('Hunter')
 
     // Initialize/terminate data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
@@ -50,6 +51,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     // Task handlers
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const procurementTaskHandler = (assignee: string) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.createProcurementTask, [assignee, props.katId, props.hunterId], "Creating task")
+    const approveWrapper = (args: any[])=> dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
 
     return (
         <>
@@ -61,7 +63,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                     <label className='text-2xl block mb-2'>Update Model Thumbnail</label>
                     <input
-                        ref={uid as LegacyRef<HTMLInputElement>}
+                        onChange={e => setUid(e.target.value)}
                         type='text'
                         className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                         placeholder="Enter UID"
@@ -69,7 +71,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     </input>
                     <Button
                         className="w-1/2 text-white bg-[#004C46]"
-                        onClick={() => thumbnailHandler((uid.current as HTMLInputElement).value, false)}
+                        onClick={() => thumbnailHandler(uid, false)}
                     >
                         Update
                     </Button>
@@ -78,7 +80,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                     <label className='text-2xl block mb-2'>Update Community Thumbnail</label>
                     <input
-                        ref={communityUid as LegacyRef<HTMLInputElement>}
+                        onChange={e => setCommunityUid(e.target.value)}
                         type='text'
                         className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                         placeholder="Enter UID"
@@ -86,7 +88,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     </input>
                     <Button
                         className="w-1/2 text-white bg-[#004C46]"
-                        onClick={() => thumbnailHandler((communityUid.current as HTMLInputElement).value, true)}
+                        onClick={() => thumbnailHandler(communityUid, true)}
                     >
                         Update
                     </Button>
@@ -96,7 +98,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
             {
                 pendingModels &&
                 //@ts-ignore - Typescript thinks decimal isn't assignable to number (it seems to be)
-                <PendingModelsAdmin pendingModels={pendingModels} />
+                <PendingModelsAdmin pendingModels={pendingModels} approveWrapper={approveWrapper}/>
             }
         </>
     )
