@@ -17,6 +17,7 @@ import { ReactImageGalleryItem } from "react-image-gallery";
 import ImageGallery from 'react-image-gallery'
 import Image from "next/image";
 import { observationTaxonUrl, userPageUrl } from "@/ts/inaturalist";
+import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
 
 /**
  * @returns a JSX component that holds the images of the 
@@ -40,21 +41,25 @@ export const MapImageGallery = () => {
         <>
         {state.observations.length > 0 && (
                     <>  
-                        <a  
-                             id="herb-anchor" 
-                             href={observationTaxonUrl + state.observationTaxonId} 
-                            target="_blank"
-                            className="flex w-full h-[10%] justify-center items-center !text-2xl"
-                                                    >
-                            {state.observationTaxon}
-                             </a>                             
-                        <div className='w-3/5 h-[70%] lg:h-[60%] lg:w-4/5'>
+
+                        <div className="my-[10px]">
+                            <a  
+                                id="herb-anchor" 
+                                href={observationTaxonUrl + state.observationTaxonId} 
+                                target="_blank"
+                                className="flex w-full justify-center items-center !text-2xl"
+                                                        >
+                                {toUpperFirstLetter(state.observationTaxon)}
+                                </a>    
+                        </div>
+                                                 
+                        <div className='w-3/5 h-[55%] md:w-2/5 lg:h-[65%] lg:w-[75%]'>
                             <ImageGallery autoPlay items={state.images as ReactImageGalleryItem[]} slideInterval={4000} 
                                 onSlide={(currentIndex) => setCredentials(currentIndex, state,dispatch)} 
                                 onPlay={(currentIndex) => setCredentials(currentIndex, state, dispatch)
                                 }/>
                         </div>
-                        <div className="flex flex-col items-center justify-center h-[160px] w-full">
+                        <div className="flex flex-col items-center justify-center h-[160px] mt-[5px] w-full">
                             <div id='observationCredentials' className='flex flex-col h-[20%] xl:h-[30%] w-4/5 text-center items-center justify-center text-base xl:text-lg'>
                                 <p className="">{state.observationLocation}</p>
                                 <p className="">{state.observationDate}</p>

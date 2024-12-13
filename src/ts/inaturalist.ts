@@ -10,7 +10,7 @@
 import { LatLngLiteral } from "leaflet"
 
 //When the map first loads it will load here, If there is an error it will also load back to here
-export const defaultCoordinates: LatLngLiteral = { lat: 39.35, lng: -120.26 }
+export const defaultCoordinates: LatLngLiteral = { lat: 40.8665, lng: -124.0828 }
 
 export const userPageUrl : string = "https://www.inaturalist.org/people/"
 

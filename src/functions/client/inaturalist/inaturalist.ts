@@ -179,7 +179,7 @@ export const setCredentials = (
             observationDate : observation.observedDate,
             observationLocation : observation.place_guess,
             observationIcon : observation.user.userIcon,
-            observationTaxon : observation.taxon_name,
+            observationTaxon : decodeURIComponent(observation.taxon_name),
             observationTaxonId : observation.taxon_id
         }
     })

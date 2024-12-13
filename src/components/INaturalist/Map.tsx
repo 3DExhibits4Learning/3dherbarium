@@ -104,7 +104,7 @@ export default function Map() {
             </div>
         }
 
-        <MapContainer className="z-0 rounded-xl h-full w-full" center={[data.coordinates.lat, data.coordinates.lng]} zoom={7} scrollWheelZoom={false}>
+        <MapContainer className="z-0 rounded-xl h-full w-full" center={[data.coordinates.lat, data.coordinates.lng]} zoom={10} scrollWheelZoom={false}>
             <LocationFinder />
             <RecenterMap position={data.coordinates}/>
             <TileLayer

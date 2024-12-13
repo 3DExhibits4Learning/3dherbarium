@@ -22,7 +22,7 @@ interface NavButtonProps {
  */
 export function NavButton({ label, onClick }: NavButtonProps) {
   return (
-    <Button className="bg-sea-glass text-black active:ring-4 active:ring-chanterelle-gold focus:ring-0 focus:ring-sea-glass" onClick={onClick}>
+    <Button className="bg-[#00856A] text-white active:ring-4 active:ring-chanterelle-gold focus:ring-0 focus:ring-sea-glass" onClick={onClick}>
       {label}
     </Button>
   )

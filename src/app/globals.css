@@ -408,6 +408,18 @@ input[type="file"]::file-selector-button {
   width: 100% !important;
 }
 
+@media (max-width: 1024px) {
+  #inaturalist {
+    height: calc(100vh - 177px) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #inaturalist {
+    height: calc(100vh - 200px) !important;    
+  }
+}
+
 
 /* Tafigy placeholder text color (dark mode) */
 
