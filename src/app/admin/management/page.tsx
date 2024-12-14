@@ -11,18 +11,22 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getAdmin } from "@/api/queries";
 import { authed } from "@prisma/client";
 import { serverErrorHandler } from "@/functions/server/error";
+import { connection } from "@/functions/server/mysql";
 
 // Default imports
 import ManagerClient from "@/components/Admin/Manager/ManagerClient"
 import Header from "@/components/Header/Header";
 import Foot from "@/components/Shared/Foot";
 import FullPageError from "@/components/Error/FullPageError";
+import mysql from 'mysql2/promise';
 
 // Path
 const path = 'src/app/admin/management/page.tsx'
 
 // Main JSX
 export default async function Page() {
+
+
 
     try {
         // Get email from session
@@ -37,6 +41,10 @@ export default async function Page() {
         const pendingModels = await getAllPendingModels().catch(e => serverErrorHandler(path, e.message, "Couldn't get pending models", "getAllPendingModels", false))
         const pendingModelsJson = JSON.stringify(pendingModels)
 
+        const connection = await mysql.createConnection({ host: process.env.HOST, user: process.env.USER, password: process.env.PASSWORD, database: process.env.DATABASE })
+        const [results, fields] = await connection.query('SELECT * FROM `model` WHERE `site_ready` IS true')
+        console.log(fields)
+
         // Return Header, ManagerClient in a wrapper, Footer
         return (
             <>
@@ -49,5 +57,5 @@ export default async function Page() {
         )
     }
     // Typical catch
-    catch(e: any) {return <FullPageError clientErrorMessage={e.message}/>}
+    catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
 }
