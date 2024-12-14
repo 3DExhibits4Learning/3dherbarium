@@ -116,7 +116,7 @@ export function MapOptions() {
              <label htmlFor="use-my-location" className=" mb-2 pl-2">Use My Location</label>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-8">
         <select
             id="grade-type"
             value={gradeType}
@@ -128,12 +128,14 @@ export function MapOptions() {
                 <option value="research">Researched</option>
             </select>
                 
-            <label htmlFor="grade-type" className="block mb-2"> Grade type </label>
-
-            <button type="submit" className="bg-[#004C46] text-white py-2 px-4 rounded">
-                Submit
-            </button>
+            <label htmlFor="grade-type" className="block"> Grade type </label>
         </div>
+
+        <div className="flex justify-center items-center m-0">
+                <button type="submit" className="bg-[#004C46] text-white py-2 px-4 rounded">
+                    Submit
+                </button>
+            </div>
     </form>
     </>
     )

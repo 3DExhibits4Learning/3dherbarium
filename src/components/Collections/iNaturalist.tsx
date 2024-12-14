@@ -70,6 +70,14 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     return (
         <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
+
+        {state.observations.length === 0 && state.loading ? (
+            <div className="flex justify-center items-center w-full h-full flex-col border-2 border-pacific-blue rounded-lg">
+                <Spinner size="lg" color="default" />
+                <p className="mt-4 text-2xl 2xl:text-4xl">Loading</p>
+            </div>
+
+        ) : (
         <div className="flex w-full h-full overflow-y-auto">
             <section className={`h-[85%] lg:h-[95%] min-h-[600px] lg:flex justify-center items-center lg:w-1/3 ml-2 mt-4 ${state.activeSection === "locations" ? "mr-2 flex w-full" : "hidden"}`}>
                 {state.loading ? (
@@ -91,7 +99,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 <LeaderBoard identifiers={state.topIdentifiers} observers={state.topObservers} />
             </section>
         </div>
+        )}
         </MapContext.Provider>
     )
-
 }
