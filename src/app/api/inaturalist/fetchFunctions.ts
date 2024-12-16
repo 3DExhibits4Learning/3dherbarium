@@ -42,13 +42,8 @@ export const fetchSpecimenObservations = async (specimenName: string, coordinate
         coordinate: coordinate,
         searchOptions: searchOptions,
     }
-
-    console.log(fetchObj.specimenName)
-
     //initial fetch logic 
     const endpoint = iNatUrl(fetchObj)
-
-    console.log(endpoint)
 
     const response : iNatApiResponse = await basicFetch<iNatApiResponse>(endpoint)
     

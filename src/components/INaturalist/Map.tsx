@@ -17,6 +17,7 @@ import RecenterMap  from '@/components/INaturalist/RecenterMap'
 import Image from 'next/image'
 import { MapDataState, observationTaxonUrl, observationUrl, userPageUrl } from '@/ts/inaturalist'
 import { MapOptions } from './MapOptions'
+import { MessageButton } from './MessageButton'
 
 
 /**
@@ -145,23 +146,27 @@ export default function Map() {
                                                     >
                                                        {observation.taxon_name}
                                                     </a>
-                                                <div className="h-[80%] flex flex-col justify-evenly text-[#004C46] dark:text-white ">
+                                                <div className="h-[80%] flex flex-col justify-start mt-[8px] text-[#004C46] dark:text-white ">
                                                     <a 
                                                         id="herb-anchor" 
                                                         href={userPageUrl + observation.user.userName} 
                                                         target="_blank"
-                                                        className="text-sm !text-[#004C46] dark:!text-white"
+                                                        className="text-sm !text-[#004C46] dark:!text-white mb-2"
                                                     >
                                                         Observer: {observation.user.userName}
                                                     </a>
-                                                    <p className="text-[14px] !m-0">Date: {observation.observedDate}</p>
-                                                    <p className="text-[14px] !m-0">Verifiable: {observation.gradeType}</p>
+                                                    <p className="text-[14px] !m-0 !mb-2">Date: {observation.observedDate}</p>
+                                                    <p className="text-[14px] !m-0 !mb-4">Verifiable: {observation.gradeType}</p>
+
+                                                    <div className="">
+                                                        <MessageButton userToMessage={observation.user.userName}/>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <a id="herb-anchor" href={observationUrl + observation.id} target="_blank">
                                                 <Image 
                                                     src={observation.images.small} 
-                                                    className="h-[200px] w-[140px] object-cover" 
+                                                    className="h-[200px] w-[140px] object-cover rounded-md" 
                                                     alt="observation photo" 
                                                     width={125} 
                                                     height={150}

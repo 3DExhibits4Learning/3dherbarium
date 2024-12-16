@@ -6,9 +6,10 @@
  * @todo 
  */
 
-import { defaultCoordinates, iNatApiResult, iNatFetchObj, MapDataState} from "@/ts/inaturalist"
+import { defaultCoordinates, iNatApiResult, iNatFetchObj, iNatUserObservation, MapDataState, Message} from "@/ts/inaturalist"
 import { Dispatch } from "react";
 import { MapDataAction } from "@/functions/client/reducers/INaturalistStateReducer";
+import { routeHandlerTypicalResponse } from "@/functions/server/response";
 
 /**
  * @description Retrieves the user's current geographical coordinates using the browser's Geolocation API.
@@ -150,6 +151,44 @@ export const iNatFetch = async (
         console.log(state.topIdentifiers)
     } else {
         console.error("Error fetching iNaturalist data:", res.text)
+    }
+}
+
+export const sendMessageToObserver = async (userToMessage : string, heading: string, content: string) => {
+try{
+    const res = await fetch(`/api/inaturalist/messages?username=${userToMessage}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',  
+        }
+    })
+    
+    if (res.ok) {
+       const data = await res.json()
+       const userToMessageId = data.userId;
+        
+
+        const messageResponse = await fetch(`/api/inaturalist/messages`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',  
+            },
+            body: JSON.stringify({
+                    id: userToMessageId,
+                    subject: heading,
+                    body: content
+            })
+        })
+
+            if (messageResponse.ok) {
+                const responseJson = await messageResponse.json()
+                console.log("Message sent successfully:", responseJson)
+            } else 
+                console.error("Error sending message:", await messageResponse.text())
+        } else 
+            console.error("Error fetching user ID:", await res.text())
+    }  catch (e) {
+        console.error("An error occurred:", e)
     }
 }
 

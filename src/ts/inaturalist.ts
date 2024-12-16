@@ -82,6 +82,14 @@ export interface iNatFetchObj {
     searchOptions: DisplayOptions
 }
 
+export interface Message {
+    message: {
+        to_user_id: string,
+        subject: string,
+        body: string
+    }
+}
+
 //State for the reducers and context
 
 export interface MapDataState {
