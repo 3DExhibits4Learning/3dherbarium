@@ -22,21 +22,20 @@ const path = 'src/app/modelSubmit/page.tsx'
 // Main JSX
 export default async function Page() {
 
-    try {
-        
-        // await session, redirect if there isn't a session (try-catch wrapper required due to internal error thrown by redirect())
-        const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))
-        if (!session || !session.user) { try { redirect('/api/auth/signin') } catch (e) { } }
-        
-        // Note there is no client wrapper; just header => form => footer
-        return (
-            <>
-                <Header headerTitle='Submit a 3D Model' pageRoute='modelSubmit' />
-                <ModelSubmitForm />
-                <Foot />
-            </>
-        )
-    }
-    // Typical catch
-    catch(e: any){return <FullPageError clientErrorMessage={e.message}/>}
+    var session
+
+    // await session, redirect if there isn't a session or user
+    try { session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false)) }
+    catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
+
+    if (!session || !session.user) redirect('/api/auth/signin')
+
+    // Note there is no client wrapper; just header => form => footer
+    return (
+        <>
+            <Header headerTitle='Submit a 3D Model' pageRoute='modelSubmit' />
+            <ModelSubmitForm />
+            <Foot />
+        </>
+    )
 }
