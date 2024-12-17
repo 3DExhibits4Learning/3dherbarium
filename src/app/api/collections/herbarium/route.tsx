@@ -24,7 +24,7 @@ export async function GET(request: Request) {
             getSoftwares(uid),
             getImageSet(uid),
             fetchGbifProfile(usageKey),
-           fetchWikiSummary(specimenName),
+            fetchWikiSummary(specimenName),
         ]
 
         // Await promises, throw error if there are issues gathering metadata
