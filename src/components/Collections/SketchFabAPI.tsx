@@ -44,7 +44,7 @@ export const SketchfabApiContext = createContext<sketchfabApiData>(initialData)
 // Main JSX
 export default function SFAPI() {
 
-  try {
+  //try {
     
     // Get context
     const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
@@ -105,7 +105,7 @@ export default function SFAPI() {
         </div >
       </SketchfabApiContext.Provider>
     )
-  }
+  //}
   // Typical catch
-  catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
+  //catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
 }
