@@ -1,50 +1,74 @@
-select d.spec_name, d.genus, d.is_local 
+/*
+* Run to migrate models and annotations from the development schema to the test schema
+* Be sure to connect to the test schema for rollback test
+* Remove rollback/uncomment commit to commit
+*/
+
+-- Start transaction
+start transaction;
+
+-- Migrate species 
+insert into Test.species(
+select d.*
 from Development.species as d
 left join Test.species as t
 on d.spec_name = t.spec_name
-where t.spec_name is null;
+where t.spec_name is null);
 
-insert into Test.species(
-select Development.species.spec_name, Development.species.genus, Development.species.is_local 
-from Development.species
-left join Test.species
-on Development.species.spec_name = Test.species.spec_name
-where Test.species.spec_name is null);
-rollback;
-
-select * 
+-- Migrate specimen
+insert into Test.specimen(
+select d.*
 from Development.specimen as d
 left join Test.specimen as t
 on d.spec_acquis_date = t.spec_acquis_date and d.spec_name = t.spec_name
-where t.spec_name is null;
+where t.spec_name is null);
 
-select * from Development.model
-left join Test.model
-on Development.model.uid = Test.model.uid
-where Test.model.uid is null and Development.model.annotated is true;
+-- Migrate annotated models 
+insert into Test.model(
+select d.* 
+from Development.model as d
+left join Test.model as t
+on d.uid = t.uid
+where t.uid is null and d.annotated is true);
 
-select * 
+-- Migrate image sets of migrated models
+insert into Test.image_set(
+select d.* 
 from Development.image_set as d
 left join Test.image_set as t
 on d.spec_name = t.spec_name and d.spec_acquis_date = t.spec_acquis_date and d.set_no = t.set_no
-where t.spec_name is null and d.uid is not null and d.uid in (select uid from Test.model);
+where t.spec_name is null and d.uid is not null and d.uid in (select uid from Test.model));
 
-select * from Development.annotations
-left join Test.annotations
-on Development.annotations.annotation_id = Test.annotations.annotation_id
-where Test.annotations.annotation_id is null and Development.annotations.uid in (select uid from Test.model);
+-- Migrate annotations of migrated models
+insert into Test.annotations(
+select d.* from Development.annotations as d
+left join Test.annotations as t
+on d.annotation_id = t.annotation_id
+where t.annotation_id is null and d.uid in (select uid from Test.model));
 
-select * from Development.photo_annotation
-left join Test.photo_annotation
-on Development.photo_annotation.annotation_id = Test.photo_annotation.annotation_id
-where Test.photo_annotation.annotation_id is null and Development.photo_annotation.annotation_id in (select annotation_id from Test.annotations);
+-- Migrate photo_annotations of migrated models
+insert into Test.photo_annotation(
+select d.* 
+from Development.photo_annotation as d
+left join Test.photo_annotation as t
+on d.annotation_id = t.annotation_id
+where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));
 
-select * from Development.video_annotation
-left join Test.video_annotation
-on Development.video_annotation.annotation_id = Test.video_annotation.annotation_id
-where Test.video_annotation.annotation_id is null and Development.video_annotation.annotation_id in (select annotation_id from Test.annotations);
+-- Migrate video_annotations of migrated models
+insert into Test.video_annotation(
+select d.* 
+from Development.video_annotation as d
+left join Test.video_annotation as t
+on d.annotation_id = t.annotation_id
+where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));
 
-select * from Development.model_annotation
-left join Test.model_annotation
-on Development.model_annotation.annotation_id = Test.model_annotation.annotation_id
-where Test.model_annotation.annotation_id is null and Development.model_annotation.annotation_id in (select annotation_id from Test.annotations);
+-- Migrate model_annotations of migrated models
+insert into Test.model_annotation(
+select d.* 
+from Development.model_annotation as d
+left join Test.model_annotation as t
+on d.annotation_id = t.annotation_id
+where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));
+
+rollback;
+-- commit;

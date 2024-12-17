@@ -89,6 +89,9 @@ model model {
   build_process       String?       @default("Photogrammetry") @db.VarChar(50)
   thumbnail           String        @default("")
   annotator           String?       @db.VarChar(75)
+  lat                 String?       @db.VarChar(25) 
+  lng                 String?       @db.VarChar(25) 
+  locality            String?       @db.VarChar(1500) 
   annotations         annotations[]
   image_set           image_set[]
   species             species       @relation(fields: [spec_name], references: [spec_name], onDelete: NoAction, map: "model_ibfk_1")
