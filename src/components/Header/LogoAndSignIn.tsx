@@ -20,7 +20,7 @@ export default function LogoAndSignIn() {
     useEffect(() => {
 
         const isAdmin = async () => {
-            if (session.user?.email) {
+            if (session?.user?.email) {
                 const adminBoolRes = await fetch(`/api/admin?email=${session.user?.email}`).then(res => res.json()).then(json => json.response)
                 setIsAdministrator(adminBoolRes)
             }
