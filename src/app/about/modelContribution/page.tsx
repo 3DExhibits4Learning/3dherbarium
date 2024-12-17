@@ -9,8 +9,8 @@ export default function Page() {
                 <h1 className="text-3xl mb-12">About 3D model contribution</h1>
                 <h2 className="text-2xl mb-2">How it works</h2>
                 <p className="mb-12">
-                    Once you have uploaded your 3D model, it will be reviewed and processed so that it optimally appears on the 3D herbarium. Your model will be 'pending' during this time.
-                    Once approved, it will appear on the collections page with the "community" label in the thumbnail.
+                    Once you have uploaded your 3D model, it will be reviewed and processed so that it optimally appears on the 3D herbarium. Your model will be &quot;pending&quot; during this time.
+                    Once approved, it will appear on the collections page with the &quot;community&quot; label in the thumbnail.
                     For wild specimen, an iNaturalist post will also be linked with your model contribution for community identification.
                     Your model will be available to view, update or delete on your dashboard. Contributors agree to submit models/photos under a CC-BY-NC-SA license.
                 </p>

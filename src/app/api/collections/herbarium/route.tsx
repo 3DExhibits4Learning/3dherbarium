@@ -1,6 +1,7 @@
 import { getSoftwares, getImageSet, getModelByUid } from '@/api/queries'
 import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/api/fetchFunctions";
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
+import { getWikiPediaPageOrSummary } from '@/functions/server/collections';
 
 export async function GET(request: Request) {
 
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
             getSoftwares(uid),
             getImageSet(uid),
             fetchGbifProfile(usageKey),
-            fetchWikiSummary(specimenName),
+           fetchWikiSummary(specimenName),
         ]
 
         // Await promises, throw error if there are issues gathering metadata
@@ -38,8 +39,6 @@ export async function GET(request: Request) {
                 throw Error('/api/collections/herbarium: Error getting model by uid')
             })
         }
-
-        console.log('SOFTWARE', results[1])
 
         return Response.json({data:"Success", response: results})
     }

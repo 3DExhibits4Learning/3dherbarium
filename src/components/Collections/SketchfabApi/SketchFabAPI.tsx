@@ -2,6 +2,8 @@
  * @file SketchFabApi.tsx
  * 
  * @fileoverview client component which renders the 3D models and annotations
+ * 
+ * @todo move try-catch blocks inside of effects
  */
 
 "use client"
@@ -12,7 +14,7 @@ import * as fn from '@/functions/client/collections/sketchfabApi'
 // Typical imports
 import { GbifResponse } from '@/api/types';
 import { useEffect, useRef, useContext, createContext, useReducer } from 'react';
-import { CollectionsContext } from './CollectionsWrapper';
+import { CollectionsContext } from '../CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData } from '@/ts/collections';
 
@@ -21,9 +23,9 @@ import Sketchfab from '@sketchfab/viewer-api';
 import AnnotationModal from '@/components/Collections/AnnotationModal';
 import Herbarium from '@/utils/HerbariumClass';
 import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer';
-import ModelViewer from './SketchfabApi/ModelViewer';
-import Annotation from './SketchfabApi/Annotation';
-import FullPageError from '../Error/FullPageError';
+import ModelViewer from './ModelViewer';
+import Annotation from './Annotation';
+import FullPageError from '../../Error/FullPageError';
 
 // Initial context data
 const initialData = {
@@ -105,7 +107,7 @@ export default function SFAPI() {
         </div >
       </SketchfabApiContext.Provider>
     )
-  //}
+  }
   // Typical catch
   //catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
-}
+//}
