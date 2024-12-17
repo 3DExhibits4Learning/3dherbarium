@@ -11,8 +11,11 @@ import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
 import createTask from "@/utils/Jira/createTask"
 import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
+import { routeHandlerErrorHandler } from "@/functions/server/error"
 
 const prisma = prismaClient()
+
+const path = 'src/app/api/admin/modeler/model/route.tsx'
 
 export async function POST(request: Request) {
 
@@ -53,7 +56,7 @@ export async function POST(request: Request) {
                 base_model: !!parseInt(model.isBase),
                 thumbnail: thumbUrl
             }
-        }).catch(() => { throw new Error("Couldn't enter model into Database") })
+        }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.model.create()", "Couldn't enter model into databse"))
 
         // Update corresponding image_set UID
         update = await prisma.image_set.update({
