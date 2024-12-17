@@ -18,15 +18,13 @@ import ManagerClient from "@/components/Admin/Manager/ManagerClient"
 import Header from "@/components/Header/Header";
 import Foot from "@/components/Shared/Foot";
 import FullPageError from "@/components/Error/FullPageError";
-import mysql from 'mysql2/promise';
+import mysql from 'mysql'
 
 // Path
 const path = 'src/app/admin/management/page.tsx'
 
 // Main JSX
 export default async function Page() {
-
-
 
     try {
         // Get email from session
@@ -41,9 +39,12 @@ export default async function Page() {
         const pendingModels = await getAllPendingModels().catch(e => serverErrorHandler(path, e.message, "Couldn't get pending models", "getAllPendingModels", false))
         const pendingModelsJson = JSON.stringify(pendingModels)
 
-        const connection = await mysql.createConnection({ host: process.env.HOST, user: process.env.USER, password: process.env.PASSWORD, database: process.env.DATABASE })
-        const [results, fields] = await connection.query('SELECT * FROM `model` WHERE `site_ready` IS true')
-        console.log(fields)
+        const query = 'select * from `Development.model` left join `Test.model` on `Development.model.uid` = `Test.model.uid` where `Test.model.uid` is null'
+
+        //const connection = await mysql.createConnection({ host: process.env.HOST, user: process.env.USER, password: process.env.PASSWORD})
+        //const [results, fields] = await connection(query)
+        //console.log(results)
+        //connection.query(query)
 
         // Return Header, ManagerClient in a wrapper, Footer
         return (
