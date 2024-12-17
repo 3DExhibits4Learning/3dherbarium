@@ -9,7 +9,7 @@ import OccurrenceSwiper from "../GbifSwiper"
 import Inaturalist from "../iNaturalist"
 import Foot from "@/components/Shared/Foot"
 
-const SketchfabApi = dynamic(() => import('@/components/Collections/SketchFabAPI'), { ssr: false })
+const SketchfabApi = dynamic(() => import('@/components/Collections/SketchfabApi/SketchFabAPI'), { ssr: false })
 
 export default function CollectionsHerbariumModel(props:{sizes: any, modelHeight: string}) {
 
