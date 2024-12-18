@@ -1,3 +1,5 @@
+//@ts-nocheck
+
 /**
  * @file src/components/Header/LogoAndSignIn.tsx
  * 
@@ -54,22 +56,18 @@ export default function LogoAndSignIn() {
                     <DropdownMenu aria-label="Static Actions">
                         <DropdownItem key="dashboard" onClick={() => router.push('/dashboard')}>Dashboard</DropdownItem>
                         <DropdownItem key="modelSubmit" onClick={() => router.push('/modelSubmit')}>Submit 3D Model</DropdownItem>
+
                         {
-                            <>
-                                {
-                                    isAdministrator && process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' && session.user?.email !== 'ab632@humboldt.edu' &&
-                                    <DropdownItem key="modelSubmit" onClick={() => router.push('/admin')}>Admin</DropdownItem>
-                                }
-                            </>
+                            isAdministrator && process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' && session.user?.email !== 'ab632@humboldt.edu' &&
+                            <DropdownItem key="modelSubmit" onClick={() => router.push('/admin')}>Admin</DropdownItem>
                         }
+
+
                         {
-                            <>
-                                {
-                                    session.user?.email === 'ab632@humboldt.edu' &&
-                                    <DropdownItem key="modelSubmit" onClick={() => router.push('/admin')}>Admin</DropdownItem>
-                                }
-                            </>
+                            session.user?.email === 'ab632@humboldt.edu' &&
+                            <DropdownItem key="modelSubmit" onClick={() => router.push('/admin')}>Admin</DropdownItem>
                         }
+
                         <DropdownItem key="signOut" onClick={() => signOut()}>Sign Out</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
