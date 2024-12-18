@@ -1,14 +1,14 @@
 /**
  * @file /components/Map/Map.tsx
- * @fileoverview react leaflet map component implementation for nextJS.
+ * @fileoverview Basic map to power most other maps
  */
 
 'use client'
 
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css';
+// Imports
+import { MapContainer, TileLayer} from 'react-leaflet'
 import { ConditionalChildren } from '@/api/types';
-
+import 'leaflet/dist/leaflet.css';
 
 export default function Map({children}: ConditionalChildren) {
 

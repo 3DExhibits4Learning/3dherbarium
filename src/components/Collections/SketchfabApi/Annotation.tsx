@@ -1,12 +1,12 @@
 'use client'
 
 import { GbifResponse } from "@/api/types"
+import { forwardRef, MutableRefObject } from "react"
 
 import TaxonomyAndDescription from "./TaxAndDescription"
 import PhotoAnnotation from "./PhotoAnnotation"
 import VideoAnnotation from "./VideoAnnotation"
 import ModelAnnotationMedia from "./ModelAnnotation"
-import { forwardRef, MutableRefObject } from "react"
 
 export const Annotation = forwardRef((props:{gMatch: GbifResponse, sketchfabApi: any}, ref) => {
 
