@@ -75,7 +75,7 @@ export default async function Page({ params, searchParams }: { params: { specime
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
         <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
         <title>3D Herbarium Collections</title>
-        <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }}/>
+        <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} />
       </>
     )
   }

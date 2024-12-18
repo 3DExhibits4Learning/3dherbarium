@@ -3,14 +3,18 @@
  * @fileoverview contains the type definitions of the API calls used throughout the application.
  */
 
-import { Dispatch } from "react";
-import { SetStateAction } from "react";
+import { Dispatch, SetStateAction, ReactElement } from "react";
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
 import { LatLngLiteral } from "leaflet";
 
-export interface action{
+export interface action {
   type: string
 }
+
+export interface ConditionalChildren {
+  children?: Array<ReactElement | "" | undefined> | ReactElement | "" | undefined
+}
+
 
 export interface SearchHeaderProps {
   headerTitle: string,

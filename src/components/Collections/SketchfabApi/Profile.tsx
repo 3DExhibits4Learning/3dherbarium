@@ -4,7 +4,7 @@ import { addCommas } from "../SketchfabDom"
 import { boolRinse } from "../SketchfabDom"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 
-export default function Profile(props: { sketchfabApi: any, }) {
+export default function Profile(props: { sketchfabApi: any }) {
 
     const sketchfabApi = props.sketchfabApi
 
