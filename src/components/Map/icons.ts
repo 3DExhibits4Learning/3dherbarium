@@ -6,7 +6,7 @@
 
 import L from 'leaflet'
 
-export const greenMapIcon = new L.Icon({
+export const mapMarker = new L.Icon({
         iconUrl: '/mapMarker.svg',
         iconRetinaUrl: '/mapMarker.svg',
         popupAnchor: [-0, -0],

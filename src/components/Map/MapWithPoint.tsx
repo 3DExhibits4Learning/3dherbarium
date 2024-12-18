@@ -2,14 +2,14 @@
 
 import { LatLngLiteral } from "leaflet"
 import { Marker, Popup } from "react-leaflet"
-import { greenMapIcon } from "./icons"
+import { mapMarker } from "./icons"
 
 import Map from "./Map"
 
 export default function MapWithPoint(props:{position: LatLngLiteral}) {
     return (
         <Map>
-            <Marker position={props.position} icon={greenMapIcon}>
+            <Marker position={props.position} icon={mapMarker}>
                 <Popup>
                     <p>Latitude: {props.position.lat}</p>
                     <p>Longitude: {props.position.lng}</p>
