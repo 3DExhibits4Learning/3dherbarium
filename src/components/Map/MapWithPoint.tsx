@@ -10,7 +10,10 @@ export default function MapWithPoint(props:{position: LatLngLiteral}) {
     return (
         <Map>
             <Marker position={props.position} icon={greenMapIcon}>
-                <Popup>Specimen geolocation</Popup>
+                <Popup>
+                    <p>Latitude: {props.position.lat}</p>
+                    <p>Longitude: {props.position.lng}</p>
+                    </Popup>
             </Marker>
         </Map>
     )

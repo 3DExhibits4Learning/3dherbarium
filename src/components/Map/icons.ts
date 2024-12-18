@@ -7,8 +7,9 @@
 import L from 'leaflet'
 
 export const greenMapIcon = new L.Icon({
-        iconUrl: '../../../marker-32.png',
-        iconRetinaUrl: '../../../marker-32.png',
+        iconUrl: '/mapMarker.svg',
+        iconRetinaUrl: '/mapMarker.svg',
         popupAnchor: [-0, -0],
-        iconSize: [32, 32],
+        iconSize: [40, 40],
     })
+
