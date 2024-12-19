@@ -69,7 +69,7 @@ export default function PendingModelsAdmin(props: { pendingModels: Models[], app
                                             <Button isDisabled={approvalDisabled} className="text-white font-medium" onPress={() => props.approveWrapper([props.pendingModels[index], true, photoFiles as string[]])}>Approve Wild</Button>
                                         </div>
                                         <div>
-                                            <Button color='danger' variant='light' className="font-medium" onPress={() => props.approveWrapper([props.pendingModels[index], true, photoFiles as string[]])}>Quick Approve</Button>
+                                            <Button color='danger' variant='light' className="font-medium" onPress={() => props.approveWrapper([props.pendingModels[index], false, photoFiles as string[]])}>Quick Approve</Button>
                                         </div>
                                     </div>
                                 </section>

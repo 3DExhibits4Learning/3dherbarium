@@ -119,7 +119,7 @@ export async function POST(request: Request) {
                 thumbnail: thumbUrl,
                 lat: position.lat,
                 lng: position.lng,
-                wild: body.get('wild') === 'wild' ? true : false,
+                wild: body.get('wildOrCultivated') === 'wild' ? true : false,
             }
         }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.userSubmitaal.create()", "Coulnd't insert model into the database"))
 
