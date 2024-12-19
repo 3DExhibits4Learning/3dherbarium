@@ -9,8 +9,15 @@
 import { MapContainer, TileLayer} from 'react-leaflet'
 import { ConditionalChildren } from '@/api/types';
 import 'leaflet/dist/leaflet.css';
+import { LatLngLiteral } from 'leaflet';
+import { ReactNode } from 'react';
 
-export default function Map({children}: ConditionalChildren) {
+export interface MapProps {
+  center: LatLngLiteral,
+  children: ReactNode
+}
+
+export default function Map({center, children}: MapProps) {
 
   // This clause ensures that this code doesn't run server side; it will throw an error if it does (it uses the window object)
   if (typeof window !== 'undefined') {
@@ -25,7 +32,7 @@ export default function Map({children}: ConditionalChildren) {
     let attribution = !prefersDarkMode ? openAttribution : esriAttribution
 
     return (
-      <MapContainer className='h-full w-full' center={[40.875781, -124.07856]} zoom={9} scrollWheelZoom={false}>
+      <MapContainer className='h-full w-full' center={[center.lat, center.lng]} zoom={10} scrollWheelZoom={false}>
         <TileLayer attribution={attribution} url={tiles} />
         {children}
       </MapContainer>
