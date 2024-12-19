@@ -6,7 +6,7 @@ const HomePageClient = dynamic(() => import('@/components/Home/Client'), { ssr: 
 
 export default async function Page() {
 
-  await getWikiPediaPageOrSummary('').then(() => console.log('CALLED FUNCTIONS'))
+  //await getWikiPediaPageOrSummary('').then(() => console.log('CALLED FUNCTIONS'))
 
   return (
     <>
