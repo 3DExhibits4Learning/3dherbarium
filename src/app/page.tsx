@@ -1,9 +1,12 @@
 import Footer from '@/components/Shared/Foot';
 import dynamic from 'next/dynamic';
+import { getWikiPediaPageOrSummary } from '@/functions/server/collections';
 const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const HomePageClient = dynamic(() => import('@/components/Home/Client'), { ssr: false })
 
-export default function Page() {
+export default async function Page() {
+
+  await getWikiPediaPageOrSummary('').then(() => console.log('CALLED FUNCTIONS'))
 
   return (
     <>

@@ -1,7 +1,8 @@
 import { getPublishedUserSubmittals, getSubmittalSoftware, getSubmittalTags } from "@/api/queries"
 
-export async function GET(request: Request) {
+export const dynamic = 'force-dynamic'
 
+export async function GET() {
 
   try {
     const communitySubmittals: any = await getPublishedUserSubmittals()

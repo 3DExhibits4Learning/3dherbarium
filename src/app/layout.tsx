@@ -1,32 +1,24 @@
 import { Providers } from "./providers";
 import { cookies } from 'next/headers'
 import { getServerSession } from 'next-auth'
-import SessionProvider from '@/components/Shared/SessionProvider'
 import { redirect } from 'next/navigation'
 import { userIsAdmin } from "@/api/queries";
 
+import SessionProvider from '@/components/Shared/SessionProvider'
+
 import './globals.css';
 
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default async function RootLayout({children}: {children: React.ReactNode}) {
 
   const session = await getServerSession();
   
   if (process.env.AUTH == 'true') {
-    if (!session || !session.user) {
-      redirect('/api/auth/signin')
-    }
+    if (!session || !session.user) redirect('/api/auth/signin')
     else {
       let email = session.user.email as string
       const isAdmin = userIsAdmin(email)
-      if (!isAdmin) {
-        return <h1>NOT AUTHORIZED</h1>
-      }
+      if (!isAdmin) return <h1>NOT AUTHORIZED</h1>
     }
-
   }
 
   const theme = cookies().get("theme");

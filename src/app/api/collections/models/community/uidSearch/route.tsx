@@ -1,6 +1,8 @@
 import { getPublishedUserSubmittalsByUid } from "@/api/queries";
 import { NextRequest } from "next/server";
 
+export const dynamic = 'force-dynamics'
+
 export async function GET(request: NextRequest) {
 
     try {
