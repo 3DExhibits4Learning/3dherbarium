@@ -3,22 +3,29 @@
  * @fileoverview Client component which renders the 3D models and annotations.
  */
 
-"use client";
+"use client"
 
+// Typical imports
 import { useEffect, useState } from 'react'
 import { boolRinse, addCommas } from './SketchfabDom'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
-import dynamic from 'next/dynamic'
 import { Chip, Button } from '@nextui-org/react';
-const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'))
-import Image from 'next/image';
-import CommunityHerbarium from '@/utils/Community3dModel';
 import { userSubmittal } from '@prisma/client';
 import { GbifImageResponse, GbifResponse } from '@/api/types';
+
+// Default imports
+import Image from 'next/image';
+import CommunityHerbarium from '@/utils/Community3dModel';
+import dynamic from 'next/dynamic'
 import CommunityDataModal from './CommunityDataModal';
+import Geolocation from './SketchfabApi/Geolocation';
 
+// Dynamic imports
+const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'))
+
+// Main JSX
 const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolean, data?: GbifResponse }, images: GbifImageResponse[], imageTitle: string }) => {
-
+    
     const [s, setS] = useState<CommunityHerbarium>() // s = specimen
     const [mobileDataOpen, setMobileDataOpen] = useState<boolean>(false)
     const [grade, setGrade] = useState<string>()
@@ -88,6 +95,8 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
                                         <p>Genus: <i>{s.gMatch.data?.genus}</i></p>
                                     </div>
                                 </div>
+
+                                <Geolocation position={{lat: s.model.lat as unknown as number, lng: s.model.lng as unknown as number}} />
 
                                 <div className='fade flex w-[99%] mt-[25px]'>
                                     <div className='annotationBorder w-[35%] flex text-[1.5rem] justify-center items-center py-[20px] border-r'>

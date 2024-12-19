@@ -13,7 +13,10 @@ export default function TaxonomyAndDescription(props:{gMatch: GbifResponse, sket
     return (
         <div className="w-full h-fit" id="annotationDivMedia">
             <Classification gMatch={props.gMatch} />
-            <Geolocation sketchfabApi={props.sketchfabApi} />
+            {
+                props.sketchfabApi.s?.model.lat && props.sketchfabApi.s?.model.lng &&
+                <Geolocation position={{lat: parseFloat(props.sketchfabApi.s?.model.lat), lng: parseFloat(props.sketchfabApi.s?.model.lng)}} locality={props.sketchfabApi.s?.model.locality} />
+            }
             <Profile sketchfabApi={props.sketchfabApi} />
             <ModelData sketchfabApi={props.sketchfabApi} />
             <br></br>
