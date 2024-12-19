@@ -1,23 +1,17 @@
 /**
  * @file /components/Map/Map.tsx
- * @fileoverview Basic map to power most other maps
+ * @fileoverview basic map to power most other maps post 2025
  */
 
 'use client'
 
 // Imports
-import { MapContainer, TileLayer} from 'react-leaflet'
-import { ConditionalChildren } from '@/api/types';
-import 'leaflet/dist/leaflet.css';
+import { MapContainer, TileLayer } from 'react-leaflet'
 import { LatLngLiteral } from 'leaflet';
 import { ReactNode } from 'react';
+import 'leaflet/dist/leaflet.css';
 
-export interface MapProps {
-  center: LatLngLiteral,
-  children: ReactNode
-}
-
-export default function Map({center, children}: MapProps) {
+export default function Map({ center, children }: { center: LatLngLiteral, children: ReactNode }) {
 
   // This clause ensures that this code doesn't run server side; it will throw an error if it does (it uses the window object)
   if (typeof window !== 'undefined') {
