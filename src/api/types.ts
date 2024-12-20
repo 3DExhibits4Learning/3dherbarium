@@ -6,10 +6,19 @@
 import { Dispatch, SetStateAction, ReactElement } from "react";
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
 import { LatLngLiteral } from "leaflet";
+import Herbarium from "@/utils/HerbariumClass";
 
 export interface action {
   type: string
 }
+
+export interface annotationModalProps {
+  specimen: Herbarium,
+  gMatch: { hasInfo: boolean, data?: GbifResponse }
+  title: string
+  index: number | null
+}
+
 
 export interface ConditionalChildren {
   children?: Array<ReactElement | "" | undefined> | ReactElement | "" | undefined

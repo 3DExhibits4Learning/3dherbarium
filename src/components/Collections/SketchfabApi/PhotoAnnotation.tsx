@@ -2,13 +2,11 @@
 
 import { photo_annotation } from "@prisma/client"
 import { Skeleton } from "@nextui-org/skeleton";
-import { useContext } from "react"
-import { SketchfabApiContext } from "./SketchFabAPI"
 
 export default function PhotoAnnotation(props: { sketchfabApi: any }) {
 
     const sketchfabApi = props.sketchfabApi
-    const loading = useContext(SketchfabApiContext).loadingPhoto
+    const loading = sketchfabApi.loadingPhoto
 
     return (
         <>

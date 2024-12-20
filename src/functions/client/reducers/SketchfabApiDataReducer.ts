@@ -36,7 +36,9 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
             return {
                 ...apiState,
                 index: setMobileAction.index,
-                annotationTitle: setMobileAction.title
+                mobileIndex: setMobileAction.index,
+                annotationTitle: setMobileAction.title,
+                annotationModalOpen: true,
             }
 
         case 'setApi':
@@ -50,7 +52,7 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
             }
 
         case 'setPhotoLoading':
-            
+
             return {
                 ...apiState,
                 loadingPhoto: true,
@@ -60,7 +62,7 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
         case 'photoLoaded':
 
             const photoLoadedAction = action as setStringOrNumberAction
-            if(!(photoLoadedAction.value)) throw Error("Action missing data")
+            if (!(photoLoadedAction.value)) throw Error("Action missing data")
 
             return {
                 ...apiState,
@@ -68,6 +70,19 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
                 loadingPhoto: false
             }
 
+        case 'openAnnotationModal':
+
+            return {
+                ...apiState,
+                annotationModalOpen: true
+            }
+
+        case 'closeAnnotationModal':
+
+            return {
+                ...apiState,
+                annotationModalOpen: false
+            }
 
         default:
             throw Error("Unknown action type")

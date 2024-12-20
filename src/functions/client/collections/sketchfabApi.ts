@@ -115,7 +115,7 @@ export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApi
 
         // Mobile annotation state management
         if (index !== -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
-            document.getElementById("annotationButton")?.click()
+            //sketchfabApiDispatch({type: 'openAnnotationModal'})
             sketchfabApi.api.getAnnotation(index, function (err: any, information: any) {if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name })})
         }
     })

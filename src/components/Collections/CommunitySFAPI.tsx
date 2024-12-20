@@ -9,7 +9,7 @@
 import { useEffect, useState } from 'react'
 import { boolRinse, addCommas } from './SketchfabDom'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
-import { Chip, Button } from '@nextui-org/react';
+import { Chip } from '@nextui-org/react';
 import { userSubmittal } from '@prisma/client';
 import { GbifImageResponse, GbifResponse } from '@/api/types';
 

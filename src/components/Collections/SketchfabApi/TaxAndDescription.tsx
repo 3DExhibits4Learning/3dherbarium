@@ -1,13 +1,13 @@
 'use client'
 
 import { GbifResponse } from "@/api/types"
+import { sketchfabApiData } from "@/ts/collections"
 
 import Geolocation from "./Geolocation"
 import Classification from "./Classification"
 import Profile from "./Profile"
 import ModelData from "./ModelData"
 import Wikipedia from "./Wikipedia"
-import { sketchfabApiData } from "@/ts/collections"
 
 export default function TaxonomyAndDescription(props:{gMatch: GbifResponse, sketchfabApi: sketchfabApiData}) {
     return (
