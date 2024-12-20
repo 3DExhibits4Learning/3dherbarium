@@ -65,7 +65,9 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
             latitude: model.lat as unknown as number,
             longitude: model.lng as unknown as number,
             files: photoFiles,
-            wild: wild
+            wild: wild,
+            email: model.email,
+            uid: model.modeluid
         }
 
         return await fetch('/api/approveModel', {

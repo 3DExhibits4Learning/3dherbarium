@@ -23,14 +23,14 @@ export default function CollectionsMediaRadio(props: { setIsSelected: Dispatch<S
                 // Only display the 3D model view option if there is in fact a 3d model available
                 (hasHerbariumModel || hasUserModel) &&
                 <>
-                    <label className="mr-1">3D Model</label>
-                    <input className="mr-8" name='collectionsMedia' type='radio' value='model' checked={mediaState.modelChecked} onChange={() => { dispatch({ type: 'modelChecked' }); props.setIsSelected(true) }}></input>
+                    <label className="mr-1">3D Herbarium</label>
+                    <input className="mr-8 accent-[#FFC72C] dark:accent-[#F5F3E7]" name='collectionsMedia' type='radio' value='model' checked={mediaState.modelChecked} onChange={() => { dispatch({ type: 'modelChecked' }); props.setIsSelected(true) }}></input>
                 </>
             }
-            <label className="mr-1">Photos</label>
-            <input className="mr-8" name='collectionsMedia' type='radio' value='photos' checked={mediaState.photosChecked} onChange={() => dispatch({ type: 'photosChecked' })}></input>
+            <label className="mr-1">2D Herbarium</label>
+            <input className="mr-8 accent-[#FFC72C] dark:accent-[#F5F3E7]" name='collectionsMedia' type='radio' value='photos' checked={mediaState.photosChecked} onChange={() => dispatch({ type: 'photosChecked' })}></input>
             <label className="mr-1">Observations</label>
-            <input name='collectionsMedia' type='radio' value='observations' checked={mediaState.observationsChecked} onChange={() => dispatch({ type: 'observationsChecked' })}></input>
+            <input className='accent-[#FFC72C] dark:accent-[#F5F3E7]' name='collectionsMedia' type='radio' value='observations' checked={mediaState.observationsChecked} onChange={() => dispatch({ type: 'observationsChecked' })}></input>
         </div>
     )
 }

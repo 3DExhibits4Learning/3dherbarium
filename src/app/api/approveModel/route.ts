@@ -19,6 +19,8 @@ import { fetchSpecimenGbifInfo } from "@/api/fetchFunctions"
 import { updateCommunityId } from "@/api/queries"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import { sendHTMLEmail } from "@/functions/server/email"
+import { routeHandlerError } from "@/functions/server/error"
 
 // Default imports
 import ExifReader from "exifreader"
@@ -128,8 +130,18 @@ export async function POST(request: Request) {
             await updateCommunityId(requestData.confirmation, postObservation.id).catch(e => routeHandlerErrorHandler(path, e.message, "updateCommunityId()", "Coudn't update iNat post id"))
         }
 
-        // Finally, mark the 3D model as approved in the database
+        // Finally, mark the 3D model as approved in the database and email the contributor
         const approved = await approveModel(requestData.confirmation).catch(e => routeHandlerErrorHandler(path, e.message, "approveModel()", "Coudn't approve model"))
+
+        // Contributor email HTML
+        const contributorEmailHtml = `Congratulations, your model has been published on the 3D Herbarium!
+            <br><br>
+            You can see your model at 3dherbarium.org/collections/${requestData.species}/?communityId=${requestData.uid}
+            <br><br>
+            Thank you for your contribution!`
+
+        // Note that this is a nonFatal error catch
+        await sendHTMLEmail(requestData.email, "3D Model Published", contributorEmailHtml).catch(e => console.error(routeHandlerError(path, e.message, "sendHTMLEmail()", 'POST', true)))
 
         // Typical success response
         return routeHandlerTypicalResponse('3D Model Approved', approved)

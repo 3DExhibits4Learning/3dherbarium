@@ -329,32 +329,34 @@ export interface fullUserSubmittal extends userSubmittal {
 }
 
 export interface ModelUploadResponse {
-  options_errors: string,
-  uri: string,
-  uid: string,
+  options_errors: string
+  uri: string
+  uid: string
 }
 
 export interface ModelUpdateObject {
-  species: string,
-  artist: string,
-  isMobile: string,
-  methodology: string,
-  software: string[],
-  tags: string[],
-  position: LatLngLiteral,
+  species: string
+  artist: string
+  isMobile: string
+  methodology: string
+  software: string[]
+  tags: string[]
+  position: LatLngLiteral
   confirmation: string
 }
 
 export interface ModelDeleteObject {
-  confirmation: string,
+  confirmation: string
   modelUid: string
 }
 
 export interface ApproveModelObject {
-  confirmation: string,
-  species: string,
-  latitude: number,
-  longitude: number,
+  confirmation: string
+  species: string
+  latitude: number
+  longitude: number
   files: string[]
   wild: boolean
+  email: string
+  uid: string
 }

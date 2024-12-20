@@ -245,7 +245,7 @@ export const fetchSpeciesList = async (genus: string | undefined): Promise<Speci
 export const fetchGbifImages = async (key: number | undefined, rank: string): Promise<GbifImageResponse[]> => {
   if (!key) return [];
 
-  const config: string = rank == 'SPECIES' ? 'occurrence/search?mediaType=StillImage&speciesKey' : 'occurrence/search?mediaType=StillImage&genusKey';
+  const config: string = rank == 'SPECIES' ? 'occurrence/search?basisOfRecord=PRESERVED_SPECIMEN&mediaType=StillImage&speciesKey' : 'occurrence/search?basisOfRecord=PRESERVED_SPECIMEN&mediaType=StillImage&genusKey';
   const endpoint: string = gbifUrl(config, key);
   const gbifOccurrences: GbifMediaResponse = await basicFetch<GbifMediaResponse>(endpoint);
 
