@@ -8,7 +8,7 @@ import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
 import { SetStateAction, Dispatch } from 'react';
 import Image from 'next/image';
 
-export default function InatMap(props: { activeSpecies: string, observations: any[], position: LatLngLiteral, userCoordinates: LatLngLiteral | undefined, setUserCoordinates: Dispatch<SetStateAction<LatLngLiteral | undefined>> }) {
+export default function InatMap(props: { activeSpecies: string, observations: any[], position: LatLngLiteral, userCoordinates: LatLngLiteral | undefined, setUserCoordinates: Dispatch<SetStateAction<LatLngLiteral>> }) {
 
     const lightModeTiles: string = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
     const darkModeTiles: string = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
