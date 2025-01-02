@@ -56,7 +56,12 @@ export default function MainWrap(props: CollectionsWrapperProps) {
 
   // Sizes object, resize handler
   const [sizes, setSizes] = useState<any>(dynamicSizes)
-  window.onresize = () => setSizes(dynamicSizes)
+  window.onresize = () => setSizes({
+    viewWidthInPx: window.outerWidth,
+    viewportHeightInPx: window.outerHeight + 200,
+    swiperHeight: window.outerHeight - 96,
+    imgHeight: window.outerHeight - 208
+  })
 
   // Initial media state and reducer
   const initialMediaState = { modelChecked: true, observationsChecked: false, photosChecked: false }

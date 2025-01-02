@@ -103,6 +103,7 @@ const CommunitySFAPI = (props: { model: userSubmittal, gMatch: { hasInfo: boolea
                                         <p> Profile </p>
                                     </div>
                                     <div className='w-[65%] py-[20px] justify-center items-center text-center px-[2%]'>
+                                        <p>Date: {new Date(s.model.dateTime).toDateString()}</p>
                                         {s.commonNames.length > 1 && <p>Common Names: {addCommas(s.commonNames)}</p>}
                                         {s.commonNames.length == 1 && <p>Common Names: {s.commonNames[0]}</p>}
                                         {s.profile.extinct !== '' && <p>Extinct: {boolRinse(s.profile.extinct)}</p>}
