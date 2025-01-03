@@ -52,7 +52,7 @@ function Foot() {
         </div>
 
         {/*Copyright*/}
-        <p className='text-white text-center mt-2'>&#169; 2024 Cal Poly Humboldt Library</p>
+        <p className='text-white text-center mt-2'>&#169; 2025 Cal Poly Humboldt Library</p>
 
       </section>
 
@@ -100,7 +100,7 @@ function Foot() {
         </div>
 
         {/*Copyright*/}
-        <p className='text-white text-center mt-2'>&#169; 2024 Cal Poly Humboldt Library</p>
+        <p className='text-white text-center mt-2'>&#169; 2025 Cal Poly Humboldt Library</p>
 
       </section>
 
