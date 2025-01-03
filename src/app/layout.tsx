@@ -12,10 +12,10 @@ export default async function RootLayout({children}: {children: React.ReactNode}
 
   const session = await getServerSession();
   
-  if (process.env.AUTH == 'true') {
+  if (process.env.AUTH === 'true') {
     if (!session || !session.user) redirect('/api/auth/signin')
     else {
-      let email = session.user.email as string
+      const email = session.user.email as string
       const isAdmin = userIsAdmin(email)
       if (!isAdmin) return <h1>NOT AUTHORIZED</h1>
     }

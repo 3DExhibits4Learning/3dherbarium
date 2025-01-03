@@ -34,6 +34,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     const [observationDate, setObservationDate] = useState<string>()
     const [observerIcon, setObserverIcon] = useState<string>()
     const [fetchFailed, setFetchFailed] = useState<boolean>(false)
+    const [loading, setLoading] = useState<boolean>(false)
 
     const setCredentials = (index: number) => {
         var observation
@@ -47,6 +48,8 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     }
 
     useEffect(() => {
+
+        setLoading(true)
 
         const iNatFetch = async () => {
 
@@ -73,10 +76,11 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 setImages(json.data.images)
                 setTopObservers(json.data.topObservers)
                 setTopIdentifiers(json.data.topIdentifiers)
+                setLoading(false)
 
                 if (!userCoordinates) { setCoordinates(json.data.point) }
             }
-            else (setFetchFailed(true))
+            else setFetchFailed(true); setLoading(false)
         }
 
         iNatFetch()
@@ -97,13 +101,13 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                     <>
                         <section className='hidden lg:flex h-full w-1/3 items-center justify-center'>
                             {
-                                coordinates &&
+                                coordinates && !loading &&
                                 <InatMap activeSpecies={props.activeSpecies} position={coordinates} userCoordinates={userCoordinates} setUserCoordinates={setUserCoordinates} observations={observations} />
                             }
                         </section>
                         <section className='flex h-full items-center w-full lg:w-1/3 flex-col'>
                             {
-                                observations &&
+                                observations && !loading &&
                                 <>
                                     <p className='flex w-full h-[5%] justify-center items-center [@media(max-height:900px)]:text-lg text-xl lg:text-2xl xl:text-3xl'>{toUpperFirstLetter(observationTitle as string)}</p>
                                     <div id='observationCredentials' className='flex flex-col w-3/5 text-center items-center justify-center [@media(max-height:900px)]:text-sm text-md'>
@@ -117,16 +121,22 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                                 </>
                             }
                             {
-                                !observations &&
+                                !observations && !loading &&
                                 <div className='flex flex-col h-full w-full justify-center items-center'>
                                     <p>No observations found at this location.</p>
                                     <p>Try clicking a different location on the map.</p>
                                 </div>
                             }
+                            {
+                                loading &&
+                                <div className='h-full w-full flex justify-center items-center'>
+                                    <Spinner size='lg' label='Updating Observations' className='text-2xl'/>
+                                </div>
+                            }
                         </section>
                         <section className='hidden lg:flex flex-col justify-center items-center w-1/3'>
                             {
-                                topIdentifiers?.length != 0 && topObservers?.length != 0 &&
+                                topIdentifiers?.length != 0 && topObservers?.length != 0 && !loading &&
                                 <Leaderboards identifiers={topIdentifiers} observers={topObservers} />
                             }
                         </section>

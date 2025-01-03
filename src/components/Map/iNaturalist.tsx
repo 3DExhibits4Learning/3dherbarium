@@ -35,14 +35,8 @@ export default function InatMap(props: { activeSpecies: string, observations: an
     });
 
     const LocationMarker = () => {
-        const map = useMapEvents({
-            click(e) {
-                props.setUserCoordinates({ lat: e.latlng.lat, lng: e.latlng.lng });
-            }
-        })
-        return props.position === null ? null : (
-            <Marker position={props.position} icon={markerIcon} />
-        )
+        const map = useMapEvents({click(e) {props.setUserCoordinates({ lat: e.latlng.lat, lng: e.latlng.lng })}})
+        return props.position === null ? null : (<Marker position={props.position} icon={markerIcon} />)
     }
 
     return (

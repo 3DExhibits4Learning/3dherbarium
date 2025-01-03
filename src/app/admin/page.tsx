@@ -10,8 +10,8 @@ export default async function Page() {
 
     const session = await getServerSession(authOptions)
 
-    let email = session?.user?.email as string
-    const isAdmin = await userIsAdmin(email)
+    const email = session?.user?.email as string; var isAdmin
+    if (email) isAdmin = await userIsAdmin(email)
     
 
     if (!isAdmin) {
