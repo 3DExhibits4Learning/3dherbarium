@@ -54,15 +54,14 @@ export default async function Page({ params, searchParams }: { params: { specime
     // Fetch general GBIF images if the HSC (CPH Vascular plant herbarium) doens't have any for the searched specimen, but a GBIF match WAS found
     if (gMatch.hasInfo && !images.length) {
       images = await fetchGbifImages(gMatch.data.usageKey, gMatch.data.rank).catch(e => serverErrorHandler(path, e.message, "Couldn't get images", "fetchGbifImages()", false))
-      noModelData = { title: 'Images from the Global Biodiversity Information Facility', images: images }
+      noModelData = { title: 'Herbaria images from the Global Biodiversity Information Facility', images: images }
     }
 
     // If there are no models or images, search for common name information. If there is no common name information, display appropriate message. If there is, redirect to common name search.
     if (!(_3dmodel.length || images.length)) {
 
       // Fetch common name info
-      const commonNameInfo = await fetchCommonNameInfo(params.specimenName)
-        .catch(e => serverErrorHandler(path, e.message, "Couldn't get vernacular name data", "fetchCommonNameInfo()", false)) as CommonNameInfo[]
+      const commonNameInfo = await fetchCommonNameInfo(params.specimenName).catch(e => serverErrorHandler(path, e.message, "Couldn't get vernacular name data", "fetchCommonNameInfo()", false)) as CommonNameInfo[]
 
       // If there is common name data, redirect to common name search; else display error component (redirect throws an internal error, hence the try-catch wrapper)
       if (commonNameInfo.length) { try { redirect(`/collections/common-name/${params.specimenName}`) } catch (e) { } }

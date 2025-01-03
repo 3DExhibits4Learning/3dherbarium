@@ -261,7 +261,7 @@ export const fetchGbifImages = async (key: number | undefined, rank: string): Pr
       year: result.year,
       month: result.month,
       day: result.day,
-      url: result.media?.[0]?.identifier, //extensions
+      url: result.media?.[0]?.identifier ?? result.media?.[0]?.references
     };
     gbifOccurrenceArray.push(specimenObservationInfo);
   }
