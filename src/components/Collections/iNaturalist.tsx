@@ -78,14 +78,14 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 setTopObservers(json.data.topObservers)
                 setTopIdentifiers(json.data.topIdentifiers)
                 setLoading(false)
+                setFirstLoad(false)
 
                 if (!userCoordinates) { setCoordinates(json.data.point) }
             }
-            else setFetchFailed(true); setLoading(false)
+            else setFetchFailed(true); setLoading(false); setFirstLoad(false)
         }
 
         iNatFetch()
-        setFirstLoad(false)
 
     }, [userCoordinates]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -98,18 +98,21 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                         <Spinner size='lg' label='Loading Observations' />
                     </section>
                 }
-                <section className='hidden lg:flex h-full w-1/3 items-center justify-center'>
-                    {
-                        coordinates && !loading &&
-                        <InatMap activeSpecies={props.activeSpecies} position={coordinates} userCoordinates={userCoordinates} setUserCoordinates={setUserCoordinates} observations={observations} />
-                    }
-                    {
-                        loading &&
-                        <div className='h-full w-full flex justify-center items-center'>
-                            <Spinner size='lg' label='Updating Observations' />
-                        </div>
-                    }
-                </section>
+                {
+                    !firstLoad &&
+                    <section className='hidden lg:flex h-full w-1/3 items-center justify-center'>
+                        {
+                            coordinates && !loading &&
+                            <InatMap activeSpecies={props.activeSpecies} position={coordinates} userCoordinates={userCoordinates} setUserCoordinates={setUserCoordinates} observations={observations} />
+                        }
+                        {
+                            loading && !firstLoad &&
+                            <div className='h-full w-full flex justify-center items-center'>
+                                <Spinner size='lg' label='Updating Observations' />
+                            </div>
+                        }
+                    </section>
+                }
                 {
                     !observations && !loading &&
                     <div className='flex flex-col h-full w-full justify-center items-center'>
@@ -122,7 +125,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                     <>
                         <section className='flex h-full items-center w-full lg:w-1/3 flex-col'>
                             {
-                                observations && images && 
+                                observations && images &&
                                 <>
                                     <p className='flex w-full h-[5%] justify-center items-center [@media(max-height:900px)]:text-lg text-xl lg:text-2xl xl:text-3xl'>{toUpperFirstLetter(observationTitle as string)}</p>
                                     <div id='observationCredentials' className='flex flex-col w-3/5 text-center items-center justify-center [@media(max-height:900px)]:text-sm text-md'>
