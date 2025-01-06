@@ -71,6 +71,7 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
             method: 'POST',
             body: JSON.stringify(approveModelObject)
         })
+            console.log('RES: ', res)
             if (!res.ok) return res.statusText
             else return await res.json().then(json => json.data).catch(e => e.message)
     }
