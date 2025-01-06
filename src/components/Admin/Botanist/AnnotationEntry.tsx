@@ -6,14 +6,14 @@ import { Button } from "@nextui-org/react"
 import DataTransferModal from "../../Shared/DataTransferModal"
 import { v4 as uuidv4 } from 'uuid'
 import TextInput from "../../Shared/TextInput"
-import RadioButtons from "../AnnotationFields/RadioButtons"
-import AnnotationReposition from "../AnnotationFields/AnnotationReposition"
-import FileInput from "../AnnotationFields/FileInput"
-import License from "../AnnotationFields/License"
-import Annotation from "../AnnotationFields/Annotation"
+import RadioButtons from "./AnnotationFields/RadioButtons"
+import AnnotationReposition from "./AnnotationFields/AnnotationReposition"
+import FileInput from "./AnnotationFields/FileInput"
+import License from "./AnnotationFields/License"
+import Annotation from "./AnnotationFields/Annotation"
 import dynamic from "next/dynamic"
 const ModelViewer = dynamic(() => import('../../Shared/ModelViewer'), { ssr: false })
-import ModelAnnotationSelect from "../AnnotationFields/ModelAnnotationSelect"
+import ModelAnnotationSelect from "./AnnotationFields/ModelAnnotationSelect"
 
 const AnnotationEntry = (props: {
     activeAnnotation?: photo_annotation | video_annotation | model_annotation | undefined,
