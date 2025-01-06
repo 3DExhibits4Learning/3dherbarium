@@ -45,8 +45,12 @@ export async function POST(request: Request) {
         const requestData: ApproveModelObject = await request.json().catch(e => routeHandlerErrorHandler(path, e.message, "request.json()", "Coudn't get json"))
         const gMatch = await fetchSpecimenGbifInfo(requestData.species).catch(e => routeHandlerErrorHandler(path, e.message, "fetchSpecimenGbifInfo()", "Coudn't get GBIF data")) as { hasInfo: boolean; data?: GbifResponse }
 
+        console.log('GMATCH RAN')
+
         // If so, we make an iNaturalist post with submitted image(s) for community id of the specimen (if the specimen is marked/approved as wild)
         if (gMatch.hasInfo && requestData.wild) {
+
+            console.log('IF RAN')
 
             // Get account from session, get token from account
             const session = await getServerSession(authOptions).catch(e => routeHandlerErrorHandler(path, e.message, "getServerSession()", "Coudn't get session"))
@@ -55,6 +59,8 @@ export async function POST(request: Request) {
 
             // Get photo buffers and extract the date of the photos if available
             for (let i = 0; i < (requestData.files as string[]).length; i++) {
+
+                console.log('LOOP RAN')
 
                 // Get buffer
                 const buffer = await readFile(`public/data/Herbarium/tmp/submittal/${requestData.confirmation}/${requestData.files[i]}`).catch(e => routeHandlerErrorHandler(path, e.message, "readFile()", "Coudn't read photo")) as Buffer
