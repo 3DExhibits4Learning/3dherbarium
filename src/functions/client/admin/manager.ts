@@ -67,13 +67,12 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
             uid: model.modeluid
         }
 
-        return await fetch('/api/approveModel', {
+        const res = await fetch('/api/approveModel', {
             method: 'POST',
             body: JSON.stringify(approveModelObject)
         })
-            .then(res => { if (!res.ok) return res.statusText; return res.json() })
-            .then(json => json.data)
-            .catch(e => e.message)
+            if (!res.ok) return res.statusText
+            else return await res.json().then(json => json.data).catch(e => e.message)
     }
 
 export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatch<SetStateAction<string[]>>) => {
