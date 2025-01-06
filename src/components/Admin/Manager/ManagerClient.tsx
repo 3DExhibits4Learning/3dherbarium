@@ -14,7 +14,7 @@ import * as fn from "@/functions/client/admin/manager"
 
 // Typical imports
 import { userSubmittal } from "@prisma/client";
-import { useState} from "react";
+import { useState } from "react";
 import { Button } from "@nextui-org/react";
 
 // Default imports
@@ -24,20 +24,21 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer";
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler";
 import ProcurementTask from "./ProcurementTask";
+import { Models } from "@/api/types";
 
 // Main JSX
 export default function ManagerClient(props: { pendingModels: string, katId: string, hunterId: string }) {
 
     // First we parse the strigified pending models and recreate the Date objects; finally declare/type pendingModels
     const models = JSON.parse(props.pendingModels)
-    for (let model in models) {const time = Date.parse(models[model].dateTime); models[model].dateTime = new Date(time)}
+    for (let model in models) { const time = Date.parse(models[model].dateTime); models[model].dateTime = new Date(time) }
     const pendingModels: userSubmittal[] = models
 
     // Task field states
     const [taskee, setTaskee] = useState<string>('Hunter')
     const [uid, setUid] = useState<string>('')
     const [communityUid, setCommunityUid] = useState<string>('')
-    
+
     // Data transfer states
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
@@ -47,18 +48,18 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     // Initialize/terminate data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
-    
+
     // Task handlers
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const procurementTaskHandler = (assignee: string) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.createProcurementTask, [assignee, props.katId, props.hunterId], "Creating task")
-    const approveWrapper = (args: any[])=> dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
+    const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
 
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
 
             <div className="flex h-48 w-full mt-8">
-                <ProcurementTask taskee={taskee} setTaskee={setTaskee} procurementTaskHandler={procurementTaskHandler}/>
+                <ProcurementTask taskee={taskee} setTaskee={setTaskee} procurementTaskHandler={procurementTaskHandler} />
 
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                     <label className='text-2xl block mb-2'>Update Model Thumbnail</label>
@@ -95,11 +96,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 </div>
 
             </div>
-            {
-                pendingModels &&
-                //@ts-ignore - Typescript thinks decimal isn't assignable to number (it seems to be)
-                <PendingModelsAdmin pendingModels={pendingModels} approveWrapper={approveWrapper}/>
-            }
+            {pendingModels && <PendingModelsAdmin pendingModels={pendingModels as unknown as Models[]} approveWrapper={approveWrapper} />}
         </>
     )
 }

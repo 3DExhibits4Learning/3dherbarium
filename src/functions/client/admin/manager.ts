@@ -7,7 +7,6 @@
 'use client'
 
 // Imports
-import { userSubmittal } from "@prisma/client"
 import { ApproveModelObject, Models } from "@/api/types"
 import { SetStateAction, Dispatch } from "react"
 
@@ -55,8 +54,6 @@ export const createProcurementTask = async (assignee: string, katId: string, hun
 
 export const approveCommunityModel = async (model: Models, wild: boolean, photoFiles: string[]) => {
 
-    try {
-
         await checkToken('inaturalist')
 
         const approveModelObject: ApproveModelObject = {
@@ -74,12 +71,10 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
             method: 'POST',
             body: JSON.stringify(approveModelObject)
         })
-            .then(res => { if (!res.ok) throw Error(res.statusText); return res.json() })
+            .then(res => { if (!res.ok) return res.statusText; return res.json() })
             .then(json => json.data)
-            .catch(e => { throw Error(e.message) })
+            .catch(e => e.message)
     }
-    catch (e: any) { }
-}
 
 export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatch<SetStateAction<string[]>>) => {
 
