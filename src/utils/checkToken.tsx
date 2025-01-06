@@ -13,6 +13,8 @@ const checkToken = async (provider: 'sketchfab' | 'inaturalist', setError?: Disp
         if (typeof (tokenValid) === 'string') if(setError) setError(true)
         else signIn(provider)
     }
+
+    return tokenValid
 }
 
 export default checkToken

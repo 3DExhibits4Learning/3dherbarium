@@ -54,8 +54,10 @@ export const createProcurementTask = async (assignee: string, katId: string, hun
 
 export const approveCommunityModel = async (model: Models, wild: boolean, photoFiles: string[]) => {
 
-        await checkToken('inaturalist')
+    const isTokenValid = await checkToken('inaturalist')
 
+    if (isTokenValid) {
+        
         const approveModelObject: ApproveModelObject = {
             confirmation: model.confirmation,
             species: model.speciesName,
@@ -67,16 +69,16 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
             uid: model.modeluid
         }
 
-        const res = await fetch('/api/approveModel', {
+        return await fetch('/api/approveModel', {
             method: 'POST',
             body: JSON.stringify(approveModelObject)
         })
-        .then(res => res.json())
-        .then(json => json.data)
-
-        console.log(res)
-        return res
+            .then(res => res.json())
+            .then(json => json.data)
     }
+
+    else return "You need to refresh you're iNaturalist token to approve a wild model"
+}
 
 export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatch<SetStateAction<string[]>>) => {
 
@@ -85,7 +87,7 @@ export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatc
         .then(json => setPhotoFiles(json.response))
 }
 
-export const updateAccordionItemState = (index: number, pendingModels: Models[], setApprovalDisabled: Dispatch<SetStateAction<boolean>>)=> {
+export const updateAccordionItemState = (index: number, pendingModels: Models[], setApprovalDisabled: Dispatch<SetStateAction<boolean>>) => {
     const approvable = pendingModels[index].thumbnail.includes('models')
     setApprovalDisabled(!approvable)
 }
