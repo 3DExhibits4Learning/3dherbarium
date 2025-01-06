@@ -1,9 +1,9 @@
 'use client'
 import { useRef, LegacyRef, useState } from "react"
 import { Button } from "@nextui-org/react"
-import DataTransferModal from "../Shared/DataTransferModal"
+import DataTransferModal from "../../Shared/DataTransferModal"
 import { imageInsertion } from "@/api/types"
-import AutoComplete from "../Shared/AutoCompleteRef"
+import AutoComplete from "../../Shared/AutoCompleteRef"
 
 export default function NewImageSet() {
 

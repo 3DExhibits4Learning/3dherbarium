@@ -10,7 +10,7 @@ import { photo_annotation, video_annotation, model_annotation } from "@prisma/cl
 import ModelAnnotations from "@/utils/ModelAnnotationsClass"
 import { fullAnnotation } from "@/api/types"
 import BotanistRefWrapper from "./BotanistModelViewerRef"
-import AreYouSure from "../Shared/AreYouSure"
+import AreYouSure from "../../Shared/AreYouSure"
 import { Spinner } from "@nextui-org/react"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {

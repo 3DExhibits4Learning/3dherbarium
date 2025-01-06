@@ -1,11 +1,11 @@
 'use client'
 import { Accordion, AccordionItem } from "@nextui-org/react"
-import NewSpecimenEntry from "./NewSpecimenEntry"
+import NewSpecimenEntry from "../NewSpecimenEntry"
 import NewImageSet from "./NewImageSet"
 import New3DModel from "./NewModelEntry"
 import { specimenWithImageSet, imageSetWithModel } from "@/api/types"
-import SpecimenToPhotograph from "./SpecimenToPhotograph"
-import SpecimenToModel from "./SpecimenToModel"
+import SpecimenToPhotograph from "../SpecimenToPhotograph"
+import SpecimenToModel from "../SpecimenToModel"
 
 export default function ModelerDash(props: {unphotographedSpecimen: specimenWithImageSet[], unModeledSpecimen: imageSetWithModel[]}) {
     return (

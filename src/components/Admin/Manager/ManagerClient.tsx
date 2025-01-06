@@ -19,7 +19,7 @@ import { Button } from "@nextui-org/react";
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal";
-import PendingModelsAdmin from "@/components/Admin/PendingModels";
+import PendingModelsAdmin from "@/components/Admin/Manager/PendingModels";
 import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer";
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer";
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler";

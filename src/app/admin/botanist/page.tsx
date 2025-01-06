@@ -1,6 +1,6 @@
 import Header from "@/components/Header/Header"
 import Foot from "@/components/Shared/Foot"
-import BotanyClient from "@/components/Admin/BotanyClient"
+import BotanyClient from "@/components/Admin/Botanist/BotanyClient"
 import { getAllAnnotationModels, getModelsToAnnotate, getTestModel } from "@/api/queries"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"

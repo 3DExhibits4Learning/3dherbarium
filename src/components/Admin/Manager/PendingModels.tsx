@@ -19,7 +19,7 @@ import { useState, useEffect, SetStateAction, Dispatch } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamic imports
-const ModelViewer = dynamic(() => import('../Shared/ModelViewer'), { ssr: false })
+const ModelViewer = dynamic(() => import('../../Shared/ModelViewer'), { ssr: false })
 
 // Main JSX
 export default function PendingModelsAdmin(props: { pendingModels: Models[], approveWrapper: Function }) {
