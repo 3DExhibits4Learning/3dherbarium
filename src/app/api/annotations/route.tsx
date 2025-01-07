@@ -1,7 +1,9 @@
 /**
  * @file src\app\api\annotations\route.tsx
  * 
- * @fileoverview
+ * @fileoverview annotation CUD route handler
+ * 
+ * @todo finish retrofitting error handling
  */
 
 import {
