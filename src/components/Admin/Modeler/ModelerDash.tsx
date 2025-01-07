@@ -22,7 +22,12 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 
 // Exported context
-export const ModelerContext = createContext<any>('')
+export const ModelerContext = createContext<'' | dataTransfer>('')
+
+export interface dataTransfer{
+    initializeDataTransferHandler: Function 
+    terminateDataTransferHandler: Function
+}
 
 // Main JSX
 export default function ModelerDash(props: { unphotographedSpecimen: specimenWithImageSet[], unModeledSpecimen: imageSetWithModel[] }) {

@@ -114,12 +114,12 @@ export default function ModelEditForm(props: EditModelFormProps) {
             <DataTransferModal open={open} transferring={transferring} result={result} loadingLabel='Updating Model' href='/dashboard'/>
             <Delete confirmation={props.confirmation} modelUid={props.modelUid} open={deleteModalOpen} setOpen={setDeleteModalOpen}/>
             
-            <form className='w-full m-auto bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
+            <form className='w-full m-auto bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16 px-12'>
 
                 <Divider />
 
                 <div className='flex items-center h-[75px]'>
-                    <p className='ml-12 text-3xl'>Specimen Data</p>
+                    <p className='text-3xl'>Specimen Data</p>
                 </div>
 
                 <Divider className='mb-6' />
@@ -130,11 +130,11 @@ export default function ModelEditForm(props: EditModelFormProps) {
 
                 <Divider className='mt-12' />
 
-                <h1 className='ml-12 text-3xl mt-4 mb-4'>Model Data</h1>
+                <h1 className='text-3xl mt-4 mb-4'>Model Data</h1>
 
                 <Divider className='mb-12' />
 
-                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12' />
+                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required />
                 <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} defaultValue={madeWithMobile} />
                 <ProcessSelect value={buildMethod} setValue={setBuildMethod} defaultValue={buildMethod} />
                 <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<{ value: string }[]>>} defaultValues={softwareArr} />

@@ -1,8 +1,7 @@
 'use client'
 
-import { forwardRef, MutableRefObject } from 'react';
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css';
+import 'leaflet/dist/leaflet.css'
 
 
 export default function FormMap(props: { position: any, setPosition: any, className?: string, title?: boolean, enabler?: Function, required?: boolean }) {
@@ -10,7 +9,7 @@ export default function FormMap(props: { position: any, setPosition: any, classN
   // This clause ensures that this code doesn't run server side; it will throw an error if it does (it uses the window object)
   if (typeof window !== 'undefined') {
 
-    const className = props.className ? props.className : 'h-[400px] w-4/5 ml-12 mb-12 z-10'
+    const className = props.className ? props.className : 'h-[400px] w-4/5 mb-12 z-10'
 
     const lightModeTiles: string = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
     const darkModeTiles: string = 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}';
@@ -22,23 +21,21 @@ export default function FormMap(props: { position: any, setPosition: any, classN
     let attribution = !prefersDarkMode ? openAttribution : esriAttribution
 
     const LocationMarker = () => {
-      const map = useMapEvents({
-        click(e) {
-          props.setPosition({ lat: e.latlng.lat, lng: e.latlng.lng });
-          if (props.enabler) props.enabler()
-        }
-      })
+      
+      useMapEvents({ click(e) { props.setPosition({ lat: e.latlng.lat, lng: e.latlng.lng }) } })
+      
       return props.position === null ? null : (
         <Marker position={props.position}>
           <Popup>Your specimen was collected here</Popup>
         </Marker>
       )
     }
+    
     return (
       <>
         {
           props.title &&
-          <h1 className='ml-12 text-2xl mb-2'>Click the map at the location where your specimen was found
+          <h1 className='text-2xl mb-2'>Click the map at the location where your specimen was found
             {
               props.required &&
               <span className="text-red-600 ml-1">*</span>

@@ -11,8 +11,8 @@ export default function ProcessSelect(props: { value: string | undefined, setVal
 
     return (
         <>
-            <p className='text-2xl mt-8 ml-12'>What process was used to create the 3D model?<span className="text-red-600 ml-1">*</span></p>
-            <div className='grid grid-cols-2 w-[210px] ml-12 mt-4 mb-8' style={{ gridTemplateColumns: 'auto auto' }}>
+            <p className='text-2xl mt-8'>What process was used to create the 3D model?<span className="text-red-600 ml-1">*</span></p>
+            <div className='grid grid-cols-2 w-[210px] mt-4 mb-8' style={{ gridTemplateColumns: 'auto auto' }}>
                 <div className='flex items-center'><label className='text-xl'>Photogrammetry</label></div>
                 <div className='flex items-center'>
                     <input

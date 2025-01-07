@@ -7,19 +7,32 @@
 'use client'
 
 // Typical imports
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { Button } from "@nextui-org/react"
 import { specimenInsertion } from "@/api/types"
+import { dataTransfer, ModelerContext } from "./Modeler/ModelerDash"
+import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
+import { buttonEnable } from "@/functions/client/shared"
+import { LatLngLiteral } from "leaflet"
 
 // Default imports
-import DataTransferModal from "../Shared/DataTransferModal"
 import TextInput from "../Shared/TextInput"
 import DateInput from "../Shared/Form Fields/DateInput"
 import YesOrNo from "../Shared/Form Fields/YesOrNo"
-import Autocomplete from "../Shared/Form Fields/AutoComplete"
+import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
+import AutoCompleteWrapper from "../Shared/Form Fields/AutoCompleteWrapper"
+import dynamic from "next/dynamic"
+
+// Dynamic imports 
+const MapToSetLocation = dynamic(() => import('../Map/MapToSetLocation'), { ssr: false })
 
 // Main JSX
 export default function NewSpecimenEntry() {
+
+    // Data transfer context
+    const context = useContext(ModelerContext) as dataTransfer
+    const initializeTransfer = context.initializeDataTransferHandler
+    const terminateTransfer = context.terminateDataTransferHandler
 
     // Form field states
     const [genus, setGenus] = useState<string>('')
@@ -28,26 +41,12 @@ export default function NewSpecimenEntry() {
     const [procurer, setProcurer] = useState<string>('')
     const [isLocal, setIsLocal] = useState<boolean>()
     const [disabled, setDisabled] = useState<boolean>(true)
+    const [position, setPosition] = useState<LatLngLiteral>()
 
-    // Data transfer states
-    const [insertionModalOpen, setInsertionModalOpen] = useState<boolean>(false)
-    const [inserting, setInserting] = useState<boolean>(false)
-    const [insertionResult, setInsertionResult] = useState<string>('')
-    
-    // Autocomplete option states
-    const [speciesOptions, setSpeciesOptions] = useState<any[]>([])
-    const [genusOptions, setGenusOptions] = useState<any[]>([])
+    // Specimen insertion handeler
+    const insertSpecimenHandler = async () => {
 
-    const buttonEnable = (values: any[]) => {   
-        if (values.every((value) => value)) setDisabled(false)
-        else setDisabled(true)
-    }
-
-    const dataHandler = async () => {
-        
-        setInsertionModalOpen(true)
-        setInserting(true)
-
+        // Specimen insertion object
         const insertObj: specimenInsertion = {
             species: species,
             acquisitionDate: acquisitionDate as string,
@@ -56,42 +55,23 @@ export default function NewSpecimenEntry() {
             genus: genus
         }
 
-        await fetch('/api/admin/modeler/specimen', {
-            method: 'POST',
-            body: JSON.stringify(insertObj)
-        }).then(res => res.json()).then(json => {
-            setInsertionResult(json.data)
-            setInserting(false)
-        })
+        // Handle data transfer
+        await dataTransferHandler(initializeTransfer, terminateTransfer, insertSpecimenIntoDatabase, [insertObj], 'Entering specimen into database')
     }
 
-    const fetchAutoCompleteSpecies = async () => {
-        const speciesOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=47126&rank=species&q=${species}`)
-            .then(res => res.json()).then(json => json.results)
-        setSpeciesOptions(speciesOptions)
-    }
-
-    const fetchAutoCompleteGenus = async () => {
-        const genusOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=47126&rank=genus&q=${genus}`)
-            .then(res => res.json()).then(json => json.results)
-        setGenusOptions(genusOptions)
-    }
-
-    useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, isLocal]))
+    useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, isLocal], setDisabled))
 
     return (
-        <>
-            <DataTransferModal open={insertionModalOpen} transferring={inserting} result={insertionResult} loadingLabel="Entering specimen into database" href='/admin/modeler' />
-            <Autocomplete options={genusOptions} changeFn={fetchAutoCompleteGenus} width='w-1/5 max-w-[500px]' value={genus} setValue={setGenus}/>
-            <Autocomplete options={speciesOptions} changeFn={fetchAutoCompleteSpecies} width='w-1/5 max-w-[500px]' value={species} setValue={setSpecies}/>
-            <YesOrNo value={isLocal} setValue={setIsLocal} title='Local Specimen?' required/>
-            <DateInput value={acquisitionDate} setValue={setAcquisitionDate}/>
-            <TextInput value={procurer} setValue={setProcurer} title='Procurer' required/>
-            <div className="ml-12 my-8">
-                <Button isDisabled={disabled} className="text-white text-xl" onPress={dataHandler}>
-                    Enter Specimen into Database
-                </Button>
-            </div>
-        </>
+        <section className="px-12">
+            <AutoCompleteWrapper value={genus} setValue={setGenus} title='Genus' required rank='genus' />
+            <AutoCompleteWrapper value={species} setValue={setSpecies} title='Species' required />
+            <TextInput value={procurer} setValue={setProcurer} title='Procurer' required />
+            <YesOrNo value={isLocal} setValue={setIsLocal} title='Native species?' required />
+            <DateInput value={acquisitionDate} setValue={setAcquisitionDate} />
+            <Button isDisabled={disabled} className="text-white text-xl" onPress={insertSpecimenHandler}>
+                Enter Specimen into Database
+            </Button>
+            <MapToSetLocation position={position} setPosition={setPosition} />
+        </section>
     )
 }

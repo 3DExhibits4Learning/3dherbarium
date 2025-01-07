@@ -25,7 +25,7 @@ export default function TagInput(props: { defaultValues?: {value: string}[], tit
 
     return (
         <>
-            <h1 className='ml-12 text-2xl mb-2'>{props.title}
+            <h1 className='text-2xl mb-2'>{props.title}
                 {
                     props.required &&
                     <span className="text-red-600 ml-1">*</span>
@@ -33,7 +33,7 @@ export default function TagInput(props: { defaultValues?: {value: string}[], tit
             </h1>
             <Tags
                 id='tags'
-                className='w-4/5 h-[150px] bg-white ml-12 dark:bg-[#181818] dark:text-white'
+                className='w-4/5 h-[150px] bg-white dark:bg-[#181818] dark:text-white'
                 placeholder='Add some tags'
                 settings={{
                     blacklist: ["xxx"],

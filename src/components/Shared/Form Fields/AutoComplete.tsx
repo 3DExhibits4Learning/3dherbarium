@@ -3,7 +3,7 @@
 
 'use client'
 
-import { ChangeEvent, LegacyRef, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent, SetStateAction, Dispatch } from "react"
+import { ChangeEvent, LegacyRef, useRef, useState, useEffect, KeyboardEvent, SetStateAction, Dispatch } from "react"
 import { useRouter } from "next/navigation"
 
 export default function Autocomplete(props: { options: any[], changeFn: Function, width?: string, value: string, setValue:Dispatch<SetStateAction<string>>, className?: string, listWidth?: string, search?: boolean }) {
@@ -107,7 +107,6 @@ export default function Autocomplete(props: { options: any[], changeFn: Function
     }
 
     // Add or remove outside click listener
-
     useEffect(() => {
         if (typeof window !== undefined) {
             if (optionsVisible) document.addEventListener('click', handleOutsideClick);
@@ -116,7 +115,6 @@ export default function Autocomplete(props: { options: any[], changeFn: Function
     }, [optionsVisible])
 
     // If options have become less than highlighted index onChange, reset index
-
     useEffect(() => {
         if (props.options.length < highlightedIndex) {
             setHighlightedIndex(-1)

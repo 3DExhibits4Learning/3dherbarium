@@ -16,7 +16,7 @@ import { uid } from 'uid';
 import MobileSelect from './MobileSelectField';
 import ProcessSelect from './ProcessSelectField';
 import TagInput from './Tags';
-import Leaflet from 'leaflet';
+import Leaflet, { latLng } from 'leaflet';
 import dynamic from 'next/dynamic';
 import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
@@ -123,7 +123,7 @@ export default function ModelSubmitForm() {
                 </div>
             </div>
 
-            <form className='w-full lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
+            <form className='w-full px-12 lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
 
                 <div className='flex pr-6 justify-end lg:hidden'>
                     <span className='mr-2 text-lg block'><Link href="/about/modelContribution">How it works</Link></span>
@@ -133,24 +133,24 @@ export default function ModelSubmitForm() {
                 <Divider />
 
                 <div className='flex items-center h-[75px]'>
-                    <p className='ml-12 text-3xl'>Specimen Data</p>
+                    <p className='text-3xl'>Specimen Data</p>
                 </div>
 
                 <Divider className='mb-6' />
 
                 <WildSelect setValue={setWildOrCultivated as Dispatch<SetStateAction<string>>} />
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
-                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required leftMargin='ml-12' topMargin='mt-12' bottomMargin='mb-12' />
+                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required topMargin='mt-12' bottomMargin='mb-12' />
                 <FormMap position={position} setPosition={setPosition} title required />
                 <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
 
                 <Divider className='mt-12' />
 
-                <h1 className='ml-12 text-3xl mt-4 mb-4'>Model Data</h1>
+                <h1 className=' text-3xl mt-4 mb-4'>Model Data</h1>
 
                 <Divider className='mb-12' />
 
-                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required leftMargin='ml-12' />
+                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required  />
                 <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
                 <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
                 <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<{ value: string }[]>>} />
@@ -161,7 +161,7 @@ export default function ModelSubmitForm() {
                     isDisabled={uploadDisabled}
                     color='primary'
                     onClick={uploadModelAndEnterIntoDb}
-                    className='text-white text-xl mb-24 mt-8 ml-12'>Upload 3D Model
+                    className='text-white text-xl mb-24 mt-8'>Upload 3D Model
                 </Button>
             </form>
         </>
