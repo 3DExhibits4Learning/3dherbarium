@@ -1,11 +1,18 @@
-import Header from "@/components/Header/Header";
-import Foot from "@/components/Shared/Foot";
-import ModelerDash from "@/components/Admin/Modeler/ModelerDash";
+/**
+ * @file src\app\admin\modeler\page.tsx
+ * 
+ * @fileoverview server component for 3D modeler admin
+ */
+
 import { getSpecimenWithoutPhotos, getSpecimenToModel } from "@/api/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getAdmin } from "@/api/queries";
 import { authed } from "@prisma/client";
+
+import Header from "@/components/Header/Header";
+import Foot from "@/components/Shared/Foot";
+import ModelerDash from "@/components/Admin/Modeler/ModelerDash";
 
 export default async function Page() {
 
