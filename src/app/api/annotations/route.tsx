@@ -1,3 +1,11 @@
+/**
+ * @file src\app\api\annotations\route.tsx
+ * 
+ * @fileoverview annotation CUD route handler
+ * 
+ * @todo finish retrofitting error handling
+ */
+
 import {
     insertFirstAnnotationPosition,
     getFirstAnnotationPostion,
@@ -14,7 +22,10 @@ import {
     updateModelAnnotation,
     deleteModelAnnotation
 } from "@/api/queries"
+import { routeHandlerErrorHandler } from "@/functions/server/error"
 import { mkdir, unlink, writeFile, rm } from "fs/promises"
+
+const path = 'src/app/api/annotations/route.tsx'
 
 
 
@@ -26,82 +37,89 @@ export async function GET(request: Request) {
 
     // Return first annotation position if it exists; typical try-catch return
     try {
-        const firstAnnotationPosition = await getFirstAnnotationPostion(searchParams.get('uid') as string)
+        const firstAnnotationPosition = await getFirstAnnotationPostion(searchParams.get('uid') as string).catch((e) => routeHandlerErrorHandler(path, e.message, 'getFirstAnnotationPosition()', "Couldn't get annotation position"))
         return Response.json({ data: 'Annotation Position retrieved', response: firstAnnotationPosition })
     }
     catch (e: any) { return Response.json({ data: "Couldn't enter position", response: e.message }, { status: 400, statusText: "Couldn't enter position" }) }
 }
 
 
-
-
 // POST request handler
 export async function POST(request: Request) {
-    const data = await request.formData()
 
-    // First annotation handler; always taxonomy and description, insert position with typical try-catch return
-    if (data.get('index') == '1') {
-        let update
-        try {
-            update = await insertFirstAnnotationPosition(data.get('uid') as string, data.get('position') as string)
+    try {
+
+        const data = await request.formData()
+        // First annotation handler; always taxonomy and description, insert position with typical try-catch return
+        if (data.get('index') == '1') {
+            const update = await insertFirstAnnotationPosition(data.get('uid') as string, data.get('position') as string).catch((e) => routeHandlerErrorHandler(path, e.message, 'getFirstAnnotationPosition()', "Couldn't get annotation position"))
             return Response.json({ data: 'Annotation Created', response: update })
         }
-        catch (e: any) { return Response.json({ data: "Couldn't enter position", response: update }, { status: 400, statusText: "Couldn't enter position" }) }
-    }
 
-    // Else the annotation must be photo or video (or 3D model coming soon)
-    else {
+        // Else the annotation must be photo or video (or 3D model coming soon)
+        else {
 
-        // Conditional based on annotationType
-        switch (data.get('annotation_type')) {
+            // Conditional based on annotationType
+            switch (data.get('annotation_type')) {
 
-            // annotationType = 'video' handler
-            case 'video':
-                try {
+                // annotationType = 'video' handler
+                case 'video':
 
                     // Database annotation creation
-                    const newAnnotation = await createAnnotation(data.get('uid') as string, data.get('position') as string, data.get('url') as string, parseInt(data.get('annotation_no') as string), data.get('annotation_type') as string, data.get('annotation_id') as string, data.get('title') as string)
-                    const newVideoAnnotation = await createVideoAnnotation(data.get('url') as string, data.get('length') as string, data.get('annotation_id') as string)
-                    return Response.json({ data: 'Annotation created', response: newAnnotation, newVideoAnnotation })
-                }
-                // Catch returns 400 status with 3rd party error message as response value; data and statusText are generic error messages
-                catch (e: any) { return Response.json({ data: 'Prisma Error', response: e.message }, { status: 400, statusText: 'Prisma Error' }) }
+                    const newAnnotation0 = await createAnnotation(
+                        data.get('uid') as string,
+                        data.get('position') as string,
+                        data.get('url') as string,
+                        parseInt(data.get('annotation_no') as string),
+                        data.get('annotation_type') as string,
+                        data.get('annotation_id') as string,
+                        data.get('title') as string
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createAnnotation()', "Couldn't create annotation"))
 
-            // annotationType = 'video' handler
-            case 'model':
-                try {
+                    const newVideoAnnotation = await createVideoAnnotation(
+                        data.get('url') as string,
+                        data.get('length') as string,
+                        data.get('annotation_id') as string
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createVideoAnnotation()', "Couldn't create video annotation"))
+
+                    return Response.json({ data: 'Annotation created', response: newAnnotation0, newVideoAnnotation })
+
+                // annotationType = 'video' handler
+                case 'model':
 
                     // Database annotation creation
-                    const newAnnotation = await createAnnotation(data.get('uid') as string, data.get('position') as string, data.get('url') as string, parseInt(data.get('annotation_no') as string), data.get('annotation_type') as string, data.get('annotation_id') as string, data.get('title') as string)
-                    const newModelAnnotation = await createModelAnnotation(data.get('modelAnnotationUid') as string, data.get('annotation') as string, data.get('annotation_id') as string)
-                    return Response.json({ data: 'Annotation created', response: newAnnotation, newModelAnnotation })
-                }
-                // Catch returns 400 status with 3rd party error message as response value; data and statusText are generic error messages
-                catch (e: any) { return Response.json({ data: 'Prisma Error', response: e.message }, { status: 400, statusText: 'Prisma Error' }) }
+                    const newAnnotation1 = await createAnnotation(
+                        data.get('uid') as string,
+                        data.get('position') as string,
+                        data.get('url') as string,
+                        parseInt(data.get('annotation_no') as string),
+                        data.get('annotation_type') as string,
+                        data.get('annotation_id') as string,
+                        data.get('title') as string
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createAnnotation()', "Couldn't create annotation"))
 
-            // Default case (annotationType == 'photo')
-            default:
-                try {
+                    const newModelAnnotation = await createModelAnnotation(
+                        data.get('modelAnnotationUid') as string,
+                        data.get('annotation') as string,
+                        data.get('annotation_id') as string
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createModelAnnotation()', "Couldn't create model annotation"))
+
+                    return Response.json({ data: 'Annotation created', response: newAnnotation1, newModelAnnotation })
+
+
+                // Default case (annotationType == 'photo')
+                default:
 
                     let photoBuffer
 
                     if (data.get('file')) {
                         const file = data.get('file') as File
-                        const bytes = await file.arrayBuffer().catch((e) => {
-                            if (process.env.LOCAL_ENV) console.error(e.message)
-                            throw Error("Couldn't get array buffer")
-                        })
+                        const bytes = await file.arrayBuffer().catch((e) => routeHandlerErrorHandler(path, e.message, 'file.arrayBuffer()', "Couldn't get arrayBuffer")) as ArrayBuffer
                         photoBuffer = Buffer.from(bytes)
 
-                        await mkdir(data.get('dir') as string, { recursive: true }).catch((e) => {
-                            if (process.env.LOCAL_ENV) console.error(e.message)
-                            throw Error("Couldn't make directory")
-                        })
+                        await mkdir(data.get('dir') as string, { recursive: true }).catch((e) => routeHandlerErrorHandler(path, e.message, 'mkdir()', "Couldn't make directory"))
                         //@ts-ignore
-                        await writeFile(data.get('path') as string, photoBuffer).catch((e) => {
-                            if (process.env.LOCAL_ENV) console.error(e.message)
-                            throw Error("Couldn't write file")
-                        })
+                        await writeFile(data.get('path') as string, photoBuffer).catch((e) => routeHandlerErrorHandler(path, e.message, 'writeFile()', "Couldn't write file"))
                     }
 
                     // Optional photo_annotation data initializtion
@@ -109,16 +127,33 @@ export async function POST(request: Request) {
                     const title = data.get('photoTitle') ? data.get('title') : undefined
 
                     // Database annotation creation
-                    const newAnnotation = await createAnnotation(data.get('uid') as string, data.get('position') as string, data.get('url') as string, parseInt(data.get('annotation_no') as string), data.get('annotation_type') as string, data.get('annotation_id') as string, data.get('title') as string)
-                    const newPhotoAnnotation = await createPhotoAnnotation(data.get('url') as string, data.get('author') as string, data.get('license') as string, data.get('annotator') as string, data.get('annotation') as string, data.get('annotation_id') as string, website as string | undefined, title as string | undefined)
+                    const newAnnotation2 = await createAnnotation(
+                        data.get('uid') as string, data.get('position') as string,
+                        data.get('url') as string,
+                        parseInt(data.get('annotation_no') as string),
+                        data.get('annotation_type') as string,
+                        data.get('annotation_id') as string,
+                        data.get('title') as string
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createAnnotation()', "Couldn't create annotation"))
+
+                    const newPhotoAnnotation = await createPhotoAnnotation(
+                        data.get('url') as string,
+                        data.get('author') as string,
+                        data.get('license') as string,
+                        data.get('annotator') as string,
+                        data.get('annotation') as string,
+                        data.get('annotation_id') as string,
+                        website as string | undefined,
+                        title as string | undefined
+                    ).catch((e) => routeHandlerErrorHandler(path, e.message, 'createPhotoAnnotation()', "Couldn't create photo annotation"))
 
                     // Successful response returns message as the data value and response objects from prisma as the response values
-                    return Response.json({ data: 'Annotation created', response: { newAnnotation, newPhotoAnnotation } })
-                }
-                // Catch returns 400 status with 3rd party error message as response value; data and statusText are generic error messages
-                catch (e: any) { return Response.json({ data: 'Prisma Error', response: e.message }, { status: 400, statusText: 'Prisma Error' }) }
+                    return Response.json({ data: 'Annotation created', response: { newAnnotation2, newPhotoAnnotation } })
+
+            }
         }
     }
+    catch (e: any) { }
 }
 
 
