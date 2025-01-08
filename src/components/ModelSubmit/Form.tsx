@@ -140,7 +140,7 @@ export default function ModelSubmitForm() {
 
                 <WildSelect setValue={setWildOrCultivated as Dispatch<SetStateAction<string>>} />
                 <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
-                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required topMargin='mt-12' bottomMargin='mb-12' />
+                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required topMargin='mt-12' bottomMargin='mb-12' multiple />
                 <FormMap position={position} setPosition={setPosition} title required />
                 <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
 

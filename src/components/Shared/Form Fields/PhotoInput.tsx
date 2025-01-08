@@ -2,7 +2,7 @@
 
 import { SetStateAction, Dispatch } from "react"
 
-export default function PhotoInput(props: { setFile: Dispatch<SetStateAction<FileList>>, required?: boolean, title?: string, leftMargin?: string, topMargin?: string, bottomMargin?: string }) {
+export default function PhotoInput(props: { setFile: Dispatch<SetStateAction<FileList>>, required?: boolean, title?: string, leftMargin?: string, topMargin?: string, bottomMargin?: string, multiple?: boolean }) {
     return (
         <>
             {
@@ -17,9 +17,9 @@ export default function PhotoInput(props: { setFile: Dispatch<SetStateAction<Fil
             <input
                 id='formFileInput'
                 accept='.jpg,.jpeg,.png'
+                multiple={props.multiple ? props.multiple : false}
                 type='file'
-                multiple
-                className={`${props.leftMargin} ${props.bottomMargin}`}
+                className={`${props.leftMargin} ${props.bottomMargin ? props.bottomMargin : 'mb-8'}`}
                 onChange={(e) => {
                     if (e.target.files) {
                         props.setFile(e.target.files)

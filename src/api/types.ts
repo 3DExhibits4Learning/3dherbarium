@@ -281,9 +281,13 @@ export interface modelerInsertion {
 }
 
 export interface specimenInsertion extends modelerInsertion {
-  procurer: string,
-  isLocal: boolean,
+  procurer: string
+  isLocal: boolean
   genus: string
+  height: string
+  position: LatLngLiteral
+  locality: string
+  photo: File
 }
 
 export interface imageInsertion extends modelerInsertion {
