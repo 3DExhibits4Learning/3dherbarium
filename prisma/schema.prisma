@@ -158,9 +158,15 @@ model species {
 }
 
 model specimen {
+  sid              String      @default("") @db.VarChar(25)
   spec_name        String      @db.VarChar(100)
   spec_acquis_date DateTime    @db.Date
   procurer         String      @db.VarChar(25)
+  lat              String      @default("")  @db.VarChar(50)
+  lng              String      @default("")  @db.VarChar(50)
+  height           String      @default("")  @db.VarChar(50)
+  locality         String      @default("")  @db.VarChar(1000)
+  photoUrl         String      @default("")  @db.VarChar(150)
   image_set        image_set[]
   model            model[]
   species          species     @relation(fields: [spec_name], references: [spec_name], onDelete: NoAction, map: "specimen_ibfk_1")
