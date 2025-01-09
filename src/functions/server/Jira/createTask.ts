@@ -1,36 +1,18 @@
-export default async function createTask(epicKey: string, summary: string, description: string, assigneeId: string ) {
+export default async function createTask(epicKey: string, summary: string, description: string, assigneeId: string) {
 
     const data = {
         fields: {
-            project: {
-                key: 'HERB',
-            },
-            parent: {
-                key: epicKey
-            },
+            project: { key: 'SPRIN' },
+            parent: { key: epicKey },
             summary: summary,
             description: {
                 type: 'doc',
                 version: 1,
-                content: [
-                    {
-                        type: 'paragraph',
-                        content: [
-                            {
-                                type: 'text',
-                                text: description,
-                            },
-                        ],
-                    },
-                ],
+                content: [{ type: 'paragraph', content: [{ type: 'text', text: description }] }]
             },
-            issuetype: {
-                name: 'Task',
-            },
-            assignee: {
-                id: assigneeId
-            }
-        },
+            issuetype: { name: 'Task' },
+            assignee: { id: assigneeId }
+        }
     }
 
     const base64 = Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
@@ -50,5 +32,5 @@ export default async function createTask(epicKey: string, summary: string, descr
         .then(json => json)
         .catch(() => { throw new Error("Unable to create Task") })
 
-        return task
+    return task
 }

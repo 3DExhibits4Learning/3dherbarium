@@ -34,22 +34,22 @@ export const updateThumbnail = async (uid: string, community: boolean) => {
 export const createProcurementTask = async (assignee: string, katId: string, hunterId: string) => {
 
     // Determine id of the assignee
-    const assigneeId = assignee === 'Hunter' ? hunterId : katId
+    const assigneeId = '712020:28db4706-9c68-4e0f-aa90-655876123369'
 
     // Procurement task data
     const data = {
         fields: {
-            project: { key: 'HERB' },
-            parent: { key: 'HERB-59' },
-            summary: `Procure ${new Date().toLocaleDateString}`,
-            description: { type: 'doc', version: 1, content: [{ type: 'paragraph', content: [{ type: 'text', text: `Procure ${new Date().toLocaleDateString}` }] }] },
-            issuetype: { name: 'Task' },
+            project: { key: 'SPRIN' },
+            parent: { key: 'SPRIN-11' },
+            summary: `Subtask example`,
+            description: { type: 'doc', version: 1, content: [{ type: 'paragraph', content: [{ type: 'text', text: `Example subtask` }] }] },
+            issuetype: { name: 'Subtask' },
             assignee: { id: assigneeId }
         }
     }
 
     // Create the task; return status message 
-    return await fetch('/api/issues/create', { method: 'POST', body: JSON.stringify(data) }).then(res => res.json()).then(json => { console.log(json.response); return json.response })
+    return await fetch('/api/issues/create', { method: 'POST', body: JSON.stringify(data) }).then(res => res.json()).then(json => { console.log(json.response); return json.data })
 }
 
 export const approveCommunityModel = async (model: Models, wild: boolean, photoFiles: string[]) => {

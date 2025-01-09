@@ -1,56 +1,86 @@
 /**
  * @file src/app/api/admin/modeler/specimen/route.tsx
+ * 
+ * @fileoverview specimen insertion route handler
+ * 
+ * @todo update jira task management
  */
 
 // Typical imports
-import { specimenInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
+import { v4 as uuidv4 } from 'uuid'
+import { writeFile, mkdir } from "fs/promises"
+import { sendErrorEmail } from "@/functions/server/email"
+import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
 // Default imports
 import prisma from "@/utils/prisma"
-import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
-import createTask from "@/utils/Jira/createTask"
-import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
+import createTask from "@/functions/server/jira"
+
+// Path
+const path = 'src/app/api/admin/modeler/specimen/route.tsx'
 
 /**
- * 
- * @param request HTTP request object
+ * @function POST
+ * @param request Request
  * @returns 
  */
 export async function POST(request: Request) {
 
     try {
 
-        const specimen = await request.json() as specimenInsertion
+        // Get request data and check if species exists in database (deprected DB structure to be changed)
+        const specimen = await request.formData().catch(e => routeHandlerErrorHandler(path, e.message, 'request.json()', "Couldn't get request JSON")) as FormData
+        const speciesCheck = await prisma.species.findUnique({ where: { spec_name: (specimen.get('species') as string).toLowerCase() } }).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.species.findUnique()', "Couldn't check species"))
         
-        const speciesCheck = await prisma.species.findUnique({
-            where: {
-                spec_name: specimen.species.toLowerCase()
-            }
-        })
+        // Specimen id, path variables
+        const sid = uuidv4()
+        const dir = `public/data/Herbarium/specimen/${sid}`
+        const filePath = dir + `/${(specimen.get('photo') as File).name}`
+        const species = toUpperFirstLetter(specimen.get('species') as string)
+        const hunterJira = process.env.HUNTER_JIRA_ID as string
 
+        // If the species doesn't exist in the database, it must be created (deprected DB structure to be changed)
         if (!speciesCheck) {
             await prisma.species.create({
                 data: {
-                    spec_name: specimen.species.toLowerCase(),
-                    genus: specimen.genus.toLowerCase(),
-                    is_local: specimen.isLocal
+                    spec_name: species.toLowerCase(),
+                    genus: (specimen.get('genus') as string).toLowerCase(),
+                    is_local: specimen.get('isLocal') === 'true' ? true : false
                 }
-            })
+            }).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.species.create()', "Couldn't create species record in database"))
         }
 
+        // Insert specimen into database
         const insert = await prisma.specimen.create({
             data: {
-                spec_name: specimen.species.toLowerCase(),
-                spec_acquis_date: new Date(specimen.acquisitionDate),
-                procurer: specimen.procurer
+                spec_name: species.toLowerCase(),
+                spec_acquis_date: new Date(specimen.get('acquisitionDate') as string),
+                procurer: specimen.get('procurer') as string,
+                height: specimen.get('height') as string,
+                lat: JSON.parse(specimen.get('position') as string).lat.toString(),
+                lng: JSON.parse(specimen.get('position') as string).lng.toString(),
+                locality: specimen.get('locality') as string,
+                sid: sid,
+                photoUrl: filePath
             }
-        })
+        }).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.specimen.create()', "Couldn't create specimen record in database"))
 
-        await markIssueAsDone('HERB-59', `Procure specimen ${new Date().toLocaleDateString()}`).catch((e: any) => sendErrorEmail(e.message, `Mark Procure specimen ${new Date().toLocaleDateString()} as done`))
-        const task = await createTask('HERB-59', `Photograph ${toUpperFirstLetter(specimen.species)}`, `Photograph ${toUpperFirstLetter(specimen.species)}`, process.env.HUNTER_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message, `Create task Photograph ${toUpperFirstLetter(specimen.species)}`))
+        // Write photo to data storage
+        await mkdir(dir, {recursive: true})
+        const arrayBuffer = await (specimen.get('photo') as File).arrayBuffer().catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.specimen.create()', "Couldn't create specimen record in database")) as ArrayBuffer
+        const buffer = Buffer.from(arrayBuffer)
+        await writeFile(filePath, buffer).catch(e => routeHandlerErrorHandler(path, e.message, 'writeFile()', "Couldn't write photo file"))
 
-        return Response.json({ data: 'Specimen Entered Successfully', response: insert, task })
+        // Jira task management (Create model task with two subtasks for photography and 3D model compilation)
+        const task = await createTask('SPRIN-4', `Model ${species}`, `Photograph and compile 3D model of ${species}`, process.env.HUNTER_JIRA_ID as string).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
+        const subTasks = [createTask(task.key, `Photograph ${species}`, `Photograph ${species}`, hunterJira, 'Subtask'), createTask(task.key, `Build 3D model of ${species}`, `Build 3D model of ${species}`, hunterJira, 'Subtask')]
+        await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
+
+        // Typical response
+        return routeHandlerTypicalResponse('Specimen Entered Successfully', {insert, task})
     }
-    catch (e: any) { return Response.json({ data: e.message, response: 'Prisma Error' }, { status: 400, statusText: 'Prisma Error' }) }
+    // Typical catch
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

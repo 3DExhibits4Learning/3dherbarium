@@ -8,9 +8,9 @@ import { prismaClient } from "@/api/queries"
 import { modelInsertion } from "@/api/types"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 
-import markIssueAsDone from "@/utils/Jira/markIssueAsDone"
-import createTask from "@/utils/Jira/createTask"
-import sendErrorEmail from "@/utils/Jira/sendErrorEmail"
+import markIssueAsDone from "@/functions/server/Jira/markIssueAsDone"
+import createTask from "@/functions/server/Jira/createTask"
+import sendErrorEmail from "@/functions/server/Jira/sendErrorEmail"
 import { routeHandlerErrorHandler } from "@/functions/server/error"
 
 const prisma = prismaClient()

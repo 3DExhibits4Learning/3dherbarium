@@ -1,10 +1,21 @@
+/**
+ * @file src/components/Admin/Modeler/NewImageSet.tsx
+ * 
+ * @fileoverview client component interface for 3D modeler to enter image set data
+ */
+
 'use client'
+
+// Typical imports
 import { useRef, LegacyRef, useState } from "react"
 import { Button } from "@nextui-org/react"
-import DataTransferModal from "../../Shared/DataTransferModal"
 import { imageInsertion } from "@/api/types"
-import AutoComplete from "../../Shared/AutoCompleteRef"
 
+// Default imports 
+import AutoComplete from "../../Shared/AutoCompleteRef"
+import DataTransferModal from "../../Shared/DataTransferModal"
+
+// Main JSX
 export default function NewImageSet() {
 
     const species = useRef<string>()

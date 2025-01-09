@@ -1,7 +1,7 @@
 
 import { getAnnotations, getPhotoAnnotation, getVideoAnnotation, markAsAnnotated, getModelAnnotation, updateModelAnnotator } from "@/api/queries"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
-import markIssueAsDone from "@/utils/Jira/markIssueAsDone";
+import markIssueAsDone from "@/functions/server/Jira/markIssueAsDone";
 
 export async function GET(request: Request) {
     try {

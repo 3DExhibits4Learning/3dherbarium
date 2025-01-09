@@ -13,18 +13,18 @@
 import * as fn from "@/functions/client/admin/manager"
 
 // Typical imports
-import { userSubmittal } from "@prisma/client";
-import { useState } from "react";
-import { Button } from "@nextui-org/react";
+import { userSubmittal } from "@prisma/client"
+import { useState } from "react"
+import { Button } from "@nextui-org/react"
+import { Models } from "@/api/types"
 
 // Default imports
-import DataTransferModal from "../../Shared/DataTransferModal";
-import PendingModelsAdmin from "@/components/Admin/Manager/PendingModels";
-import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer";
-import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer";
-import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler";
-import ProcurementTask from "./ProcurementTask";
-import { Models } from "@/api/types";
+import DataTransferModal from "../../Shared/DataTransferModal"
+import PendingModelsAdmin from "@/components/Admin/Manager/PendingModels"
+import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
+import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
+import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
+import ProcurementTask from "./ProcurementTask"
 
 // Main JSX
 export default function ManagerClient(props: { pendingModels: string, katId: string, hunterId: string }) {

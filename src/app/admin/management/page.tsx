@@ -25,6 +25,7 @@ const path = 'src/app/admin/management/page.tsx'
 export default async function Page() {
 
     try {
+
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))
         const email = session?.user?.email as string

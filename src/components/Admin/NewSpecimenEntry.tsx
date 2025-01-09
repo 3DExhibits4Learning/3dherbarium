@@ -53,23 +53,36 @@ export default function NewSpecimenEntry() {
     const insertSpecimenHandler = async () => {
 
         // Specimen insertion object
-        const insertObj: specimenInsertion = {
-            species: species,
-            acquisitionDate: acquisitionDate as string,
-            procurer: procurer,
-            isLocal: isLocal as boolean,
-            genus: genus,
-            height: height,
-            locality: locality,
-            photo: (file as FileList)[0] as File,
-            position: position as LatLngLiteral
-        }
+        // const insertObj: specimenInsertion = {
+        //     species: species,
+        //     acquisitionDate: acquisitionDate as string,
+        //     procurer: procurer,
+        //     isLocal: isLocal as boolean,
+        //     genus: genus,
+        //     height: height,
+        //     locality: locality,
+        //     photo: (file as FileList)[0] as File,
+        //     position: position as LatLngLiteral
+        // }
+
+        const data = new FormData()
+        data.set('species', species)
+        data.set('acquisitionDate', acquisitionDate as string)
+        data.set('procurer', procurer as string)
+        data.set('isLocal', isLocal ? 'true' : 'false')
+        data.set('genus', genus)
+        data.set('height', height)
+        data.set('locality', locality)
+        data.set('position', JSON.stringify(position))
+        data.set('photo', (file as FileList)[0] as File)
 
         // Handle data transfer
-        await dataTransferHandler(initializeTransfer, terminateTransfer, insertSpecimenIntoDatabase, [insertObj], 'Entering specimen into database')
+        await dataTransferHandler(initializeTransfer, terminateTransfer, insertSpecimenIntoDatabase, [data], 'Entering specimen into database')
     }
 
     useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, isLocal, position, height, locality, file], setDisabled))
+
+    if(file)console.log((file as FileList)[0])
 
     return (
         <section className="w-full flex justify-center">
