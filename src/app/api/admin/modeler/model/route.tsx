@@ -6,16 +6,15 @@
  * @todo update once sid is deemed primary key for specimen and image set in the database
  */
 
-// Typical imports
+// Imports
 import { prismaClient } from "@/api/queries"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
-import { routeHandlerErrorHandler } from "@/functions/server/error"
+import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { ModelUploadResponse } from "@/api/types"
-
-// Default imports
-import markIssueAsDone from "@/functions/server/Jira/markIssueAsDone"
-import createTask from "@/functions/server/Jira/createTask"
-import sendErrorEmail from "@/functions/server/Jira/sendErrorEmail"
+import { markSubtaskAsDone } from "@/functions/server/jira"
+import { sendErrorEmail } from "@/functions/server/email"
+import { createTask } from "@/functions/server/jira"
+import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
 // Prisma singleton
 const prisma = prismaClient()
@@ -26,7 +25,7 @@ const path = 'src/app/api/admin/modeler/model/route.tsx'
 /**
  * 
  * @param request HTTP
- * @returns 
+ * @returns typical response
  */
 export async function POST(request: Request) {
 
@@ -43,6 +42,11 @@ export async function POST(request: Request) {
         const modeler = model.get('modeler') as string
         const isViable = model.get('isViable') as string
         const isBase = model.get('isBase') as string
+        const katJira = process.env.KAT_JIRA_ID as string
+
+        // Value check
+        const requiredValues = [sid, _3dModel, commonName, modeler, isViable, isBase]
+        if (!requiredValues.every(value => value)) { throw Error("Missing model input data") }
 
         // Ensure that image_set data has been entered first *Note sid will be implemented as key in the future
         const imageSet = await prisma.image_set.findFirst({ where: { sid: sid } }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.image_set.findFirst()", "Couldn't find corresponding image set data"))
@@ -72,10 +76,10 @@ export async function POST(request: Request) {
         const thumbUrl = await fetch(`https://api.sketchfab.com/v3/models/${modelUid}`)
             .then(res => res.json())
             .then(data => data.thumbnails?.images[0]?.url ?? '')
-            .catch((e: any) => { console.error(e.message); throw new Error("Couldn't get Thumbnail") })
+            .catch(e => console.error(routeHandlerError(path, e.message, 'thumbUrl', 'POST', true)))
 
         // Create model database entry
-        const insert = await prisma.model.create({
+        const insert = prisma.model.create({
             data: {
                 spec_name: imageSet.spec_name.toLowerCase(),
                 spec_acquis_date: imageSet.spec_acquis_date,
@@ -84,33 +88,52 @@ export async function POST(request: Request) {
                 modeled_by: modeler,
                 site_ready: isViable === 'yes' ? true : false,
                 base_model: isBase === 'yes' ? true : false,
-                thumbnail: thumbUrl
+                thumbnail: thumbUrl ? thumbUrl : ''
             }
-        }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.model.create()", "Couldn't enter model into databse"))
+        })
 
         // Update corresponding image_set UID
-        update = await prisma.image_set.update({
+        const update = prisma.image_set.update({
             where: {
                 spec_name_spec_acquis_date_set_no: {
-                    spec_name: model.species.toLowerCase(),
-                    spec_acquis_date: new Date(model.acquisitionDate),
+                    spec_name: imageSet.spec_name,
+                    spec_acquis_date: imageSet.spec_acquis_date,
                     set_no: 1
                 }
             },
-            data: {
-                uid: model.uid
-            }
-        }).catch(() => { throw new Error("Couldn't update Image Set UID") })
+            data: { uid: modelUid }
+        })
 
-        // Mark Create 3D Model task as done
-        await markIssueAsDone('HERB-59', `Model ${toUpperFirstLetter(model.species)}`).catch((e: any) => sendErrorEmail(e.message, `Mark Model ${toUpperFirstLetter(model.species)} as done`))
+        // Await transaction
+        await prisma.$transaction([insert, update]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
 
-        // Create Jira task if the model has been marked as viable by the 3D modeler
-        if (parseInt(model.isViable)) {
-            annotateTask = await createTask('HERB-59', `Annotate ${toUpperFirstLetter(model.species)}`, `Annotate ${toUpperFirstLetter(model.species)}`, process.env.KAT_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message, `Create annotation for ${toUpperFirstLetter(model.species)}`))
+        // Mark 3D model subtask as complete
+        await markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build").catch(e => sendErrorEmail(path, 'markSubtaskAsDone', e.message, true))
+
+        // Create annotation task if the model is viable
+        if (isViable === 'yes') {
+
+            // Await task, get task key to make subtasks
+            const task = await createTask(
+                'SPRIN-1',
+                `Annotate ${toUpperFirstLetter(imageSet.spec_name)} (${sid.slice(0, 8)})`,
+                `Annotate ${imageSet.spec_name}`,
+                process.env.HUNTER_JIRA_ID as string
+            ).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
+
+            // Subtasks (annotation and sketchfab metadata)
+            const subTasks = [
+                createTask(task.key, `Add metadata for ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Add metadata for ${imageSet.spec_name}`, katJira, 'Subtask'),
+                createTask(task.key, `Annotate ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Annotate ${imageSet.spec_name}`, katJira, 'Subtask')
+            ]
+            await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
+
+            // Typical response
+            return routeHandlerTypicalResponse('Model Data Entered Successfully', task)
         }
-
-        return Response.json({ data: 'Model Data Entered Successfully', response: { insert: insert, update: update, task: annotateTask } })
+        // Typical response without task
+        return routeHandlerTypicalResponse('Model Data Entered Successfully', { insert, update })
     }
-    catch (e: any) { return Response.json({ data: e.message, response: 'Model Entry Error' }, { status: 400, statusText: 'Model Entry Error' }) }
+    // Typical catch
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

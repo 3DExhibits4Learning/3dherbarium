@@ -1,3 +1,1 @@
-export function routeHandlerTypicalResponse(successMessage: string, response: any){
-    return Response.json({data: successMessage, response: response})
-}
+export function routeHandlerTypicalResponse(successMessage: string, response: any) { return Response.json({ data: successMessage, response: response }) }

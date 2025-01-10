@@ -40,18 +40,10 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
-    const requiredValues = [isViable, commonName, modeler, isBase, model]
+    const requiredValues = [commonName, modeler, model]
 
-    // Specimen insertion handeler
+    // Model data insertion handeler
     const insertModelDataHandler = async () => {
-
-        const modelData: modelInsertion = {
-            sid: props.specimen.sid,
-            commonName: commonName,
-            modeler: modeler,
-            isViable: isViable,
-            isBase: isBase
-        }
 
         const data = new FormData()
 
@@ -63,11 +55,11 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('model', model as File)
 
         // Handle data transfer
-        await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering image set into database')
+        await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering 3D model into database')
     }
 
     // Button enabler effect
-    useEffect(() => buttonEnable([isViable, commonName, modeler, isBase, model], setIsDisabled), [requiredValues])
+    useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
 
     return (
         <section className="flex justify-center w-full">
@@ -76,10 +68,10 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
                 <div className="w-full h-2/5 mb-8 max-h-[300px]">
                     <img className='h-full w-full' src={props.specimen.photoUrl.slice(6)} alt={`Photo of ${props.specimen.spec_name}`} />
                 </div>
-                <TextInput value={modeler} setValue={setModeler} title='Photographer' required textSize="text-2xl" />
+                <TextInput value={modeler} setValue={setModeler} title='3D Modeler' required textSize="text-2xl" />
                 <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
                 <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required />
-                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required />
+                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo/>
                 <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8"/>
                 <div>
                     <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>

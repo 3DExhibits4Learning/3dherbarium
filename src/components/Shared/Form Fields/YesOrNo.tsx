@@ -2,10 +2,10 @@
 
 import { SetStateAction, Dispatch } from "react"
 
-export default function YesOrNo(props: { value: boolean | undefined, setValue: Dispatch<SetStateAction<boolean>>, title: string, required?: boolean, topMargin?: string }) {
+export default function YesOrNo(props: { value: boolean | undefined, setValue: Dispatch<SetStateAction<boolean>>, title: string, required?: boolean, topMargin?: string, defaultNo?: boolean }) {
     return (
 
-            <div className={`${props.topMargin}`}>
+        <div className={`${props.topMargin}`}>
             {
                 props.title &&
                 <p className="text-2xl mb-1">{props.title}
@@ -15,10 +15,25 @@ export default function YesOrNo(props: { value: boolean | undefined, setValue: D
                     }
                 </p>
             }
-                <select className='dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 rounded-xl outline-[#004C46] mb-8' onChange={(e) => props.setValue(e.target.value ? true : false)}>
-                    <option value={1}>Yes</option>
-                    <option value={0}>No</option>
-                </select>
-            </div>
+            <select className='dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 rounded-xl outline-[#004C46] mb-8' onChange={(e) => props.setValue(e.target.value ? true : false)}>
+
+                {
+                    props.defaultNo &&
+                    <>
+                        <option value={0}>No</option>
+                        <option value={1}>Yes</option>
+                    </>
+
+                }
+                {
+                    !props.defaultNo &&
+                    <>
+                        <option value={1}>Yes</option>
+                        <option value={0}>No</option>
+                    </>
+
+                }
+            </select>
+        </div>
     )
 }

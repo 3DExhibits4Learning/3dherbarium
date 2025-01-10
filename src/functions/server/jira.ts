@@ -6,6 +6,26 @@
 
 /**
  * 
+ * @returns 
+ */
+export const getBase64ApiKey = () => Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
+
+/**
+ * 
+ * @param base64 
+ * @returns 
+ */
+export const getJiraHeaders = (base64: string) => {
+    return {
+        'X-Force-Accept-Language': true,
+        'Accept-Language': 'en',
+        'Authorization': `Basic ${base64}`,
+        'Content-Type': 'application/json',
+    }
+}
+
+/**
+ * 
  * @param epic 
  * @param uuidSlice8 
  * @returns 
@@ -19,15 +39,8 @@ export const getTaskFromEpic = (epic: any, uuidSlice8: string) => epic.issues.fi
  * @param subtaskKeyword 
  * @returns 
  */
-export const getSubtaskFromTask = (task: any, uuidSlice8: string, subtaskKeyword: string) => 
+export const getSubtaskFromTask = (task: any, uuidSlice8: string, subtaskKeyword: string) =>
     task.fields.subtasks.find((subtask: any) => subtask.fields.summary.includes(uuidSlice8) && subtask.fields.summary.includes(subtaskKeyword))
-
-/**
- * 
- * @returns 
- */
-export const getBase64ApiKey = () => Buffer.from(`ab632@humboldt.edu:${process.env.JIRA_API_KEY}`).toString('base64')
-
 
 /**
  * 
@@ -40,13 +53,8 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
 
     const transition = await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/${issueKey}/transitions`, {
         method: 'POST',
-        //@ts-ignore -- without the first two headers, data is not returned in English
-        headers: {
-            'X-Force-Accept-Language': true,
-            'Accept-Language': 'en',
-            'Authorization': `Basic ${base64}`,
-            'Content-Type': 'application/json',
-        },
+        //@ts-ignore
+        headers: getJiraHeaders(base64),
         body: JSON.stringify({ transition: { id: transitionId } })
     })
 
@@ -60,23 +68,17 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
  * @returns  
  */
 export const getIssue = async (issueKey: string) => {
-    
+
     const base64 = getBase64ApiKey()
 
     const epic = await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = ${issueKey}`, {
-        //@ts-ignore -- without the first two headers, data is not returned in English
-        headers: {
-            'X-Force-Accept-Language': true,
-            'Accept-Language': 'en',
-            'Authorization': `Basic ${base64}`,
-            'Content-Type': 'application/json',
-        },
+        //@ts-ignore
+        headers: getJiraHeaders(base64),
     })
 
     if (!epic.ok) { throw Error(epic.statusText) }
     else return await epic.json().then(json => json).catch(e => { throw Error(e.message) })
 }
-
 
 /**
  * 
@@ -88,13 +90,8 @@ export const jiraTaskFetch = async (data: any) => {
 
     const taskFetch = await fetch('https://3dteam.atlassian.net/rest/api/3/issue', {
         method: 'POST',
-        //@ts-ignore -- without the first two headers, data is not returned in English
-        headers: {
-            'X-Force-Accept-Language': true,
-            'Accept-Language': 'en',
-            'Authorization': `Basic ${base64}`,
-            'Content-Type': 'application/json',
-        },
+        //@ts-ignore
+        headers: getJiraHeaders(base64),
         body: JSON.stringify(data)
     })
 
@@ -143,7 +140,7 @@ export async function markSubtaskAsDone(issueKey: string, uuidSlice8: string, su
     try {
         // Get epic JSON data
         const epic = await getIssue(issueKey).catch(e => { throw Error(e.message) })
-        
+
         // Find the task including the first 10 chars of the spcimen uuid in the summary
         const task = getTaskFromEpic(epic, uuidSlice8)
 
