@@ -3,20 +3,12 @@
  * @fileoverview database queries used throughout the application
  */
 
-//import { PrismaClient } from "@prisma/client"
+// Imports
 import { model } from "@prisma/client";
 import prisma from '@/utils/prisma'
 
-//const prisma = new PrismaClient()
-
-export function prismaClient() {
-  return prisma
-}
-
-interface modelSubmitProps {
-  email: string,
-  artistName: string
-}
+// Singleton prisma export
+export function prismaClient() { return prisma }
 
 /**
  * @function getModelUid
@@ -332,31 +324,26 @@ export const approveModel = async (confirmation: string,) => {
 };
 
 /**
- * @function getSpecimenWithoutPhotos
- * @description returns an object array of all specimens since 6/20/2024 that do not have corresponding image_set data
+ * @function getModelerSpecimen
+ * @description returns an object with two arrays; one containing specimen objects to be photographed, the other containing speicmen objects that need to be modeled
  * 
  */
-export const getSpecimenWithoutPhotos = async () => {
-  let filteredSpecimen = []
+export const getModelerSpecimen = async () => {
+
+  const specimenToBePhotographed = []
+  const specimenToBeModeled = []
 
   const specimen = await prisma.specimen.findMany({
-    where: {
-      spec_acquis_date: {
-        gte: new Date('2024-06-01')
-      }
-    },
-    include: {
-      image_set: true
-    }
+    where: { spec_acquis_date: { gte: new Date('2024-06-01') } },
+    include: { image_set: true }
   })
 
   for (let i in specimen) {
-    if (specimen[i].image_set.length === 0) {
-      filteredSpecimen.push(specimen[i])
-    }
+    if (specimen[i].image_set.length === 0) specimenToBePhotographed.push(specimen[i])
+    else if (!specimen[i].image_set[0].uid) specimenToBeModeled.push(specimen[i])
   }
 
-  return filteredSpecimen
+  return { specimenToBePhotographed, specimenToBeModeled }
 }
 
 /**
@@ -816,7 +803,7 @@ export const updateCommunityId = async (confirmation: string, id: number) => {
 
   const update = await prisma.userSubmittal.update({
     where: { confirmation: confirmation },
-    data:{communityId: id}
+    data: { communityId: id }
   })
   return update
 }

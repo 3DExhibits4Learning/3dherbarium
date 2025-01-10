@@ -6,7 +6,7 @@ export default function DataTransferModal(props: { open: boolean, transferring: 
     const { onOpenChange } = useDisclosure();
     return (
         <>
-            <Modal isOpen={props.open} onOpenChange={onOpenChange} isDismissable={false} hideCloseButton isKeyboardDismissDisabled={true}>
+            <Modal isOpen={props.open} onOpenChange={onOpenChange} isDismissable={false} hideCloseButton isKeyboardDismissDisabled={true} className="relative z-50">
                 <ModalContent>
                     {(onClose) => (
                         <>

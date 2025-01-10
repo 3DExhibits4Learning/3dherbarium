@@ -8,30 +8,28 @@
 
 // Typical imports
 import { imageInsertion } from "@/api/types"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import { markSubtaskAsDone } from "@/functions/server/jira"
+import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
-import sendErrorEmail from "@/functions/server/Jira/sendErrorEmail"
 import prisma from "@/utils/prisma"
-import createTask from "@/functions/server/Jira/createTask"
-import markIssueAsDone from "@/functions/server/Jira/markIssueAsDone"
 
 // Path
 const path = 'src/app/api/admin/modeler/photos/route.tsx'
 
 /**
  * @param request Request
- * @returns 
+ * @returns typical response
  */
 export async function POST(request: Request) {
 
     try {
-        
+
         // Get request data
         const images = await request.json().catch(e => routeHandlerErrorHandler(path, e.message, "request.json()", "Couldn't get request JSON")) as imageInsertion
-        
+
         // Create image set record
         const insert = await prisma.image_set.create({
             data: {
@@ -40,17 +38,17 @@ export async function POST(request: Request) {
                 set_no: 1,
                 imaged_by: images.imagedBy,
                 imaged_date: new Date(images.imagedDate),
-                no_of_images: parseInt(images.numberOfImages)
+                no_of_images: parseInt(images.numberOfImages),
+                sid: images.sid
             }
         }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.image_set.create()", "Couldn't create image set record in database"))
 
         // Jira task management
-        await markIssueAsDone('HERB-59', `Photograph ${toUpperFirstLetter(images.species)}`).catch((e: any) => sendErrorEmail(e.message, `Mark Photograph ${toUpperFirstLetter(images.species)} as done`))
-        const task = await createTask('HERB-59', `Model ${toUpperFirstLetter(images.species)}`, `Model ${toUpperFirstLetter(images.species)}`, process.env.HUNTER_JIRA_ID as string).catch((e: any) => sendErrorEmail(e.message, `Create task: Model ${toUpperFirstLetter(images.species)}`))
+        await markSubtaskAsDone('SPRIN-4', images.sid.slice(0, 8), "Photograph").catch(e => sendErrorEmail(path, 'markSubtaskAsDone', e.message, true))
 
         // Typical response
-        return routeHandlerTypicalResponse("Image Data Entered Successfully", {insert, task})
+        return routeHandlerTypicalResponse("Image Data Entered Successfully", insert)
     }
     // Typical catch
-    catch (e: any) { return routeHandlerTypicalCatch(e.message)}
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

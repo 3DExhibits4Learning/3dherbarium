@@ -9,7 +9,6 @@
 // Typical imports
 import { useState, useEffect, useContext, SetStateAction, Dispatch } from "react"
 import { Button } from "@nextui-org/react"
-import { specimenInsertion } from "@/api/types"
 import { dataTransfer, ModelerContext } from "./Modeler/ModelerDash"
 import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared"
@@ -52,20 +51,9 @@ export default function NewSpecimenEntry() {
     // Specimen insertion handeler
     const insertSpecimenHandler = async () => {
 
-        // Specimen insertion object
-        // const insertObj: specimenInsertion = {
-        //     species: species,
-        //     acquisitionDate: acquisitionDate as string,
-        //     procurer: procurer,
-        //     isLocal: isLocal as boolean,
-        //     genus: genus,
-        //     height: height,
-        //     locality: locality,
-        //     photo: (file as FileList)[0] as File,
-        //     position: position as LatLngLiteral
-        // }
-
+        // Create and set form data
         const data = new FormData()
+
         data.set('species', species)
         data.set('acquisitionDate', acquisitionDate as string)
         data.set('procurer', procurer as string)
@@ -80,9 +68,8 @@ export default function NewSpecimenEntry() {
         await dataTransferHandler(initializeTransfer, terminateTransfer, insertSpecimenIntoDatabase, [data], 'Entering specimen into database')
     }
 
+    // Button enabler
     useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, isLocal, position, height, locality, file], setDisabled))
-
-    if(file)console.log((file as FileList)[0])
 
     return (
         <section className="w-full flex justify-center">
@@ -95,7 +82,7 @@ export default function NewSpecimenEntry() {
                 <YesOrNo value={isLocal} setValue={setIsLocal} title='Native species?' required />
                 <DateInput value={acquisitionDate} setValue={setAcquisitionDate} title="Date acquired" required />
                 <TextInput value={height} setValue={setHeight} title='Specimen height (cm)' required type='number' textSize="text-2xl" maxWidth="max-w-[250px]" />
-                <MapToSetLocation position={position} setPosition={setPosition} title mapSize='h-[400px] w-[400px]' required/>
+                <MapToSetLocation position={position} setPosition={setPosition} title mapSize='h-[400px] ww-[400px]' required/>
                 <TextArea value={locality} setValue={setLocality} title='Describe locality (scenery, landmarks, adjacent species, etc.)' required />
                 <div>
                     <Button isDisabled={disabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertSpecimenHandler}>

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react"
 export default function DateInput (props:{value: string | undefined, setValue:Dispatch<SetStateAction<string | undefined>>, title?: string, required?: boolean}){
     return (
         <>
-            <div className="mb-6">
+            <div className="mb-8">
             {
                 props.title && 
                 <p className={`text-2xl mb-2`}>{props.title}

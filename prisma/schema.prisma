@@ -59,6 +59,7 @@ model common_names {
 
 model image_set {
   spec_name        String   @db.VarChar(100)
+  sid              String   @default("") @db.VarChar(36)
   spec_acquis_date DateTime @db.Date
   set_no           Int      @db.TinyInt
   imaged_by        String   @db.VarChar(25)
@@ -78,6 +79,7 @@ model image_set {
 
 model model {
   uid                 String        @id @db.VarChar(100)
+  sid                 String        @default("") @db.VarChar(36)
   spec_name           String        @db.VarChar(100)
   spec_acquis_date    DateTime      @db.Date
   modeled_by          String        @db.VarChar(25)
@@ -158,7 +160,7 @@ model species {
 }
 
 model specimen {
-  sid              String      @default("") @db.VarChar(36)
+  sid              String      @default(uuid()) @db.VarChar(36)
   spec_name        String      @db.VarChar(100)
   spec_acquis_date DateTime    @db.Date
   procurer         String      @db.VarChar(25)

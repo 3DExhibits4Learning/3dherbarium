@@ -8,6 +8,11 @@ import { specimen, annotations, photo_annotation, video_annotation, userSubmitta
 import { LatLngLiteral } from "leaflet";
 import Herbarium from "@/utils/HerbariumClass";
 
+export interface dataTransfer{
+  initializeDataTransferHandler: Function 
+  terminateDataTransferHandler: Function
+}
+
 export interface action {
   type: string
 }
@@ -290,18 +295,21 @@ export interface specimenInsertion extends modelerInsertion {
   photo: File
 }
 
-export interface imageInsertion extends modelerInsertion {
-  imagedBy: string,
-  imagedDate: string,
+export interface imageInsertion {
+  sid: string
+  species: string
+  acquisitionDate: Date
+  imagedBy: string
+  imagedDate: string
   numberOfImages: string
 }
 
-export interface modelInsertion extends modelerInsertion {
-  commonName: string,
-  uid: string,
-  modeler: string,
-  isViable: string,
-  isBase: string
+export interface modelInsertion{
+  sid: string
+  commonName: string
+  modeler: string
+  isViable: boolean
+  isBase: boolean
 }
 
 export interface specimenWithImageSet extends specimen {
