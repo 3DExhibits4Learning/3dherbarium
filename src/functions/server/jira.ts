@@ -1,7 +1,7 @@
 /**
  * @file src\functions\server\jira.ts
  * 
- * @fileoverview jira api project management logic file
+ * @fileoverview jira api project management logic
  */
 
 /**
@@ -53,8 +53,7 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
 
     const transition = await fetch(`https://3dteam.atlassian.net/rest/api/3/issue/${issueKey}/transitions`, {
         method: 'POST',
-        //@ts-ignore
-        headers: getJiraHeaders(base64),
+        headers: getJiraHeaders(base64) as unknown as HeadersInit,
         body: JSON.stringify({ transition: { id: transitionId } })
     })
 
@@ -69,13 +68,11 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
  */
 export const getIssue = async (issueKey: string) => {
 
+    // Get api key, get epi
     const base64 = getBase64ApiKey()
+    const epic = await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = ${issueKey}`, { headers: getJiraHeaders(base64) as unknown as HeadersInit })
 
-    const epic = await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = ${issueKey}`, {
-        //@ts-ignore
-        headers: getJiraHeaders(base64),
-    })
-
+    // Throw error on bad request; return epic
     if (!epic.ok) { throw Error(epic.statusText) }
     else return await epic.json().then(json => json).catch(e => { throw Error(e.message) })
 }
@@ -90,8 +87,7 @@ export const jiraTaskFetch = async (data: any) => {
 
     const taskFetch = await fetch('https://3dteam.atlassian.net/rest/api/3/issue', {
         method: 'POST',
-        //@ts-ignore
-        headers: getJiraHeaders(base64),
+        headers: getJiraHeaders(base64) as unknown as HeadersInit,
         body: JSON.stringify(data)
     })
 

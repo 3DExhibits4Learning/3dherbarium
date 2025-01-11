@@ -13,7 +13,7 @@ import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
 import { modelInsertion, specimenWithImageSet, dataTransfer } from "@/api/types"
 import { buttonEnable } from "@/functions/client/shared";
-import { insertModelIntoDatabase } from "@/functions/client/admin/modeler"
+import { insertModelIntoDatabase, setImageSource } from "@/functions/client/admin/modeler"
 
 // Default imports
 import Form from "@/components/Shared/Form"
@@ -31,16 +31,22 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     const initializeTransfer = context.initializeDataTransferHandler
     const terminateTransfer = context.terminateDataTransferHandler
 
-    // Form field states; entry button state
+    // Form field states
     const [commonName, setCommonName] = useState<string>('')
     const [modeler, setModeler] = useState<string>('Hunter Phillips')
     const [isViable, setIsViable] = useState<boolean>(false)
     const [isBase, setIsBase] = useState<boolean>(true)
     const [model, setModel] = useState<File>()
+
+    // Image source, button state
+    const [imgSrc, setImgSrc] = useState<any>()
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
     const requiredValues = [commonName, modeler, model]
+
+    // Async fn wrapper for effect
+    const imgSrcWrapper = () => { setImageSource(setImgSrc, props.specimen.photoUrl.slice(6)) }
 
     // Model data insertion handeler
     const insertModelDataHandler = async () => {
@@ -61,18 +67,20 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     // Button enabler effect
     useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
 
+    useEffect(() => imgSrcWrapper(), [])
+
     return (
         <section className="flex justify-center w-full">
             <Form width='w-4/5'>
                 <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
                 <div className="w-full h-2/5 mb-8 max-h-[300px]">
-                    <img className='h-full w-full' src={props.specimen.photoUrl.slice(6)} alt={`Photo of ${props.specimen.spec_name}`} />
+                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} />
                 </div>
                 <TextInput value={modeler} setValue={setModeler} title='3D Modeler' required textSize="text-2xl" />
                 <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
                 <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required />
-                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo/>
-                <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8"/>
+                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo />
+                <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
                 <div>
                     <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>
                         Enter 3D Model into Database

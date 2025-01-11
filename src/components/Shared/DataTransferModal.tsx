@@ -43,5 +43,5 @@ export default function DataTransferModal(props: { open: boolean, transferring: 
                 </ModalContent>
             </Modal>
         </>
-    );
+    )
 }

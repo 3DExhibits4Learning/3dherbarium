@@ -19,7 +19,6 @@ const path = 'src/app/api/nfs/route.tsx'
 export async function GET(request: Request) {
 
     try {
-
         // Get path, else throw error
         const { searchParams } = new URL(request.url)
         if(!searchParams.get('path')) throw Error('Path missing')
@@ -30,7 +29,6 @@ export async function GET(request: Request) {
         // Return response w/ buffer
         return new Response(fileBuffer, { status: 200 })
     }
-
     // Typical catch
     catch (e: any) {return routeHandlerTypicalCatch(e.message)}
 }

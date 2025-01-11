@@ -12,7 +12,7 @@ import { useState, useContext, useEffect } from "react"
 import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
 import { imageInsertion, specimenWithImageSet, dataTransfer } from "@/api/types"
-import { insertImageSetIntoDatabase } from "@/functions/client/admin/modeler"
+import { insertImageSetIntoDatabase, setImageSource } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared";
 
 // Default imports
@@ -35,9 +35,13 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
     const [photographer, setPhotographer] = useState<string>('')
     const [numberOfImages, setNumberOfImages] = useState<string>('')
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
+    const [imgSrc, setImgSrc] = useState<any>()
 
     // Required values
     const requiredValues = [photographer, photographyDate, numberOfImages]
+
+    // Async fn wrapper for effect
+    const imgSrcWrapper = () => { setImageSource(setImgSrc, props.specimen.photoUrl.slice(6)) }
 
     // Specimen insertion handeler
     const insertImageDataHandler = async () => {
@@ -58,23 +62,24 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
 
     // Button enabler effect
     useEffect(() => buttonEnable([photographer, photographyDate, numberOfImages], setIsDisabled), [requiredValues])
+    useEffect(() => imgSrcWrapper(), [])
 
     return (
         <section className="flex justify-center w-full">
-        <Form width='w-4/5'>
-            <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
-            <div className="w-full h-2/5 mb-8">
-                <img className='h-full w-full' src={props.specimen.photoUrl.slice(6)} alt={`Photo of ${props.specimen.spec_name}`} />
-            </div>
-            <DateInput value={photographyDate} setValue={setPhotograpyDate} title='Photography Date' required />
-            <TextInput value={photographer} setValue={setPhotographer} title='Photographer' required textSize="text-2xl"/>
-            <TextInput value={numberOfImages} setValue={setNumberOfImages} title='Number of Images' required type='number' textSize="text-2xl" />
-            <div>
-                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertImageDataHandler}>
-                    Enter Image Set into Database
-                </Button>
-            </div>
-        </Form>
+            <Form width='w-4/5'>
+                <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
+                <div className="w-full h-2/5 mb-8">
+                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} />
+                </div>
+                <DateInput value={photographyDate} setValue={setPhotograpyDate} title='Photography Date' required />
+                <TextInput value={photographer} setValue={setPhotographer} title='Photographer' required textSize="text-2xl" />
+                <TextInput value={numberOfImages} setValue={setNumberOfImages} title='Number of Images' required type='number' textSize="text-2xl" />
+                <div>
+                    <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertImageDataHandler}>
+                        Enter Image Set into Database
+                    </Button>
+                </div>
+            </Form>
         </section>
     )
 }

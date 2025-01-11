@@ -129,7 +129,7 @@ export async function POST(request: Request) {
             await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
 
             // Typical response
-            return routeHandlerTypicalResponse('Model Data Entered Successfully', task)
+            return routeHandlerTypicalResponse('Model Data Entered Successfully', { task, insert, update })
         }
         // Typical response without task
         return routeHandlerTypicalResponse('Model Data Entered Successfully', { insert, update })
