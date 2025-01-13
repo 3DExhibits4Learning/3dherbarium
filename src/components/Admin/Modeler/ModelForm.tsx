@@ -11,7 +11,7 @@ import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { useState, useContext, useEffect, SetStateAction, Dispatch } from "react"
 import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
-import { modelInsertion, specimenWithImageSet, dataTransfer } from "@/api/types"
+import { specimenWithImageSet, dataTransfer } from "@/api/types"
 import { buttonEnable } from "@/functions/client/shared";
 import { insertModelIntoDatabase, setImageSource } from "@/functions/client/admin/modeler"
 
@@ -39,14 +39,12 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     const [model, setModel] = useState<File>()
 
     // Image source, button state
-    const [imgSrc, setImgSrc] = useState<any>()
+    const url = props.specimen.photoUrl.slice(6)
+    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? (url.slice(6)) : `/api/nfs?url=${url.slice(6)}`
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
     const requiredValues = [commonName, modeler, model]
-
-    // Async fn wrapper for effect
-    const imgSrcWrapper = () => { setImageSource(setImgSrc, props.specimen.photoUrl.slice(6)) }
 
     // Model data insertion handeler
     const insertModelDataHandler = async () => {
@@ -66,8 +64,6 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
 
     // Button enabler effect
     useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
-
-    useEffect(() => imgSrcWrapper(), [])
 
     return (
         <section className="flex justify-center w-full">
