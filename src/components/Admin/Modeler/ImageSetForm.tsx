@@ -36,7 +36,7 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
     const [numberOfImages, setNumberOfImages] = useState<string>('')
 
     // Image source, button state
-    const url = props.specimen.photoUrl.slice(6)
+    const url = props.specimen.photoUrl
     const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? url : `/api/nfs?url=${url}`
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
