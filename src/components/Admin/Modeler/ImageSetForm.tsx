@@ -34,14 +34,14 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
     const [photographyDate, setPhotograpyDate] = useState<string>()
     const [photographer, setPhotographer] = useState<string>('')
     const [numberOfImages, setNumberOfImages] = useState<string>('')
+
+    // Image source, button state
+    const url = props.specimen.photoUrl.slice(6)
+    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? (url.slice(6)) : `/api/nfs?url=${url.slice(6)}`
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
-    const [imgSrc, setImgSrc] = useState<any>()
 
     // Required values
     const requiredValues = [photographer, photographyDate, numberOfImages]
-
-    // Async fn wrapper for effect
-    const imgSrcWrapper = () => { setImageSource(setImgSrc, props.specimen.photoUrl.slice(6)) }
 
     // Specimen insertion handeler
     const insertImageDataHandler = async () => {
@@ -62,7 +62,6 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
 
     // Button enabler effect
     useEffect(() => buttonEnable([photographer, photographyDate, numberOfImages], setIsDisabled), [requiredValues])
-    useEffect(() => imgSrcWrapper(), [])
 
     return (
         <section className="flex justify-center w-full">
