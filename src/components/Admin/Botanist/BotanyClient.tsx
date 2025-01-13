@@ -1,7 +1,7 @@
 'use client'
 
 import { Accordion, AccordionItem } from "@nextui-org/react"
-import { useEffect, useState, useRef, useDebugValue } from "react"
+import { useEffect, useState, useRef } from "react"
 import { model } from "@prisma/client"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import AnnotationEntry from "./AnnotationEntry"
@@ -13,6 +13,11 @@ import BotanistRefWrapper from "./BotanistModelViewerRef"
 import AreYouSure from "../../Shared/AreYouSure"
 import { Spinner } from "@nextui-org/react"
 import NewSpecimenEntry from "../NewSpecimenEntry"
+import DataTransferModal from "@/components/Shared/DataTransferModal"
+import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
+import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
+import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
+import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 
@@ -33,6 +38,17 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     const [activeAnnotationTitle, setActiveAnnotationTitle] = useState<string>()
     const [annotationSavedOrDeleted, setAnnotationSavedOrDeleted] = useState<boolean>(false)
     const [modalOpen, setModalOpen] = useState<boolean>(false)
+
+    // Data transfer states
+    const [openModal, setOpenModal] = useState<boolean>(false)
+    const [transferring, setTransferring] = useState<boolean>(false)
+    const [result, setResult] = useState<string>('')
+    const [loadingLabel, setLoadingLabel] = useState<string>('')
+
+    // Initialize/terminate data transfer handlers
+    const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
+    const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
+
 
     const modelClicked = useRef<boolean>()
     const newAnnotationEnabled = useRef<boolean>(false)
@@ -99,10 +115,11 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
     return (
         <>
+            <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
             <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} species={specimenName as string} />
             <Accordion className="w-full">
                 <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <NewSpecimenEntry />
+                    <NewSpecimenEntry initializeTransfer={initializeDataTransferHandler} terminateTransfer={terminateDataTransferHandler} />
                 </AccordionItem>
             </Accordion>
             <div className="flex w-full h-full">

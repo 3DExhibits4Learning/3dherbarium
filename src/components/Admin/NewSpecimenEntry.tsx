@@ -30,12 +30,12 @@ import PhotoInput from "../Shared/Form Fields/PhotoInput"
 const MapToSetLocation = dynamic(() => import('../Map/MapToSetLocation'), { ssr: false })
 
 // Main JSX
-export default function NewSpecimenEntry() {
+export default function NewSpecimenEntry(props:{initializeTransfer?: Function, terminateTransfer?: Function}) {
 
     // Data transfer context
     const context = useContext(ModelerContext) as dataTransfer
-    const initializeTransfer = context.initializeDataTransferHandler
-    const terminateTransfer = context.terminateDataTransferHandler
+    const initializeTransfer = props.initializeTransfer ? props.initializeTransfer : context.initializeDataTransferHandler 
+    const terminateTransfer = props.terminateTransfer ? props.terminateTransfer : context.terminateDataTransferHandler
 
     // Form field states
     const [genus, setGenus] = useState<string>('')
