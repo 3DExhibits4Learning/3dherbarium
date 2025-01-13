@@ -40,7 +40,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
 
     // Image source, button state
     const url = props.specimen.photoUrl.slice(6)
-    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? (url.slice(6)) : `/api/nfs?url=${url.slice(6)}`
+    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? url : `/api/nfs?url=${url}`
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
