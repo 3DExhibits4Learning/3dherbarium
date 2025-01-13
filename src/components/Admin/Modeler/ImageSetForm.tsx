@@ -37,7 +37,7 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
 
     // Image source, button state
     const url = props.specimen.photoUrl
-    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? url : `/api/nfs?url=${url}`
+    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? url : `/api/nfs?path=${url}`
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
@@ -68,7 +68,7 @@ export default function ImageSetForm(props: { specimen: specimenWithImageSet }) 
             <Form width='w-4/5'>
                 <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
                 <div className="w-full h-2/5 mb-8">
-                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} />
+                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`}/>
                 </div>
                 <DateInput value={photographyDate} setValue={setPhotograpyDate} title='Photography Date' required />
                 <TextInput value={photographer} setValue={setPhotographer} title='Photographer' required textSize="text-2xl" />
