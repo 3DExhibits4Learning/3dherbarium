@@ -43,6 +43,6 @@ export const insertImageSetIntoDatabase = async (imageSetInsertData: imageInsert
  * @param url photo url
  */
 export const setImageSource = async (setImgSrc: Dispatch<SetStateAction<any>>, url: string) => {
-    if (process.env.NEXT_PUBLIC_LOCAL) setImgSrc(await fetch(`/api/nfs?url=${url.slice(6)}`))
+    if (!process.env.NEXT_PUBLIC_LOCAL) setImgSrc(await fetch(`/api/nfs?url=${url.slice(6)}`))
     else setImgSrc(url.slice(6))
 }
