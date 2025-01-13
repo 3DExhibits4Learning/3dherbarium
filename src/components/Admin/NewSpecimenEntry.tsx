@@ -9,10 +9,11 @@
 // Typical imports
 import { useState, useEffect, useContext, SetStateAction, Dispatch } from "react"
 import { Button } from "@nextui-org/react"
-import { dataTransfer, ModelerContext } from "./Modeler/ModelerDash"
+import { ModelerContext } from "./Modeler/ModelerDash"
 import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared"
 import { LatLngLiteral } from "leaflet"
+import { dataTransfer } from "@/api/types"
 
 // Default imports
 import TextInput from "../Shared/Form Fields/TextInput"

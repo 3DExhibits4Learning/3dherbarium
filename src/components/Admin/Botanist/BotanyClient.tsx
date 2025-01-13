@@ -12,6 +12,7 @@ import { fullAnnotation } from "@/api/types"
 import BotanistRefWrapper from "./BotanistModelViewerRef"
 import AreYouSure from "../../Shared/AreYouSure"
 import { Spinner } from "@nextui-org/react"
+import NewSpecimenEntry from "../NewSpecimenEntry"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 
@@ -69,7 +70,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     }, [activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
-        
+
         // Set relevant model data; this is called onPress of the Accordion
         const getAnnotationsObj = async () => {
             const modelAnnotations = await ModelAnnotations.retrieve(uid as string)
@@ -99,6 +100,11 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     return (
         <>
             <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} species={specimenName as string} />
+            <Accordion className="w-full">
+                <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                    <NewSpecimenEntry />
+                </AccordionItem>
+            </Accordion>
             <div className="flex w-full h-full">
                 <section className="h-full w-1/5">
 
@@ -128,7 +134,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                                     {
                                         firstAnnotationPosition === undefined && uid && !activeAnnotation &&
                                         <div className="h-[400px] w-full flex justify-center">
-                                            <Spinner label='Loading Annotations' size="lg"/>
+                                            <Spinner label='Loading Annotations' size="lg" />
                                         </div>
                                     }
 
