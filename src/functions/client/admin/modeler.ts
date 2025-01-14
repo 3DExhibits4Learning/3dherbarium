@@ -39,10 +39,7 @@ export const insertImageSetIntoDatabase = async (imageSetInsertData: imageInsert
 
 /**
  * 
- * @param setImgSrc function to set state of image source
- * @param url photo url
+ * @param subtasks 
+ * @returns 
  */
-export const setImageSource = async (setImgSrc: Dispatch<SetStateAction<any>>, url: string) => {
-    if (!process.env.NEXT_PUBLIC_LOCAL) setImgSrc(await fetch(`/api/nfs?url=${url.slice(6)}`))
-    else setImgSrc(url.slice(6))
-}
+export const countCompletedSubtasks = (subtasks: any[]) => { var count = 0; for (let i in subtasks) { if (subtasks[i].fields.status.name === 'Done') count++ }; return count }

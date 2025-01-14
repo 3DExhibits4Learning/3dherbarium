@@ -19,12 +19,13 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import ImageSetForms from "./ImageSetForms"
 import ModelForms from "./ModelForms"
+import Tasks from "../Tasks/Tasks"
 
 // Exported context
 export const ModelerContext = createContext<'' | dataTransfer>('')
 
 // Main JSX
-export default function ModelerDash(props: { unphotographedSpecimen: specimenWithImageSet[], unModeledSpecimen: specimenWithImageSet[] }) {
+export default function ModelerDash(props: { unphotographedSpecimen: specimenWithImageSet[], unModeledSpecimen: specimenWithImageSet[], epic: any }) {
 
     // Data transfer states
     const [openModal, setOpenModal] = useState<boolean>(false)
@@ -37,22 +38,27 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
 
     // Context
-    const modelerContext = {initializeDataTransferHandler, terminateDataTransferHandler}
+    const modelerContext = { initializeDataTransferHandler, terminateDataTransferHandler }
 
     return (
         <ModelerContext.Provider value={modelerContext}>
             <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/modeler' />
-            <Accordion>
-                <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <NewSpecimenEntry />
-                </AccordionItem>
-                <AccordionItem key={'newImageSet'} aria-label={'New Image Set'} title={"I've photographed a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <ImageSetForms specimen={props.unphotographedSpecimen}/>
-                </AccordionItem>
-                <AccordionItem key={'new3DModel'} aria-label={'New Image Set'} title={"I've created a new 3D Model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <ModelForms specimen={props.unModeledSpecimen}/>
-                </AccordionItem>
-            </Accordion>
+            <section className="w-full flex">
+                <Accordion className="w-4/5 overflow-y-auto">
+                    <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                        <NewSpecimenEntry />
+                    </AccordionItem>
+                    <AccordionItem key={'newImageSet'} aria-label={'New Image Set'} title={"I've photographed a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                        <ImageSetForms specimen={props.unphotographedSpecimen} />
+                    </AccordionItem>
+                    <AccordionItem key={'new3DModel'} aria-label={'New Image Set'} title={"I've created a new 3D Model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                        <ModelForms specimen={props.unModeledSpecimen} />
+                    </AccordionItem>
+                </Accordion>
+                <div className="w-1/5 h-full flex border-l-2 border-[#004C46]">
+                    <Tasks epic={props.epic}/>
+                </div>
+            </section>
         </ModelerContext.Provider>
     )
 }

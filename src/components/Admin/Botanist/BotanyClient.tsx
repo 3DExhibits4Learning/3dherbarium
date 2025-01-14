@@ -14,10 +14,8 @@ import AreYouSure from "../../Shared/AreYouSure"
 import { Spinner } from "@nextui-org/react"
 import NewSpecimenEntry from "../NewSpecimenEntry"
 import DataTransferModal from "@/components/Shared/DataTransferModal"
-import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
-import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 

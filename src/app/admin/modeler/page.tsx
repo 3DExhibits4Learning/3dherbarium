@@ -2,6 +2,8 @@
  * @file src\app\admin\modeler\page.tsx
  * 
  * @fileoverview server component for 3D modeler admin
+ * 
+ * @todo add try catch
  */
 
 import { getModelerSpecimen } from "@/api/queries";
@@ -9,6 +11,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getAdmin } from "@/api/queries";
 import { authed } from "@prisma/client";
+import { getIssue } from "@/functions/server/jira";
 
 import Header from "@/components/Header/Header";
 import Foot from "@/components/Shared/Foot";
@@ -26,12 +29,13 @@ export default async function Page() {
     }
 
     const modelerSpecimen = await getModelerSpecimen()
+    const epic = await getIssue('SPRIN-4')
 
     return (
         <>
             <Header pageRoute="/collections" headerTitle='3D Model Admin' />
-            <section className="flex min-h-[calc(100vh-177px)]">
-                <ModelerDash unphotographedSpecimen={modelerSpecimen.specimenToBePhotographed} unModeledSpecimen={modelerSpecimen.specimenToBeModeled} />
+            <section className="flex min-h-[calc(100vh-177px)] h-[calc(100vh-177px)]">
+                <ModelerDash unphotographedSpecimen={modelerSpecimen.specimenToBePhotographed} unModeledSpecimen={modelerSpecimen.specimenToBeModeled} epic={epic}/>
             </section>
             <Foot />
         </>

@@ -3,13 +3,14 @@
  * @fileoverview contains the type definitions of the API calls used throughout the application.
  */
 
-import { Dispatch, SetStateAction, ReactElement } from "react";
-import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client";
-import { LatLngLiteral } from "leaflet";
-import Herbarium from "@/utils/HerbariumClass";
+import { Dispatch, SetStateAction, ReactElement } from "react"
+import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client"
+import { LatLngLiteral } from "leaflet"
 
-export interface dataTransfer{
-  initializeDataTransferHandler: Function 
+import Herbarium from "@/utils/HerbariumClass"
+
+export interface dataTransfer {
+  initializeDataTransferHandler: Function
   terminateDataTransferHandler: Function
 }
 
@@ -304,7 +305,7 @@ export interface imageInsertion {
   numberOfImages: string
 }
 
-export interface modelInsertion{
+export interface modelInsertion {
   sid: string
   commonName: string
   modeler: string
