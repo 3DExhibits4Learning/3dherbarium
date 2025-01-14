@@ -1,35 +1,61 @@
+/**
+ * @file src/components/Admin/Tasks/SubtaskButtons.tsx
+ * 
+ * @fileoverview subtask button
+ */
 'use client'
 
+// Typical imports
 import { Button } from "@nextui-org/react"
-import { transitionIssue } from "@/functions/server/jira"
 import { useContext } from "react"
 import { ModelerContext } from "../Modeler/ModelerDash"
 import { dataTransfer } from "@/api/types"
+import { isIssueAutoMarkedDone, transitionIssue } from "@/functions/client/admin/modeler"
 
+// Default imports
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
-export default function SubtaskButton(props: { status: string, issueKey: string }) {
-
-    // Variable declaration
-    var button
-    var transitionId: number
-
-    // Determine transition ID, button string
-    if (props.status === 'To Do') { button = "Mark as 'In Progress'"; transitionId = 21 }
-    else if (props.status === 'In Progress') { button = "Mark as 'Done'"; transitionId = 31 }
-    else if (props.status === 'Done') { button = "Mark as 'In Progress'"; transitionId = 21 }
+export default function SubtaskButton(props: { status: string, issueKey: string, summary: string }) {
 
     // Data transfer context
     const context = useContext(ModelerContext) as dataTransfer
     const initializeTransfer = context.initializeDataTransferHandler
     const terminateTransfer = context.terminateDataTransferHandler
-    const transitionHandler = () => dataTransferHandler(initializeTransfer, terminateTransfer, transitionIssue, [transitionId, props.issueKey], 'Updating issue status')
+
+    // Transition handler
+    const transitionHandler = (transitionId: number) => dataTransferHandler(initializeTransfer, terminateTransfer, transitionIssue, [transitionId, props.issueKey], 'Updating issue status')
 
     return (
         <section className="flex">
-            <div>
-                <Button onPress={() => transitionIssue(transitionId, props.issueKey)}>{button}</Button>
-            </div>
+            {
+                props.status === 'To Do' &&
+                <div>
+                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
+                </div>
+            }
+            {
+                props.status === 'In Progress' && isIssueAutoMarkedDone(props.summary) &&
+                <div>
+                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
+                </div>
+            }
+            {
+                props.status === 'In Progress' && !isIssueAutoMarkedDone(props.summary) &&
+                <section className="flex w-full justify-around">
+                    <div>
+                        <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
+                    </div>
+                    <div>
+                        <Button size='sm' className="text-sm" onPress={() => transitionHandler(31)}>{"Mark as 'Done'"}</Button>
+                    </div>
+                </section>
+            }
+            {
+                props.status === 'Done' && !isIssueAutoMarkedDone(props.summary) &&
+                <div>
+                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
+                </div>
+            }
         </section>
     )
 }

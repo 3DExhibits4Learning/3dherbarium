@@ -58,7 +58,7 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
     })
 
     if (!transition.ok) { throw Error(transition.statusText) }
-    // else return await transition.json().then(json => json).catch(e => { throw Error(e.message) })
+    return transition
 }
 
 /**

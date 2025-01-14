@@ -43,3 +43,31 @@ export const insertImageSetIntoDatabase = async (imageSetInsertData: imageInsert
  * @returns 
  */
 export const countCompletedSubtasks = (subtasks: any[]) => { var count = 0; for (let i in subtasks) { if (subtasks[i].fields.status.name === 'Done') count++ }; return count }
+
+/**
+ * 
+ * @param summary 
+ * @returns 
+ */
+export const isIssueAutoMarkedDone = (summary: string) => summary.includes('Build') || summary.includes('Photograph') || summary.includes('Annotate') ? true : false
+
+/**
+ * 
+ * @param transitionId 
+ * @returns 
+ */
+export const transitionIssue = async (transitionId: number, issueKey: string) => await fetch('/api/issues/transition', {
+    method: 'POST',
+    body: JSON.stringify({ issueKey: issueKey, transitionId: transitionId })
+}).then(res => res.text()).then(text => text)
+
+/**
+ * 
+ * @param subtasks 
+ */
+export const arrangeSubtasks = (subtasks: any[]) => {
+    const orderedSubtasks = subtasks.filter((task: any) => task.fields.summary.includes('Photograph'))
+    orderedSubtasks.push(subtasks.find((task: any) => task.fields.summary.includes('Convert')))
+    orderedSubtasks.push(subtasks.find((task: any) => task.fields.summary.includes('Build')))
+    return orderedSubtasks
+}
