@@ -11,7 +11,7 @@ import { prismaClient } from "@/api/queries"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { ModelUploadResponse } from "@/api/types"
-import { markSubtaskAsDone } from "@/functions/server/jira"
+import { markSubtaskAsDone, transitionTask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 import { createTask } from "@/functions/server/jira"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
@@ -107,8 +107,9 @@ export async function POST(request: Request) {
         // Await transaction
         await prisma.$transaction([insert, update]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
 
-        // Mark 3D model subtask as complete
-        await markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build").catch(e => sendErrorEmail(path, 'markSubtaskAsDone', e.message, true))
+        // Mark 3D model subtask as complete and the parent model task as complete
+        await Promise.all([markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build"), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
+            .catch(e => sendErrorEmail(path, 'Promise.all(markSubtask, transitionTask)', e.message, true))
 
         // Create annotation task if the model is viable
         if (isViable === 'yes') {
@@ -124,7 +125,7 @@ export async function POST(request: Request) {
             // Subtasks (annotation and sketchfab metadata)
             const subTasks = [
                 createTask(task.key, `Add metadata for ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Add metadata for ${imageSet.spec_name}`, katJira, 'Subtask'),
-                createTask(task.key, `Annotate ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Annotate ${imageSet.spec_name}`, katJira, 'Subtask')
+                createTask(task.key, `Annotate ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Annotate ${imageSet.spec_name}`, katJira, 'Subtask'),
             ]
             await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
 

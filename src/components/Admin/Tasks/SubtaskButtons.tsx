@@ -23,38 +23,28 @@ export default function SubtaskButton(props: { status: string, issueKey: string,
     const terminateTransfer = context.terminateDataTransferHandler
 
     // Transition handler
-    const transitionHandler = (transitionId: number) => dataTransferHandler(initializeTransfer, terminateTransfer, transitionIssue, [transitionId, props.issueKey], 'Updating issue status')
+    const transitionHandler = (transitionId: number) => dataTransferHandler(initializeTransfer, terminateTransfer, transitionIssue, [transitionId, props.issueKey], 'Updating subtask status')
 
     return (
         <section className="flex">
             {
                 props.status === 'To Do' &&
-                <div>
-                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
-                </div>
+                <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
             }
             {
                 props.status === 'In Progress' && isIssueAutoMarkedDone(props.summary) &&
-                <div>
-                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
-                </div>
+                <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
             }
             {
                 props.status === 'In Progress' && !isIssueAutoMarkedDone(props.summary) &&
                 <section className="flex w-full justify-around">
-                    <div>
-                        <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
-                    </div>
-                    <div>
-                        <Button size='sm' className="text-sm" onPress={() => transitionHandler(31)}>{"Mark as 'Done'"}</Button>
-                    </div>
+                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
+                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(31)}>{"Mark as 'Done'"}</Button>
                 </section>
             }
             {
                 props.status === 'Done' && !isIssueAutoMarkedDone(props.summary) &&
-                <div>
-                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
-                </div>
+                <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
             }
         </section>
     )

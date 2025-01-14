@@ -26,7 +26,7 @@ export async function POST(request: Request) {
         await transitionIssue(transitionId, issueKey).catch(e => routeHandlerErrorHandler(path, e.message, 'transitionIssue()', "Couldn't transition issue")) as Response
 
         // Respond
-        return new Response("Task status updated")
+        return new Response("Status updated")
     }
     // Typical catch
     catch (e: any) { return routeHandlerTypicalCatch(e.message) }

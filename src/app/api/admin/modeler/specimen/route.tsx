@@ -75,7 +75,11 @@ export async function POST(request: Request) {
 
         // Jira task management (Create model task with two subtasks for photography and 3D model compilation)
         const task = await createTask('SPRIN-4', `Model ${species} (${sid.slice(0, 8)})`, `Photograph and compile 3D model of ${species}`, process.env.HUNTER_JIRA_ID as string).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
-        const subTasks = [createTask(task.key, `Photograph ${species} (${sid.slice(0, 8)})`, `Photograph ${species}`, hunterJira, 'Subtask'), createTask(task.key, `Build 3D model of ${species} (${sid.slice(0, 8)})`, `Build 3D model of ${species}`, hunterJira, 'Subtask')]
+        const subTasks = [
+            createTask(task.key, `Photograph ${species} (${sid.slice(0, 8)})`, `Photograph ${species}`, hunterJira, 'Subtask'), 
+            createTask(task.key, `Build 3D model of ${species} (${sid.slice(0, 8)})`, `Build 3D model of ${species}`, hunterJira, 'Subtask'),
+            createTask(task.key, `Convert RAWs to TIFs`, `Convert RAWs to TIFs for ${species}`, hunterJira, 'Subtask')
+        ]
         await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
 
         // Typical response
