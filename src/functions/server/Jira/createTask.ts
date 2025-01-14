@@ -1,3 +1,11 @@
+/**
+ * @deprecated
+ * @param epicKey 
+ * @param summary 
+ * @param description 
+ * @param assigneeId 
+ * @returns 
+ */
 export default async function createTask(epicKey: string, summary: string, description: string, assigneeId: string) {
 
     const data = {

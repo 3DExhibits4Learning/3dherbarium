@@ -149,3 +149,25 @@ export async function markSubtaskAsDone(issueKey: string, uuidSlice8: string, su
     // throw error on catch
     catch (e: any) { throw Error(e.message) }
 }
+
+/**
+ * 
+ * @param issueKey 
+ * @param uuidSlice10 
+ * @param subtaskKeyword 
+ */
+export async function markTaskAsInProgress(issueKey: string, uuidSlice8: string) {
+
+    try {
+        // Get epic JSON data
+        const epic = await getIssue(issueKey).catch(e => { throw Error(e.message) })
+
+        // Find the task including the first 10 chars of the spcimen uuid in the summary
+        const task = getTaskFromEpic(epic, uuidSlice8)
+
+        // Transition the issue to "done" with transition ID 31
+        await transitionIssue(21, task.key).catch(e => { throw Error(e.message) })
+    }
+    // throw error on catch
+    catch (e: any) { throw Error(e.message) }
+}

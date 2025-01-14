@@ -10,14 +10,15 @@
 import { imageInsertion } from "@/api/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
-import { markSubtaskAsDone } from "@/functions/server/jira"
+import { markSubtaskAsDone, markTaskAsInProgress } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
 import prisma from "@/utils/prisma"
 
-// Path
+// Path, issueKey
 const path = 'src/app/api/admin/modeler/photos/route.tsx'
+const issueKey = 'SPRIN-4'
 
 /**
  * @param request Request
@@ -44,7 +45,8 @@ export async function POST(request: Request) {
         }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.image_set.create()", "Couldn't create image set record in database"))
 
         // Jira task management
-        await markSubtaskAsDone('SPRIN-4', images.sid.slice(0, 8), "Photograph").catch(e => sendErrorEmail(path, 'markSubtaskAsDone', e.message, true))
+        await Promise.all([markTaskAsInProgress(issueKey, images.sid.slice(0, 8)), markSubtaskAsDone(issueKey, images.sid.slice(0, 8), "Photograph")])
+            .catch(e => sendErrorEmail(path, 'Promise.all', e.message, true))
 
         // Typical response
         return routeHandlerTypicalResponse("Image Data Entered Successfully", insert)
