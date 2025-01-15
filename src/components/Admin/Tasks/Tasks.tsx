@@ -3,8 +3,10 @@
  * 
  * @fileoverview administrative tasks client
  */
+
 'use client'
 
+// Imports
 import { Accordion, AccordionItem } from "@nextui-org/react"
 import { useMemo, useContext } from "react"
 import { countCompletedSubtasks, transitionIssue, arrangeSubtasks } from "@/functions/client/admin/modeler"
@@ -12,6 +14,7 @@ import { ModelerContext } from "../Modeler/ModelerDash"
 import { dataTransfer } from "@/api/types"
 import { Button } from "@nextui-org/react"
 
+// Default imports
 import SubtaskButton from "./SubtaskButtons"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 import TaskImage from "./TaskImage"
@@ -64,7 +67,7 @@ export default function Tasks(props: { epic: any }) {
                     {
                         !inProgressTasks.length &&
                         <AccordionItem key={'No Length'}
-                            title={'YOU HAVE NO ACTIVE TASKS!!!'}
+                            title={'YOU HAVE NO ACTIVE TASKS'}
                             classNames={{ title: 'text-red-600 text-2xl font-medium' }}>
                         </AccordionItem>
                     }
