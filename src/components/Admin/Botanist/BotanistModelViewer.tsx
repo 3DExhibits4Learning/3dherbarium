@@ -1,5 +1,14 @@
-"use client";
+/**
+ * @file src/components/Admin/Botanist/BotanistModelViewer.tsx
+ * 
+ * @fileoverview model viewer enabling botanist annotations
+ * 
+ * @todo refactor, test
+ */
 
+"use client"
+
+// Imports
 import Sketchfab from '@sketchfab/viewer-api';
 import { MutableRefObject, useEffect, useRef, Dispatch, SetStateAction, forwardRef, ForwardedRef, useState } from 'react';
 import { fullAnnotation } from '@/api/types';

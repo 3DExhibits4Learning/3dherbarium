@@ -1,21 +1,31 @@
+/**
+ * @file src/components/Admin/Botanist/BotanyClient.tsx
+ * 
+ * @fileoverview botanist administrator client
+ * 
+ * @todo refactor, test
+ */
 'use client'
 
+// Typical imports
 import { Accordion, AccordionItem } from "@nextui-org/react"
 import { useEffect, useState, useRef } from "react"
 import { model } from "@prisma/client"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
-import AnnotationEntry from "./AnnotationEntry"
 import { Button } from "@nextui-org/react"
+import { Spinner } from "@nextui-org/react"
 import { photo_annotation, video_annotation, model_annotation } from "@prisma/client"
-import ModelAnnotations from "@/utils/ModelAnnotationsClass"
 import { fullAnnotation } from "@/api/types"
+
+// Default imports
+import ModelAnnotations from "@/utils/ModelAnnotationsClass"
 import BotanistRefWrapper from "./BotanistModelViewerRef"
 import AreYouSure from "../../Shared/AreYouSure"
-import { Spinner } from "@nextui-org/react"
 import NewSpecimenEntry from "../NewSpecimenEntry"
 import DataTransferModal from "@/components/Shared/DataTransferModal"
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
+import AnnotationEntry from "./AnnotationEntry"
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 
