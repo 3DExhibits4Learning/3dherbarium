@@ -1,4 +1,5 @@
 import { imageInsertion } from "@/api/types"
+import { getSubtaskFromTask } from "@/functions/server/jira";
 import { SetStateAction, Dispatch } from "react";
 
 /**
@@ -60,6 +61,7 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
     method: 'POST',
     body: JSON.stringify({ issueKey: issueKey, transitionId: transitionId })
 }).then(res => res.text()).then(text => text)
+
 
 /**
  * 

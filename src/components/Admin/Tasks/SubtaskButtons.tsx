@@ -29,7 +29,7 @@ export default function SubtaskButton(props: { status: string, issueKey: string,
         <section className="flex">
             {
                 props.status === 'To Do' &&
-                <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
+                <Button size='sm' className="text-sm bg-[#004C46] text-[#F5F3E7]" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
             }
             {
                 props.status === 'In Progress' && isIssueAutoMarkedDone(props.summary) &&
@@ -38,13 +38,13 @@ export default function SubtaskButton(props: { status: string, issueKey: string,
             {
                 props.status === 'In Progress' && !isIssueAutoMarkedDone(props.summary) &&
                 <section className="flex w-full justify-around">
-                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
-                    <Button size='sm' className="text-sm" onPress={() => transitionHandler(31)}>{"Mark as 'Done'"}</Button>
+                    <Button size='sm' className="text-sm bg-[#004C46] text-[#F5F3E7]" onPress={() => transitionHandler(11)}>{"Mark as 'To Do'"}</Button>
+                    <Button size='sm' className="text-sm bg-[#004C46] text-[#F5F3E7]" onPress={() => transitionHandler(31)}>{"Mark as 'Done'"}</Button>
                 </section>
             }
             {
                 props.status === 'Done' && !isIssueAutoMarkedDone(props.summary) &&
-                <Button size='sm' className="text-sm" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
+                <Button size='sm' className="text-sm bg-[#004C46] text-[#F5F3E7]" onPress={() => transitionHandler(21)}>{"Mark as 'In Progress'"}</Button>
             }
         </section>
     )
