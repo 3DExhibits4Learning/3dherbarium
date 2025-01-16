@@ -55,7 +55,7 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
                         <ModelForms specimen={props.unModeledSpecimen} />
                     </AccordionItem>
                 </Accordion>
-                <div className="w-1/5 h-full flex border-l-2 border-[#004C46]">
+                <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
                     <Tasks epic={props.epic}/>
                 </div>
             </section>
