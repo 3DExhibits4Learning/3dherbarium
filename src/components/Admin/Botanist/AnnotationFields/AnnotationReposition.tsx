@@ -1,18 +1,26 @@
 'use client'
 
-import { SetStateAction, Dispatch } from "react"
+import { useContext } from "react"
+import { BotanyClientContext } from "../BotanyClient"
+import { botanyClientContext } from "@/ts/botanist"
+import { SetPosition } from "@/ts/reducer"
 
-export default function AnnotationReposition(props:{repositionEnabled: boolean, setRepositionEnabled: Dispatch<SetStateAction<boolean>>, setPosition3D: Dispatch<SetStateAction<string | undefined>>}) {
+export default function AnnotationReposition() {
+
+    // Context
+    const context = useContext(BotanyClientContext) as botanyClientContext
+    const botanyState = context.botanyState
+    const dispatch = context.botanyDispatch
+
     return (
         <>
             <div className="flex items-center">
                 <input type='checkbox'
                     className="ml-12"
-                    checked={props.repositionEnabled}
+                    checked={botanyState.repositionEnabled}
                     onChange={() => {
-                        props.setRepositionEnabled(!props.repositionEnabled)
-                        if (props.setPosition3D)
-                            props.setPosition3D(undefined)
+                        dispatch({type:"setRepositionEnabled"})
+                        const positionDispatchObj: SetPosition = {type:"setPosition", position: undefined}; dispatch(positionDispatchObj)
                     }}
                 >
                 </input>

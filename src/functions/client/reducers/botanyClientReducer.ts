@@ -6,7 +6,10 @@
 
 'use client'
 
-import { CollectionsMediaObject, CollectionsMediaAction } from "@/ts/reducer"
+import { fullAnnotation } from "@/api/types"
+import { BotanyClientState } from "@/ts/botanist"
+import { BotanyClientAction, NewModelClicked, NewModelOrAnnotation, SetActiveAnnotationIndex, SetPosition } from "@/ts/reducer"
+import ModelAnnotations from "@/utils/ModelAnnotationsClass"
 
 /**
  * 
@@ -14,25 +17,121 @@ import { CollectionsMediaObject, CollectionsMediaAction } from "@/ts/reducer"
  * @param action dispatch action
  * @returns CollectionsMediaObject
  */
-export default function botanyClientReducer(mediaState: CollectionsMediaObject, action: CollectionsMediaAction): CollectionsMediaObject {
+export default function botanyClientReducer(botanistState: BotanyClientState, action: BotanyClientAction): BotanyClientState {
+
     switch (action.type) {
-        case 'modelChecked':
+
+        case 'activeAnnotationSetTo1':
+
             return {
-                modelChecked: true,
-                observationsChecked: false,
-                photosChecked: false
+                ...botanistState,
+                activeAnnotation: undefined,
+                activeAnnotationType: undefined,
+                activeAnnotationPosition: undefined
             }
-        case 'observationsChecked':
+
+        case 'numberedActiveAnnotation':
+
+            const annotations = botanistState.annotations as fullAnnotation[]
+            const index = botanistState.activeAnnotationIndex as number
+            const annotation = annotations[index - 2]
+
             return {
-                modelChecked: false,
-                observationsChecked: true,
-                photosChecked: false
+                ...botanistState,
+                activeAnnotationType: annotation.annotation_type as 'photo' | 'video',
+                activeAnnotationPosition: annotation.position as string,
+                newAnnotationEnabled: false,
+                repositionEnabled: false,
+                activeAnnotationTitle: annotation.title ?? '',
+                activeAnnotation: annotation.annotation
             }
-        case 'photosChecked':
+
+        case 'newModelOrAnnotation':
+
+            const newModelAction = action as NewModelOrAnnotation
+            const modelAnnotations = newModelAction.modelAnnotations
+
             return {
-                modelChecked: false,
-                observationsChecked: false,
-                photosChecked: true
+                ...botanistState,
+                annotations: modelAnnotations.annotations,
+                numberOfAnnotations: modelAnnotations.annotations.length,
+                activeAnnotationIndex: undefined,
+                position3D: undefined,
+                newAnnotationEnabled: false,
+                firstAnnotationPosition: newModelAction.annotationPosition,
+                activeAnnotation: undefined,
+                repositionEnabled: false
             }
+
+        case 'newModelClicked':
+
+            const modelClickedAction = action as NewModelClicked
+            const model = modelClickedAction.model
+
+            return {
+                ...botanistState,
+                firstAnnotationPosition: undefined,
+                specimenName: model.spec_name,
+                uid: model.uid
+            }
+
+        case 'newAnnotationClicked':
+
+            return {
+                ...botanistState,
+                newAnnotationEnabled: true,
+                activeAnnotationIndex: 'new',
+                repositionEnabled: false
+            }
+
+        case 'newAnnotationCancelled':
+
+            return {
+                ...botanistState,
+                newAnnotationEnabled: false,
+                activeAnnotationIndex: undefined,
+                cancelledAnnotation: !botanistState.cancelledAnnotation
+            }
+
+        case 'setActiveAnnotationIndex':
+
+            const setIndexAction = action as SetActiveAnnotationIndex
+
+            return {
+                ...botanistState,
+                activeAnnotationIndex: setIndexAction.index
+            }
+
+        case 'setPosition':
+
+            const setPositionAction = action as SetPosition
+
+            return {
+                ...botanistState,
+                position3D: setPositionAction.position
+            }
+
+        case 'setRepositionEnabled':
+
+            return {
+                ...botanistState,
+                repositionEnabled: !botanistState.repositionEnabled
+            }
+
+        case 'annotationSavedOrDeleted':
+
+            return {
+                ...botanistState,
+                annotationSavedOrDeleted: !botanistState.annotationSavedOrDeleted
+            }
+
+        case 'setUidUndefined':
+
+            return {
+                ...botanistState,
+                uid: undefined
+            }
+
+        default: throw new Error('Unkown dispatch type')
     }
 }

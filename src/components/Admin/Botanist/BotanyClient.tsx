@@ -9,13 +9,15 @@
 
 // Typical imports
 import { Accordion, AccordionItem } from "@nextui-org/react"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, createContext, useReducer } from "react"
 import { model } from "@prisma/client"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { Button } from "@nextui-org/react"
 import { Spinner } from "@nextui-org/react"
-import { photo_annotation, video_annotation, model_annotation } from "@prisma/client"
-import { fullAnnotation } from "@/api/types"
+import { botanyClientContext } from "@/ts/botanist"
+import { NewModelClicked, NewModelOrAnnotation } from "@/ts/reducer"
+import { initialBotanyClientState } from "@/ts/botanist"
+import { activeAnnotationIndexDispatch, getIndex } from "@/functions/client/admin/botanist"
 
 // Default imports
 import ModelAnnotations from "@/utils/ModelAnnotationsClass"
@@ -26,25 +28,16 @@ import DataTransferModal from "@/components/Shared/DataTransferModal"
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
 import AnnotationEntry from "./AnnotationEntry"
+import botanyClientReducer from "@/functions/client/reducers/botanyClientReducer"
+
+export const BotanyClientContext = createContext<botanyClientContext | ''>('')
 
 export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
 
-    // Variable declarations
-    const [uid, setUid] = useState<string>()
-    const [annotations, setAnnotations] = useState<fullAnnotation[]>()
-    const [numberOfAnnotations, setNumberOfAnnotations] = useState<number>()
-    const [activeAnnotationIndex, setActiveAnnotationIndex] = useState<number | 'new' | undefined>()
-    const [activeAnnotation, setActiveAnnotation] = useState<photo_annotation | video_annotation | model_annotation | undefined>()
-    const [activeAnnotationType, setActiveAnnotationType] = useState<'photo' | 'video' | 'model'>()
-    const [position3D, setPosition3D] = useState<string>()
-    const [firstAnnotationPosition, setFirstAnnotationPostion] = useState<string>()
-    const [newAnnotationEnabledState, setNewAnnotationEnabledState] = useState<boolean>(false)
-    const [specimenName, setSpecimenName] = useState<string>()
-    const [cancelledAnnotation, setCancelledAnnotation] = useState<boolean>()
-    const [activeAnnotationPosition, setActiveAnnotationPosition] = useState<string>()
-    const [repositionEnabled, setRepositionEnabled] = useState<boolean>(false)
-    const [activeAnnotationTitle, setActiveAnnotationTitle] = useState<string>()
-    const [annotationSavedOrDeleted, setAnnotationSavedOrDeleted] = useState<boolean>(false)
+    // Reducer
+    const [botanyState, botanyDispatch] = useReducer(botanyClientReducer, initialBotanyClientState)
+
+    // "Are you sure" modal state
     const [modalOpen, setModalOpen] = useState<boolean>(false)
 
     // Data transfer states
@@ -53,274 +46,184 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     const [result, setResult] = useState<string>('')
     const [loadingLabel, setLoadingLabel] = useState<string>('')
 
-    // Initialize/terminate data transfer handlers
+    // Data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
 
-
+    // Refs
     const modelClicked = useRef<boolean>()
     const newAnnotationEnabled = useRef<boolean>(false)
 
-    // Returns the index(annotation_no in the annotations table) of the activeAnnotation
-    const getIndex = () => {
-        let index
-
-        if (!numberOfAnnotations && !firstAnnotationPosition || activeAnnotationIndex == 1) index = 1
-        else if (!numberOfAnnotations) index = 2
-        else if (numberOfAnnotations && activeAnnotationIndex != 'new') index = activeAnnotationIndex
-        else if (activeAnnotationIndex == 'new') index = numberOfAnnotations + 2
-
-        return index
-    }
-
     // This effect sets the activeAnnotation when its dependency is changed from the BotanistModelViewer, either via clicking an annotation or creating a new one
-    useEffect(() => {
-
-        if (activeAnnotationIndex == 1) {
-            setActiveAnnotation(undefined)
-            setActiveAnnotationType(undefined)
-            setActiveAnnotationPosition(undefined)
-        }
-
-        else if (typeof (activeAnnotationIndex) === 'number' && annotations) {
-            setActiveAnnotationType(annotations[activeAnnotationIndex - 2].annotation_type as 'photo' | 'video')
-            setActiveAnnotationPosition((annotations[activeAnnotationIndex - 2].position) as string)
-            setNewAnnotationEnabledState(false)
-            setRepositionEnabled(false)
-            setActiveAnnotationTitle(annotations[activeAnnotationIndex - 2].title ?? '')
-            setActiveAnnotation(annotations[activeAnnotationIndex - 2].annotation)
-        }
-
-    }, [activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
+    useEffect(() => activeAnnotationIndexDispatch(botanyState, botanyDispatch), [botanyState.activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
 
         // Set relevant model data; this is called onPress of the Accordion
         const getAnnotationsObj = async () => {
-            const modelAnnotations = await ModelAnnotations.retrieve(uid as string)
-            let annotationPosition
+            const modelAnnotations = await ModelAnnotations.retrieve(botanyState.uid as string)
+            let annotationPosition = ''
 
-            await fetch(`/api/annotations?uid=${uid}`, { cache: 'no-store' })
+            await fetch(`/api/annotations?uid=${botanyState.uid}`, { cache: 'no-store' })
                 .then(res => res.json()).then(json => {
                     if (json.response) annotationPosition = JSON.parse(json.response)
-                    else annotationPosition = ''
                 })
 
-            setAnnotations(modelAnnotations.annotations)
-            setNumberOfAnnotations(modelAnnotations.annotations.length)
-            setActiveAnnotationIndex(undefined)
-            setPosition3D(undefined)
-            setNewAnnotationEnabledState(false)
             newAnnotationEnabled.current = false
-            setFirstAnnotationPostion(annotationPosition)
-            setActiveAnnotation(undefined)
-            setRepositionEnabled(false)
+            const uidOrAnnotationDispatchObj: NewModelOrAnnotation = { type: 'newModelOrAnnotation', modelAnnotations: modelAnnotations, annotationPosition: annotationPosition }
+            botanyDispatch(uidOrAnnotationDispatchObj)
         }
 
         getAnnotationsObj()
 
-    }, [uid, annotationSavedOrDeleted])
+    }, [botanyState.uid, botanyState.annotationSavedOrDeleted])
 
     return (
-        <>
+        <BotanyClientContext.Provider value={{ botanyState, botanyDispatch }}>
+
             <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
-            <AreYouSure uid={uid as string} open={modalOpen} setOpen={setModalOpen} species={specimenName as string} />
+            <AreYouSure uid={botanyState.uid as string} open={modalOpen} setOpen={setModalOpen} species={botanyState.specimenName as string} />
+
             <Accordion className="w-full">
                 <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                     <NewSpecimenEntry initializeTransfer={initializeDataTransferHandler} terminateTransfer={terminateDataTransferHandler} />
                 </AccordionItem>
             </Accordion>
+
             <div className="flex w-full h-full">
                 <section className="h-full w-1/5">
 
                     {/* Accordion holds all models than need annotation */}
 
                     <Accordion className="h-full" onSelectionChange={(keys: any) => modelClicked.current = keys.size ? true : false}>
-                        {props.modelsToAnnotate.map((model, i) => {
-                            return (
-                                <AccordionItem
-                                    key={i}
-                                    aria-label={'Specimen to model'}
-                                    title={toUpperFirstLetter(model.spec_name)}
-                                    classNames={{ title: 'text-[ #004C46] text-2xl' }}
-                                    onPress={() => {
-                                        if (modelClicked.current) {
-                                            // First annotation position MUST be loaded before BotanistRefWrapper, so it is set to undefined while model data is set - note conditional render below
-                                            setFirstAnnotationPostion(undefined)
-                                            setSpecimenName(model.spec_name)
-                                            setUid(model.uid)
-                                        }
-                                        else setUid(undefined)
-                                    }}
-                                >
-
-                                    {/* Display Spinner while 3D Model is loading*/}
-
-                                    {
-                                        firstAnnotationPosition === undefined && uid && !activeAnnotation &&
-                                        <div className="h-[400px] w-full flex justify-center">
-                                            <Spinner label='Loading Annotations' size="lg" />
-                                        </div>
-                                    }
-
-                                    {/* Conditional render that waits until the first annotation(thus all annotations) is loaded*/}
-                                    {/* RefWrapper required to pass ref to dynamically imported component*/}
-
-
-                                    {
-                                        firstAnnotationPosition !== undefined &&
-                                        <div className="h-[400px]">
-                                            <BotanistRefWrapper
-                                                uid={model.uid}
-                                                setActiveAnnotationIndex={setActiveAnnotationIndex}
-                                                setPosition3D={setPosition3D}
-                                                firstAnnotationPosition={firstAnnotationPosition}
-                                                position3D={position3D}
-                                                annotations={annotations}
-                                                cancelledAnnotation={cancelledAnnotation}
-                                                activeAnnotationIndex={activeAnnotationIndex}
-                                                newAnnotationEnabledState={newAnnotationEnabledState}
-                                                repositionEnabled={repositionEnabled}
-                                                ref={newAnnotationEnabled}
-                                                annotationSavedOrDeleted={annotationSavedOrDeleted}
-                                            />
-                                        </div>
-                                    }
-
-                                    {/* New annotation button */}
-
-                                    {
-                                        !newAnnotationEnabledState && activeAnnotationIndex != 'new' && firstAnnotationPosition != undefined &&
-                                        <Button onPress={() => {
-                                            newAnnotationEnabled.current = true
-                                            setNewAnnotationEnabledState(true)
-                                            setActiveAnnotationIndex('new')
-                                            setRepositionEnabled(false)
+                        {
+                            props.modelsToAnnotate.map((model, i) => {
+                                return (
+                                    <AccordionItem
+                                        key={i}
+                                        aria-label={'Specimen to model'}
+                                        title={toUpperFirstLetter(model.spec_name)}
+                                        classNames={{ title: 'text-[ #004C46] text-2xl' }}
+                                        onPress={() => {
+                                            if (modelClicked.current) {
+                                                // First annotation position MUST be loaded before BotanistRefWrapper, so it is set to undefined while model data is set - note conditional render below
+                                                const newModelClickedObj: NewModelClicked = { type: 'newModelClicked', model: model }
+                                                botanyDispatch(newModelClickedObj)
+                                            }
+                                            else botanyDispatch({ type: 'setUidUndefined' })
                                         }}
-                                            className="text-white mt-2 text-lg"
-                                            isDisabled={repositionEnabled}
-                                        >
-                                            + New Annotation
-                                        </Button>
-                                    }
+                                    >
 
-                                    {
-                                        annotations && annotations?.length >= 6 &&
-                                        <>
-                                            <br></br>
+                                        {/* Display Spinner while 3D Model is loading*/}
+
+                                        {
+                                            botanyState.firstAnnotationPosition === undefined && botanyState.uid && !botanyState.activeAnnotation &&
+                                            <div className="h-[400px] w-full flex justify-center">
+                                                <Spinner label='Loading Annotations' size="lg" />
+                                            </div>
+                                        }
+
+                                        {/* Conditional render that waits until the first annotation(thus all annotations) is loaded*/}
+                                        {/* RefWrapper required to pass ref to dynamically imported component*/}
+
+
+                                        {
+                                            botanyState.firstAnnotationPosition !== undefined &&
+                                            <div className="h-[400px]">
+                                                <BotanistRefWrapper ref={newAnnotationEnabled} />
+                                            </div>
+                                        }
+
+                                        {/* New annotation button */}
+
+                                        {
+                                            !botanyState.newAnnotationEnabled && botanyState.activeAnnotationIndex != 'new' && botanyState.firstAnnotationPosition != undefined &&
                                             <Button onPress={() => {
-                                                setModalOpen(true)
+                                                newAnnotationEnabled.current = true
+                                                botanyDispatch({ type: 'newAnnotationClicked' })
                                             }}
                                                 className="text-white mt-2 text-lg"
-                                                isDisabled={repositionEnabled}
+                                                isDisabled={botanyState.repositionEnabled}
                                             >
-                                                Mark as Annotated
+                                                + New Annotation
                                             </Button>
-                                        </>
-                                    }
+                                        }
 
-                                    {/* Click to place annotation or cancel*/}
-
-                                    {
-                                        newAnnotationEnabledState &&
-                                        <div className="flex justify-center flex-col items-center">
-                                            <p className="text-lg text-center">Click the subject to add an annotation</p>
-                                            <p className="text-lg">or</p>
-                                            <Button
-                                                color="danger"
-                                                variant="light"
-                                                className="text-red-600 hover:text-white text-lg"
-                                                onPress={() => {
-                                                    newAnnotationEnabled.current = false
-                                                    setNewAnnotationEnabledState(false)
-                                                    setActiveAnnotationIndex(undefined)
-                                                    setCancelledAnnotation(!cancelledAnnotation)
+                                        {
+                                            botanyState.annotations && botanyState.annotations?.length >= 6 &&
+                                            <>
+                                                <br></br>
+                                                <Button onPress={() => {
+                                                    setModalOpen(true)
                                                 }}
-                                            >
-                                                Cancel Annotation
-                                            </Button>
-                                        </div>
-                                    }
-                                </AccordionItem>
-                            )
-                        })}
+                                                    className="text-white mt-2 text-lg"
+                                                    isDisabled={botanyState.repositionEnabled}
+                                                >
+                                                    Mark as Annotated
+                                                </Button>
+                                            </>
+                                        }
+
+                                        {/* Click to place annotation or cancel*/}
+
+                                        {
+                                            botanyState.newAnnotationEnabled &&
+                                            <div className="flex justify-center flex-col items-center">
+                                                <p className="text-lg text-center">Click the subject to add an annotation</p>
+                                                <p className="text-lg">or</p>
+                                                <Button
+                                                    color="danger"
+                                                    variant="light"
+                                                    className="text-red-600 hover:text-white text-lg"
+                                                    onPress={() => {
+                                                        newAnnotationEnabled.current = false
+                                                        botanyDispatch({ type: 'newAnnotationCancelled' })
+                                                    }}
+                                                >
+                                                    Cancel Annotation
+                                                </Button>
+                                            </div>
+                                        }
+                                    </AccordionItem>
+                                )
+                            })}
                     </Accordion>
                 </section>
                 <div className="flex flex-col w-4/5">
                     <section className="flex w-full h-full flex-col">
 
                         {
-                            !uid && !activeAnnotation &&
+                            !botanyState.uid && !botanyState.activeAnnotation &&
                             <div className="flex items-center justify-center text-xl h-full w-full">
                                 <p className="mr-[10%] text-lg lg:text-3xl">Select a 3D model to get started!</p>
                             </div>
                         }
 
                         {
-                            uid && !activeAnnotation && activeAnnotationIndex !== 1 && !newAnnotationEnabledState &&
+                            botanyState.uid && !botanyState.activeAnnotation && botanyState.activeAnnotationIndex !== 1 && !botanyState.newAnnotationEnabled &&
                             <div className="flex items-center justify-center text-xl h-full w-full">
                                 <p className="mr-[10%] text-lg lg:text-3xl">Select an annotation to edit, or click New Annotation</p>
                             </div>
                         }
 
                         {
-                            activeAnnotationIndex == 1 && // This indicates the first annotation
-                            <AnnotationEntry
-                                index={getIndex() as number}
-                                new={false}
-                                setActiveAnnotationIndex={setActiveAnnotationIndex}
-                                position={position3D}
-                                uid={uid}
-                                specimenName={specimenName}
-                                setRepositionEnabled={setRepositionEnabled}
-                                repositionEnabled={repositionEnabled}
-                                setPosition3D={setPosition3D}
-                                setAnnotationSavedOrDeleted={setAnnotationSavedOrDeleted}
-                                annotationSavedOrDeleted={annotationSavedOrDeleted}
-                                annotationModels={props.annotationModels}
+                            botanyState.activeAnnotationIndex == 1 && // This indicates the first annotation
+                            <AnnotationEntry index={getIndex(botanyState) as number} new={false} annotationModels={props.annotationModels}
                             />
                         }
 
                         {
-                            typeof (activeAnnotationIndex) == 'number' && activeAnnotation && annotations && uid && // This indicates a databased annotation
-                            <AnnotationEntry
-                                index={getIndex() as number}
-                                activeAnnotation={activeAnnotation}
-                                specimenName={specimenName}
-                                annotationType={activeAnnotationType}
-                                new={false} setActiveAnnotationIndex={setActiveAnnotationIndex}
-                                position={position3D}
-                                uid={uid}
-                                activeAnnotationPosition={activeAnnotationPosition}
-                                setRepositionEnabled={setRepositionEnabled}
-                                repositionEnabled={repositionEnabled}
-                                setPosition3D={setPosition3D}
-                                activeAnnotationTitle={activeAnnotationTitle}
-                                setAnnotationSavedOrDeleted={setAnnotationSavedOrDeleted}
-                                annotationSavedOrDeleted={annotationSavedOrDeleted}
-                                annotationModels={props.annotationModels}
-                            />
+                            typeof (botanyState.activeAnnotationIndex) == 'number' && botanyState.activeAnnotation && botanyState.annotations && botanyState.uid && // This indicates a databased annotation
+                            <AnnotationEntry index={getIndex(botanyState) as number} new={false} annotationModels={props.annotationModels} />
                         }
 
                         {
-                            typeof (activeAnnotationIndex) == 'string' && // This indicates a new annotation
-                            <AnnotationEntry
-                                index={getIndex() as number}
-                                new
-                                setActiveAnnotationIndex={setActiveAnnotationIndex}
-                                position={position3D}
-                                uid={uid}
-                                specimenName={specimenName}
-                                setRepositionEnabled={setRepositionEnabled}
-                                repositionEnabled={repositionEnabled}
-                                setAnnotationSavedOrDeleted={setAnnotationSavedOrDeleted}
-                                annotationSavedOrDeleted={annotationSavedOrDeleted}
-                                annotationModels={props.annotationModels}
-                            />
+                            typeof (botanyState.activeAnnotationIndex) == 'string' && // This indicates a new annotation
+                            <AnnotationEntry index={getIndex(botanyState) as number} new={false} annotationModels={props.annotationModels} />
                         }
                     </section>
                 </div>
             </div>
-        </>
+        </BotanyClientContext.Provider>
     )
 }
