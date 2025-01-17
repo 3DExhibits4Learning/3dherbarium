@@ -120,7 +120,7 @@ const BotanistModelViewer = forwardRef((props: {minHeight?: string,}, ref: Forwa
     // Annotation select handler
     const annotationSelectHandler = (index: any) => {
         if (newAnnotationEnabled.current) return
-        else if (index !== -1) {const indexDispatch: SetActiveAnnotationIndex = { type: "setPosition", index: index + 1 }; dispatch(indexDispatch)}
+        else if (index !== -1) {const indexDispatch: SetActiveAnnotationIndex = { type: "setActiveAnnotationIndex", index: index + 1 }; dispatch(indexDispatch)}
     }
 
     // Sketchfab API initialization success object

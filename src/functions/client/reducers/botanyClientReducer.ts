@@ -38,7 +38,7 @@ export default function botanyClientReducer(botanistState: BotanyClientState, ac
 
             return {
                 ...botanistState,
-                activeAnnotationType: annotation.annotation_type as 'photo' | 'video',
+                activeAnnotationType: annotation.annotation_type as 'photo' | 'video' | 'model',
                 activeAnnotationPosition: annotation.position as string,
                 newAnnotationEnabled: false,
                 repositionEnabled: false,

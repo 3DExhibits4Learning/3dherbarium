@@ -29,12 +29,15 @@ import ModelAnnotationSelect from "./AnnotationFields/ModelAnnotationSelect"
 // Dymamic imports
 const ModelViewer = dynamic(() => import('../../Shared/ModelViewer'), { ssr: false })
 
-const AnnotationEntry = (props: { annotationType?: string, index: number, new: boolean, annotationModels: model[] }) => {
+const AnnotationEntry = (props: { index: number, annotationModels: model[] }) => {
 
     // Context
     const context = useContext(BotanyClientContext) as botanyClientContext
     const botanyState = context.botanyState
     const dispatch = context.botanyDispatch
+
+    // New annotation?
+    const isNew = botanyState.activeAnnotationIndex === 'new' ? true : false
 
     // Lightweight functions used to enable annotation creation/save edits
     const allTruthy = (value: any) => value ? true : false
@@ -66,7 +69,6 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
     const [imageSource, setImageSource] = useState<string>()
     const [modelAnnotationUid, setModelAnnotationUid] = useState<string>('select')
 
-
     // Data transfer modal states
     const [transferModalOpen, setTransferModalOpen] = useState<boolean>(false)
     const [transferring, setTransferring] = useState<boolean>(false)
@@ -88,9 +90,9 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
     useEffect(() => {
 
         // Populate fields if there is an annotation pulled from the db
-        if (props.annotationType && botanyState.activeAnnotation) {
+        if (botanyState.activeAnnotationType && botanyState.activeAnnotation) {
             const annotation = botanyState.activeAnnotation as photo_annotation
-            setAnnotationType(props.annotationType)
+            setAnnotationType(botanyState.activeAnnotationType)
             setUrl(annotation.url)
             setAuthor(annotation.author)
             setLicense(annotation.license)
@@ -100,7 +102,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
             setAnnotationTitle(botanyState.activeAnnotationTitle)
 
             // Settings for hosted photo annotations
-            if (props.annotationType == 'photo' && !props.new && (botanyState.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium')) {
+            if (botanyState.activeAnnotationType == 'photo' && !isNew && (botanyState.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium')) {
                 setMediaType('upload')
                 setVideoChecked(false)
                 setPhotoChecked(true)
@@ -109,7 +111,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                 setImgSrc()
             }
             // Settings for web based photo annotations
-            else if (props.annotationType == 'photo') {
+            else if (botanyState.activeAnnotationType == 'photo') {
                 setMediaType('url')
                 setVideoChecked(false)
                 setPhotoChecked(true)
@@ -118,7 +120,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                 setImageSource((botanyState.activeAnnotation as photo_annotation).url)
             }
             // Settings for video annotations
-            else if (props.annotationType == 'video') {
+            else if (botanyState.activeAnnotationType == 'video') {
                 setMediaType('url')
                 setVideoChecked(true)
                 setPhotoChecked(false)
@@ -126,7 +128,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                 setLength((botanyState.activeAnnotation as video_annotation).length as string)
                 setImageSource((botanyState.activeAnnotation as video_annotation).url)
             }
-            else if (props.annotationType == 'model') {
+            else if (botanyState.activeAnnotationType == 'model') {
                 setMediaType('model')
                 setModelAnnotationUid((botanyState.activeAnnotation as model_annotation).uid as string)
                 setModelChecked(true)
@@ -155,7 +157,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
         else if (annotationType == 'photo' && mediaType == 'url') {
 
             // Switch based on whether the annotation is new or databased
-            switch (props.new) {
+            switch (isNew) {
 
                 // For databased annotations
                 case false:
@@ -185,7 +187,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
         // Conditional based on radio button states
         else if (annotationType == 'photo' && mediaType == 'upload') {
 
-            switch (props.new) {
+            switch (isNew) {
 
                 // For databased annotations
                 case false:
@@ -214,7 +216,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
         // Conditional based on radio button states
         else if (annotationType == 'video') {
 
-            switch (props.new) {
+            switch (isNew) {
 
                 case false:
                     const caseAnnotation = botanyState.activeAnnotation as video_annotation
@@ -238,7 +240,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
         // Conditional based on radio button states
         else if (annotationType == 'model') {
 
-            switch (props.new) {
+            switch (isNew) {
 
                 case false:
                     const caseAnnotation = botanyState.activeAnnotation as model_annotation
@@ -384,9 +386,9 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
         // Handler for annotations with non-hosted photos
         else {
 
-            if (props.annotationType !== annotationType) {
+            if (botanyState.activeAnnotationType !== annotationType) {
                 data.set('mediaTransition', 'true')
-                data.set('previousMedia', props.annotationType as string)
+                data.set('previousMedia', botanyState.activeAnnotationType as string)
             }
 
             // Annotations table data (for update)
@@ -497,12 +499,12 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
             // Determine image visibility
             if (annotationType === 'photo' && mediaType === 'url' && url) setImageVisible(true)
 
-            else if (!props.new && mediaType === 'upload' && (botanyState.activeAnnotation as photo_annotation).url && !file || !props.new && mediaType === 'url' && (botanyState.activeAnnotation as photo_annotation).url && !url) {
+            else if (!isNew && mediaType === 'upload' && (botanyState.activeAnnotation as photo_annotation).url && !file || !isNew && mediaType === 'url' && (botanyState.activeAnnotation as photo_annotation).url && !url) {
                 setImgSrc()
                 setImageVisible(true)
             }
 
-            else if (!props.new && mediaType === 'upload' && (botanyState.activeAnnotation as photo_annotation).photo && !file || !props.new && mediaType === 'url' && (botanyState.activeAnnotation as photo_annotation).photo && !url) {
+            else if (!isNew && mediaType === 'upload' && (botanyState.activeAnnotation as photo_annotation).photo && !file || !isNew && mediaType === 'url' && (botanyState.activeAnnotation as photo_annotation).photo && !url) {
                 const base64String = Buffer.from((botanyState.activeAnnotation as photo_annotation).photo as Buffer).toString('base64');
                 const dataUrl = `data:image/jpeg;base64,${base64String}`
                 setImageSource(dataUrl)
@@ -514,16 +516,16 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
             if (url?.includes('https://www.youtube.com/embed/')) setImageVisible(false)
         }
 
-    }, [props.new, annotationType, mediaType, url, botanyState.activeAnnotation, props.index, file, imageSource])
+    }, [isNew, annotationType, mediaType, url, botanyState.activeAnnotation, props.index, file, imageSource])
 
-    if (props.index == 1) {
+    if (props.index === 1) {
         return (
             <>
                 <div className="w-[98%] h-fit flex flex-col border border-[#004C46] dark:border-white mt-4 ml-[1%] rounded-xl">
                     <p className="text-2xl mb-4 mt-2 ml-12">Annotation {props.index} <span className="ml-8">(This annotation is always taxonomy and description)</span></p>
                     <section className="flex justify-between mt-4 mb-8">
                         {
-                            !props.new &&
+                            !isNew &&
                             <>
                                 <AnnotationReposition />
                                 <div>
@@ -532,7 +534,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                             </>
                         }
                         {
-                            props.new &&
+                            isNew &&
                             <div className="flex justify-end w-full">
                                 <Button onClick={() => createAnnotation()} className="text-white text-lg mr-12" isDisabled={createDisabled}>Create Annotation</Button>
                             </div>
@@ -548,7 +550,7 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                 <div className="w-[98%] h-fit flex flex-col border border-[#004C46] dark:border-white mt-4 ml-[1%] rounded-xl">
                     <section className="flex justify-around">
                         {
-                            !props.new &&
+                            !isNew &&
                             <AnnotationReposition />
                         }
                         <p className="text-2xl mb-4 mt-2">Annotation {props.index}</p>
@@ -652,19 +654,18 @@ const AnnotationEntry = (props: { annotationType?: string, index: number, new: b
                     </section>
                     <section className="flex justify-end mb-8">
                         {
-                            props.new &&
+                            isNew &&
                             <>
                                 <Button onClick={() => createAnnotation()} className="text-white text-lg mr-8" isDisabled={createDisabled}>Create Annotation</Button>
                             </>
                         }
                         {
-                            !props.new && props.index !== 1 &&
+                            !isNew && props.index !== 1 &&
                             <div>
                                 <Button onClick={() => updateAnnotation()} className="text-white text-lg mr-2" isDisabled={saveDisabled}>Save Changes</Button>
                                 <Button onClick={() => deleteAnnotation()} color="danger" variant="light" className="mr-2">Delete Annotation</Button>
                             </div>
                         }
-
                     </section>
                 </div>
             </>
