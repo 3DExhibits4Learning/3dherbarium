@@ -9,7 +9,7 @@
 // Typical imports
 import { Accordion, AccordionItem } from "@nextui-org/react"
 import { specimenWithImageSet } from "@/api/types"
-import { useState, createContext } from "react"
+import { useState, createContext, memo } from "react"
 import { dataTransfer } from "@/api/types"
 
 // Default imports
@@ -40,6 +40,9 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
     // Context
     const modelerContext = { initializeDataTransferHandler, terminateDataTransferHandler }
 
+    // Memoed Forms
+    const MemoForms = memo(() => <ModelForms specimen={props.unModeledSpecimen} />)
+
     return (
         <ModelerContext.Provider value={modelerContext}>
             <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/modeler' />
@@ -52,7 +55,7 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
                         <ImageSetForms specimen={props.unphotographedSpecimen} />
                     </AccordionItem>
                     <AccordionItem key={'new3DModel'} aria-label={'New Image Set'} title={"I've created a new 3D Model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                        <ModelForms specimen={props.unModeledSpecimen} />
+                        <MemoForms />
                     </AccordionItem>
                 </Accordion>
                 <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
