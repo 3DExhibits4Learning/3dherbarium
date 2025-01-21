@@ -42,6 +42,7 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
 
     // Memoed Forms
     const MemoForms = memo(() => <ModelForms specimen={props.unModeledSpecimen} />)
+    MemoForms.displayName = 'MemoForms'
 
     return (
         <ModelerContext.Provider value={modelerContext}>
