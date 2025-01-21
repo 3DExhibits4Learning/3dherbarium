@@ -13,7 +13,7 @@ import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
 import { specimenWithImageSet, dataTransfer } from "@/api/types"
 import { buttonEnable } from "@/functions/client/shared";
-import { insertModelIntoDatabase, setImageSource } from "@/functions/client/admin/modeler"
+import { insertModelIntoDatabase } from "@/functions/client/admin/modeler"
 
 // Default imports
 import Form from "@/components/Shared/Form"
@@ -40,7 +40,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
 
     // Image source, button state
     const url = props.specimen.photoUrl
-    const imgSrc = process.env.NEXT_PUBLIC_LOCAL ? url : `/api/nfs?path=${url}`
+    const [imgSrc, setImgSrc] = useState<string>(process.env.NEXT_PUBLIC_LOCAL ? `/api/nfs?path=X:${url.slice(11)}` : `/api/nfs?path=${url}`)
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     // Required values
@@ -66,16 +66,16 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
 
     return (
-        <section className="flex justify-center w-full">
+        <section className="flex justify-center w-full mb-6">
             <Form width='w-4/5'>
                 <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
                 <div className="w-full h-2/5 mb-8 max-h-[300px]">
-                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} />
+                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} onError={() =>  setImgSrc('/noImage.png')}/>
                 </div>
                 <TextInput value={modeler} setValue={setModeler} title='3D Modeler' required textSize="text-2xl" />
                 <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
-                <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required />
-                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo />
+                <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required key={'select1'} />
+                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo key={'select2'} />
                 <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
                 <div>
                     <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>
