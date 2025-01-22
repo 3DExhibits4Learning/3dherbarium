@@ -5,7 +5,7 @@ import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
 import { annotationEntryContext } from "@/ts/botanist"
 
-export default function Annotation(props: {annotation: string, setAnnotation: Dispatch<SetStateAction<string>>}) {
+export default function Annotation(props: {annotation: string, setAnnotation?: Dispatch<SetStateAction<string>>}) {
 
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
 

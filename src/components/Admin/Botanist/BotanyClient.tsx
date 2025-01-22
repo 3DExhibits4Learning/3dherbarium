@@ -61,7 +61,6 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     return <BotanyClientContext.Provider value={{ botanyState, botanyDispatch, initializeDataTransferHandler, terminateDataTransferHandler }}>
 
         <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
-
         <AreYouSure uid={botanyState.uid as string} open={modalOpen} setOpen={setModalOpen} species={botanyState.specimenName as string} />
 
         <Accordion className="w-full" onSelectionChange={setSelectedKey}>

@@ -2,7 +2,7 @@
 
 import { Button } from "@nextui-org/react";
 import { Dispatch, forwardRef, MutableRefObject, SetStateAction, useContext } from "react";
-import { BotanyClientContext } from "./BotanyClient";
+import { BotanyClientContext } from "../BotanyClient";
 import { botanyClientContext } from "@/ts/botanist";
 
 export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetStateAction<boolean>>}, newAnnotationEnabledRef) =>  {

@@ -5,7 +5,7 @@ import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
 import { annotationEntryContext } from "@/ts/botanist"
 
-export default function License(props: { license: string, setLicense: Dispatch<SetStateAction<string>> }) {
+export default function License(props: { license: string, setLicense?: Dispatch<SetStateAction<string>> }) {
 
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
 

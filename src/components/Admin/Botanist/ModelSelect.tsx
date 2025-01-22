@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { BotanyClientContext } from "./BotanyClient";
 import { botanyClientContext } from "@/ts/botanist";
 import { Spinner } from "@nextui-org/react";
-import { AnnotationButtons } from "./AnnotationButtons";
+import { AnnotationButtons } from "./AnnotationSubcomponents/AnnotationButtons";
 
 import BotanistRefWrapper from "./BotanistModelViewerRef";
 

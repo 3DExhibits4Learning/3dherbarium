@@ -1,19 +1,19 @@
 /**
- * @file src/functions/client/reducers/CollectionsMediaStateReducer.ts
+ * @file src/functions/client/reducers/annotationEntryReducer.ts
  * 
- * @fileoverview simple reducer for the collections page media state (model, observations or images)
+ * @fileoverview annotation entry reducer
  */
 
 'use client'
 
 import { AnnotationEntryState } from "@/ts/botanist"
-import { AnnotationEntryAction, SetAnnotationEntryFile, SetModelAnnotation, SetPhotoAnnotation, SetString, SetVideoAnnotation } from "@/ts/reducer"
+import { AnnotationEntryAction, SetAnnotationEntryFile, SetImageSourceAndImageVisible, SetModelAnnotation, SetPhotoAnnotation, SetString, SetVideoAnnotation } from "@/ts/reducer"
 
 /**
  * 
- * @param mediaState previous stat object (not used, but required parameter)
- * @param action dispatch action
- * @returns CollectionsMediaObject
+ * @param annotationEntryState previous annotation entry state
+ * @param action dispatch object
+ * @returns next annotation entry state
  */
 export default function annotationEntryReducer(annotationEntryState: AnnotationEntryState, action: AnnotationEntryAction): AnnotationEntryState {
 
@@ -80,6 +80,8 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 mediaType: 'upload',
                 urlChecked: false,
                 uploadChecked: true,
+                url: photoAnnotation.url,
+                annotationType: 'photo'
             }
 
         case 'activeAnnotationIsWebPhoto':
@@ -101,7 +103,9 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 mediaType: 'url',
                 urlChecked: true,
                 uploadChecked: false,
-                imageSource: webPhotoAnnotation.url
+                imageSource: webPhotoAnnotation.url,
+                url: webPhotoAnnotation.url,
+                annotationType: 'photo'
             }
 
         case 'enableSaveAndCreate':
@@ -129,6 +133,83 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 file: setFileAction.file
             }
 
+        case 'setImageVisible':
+
+            return {
+                ...annotationEntryState,
+                imageVisible: true
+            }
+
+        case 'setImageInvisible':
+
+            return {
+                ...annotationEntryState,
+                imageVisible: false
+            }
+
+        case 'setImageSourceAndImageVisible':
+
+            const setSourceAndVisibleAction = action as SetImageSourceAndImageVisible
+
+            return {
+                ...annotationEntryState,
+                imageVisible: true,
+                imageSource: setSourceAndVisibleAction.src
+            }
+
+        case 'photoRadioButtonSelected':
+
+            return {
+                ...annotationEntryState,
+                annotationType: 'photo',
+                photoChecked: true,
+                videoChecked: false,
+                modelChecked: false
+            }
+
+        case 'videoRadioButtonSelected':
+
+            return {
+                ...annotationEntryState,
+                annotationType: 'video',
+                photoChecked: false,
+                videoChecked: true,
+                modelChecked: false,
+                urlChecked: true,
+                uploadChecked: false,
+                mediaType: 'url',
+            }
+
+        case 'modelRadioButtonSelected':
+
+            return {
+                ...annotationEntryState,
+                annotationType: 'model',
+                photoChecked: false,
+                videoChecked: false,
+                modelChecked: true,
+                urlChecked: false,
+                uploadChecked: false,
+                mediaType: 'model',
+            }
+
+        case 'urlRadioButtonSelected':
+
+            return {
+                ...annotationEntryState,
+                mediaType: 'url',
+                urlChecked: true,
+                uploadChecked: false
+            }
+
+        case 'uploadRadioButtonSelected':
+
+            return {
+                ...annotationEntryState,
+                mediaType: 'upload',
+                urlChecked: false,
+                uploadChecked: true
+            }
 
         default: throw new Error('Unkown dispatch type')
     }

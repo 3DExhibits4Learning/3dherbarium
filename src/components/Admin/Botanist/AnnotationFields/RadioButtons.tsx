@@ -1,22 +1,14 @@
 'use client'
 
-import { SetStateAction, Dispatch } from "react"
+import { useContext } from "react"
+import { AnnotationEntryContext } from "../AnnotationEntry"
+import { annotationEntryContext } from "@/ts/botanist"
 
-export default function RadioButtons(props: {
-    setAnnotationType: Dispatch<SetStateAction<string>>
-    setPhotoChecked: Dispatch<SetStateAction<boolean>>
-    setVideoChecked: Dispatch<SetStateAction<boolean>>
-    setMediaType: Dispatch<SetStateAction<string>>
-    setUploadChecked: Dispatch<SetStateAction<boolean>>
-    setUrlChecked: Dispatch<SetStateAction<boolean>>
-    setModelChecked: Dispatch<SetStateAction<boolean>>
-    photoChecked: boolean
-    videoChecked: boolean
-    modelChecked: boolean
-    annotationType: string
-    uploadChecked: boolean
-    urlChecked: boolean
-}) {
+export default function RadioButtons() {
+
+    const context = useContext(AnnotationEntryContext) as annotationEntryContext
+    const state = context.annotationState
+    const dispatch = context.annotationDispatch
 
     return (
         <>
@@ -27,13 +19,8 @@ export default function RadioButtons(props: {
                         type='radio'
                         value='photo'
                         name='typeOfAnnotation'
-                        onChange={(e) => {
-                            props.setAnnotationType(e.target.value)
-                            props.setPhotoChecked(true)
-                            props.setVideoChecked(false)
-                            props.setModelChecked(false)
-                        }}
-                        checked={props.photoChecked}
+                        onChange={() => dispatch({ type: 'photoRadioButtonSelected' })}
+                        checked={state.photoChecked}
                     >
                     </input>
                 </div>
@@ -43,16 +30,8 @@ export default function RadioButtons(props: {
                         type='radio'
                         value='video'
                         name='typeOfAnnotation'
-                        onChange={(e) => {
-                            props.setAnnotationType(e.target.value)
-                            props.setPhotoChecked(false)
-                            props.setVideoChecked(true)
-                            props.setModelChecked(false)
-                            props.setUploadChecked(false)
-                            props.setUrlChecked(true)
-                            props.setMediaType('url')
-                        }}
-                        checked={props.videoChecked}
+                        onChange={() => dispatch({ type: 'videoRadioButtonSelected' })}
+                        checked={state.videoChecked}
                     >
                     </input>
                 </div>
@@ -62,21 +41,13 @@ export default function RadioButtons(props: {
                         type='radio'
                         value='model'
                         name='typeOfAnnotation'
-                        onChange={(e) => {
-                            props.setAnnotationType(e.target.value)
-                            props.setPhotoChecked(false)
-                            props.setVideoChecked(false)
-                            props.setModelChecked(true)
-                            props.setUrlChecked(false)
-                            props.setUploadChecked(false)
-                            props.setMediaType('model')
-                        }}
-                        checked={props.modelChecked}
+                        onChange={() => dispatch({ type: 'modelRadioButtonSelected' })}
+                        checked={state.modelChecked}
                     >
                     </input>
                 </div>
                 {
-                    props.annotationType === 'photo' &&
+                    state.annotationType === 'photo' &&
                     <>
                         <p>URL</p>
                         <div>
@@ -84,12 +55,8 @@ export default function RadioButtons(props: {
                                 type='radio'
                                 value='url'
                                 name='typeOfPhoto'
-                                onChange={(e) => {
-                                    props.setMediaType(e.target.value)
-                                    props.setUploadChecked(false)
-                                    props.setUrlChecked(true)
-                                }}
-                                checked={props.urlChecked}
+                                onChange={() => dispatch({ type: 'urlRadioButtonSelected' })}
+                                checked={state.urlChecked}
                             >
                             </input>
                         </div>
@@ -99,13 +66,8 @@ export default function RadioButtons(props: {
                                 type='radio'
                                 value='upload'
                                 name='typeOfPhoto'
-                                onChange={(e) => {
-                                    props.setMediaType(e.target.value)
-                                    props.setUploadChecked(true)
-                                    props.setUrlChecked(false)
-                                    props.setMediaType('upload')
-                                }}
-                                checked={props.uploadChecked}
+                                onChange={() => dispatch({ type: 'uploadRadioButtonSelected' })}
+                                checked={state.uploadChecked}
                             >
                             </input>
                         </div>

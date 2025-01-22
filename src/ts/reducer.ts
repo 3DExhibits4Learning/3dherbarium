@@ -60,11 +60,16 @@ export interface AnnotationEntryType {
     "activeAnnotationIsModel" |
     "enableSaveAndCreate" |
     "disableSaveAndCreate" |
-    "setImageSource" |
     "setImageSourceAndImageVisible" |
     'setImageVisible' |
     'setActiveAnnotationType' | 
-    'setFile'
+    'setFile' |
+    'setImageInvisible' | 
+    'photoRadioButtonSelected' | 
+    'modelRadioButtonSelected' |
+    'videoRadioButtonSelected' |
+    'urlRadioButtonSelected' | 
+    'uploadRadioButtonSelected'
 }
 export interface SetString extends AnnotationEntryType {
     field: string
@@ -88,4 +93,7 @@ export interface SetModelAnnotation extends AnnotationEntryType {
 export interface SetAnnotationEntryFile extends AnnotationEntryType {
     file: File
 }
-export type AnnotationEntryAction = SetString | SetActiveAnnotationType | SetPhotoAnnotation | SetVideoAnnotation | SetModelAnnotation | SetAnnotationEntryFile
+export interface SetImageSourceAndImageVisible extends AnnotationEntryType {
+    src: string
+}
+export type AnnotationEntryAction = AnnotationEntryType | SetString | SetActiveAnnotationType | SetPhotoAnnotation | SetVideoAnnotation | SetModelAnnotation | SetAnnotationEntryFile | SetImageSourceAndImageVisible 

@@ -75,18 +75,28 @@ export interface annotationEntryContext {
     annotationDispatch: Dispatch<AnnotationEntryAction>
 }
 
-export const initialAnnotationEntryState = {
-    photoChecked: undefined,
-    videoChecked: undefined,
-    urlChecked: undefined,
-    uploadChecked: undefined,
-    modelChecked: undefined,
-    mediaType: undefined,
-    imageVisible: undefined,
-    createDisabled: true,
-    saveDisabled: true,
-    imageSource: undefined,
-    modelAnnotationUid: 'select',
-    annotationTitle: undefined,
-    file: undefined,
+export const initialAnnotationEntryState = (annotation: photo_annotation | video_annotation | model_annotation, annotationType: string) => {
+    return {
+        photoChecked: undefined,
+        videoChecked: undefined,
+        urlChecked: undefined,
+        uploadChecked: undefined,
+        modelChecked: undefined,
+        mediaType: undefined,
+        imageVisible: undefined,
+        createDisabled: true,
+        saveDisabled: true,
+        imageSource: undefined,
+        modelAnnotationUid: 'select',
+        annotationTitle: undefined,
+        file: undefined,
+        annotationType: annotationType ?? '',
+        url: (annotation as photo_annotation)?.url ?? '',
+        author: (annotation as photo_annotation)?.author ?? '',
+        license: (annotation as photo_annotation)?.license ?? '',
+        photoTitle: (annotation as photo_annotation)?.title ?? '',
+        website: (annotation as photo_annotation)?.website ?? '',
+        annotation: (annotation as photo_annotation)?.annotation ?? '',
+        length: (annotation as video_annotation)?.length ?? '',
+    }
 }
