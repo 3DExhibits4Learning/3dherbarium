@@ -132,6 +132,14 @@ export default function botanyClientReducer(botanistState: BotanyClientState, ac
                 uid: undefined
             }
 
+        case 'undefineUidAndActiveAnnotation':
+
+            return {
+                ...botanistState,
+                uid: undefined,
+                activeAnnotationIndex: undefined
+            }
+
         default: throw new Error('Unkown dispatch type')
     }
 }

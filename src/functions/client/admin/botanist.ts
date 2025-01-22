@@ -35,20 +35,30 @@ export const getIndex = (context: BotanyClientState) => {
  */
 export const activeAnnotationIndexDispatch = (botanyState: BotanyClientState, botanyDispatch: Dispatch<BotanyClientAction>) => {
     if (botanyState.activeAnnotationIndex === 1) botanyDispatch({ type: 'activeAnnotationSetTo1' })
-    else if (typeof (botanyState.activeAnnotationIndex) === 'number' && botanyState.annotations) { botanyDispatch({ type: "numberedActiveAnnotation" }) }
+    else if (typeof (botanyState.activeAnnotationIndex) === 'number' && botanyState.annotations) botanyDispatch({ type: "numberedActiveAnnotation" })
 }
 
-// Set relevant model data; this is called onPress of the Accordion
+/**
+ * 
+ * @param uid 
+ * @param newAnnotationEnabled 
+ * @param botanyDispatch 
+ */
 export const getAnnotationsObj = async (uid: string, newAnnotationEnabled: MutableRefObject<boolean>, botanyDispatch: Dispatch<BotanyClientAction>) => {
-    
+
+    // retrieve model annotations
     const modelAnnotations = await ModelAnnotations.retrieve(uid as string)
-    let annotationPosition = ''
 
-    await fetch(`/api/annotations?uid=${uid}`, { cache: 'no-store' }).then(res => res.json()).then(json => {
-            if (json.response) annotationPosition = JSON.parse(json.response)
-        })
-
+    // Fetch first annotation position, disable new annotation ref
+    const annotationPosition = await fetch(`/api/annotations?uid=${uid}`, { cache: 'no-store' }).then(res => res.json()).then(json => { if (json.response) return json.response; return '' })
     newAnnotationEnabled.current = false
+
+    // Type safe dispatch object and fn call
     const uidOrAnnotationDispatchObj: NewModelOrAnnotation = { type: 'newModelOrAnnotation', modelAnnotations: modelAnnotations, annotationPosition: annotationPosition }
     botanyDispatch(uidOrAnnotationDispatchObj)
+}
+
+export const setImgSrc = async (url: string) => {
+    const path = process.env.NEXT_PUBLIC_LOCAL ? `X:${url.slice(5)}` : `public${url}`
+    //setImageSource(`/api/nfs?path=${path}`)
 }

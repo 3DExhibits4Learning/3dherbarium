@@ -12,7 +12,6 @@ export default function AnnotationEntryWrapper(props: { annotationModels: model[
 
     const context = useContext(BotanyClientContext) as botanyClientContext
     const botanyState = context.botanyState
-    const botanyDispatch = context.botanyDispatch
 
     return <div className="flex flex-col w-4/5">
         <section className="flex w-full h-full flex-col">

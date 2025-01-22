@@ -2,6 +2,9 @@
  * @file src\functions\server\jira.ts
  * 
  * @fileoverview jira api project management logic
+ *  Transitions: // https://3dteam.atlassian.net/rest/api/2/issue/{epic key}/transitions
+ *
+ * 
  */
 
 /**

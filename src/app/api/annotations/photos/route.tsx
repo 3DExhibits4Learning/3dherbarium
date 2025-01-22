@@ -1,4 +1,6 @@
-// Retrieve photos from NFS data storage container
+/**
+ * @deprecated
+ */
 
 import { readFile } from "fs/promises"
 

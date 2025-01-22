@@ -1,8 +1,12 @@
 import { Dispatch } from "react"
 import { CollectionsWrapperProps } from "./collections"
-import { model, userSubmittal } from "@prisma/client"
+import { model, model_annotation, photo_annotation, userSubmittal, video_annotation } from "@prisma/client"
 
 import ModelAnnotations from "@/utils/ModelAnnotationsClass"
+
+export interface CollectionsMediaAction {
+    type: 'modelChecked' | 'observationsChecked' | 'photosChecked'
+}
 
 export interface CollectionsMediaObject {
     modelChecked: boolean,
@@ -10,30 +14,27 @@ export interface CollectionsMediaObject {
     photosChecked: boolean
 }
 
-export interface CollectionsMediaAction {
-    type: 'modelChecked' | 'observationsChecked' | 'photosChecked'
-}
-
-export interface CollectionsWrapperData{
+export interface CollectionsWrapperData {
     mediaState: CollectionsMediaObject,
     mediaStateDispatch: Dispatch<CollectionsMediaAction>,
     collectionsWrapperProps: CollectionsWrapperProps,
     userModel: userSubmittal | undefined,
-    
+
 }
 
-export interface BotanyClientType{
+export interface BotanyClientType {
     type: 'activeAnnotationSetTo1' |
-        "numberedActiveAnnotation" | 
-        "newModelOrAnnotation" |
-        "newModelClicked" | 
-        "newAnnotationClicked" | 
-        "newAnnotationCancelled" | 
-        "setActiveAnnotationIndex" | 
-        "setPosition" |
-        "setRepositionEnabled" | 
-        "annotationSavedOrDeleted" | 
-        'setUidUndefined'
+    "numberedActiveAnnotation" |
+    "newModelOrAnnotation" |
+    "newModelClicked" |
+    "newAnnotationClicked" |
+    "newAnnotationCancelled" |
+    "setActiveAnnotationIndex" |
+    "setPosition" |
+    "setRepositionEnabled" |
+    "annotationSavedOrDeleted" |
+    'setUidUndefined' |
+    'undefineUidAndActiveAnnotation'
 }
 export interface NewModelOrAnnotation extends BotanyClientType {
     modelAnnotations: ModelAnnotations
@@ -42,10 +43,49 @@ export interface NewModelOrAnnotation extends BotanyClientType {
 export interface NewModelClicked extends BotanyClientType {
     model: model
 }
-export interface SetPosition extends BotanyClientType{
+export interface SetPosition extends BotanyClientType {
     position: string | undefined
 }
-export interface SetActiveAnnotationIndex extends BotanyClientType{
-    index:  number | "new" | undefined
+export interface SetActiveAnnotationIndex extends BotanyClientType {
+    index: number | "new" | undefined
 }
 export type BotanyClientAction = BotanyClientType | NewModelOrAnnotation | SetPosition | SetActiveAnnotationIndex
+
+export interface AnnotationEntryType {
+    type: 'setStringValue' |
+    "activeAnnotationChanged" |
+    "activeAnnotationIsHostedPhoto" |
+    "activeAnnotationIsWebPhoto" |
+    "activeAnnotationIsVideo" |
+    "activeAnnotationIsModel" |
+    "enableSaveAndCreate" |
+    "disableSaveAndCreate" |
+    "setImageSource" |
+    "setImageSourceAndImageVisible" |
+    'setImageVisible' |
+    'setActiveAnnotationType' | 
+    'setFile'
+}
+export interface SetString extends AnnotationEntryType {
+    field: string
+    value: string
+}
+export interface SetActiveAnnotationType extends AnnotationEntryType {
+    annotationType: 'photo' | 'model' | 'video'
+}
+export interface SetPhotoAnnotation extends AnnotationEntryType {
+    annotation: photo_annotation
+    annotationTitle: string
+}
+export interface SetVideoAnnotation extends AnnotationEntryType {
+    annotation: video_annotation
+    annotationTitle: string
+}
+export interface SetModelAnnotation extends AnnotationEntryType {
+    annotation: model_annotation
+    annotationTitle: string
+}
+export interface SetAnnotationEntryFile extends AnnotationEntryType {
+    file: File
+}
+export type AnnotationEntryAction = SetString | SetActiveAnnotationType | SetPhotoAnnotation | SetVideoAnnotation | SetModelAnnotation | SetAnnotationEntryFile
