@@ -483,3 +483,18 @@ export const photoVisibilityHandler = (index: number | 'new' | undefined, botany
         if (annotationState.url.includes('https://www.youtube.com/embed/')) annotationDispatch({ type: 'setImageInvisible' })
     }
 }
+
+/**
+ * 
+ * @param botanyState 
+ * @param sketchfabApi 
+ */
+export const removeHigherAnnotations = (botanyState: BotanyClientState, sketchfabApi: any) => {
+
+    if (botanyState.annotations && botanyState.annotations.length + 1 !== botanyState.activeAnnotationIndex) {
+
+        for (let i = botanyState.annotations.length; i >= (botanyState.activeAnnotationIndex as number); i--)
+
+            sketchfabApi.removeAnnotation(i, (e: any) => { throw Error(e.message) })
+    }
+}
