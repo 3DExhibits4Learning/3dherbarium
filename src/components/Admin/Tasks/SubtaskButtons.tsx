@@ -14,11 +14,13 @@ import { isIssueAutoMarkedDone, transitionIssue } from "@/functions/client/admin
 
 // Default imports
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
+import { BotanyClientContext } from "../Botanist/BotanyClient"
+import { botanyClientContext } from "@/ts/botanist"
 
-export default function SubtaskButton(props: { status: string, issueKey: string, summary: string }) {
+export default function SubtaskButton(props: { status: string, issueKey: string, summary: string, botanist?: boolean }) {
 
     // Data transfer context
-    const context = useContext(ModelerContext) as dataTransfer
+    const context = !props.botanist ? useContext(ModelerContext) as dataTransfer : useContext(BotanyClientContext) as botanyClientContext
     const initializeTransfer = context.initializeDataTransferHandler
     const terminateTransfer = context.terminateDataTransferHandler
 

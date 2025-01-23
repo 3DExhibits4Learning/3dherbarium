@@ -67,7 +67,14 @@ export const transitionIssue = async (transitionId: number, issueKey: string) =>
  * 
  * @param subtasks 
  */
-export const arrangeSubtasks = (subtasks: any[]) => {
+export const arrangeSubtasks = (subtasks: any[], botanist?: boolean | undefined) => {
+
+    if (botanist) {
+        const orderedSubtasks = subtasks.filter((task: any) => task.fields.summary.includes('metadata'))
+        orderedSubtasks.push(subtasks.find((task: any) => task.fields.summary.includes('Annotate')))
+        return orderedSubtasks
+    }
+
     const orderedSubtasks = subtasks.filter((task: any) => task.fields.summary.includes('Photograph'))
     orderedSubtasks.push(subtasks.find((task: any) => task.fields.summary.includes('Convert')))
     orderedSubtasks.push(subtasks.find((task: any) => task.fields.summary.includes('Build')))

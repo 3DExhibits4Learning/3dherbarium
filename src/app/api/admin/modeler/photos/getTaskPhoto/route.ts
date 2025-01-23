@@ -22,7 +22,6 @@ export async function GET(request: Request) {
 
         // Variable initialization
         const sidSlice = searchParams.get('sidSlice') as string; if (!sidSlice) throw Error('Missing sid')
-            console.log(sidSlice)
 
         // Find specimen containing the first 
         const specimen = await prisma.specimen.findFirst({ where: { sid: { contains: sidSlice } } })

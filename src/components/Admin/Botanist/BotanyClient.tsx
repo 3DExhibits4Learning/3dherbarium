@@ -25,12 +25,13 @@ import terminateDataTransfer from "@/functions/client/dataTransfer/terminateData
 import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDataTransfer"
 import botanyClientReducer from "@/functions/client/reducers/botanyClientReducer"
 import AnnotationEntryWrapper from "./AnnotationEntryWrapper"
+import Tasks from "../Tasks/Tasks"
 
 // Exported context
 export const BotanyClientContext = createContext<botanyClientContext | ''>('')
 
 // Main JSX
-export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[] }) {
+export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[], epic: any }) {
 
     // Reducer
     const [botanyState, botanyDispatch] = useReducer(botanyClientReducer, initialBotanyClientState)
@@ -63,20 +64,28 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
         <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
         <AreYouSure uid={botanyState.uid as string} open={modalOpen} setOpen={setModalOpen} species={botanyState.specimenName as string} />
 
-        <Accordion className="w-full" onSelectionChange={setSelectedKey}>
+        <section className="w-full h-full flex">
+            
+            <Accordion className="w-full overflow-y-auto" onSelectionChange={setSelectedKey}>
+                
+                <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                    <NewSpecimenEntry initializeTransfer={initializeDataTransferHandler} terminateTransfer={terminateDataTransferHandler} />
+                </AccordionItem>
+                
+                <AccordionItem key={'annotate'} aria-label={'annotate'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                    <section className="flex w-full h-full">
+                        <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
+                        <AnnotationEntryWrapper annotationModels={props.annotationModels} />
+                    </section>
+                </AccordionItem>
+            
+            </Accordion>
+            
+            <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
+                <Tasks epic={props.epic} botanist/>
+            </div>
 
-            <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                <NewSpecimenEntry initializeTransfer={initializeDataTransferHandler} terminateTransfer={terminateDataTransferHandler} />
-            </AccordionItem>
-
-            <AccordionItem key={'annotate'} aria-label={'annotate'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                <section className="flex w-full h-full">
-                    <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
-                    <AnnotationEntryWrapper annotationModels={props.annotationModels} />
-                </section>
-            </AccordionItem>
-
-        </Accordion>
+        </section>
 
     </BotanyClientContext.Provider>
 }
