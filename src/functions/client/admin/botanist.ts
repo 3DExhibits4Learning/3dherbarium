@@ -320,7 +320,6 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
             break
 
         default:
-
             // Photo_annotation table data
             data.set('author', annotationState.author)
             data.set('license', annotationState.license)
@@ -481,20 +480,5 @@ export const photoVisibilityHandler = (index: number | 'new' | undefined, botany
         else annotationDispatch({ type: 'setImageInvisible' })
 
         if (annotationState.url.includes('https://www.youtube.com/embed/')) annotationDispatch({ type: 'setImageInvisible' })
-    }
-}
-
-/**
- * 
- * @param botanyState 
- * @param sketchfabApi 
- */
-export const removeHigherAnnotations = (botanyState: BotanyClientState, sketchfabApi: any) => {
-
-    if (botanyState.annotations && botanyState.annotations.length + 1 !== botanyState.activeAnnotationIndex) {
-
-        for (let i = botanyState.annotations.length; i >= (botanyState.activeAnnotationIndex as number); i--)
-
-            sketchfabApi.removeAnnotation(i, (e: any) => { throw Error(e.message) })
     }
 }

@@ -33,7 +33,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // iFrame minimum height
     const minHeight = props.minHeight ? props.minHeight : '150px'
 
-    // Annotation function wrappers (callbacks)
+    // Annotation/successObj function wrappers (callbacks)
     const createAnnotationWrapper = (info: any) => fn.createAnnotation(info, botanyState, sketchfabApi, temporaryAnnotationIndex, newAnnotationEnabled, dispatch)
     const repositionAnnotationWrapper = (info: any) => fn.repositionAnnotation(info, botanyState, sketchfabApi, temporaryAnnotationIndex, dispatch)
     const annotationSelectWrapper = (index: any) => fn.annotationSelectHandler(index, dispatch, newAnnotationEnabled)
@@ -59,13 +59,13 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // Remove temporary annotation when its cancelled
     useEffect(() => fn.removeTemporaryAnnotation(sketchfabApi, temporaryAnnotationIndex, dispatch), [botanyState.cancelledAnnotation]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Add the createAnnotation listener when the associated state is enabled (or vice versa); comes with cleanup function
+    // Add the createAnnotation listener when the associated state is enabled (or vice versa); cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
         fn.enableCreateAnnotationListener(sketchfabApi, temporaryAnnotationIndex, botanyState, createAnnotationWrapper)
         return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' }) }
     }, [botanyState.newAnnotationEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Allow repositioning of the active annotation when reposition is enabled (or remove it if appropriate); comes with cleanup function
+    // Allow repositioning of the active annotation when reposition is enabled (or remove it if appropriate); cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
         fn.enableReposition(botanyState, sketchfabApi, repositionAnnotationWrapper)
         return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'fast' }) }
@@ -74,7 +74,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // Reposition an annotation to its original location when the annotation reposition checkbox is unchecked
     useEffect(() => fn.repositionUncheckedHandler(botanyState, sketchfabApi, temporaryAnnotationIndex), [botanyState.repositionEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Initialize the annotation select event handler and handle corresponding state changes within the handler
+    // Initialize the annotation select event handler and handle corresponding state changes within the handler; cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
         fn.annotationSelectEventHandler(sketchfabApi, botanyState, annotationSelectWrapper)
         return () => { if (sketchfabApi) sketchfabApi.removeEventListener('annotationSelect', annotationSelectWrapper) }

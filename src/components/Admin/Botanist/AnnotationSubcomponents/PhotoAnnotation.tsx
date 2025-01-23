@@ -21,7 +21,7 @@ export default function PhotoAnnotation(props: {}) {
         {
             botanyState.activeAnnotationType == 'photo' && annotationState.mediaType && ['url', 'upload'].includes(annotationState.mediaType) &&
             <section className="mt-4 w-full h-fit">
-                <div className="flex h-[530px]">
+                <div className="flex ">
                     <div className="flex flex-col w-1/2">
                         <div className="ml-12">
                             <TextInput value={annotationState.annotationTitle as string} field='annotationTitle' title='Annotation Title' required />

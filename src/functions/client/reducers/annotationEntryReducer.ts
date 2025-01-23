@@ -43,7 +43,8 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 url: annotation.url,
                 length: annotation.length as string,
                 imageSource: annotation.url,
-                annotationTitle: setVideoAction.annotationTitle
+                annotationTitle: setVideoAction.annotationTitle,
+                annotationType: 'video'
             }
 
         case 'activeAnnotationIsModel':
@@ -58,7 +59,8 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 modelChecked: true,
                 mediaType: 'model',
                 modelAnnotationUid: modelAnnotation.uid,
-                annotationTitle: setModelAction.annotationTitle
+                annotationTitle: setModelAction.annotationTitle,
+                annotationType: 'model'
             }
 
         case 'activeAnnotationIsHostedPhoto':
