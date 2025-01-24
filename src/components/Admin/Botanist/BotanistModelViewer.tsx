@@ -62,13 +62,13 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // Add the createAnnotation listener when the associated state is enabled (or vice versa); cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
         fn.enableCreateAnnotationListener(sketchfabApi, temporaryAnnotationIndex, botanyState, createAnnotationWrapper)
-        return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' }) }
+        return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'slow' }) }
     }, [botanyState.newAnnotationEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Allow repositioning of the active annotation when reposition is enabled (or remove it if appropriate); cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
         fn.enableReposition(botanyState, sketchfabApi, repositionAnnotationWrapper)
-        return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'fast' }) }
+        return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'slow' }) }
     }, [botanyState.activeAnnotationIndex, botanyState.repositionEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
     // Reposition an annotation to its original location when the annotation reposition checkbox is unchecked

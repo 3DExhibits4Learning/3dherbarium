@@ -71,7 +71,8 @@ export const createAnnotation = (info: any, botanyState: BotanyClientState, sket
             })
 
             // If the click was on the 3d model (and not the background) set position/activeAnnotation data
-            if (info.position3D) {
+            if (info.instanceID) {
+                console.log("Info: ", info)
                 const positionArray = Array.from(info.position3D)
                 const positionDispatch: SetPosition = { type: "setPosition", position: JSON.stringify([positionArray, camera.position, camera.target]) }
                 dispatch(positionDispatch)
@@ -213,7 +214,7 @@ export const initializeViewer = (modelViewer: MutableRefObject<HTMLIFrameElement
  */
 export const removeTemporaryAnnotation = (sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, dispatch: Dispatch<BotanyClientAction>) => {
 
-    if (sketchfabApi && temporaryAnnotationIndex.current != undefined) {
+    if (sketchfabApi && temporaryAnnotationIndex.current !== undefined) {
         sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
         const positionDispatch: SetPosition = { type: "setPosition", position: undefined }; dispatch(positionDispatch)
     }
@@ -228,20 +229,20 @@ export const removeTemporaryAnnotation = (sketchfabApi: any, temporaryAnnotation
  */
 export const enableCreateAnnotationListener = (sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, botanyState: BotanyClientState, createAnnotationWrapper: Function) => {
 
-    if (sketchfabApi && botanyState.newAnnotationEnabled === true) {
+    if (sketchfabApi && botanyState.newAnnotationEnabled) {
         temporaryAnnotationIndex.current = undefined
-        sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'fast' })
+        sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'slow' })
     }
 
-    else if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' })
+    else if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'slow' })
 }
 
 export const enableReposition = (botanyState: BotanyClientState, sketchfabApi: any, repositionAnnotationWrapper: Function) => {
     if (sketchfabApi && botanyState.activeAnnotationIndex !== undefined && botanyState.activeAnnotationIndex !== 'new' && botanyState.repositionEnabled) {
-        sketchfabApi.addEventListener('click', repositionAnnotationWrapper, { pick: 'fast' })
+        sketchfabApi.addEventListener('click', repositionAnnotationWrapper, { pick: 'slow' })
     }
 
-    else if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'fast' })
+    else if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'slow' })
 }
 
 /**

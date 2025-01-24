@@ -59,6 +59,8 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     useEffect(() => { getAnnotationsObj(botanyState.uid as string, newAnnotationEnabled, botanyDispatch) }, [botanyState.uid, botanyState.annotationSavedOrDeleted])
     useEffect(() => { if (!selectedKey?.has('annotate')) botanyDispatch({ type: 'undefineUidAndActiveAnnotation' }) }, [selectedKey])
 
+    console.log(botanyState)
+
     return <BotanyClientContext.Provider value={{ botanyState, botanyDispatch, initializeDataTransferHandler, terminateDataTransferHandler }}>
 
         <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
