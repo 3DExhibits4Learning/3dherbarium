@@ -50,3 +50,5 @@ export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetSt
         }
     </>
 })
+
+AnnotationButtons.displayName = 'AnnotationButtons'

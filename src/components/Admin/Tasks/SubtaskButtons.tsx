@@ -20,7 +20,9 @@ import { botanyClientContext } from "@/ts/botanist"
 export default function SubtaskButton(props: { status: string, issueKey: string, summary: string, botanist?: boolean }) {
 
     // Data transfer context
-    const context = !props.botanist ? useContext(ModelerContext) as dataTransfer : useContext(BotanyClientContext) as botanyClientContext
+    const modelerContext = useContext(ModelerContext) as dataTransfer
+    const botanistContext = useContext(BotanyClientContext) as botanyClientContext
+    const context = !props.botanist ? modelerContext : botanistContext
     const initializeTransfer = context.initializeDataTransferHandler
     const terminateTransfer = context.terminateDataTransferHandler
 

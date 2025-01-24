@@ -52,3 +52,5 @@ export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setMo
         </Accordion>
     </section>
 })
+
+ModelSelect.displayName = 'ModelSelect'
