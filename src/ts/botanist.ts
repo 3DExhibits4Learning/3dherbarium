@@ -26,6 +26,7 @@ export interface BotanyClientState {
     activeAnnotationTitle: string | undefined
     repositionEnabled: boolean
     annotationSavedOrDeleted: boolean
+    sid: string | undefined
 }
 
 export const initialBotanyClientState = {
@@ -44,6 +45,7 @@ export const initialBotanyClientState = {
     activeAnnotationTitle: undefined,
     repositionEnabled: false,
     annotationSavedOrDeleted: false,
+    sid: undefined
 }
 
 export interface AnnotationEntryState {

@@ -4,7 +4,7 @@ import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
 import { SetStateAction, useState, Dispatch } from "react";
 import { Spinner } from "@nextui-org/react";
 
-export default function AreYouSure(props: { uid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, species: string }) {
+export default function AreYouSure(props: { uid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, species: string, sid: string }) {
 
     // Variable initialization
     const [areTheySure, setAreTheySure] = useState<boolean>(false)
@@ -17,7 +17,8 @@ export default function AreYouSure(props: { uid: string, open: boolean, setOpen:
             method: 'PATCH',
             body: JSON.stringify({
                 uid: props.uid,
-                species: props.species
+                species: props.species,
+                sid: props.sid
             })
         })
             .then(res => res.json())

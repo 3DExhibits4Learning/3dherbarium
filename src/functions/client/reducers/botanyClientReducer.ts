@@ -72,7 +72,8 @@ export default function botanyClientReducer(botanistState: BotanyClientState, ac
                 ...botanistState,
                 firstAnnotationPosition: undefined,
                 specimenName: model.spec_name,
-                uid: model.uid
+                uid: model.uid,
+                sid: model.sid
             }
 
         case 'newAnnotationClicked':

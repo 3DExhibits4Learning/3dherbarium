@@ -11,10 +11,12 @@ import { insertFirstAnnotationPosition, getFirstAnnotationPostion, deleteAnnotat
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { unlink, rm } from "fs/promises"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import { autoWrite } from "@/functions/server/files"
 
 // Default imports
 import prisma from "@/utils/prisma"
-import { autoWrite } from "@/functions/server/files"
+import { transitionSubtask } from "@/functions/server/jira"
+import { sendErrorEmail } from "@/functions/server/email"
 
 // PATH
 const path = 'src/app/api/annotations/route.tsx'
@@ -48,8 +50,9 @@ export async function POST(request: Request) {
 
     try {
 
-        // Grab form data
+        // Grab form data, ensure subtask is marked as 'in progress'
         const data = await request.formData()
+        await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0,8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
 
         // First annotation handler; always taxonomy and description, insert position with typical try-catch return
         if (data.get('index') == '1') {
@@ -152,6 +155,7 @@ export async function PATCH(request: Request) {
 
     // Grab form data
     const data = await request.formData()
+    await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0,8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'PATCH'))
 
     // First annotation handler; always taxonomy and description, insert position with typical try-catch return
     if (data.get('index') === '1') {

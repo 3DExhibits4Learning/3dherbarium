@@ -283,25 +283,27 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
 
     const data = new FormData()
 
-    // Simple handler for the first annotation (always taxonomy and description)
+    // Simple handler for the first annotation (always taxonomy and description); sid for jira task
     if (index === 1) {
 
         // Form data for first annotation
         data.set('uid', botanyState.uid as string)
         data.set('position', botanyState.position3D as string)
         data.set('index', index.toString())
+        data.set('sid', botanyState.sid as string)
 
         // Fetch route handler
         return await fetch('/api/annotations', { method: 'POST', body: data }).then(res => res.json()).then(json => json.data)
     }
 
     // The remaining code is for all annotations other than the first
-    // Annotations table data
+    // Annotations table data; sid for jira task
     data.set('uid', botanyState.uid as string)
     data.set('annotation_no', index.toString())
     data.set('annotation_type', botanyState.activeAnnotationType as 'photo' | 'model' | 'video')
     data.set('position', botanyState.position3D as string)
     data.set('title', annotationState.annotationTitle as string)
+    data.set('sid', botanyState.sid as string)
 
     // Set relevant data based on botanyState.activeAnnotationType
     switch (botanyState.activeAnnotationType) {
@@ -358,11 +360,12 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
 export const updateAnnotation = async (index: number, botanyState: BotanyClientState, annotationState: AnnotationEntryState) => {
     const data = new FormData()
 
-    // Simple handler for the first annotation (always taxonomy and description)
+    // Simple handler for the first annotation (always taxonomy and description); sid for jira task
     if (index == 1) {
         data.set('uid', botanyState.uid as string)
         data.set('position', botanyState.position3D as string)
         data.set('index', index.toString())
+        data.set('sid', botanyState.sid as string)
 
         // Fetch route handler - set modal result
         return await fetch('/api/annotations', { method: 'PATCH', body: data }).then(res => res.json()).then(json => json.data)
@@ -375,11 +378,12 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
         data.set('previousMedia', botanyState.activeAnnotationType as string)
     }
 
-    // Annotations table data (for update)
+    // Annotations table data (for update); sid for jira task
     data.set('uid', botanyState.uid as string)
     data.set('annotation_type', botanyState.activeAnnotationType as 'photo' | 'model' | 'video')
     data.set('position', botanyState.position3D as string ?? botanyState.activeAnnotationPosition)
     data.set('title', annotationState.annotationTitle as string)
+    data.set('sid', botanyState.sid as string)
 
     // Set relevant data based on botanyState.activeAnnotationType
     switch (botanyState.activeAnnotationType) {

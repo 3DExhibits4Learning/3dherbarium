@@ -70,7 +70,7 @@ export default function NewSpecimenEntry(props:{initializeTransfer?: Function, t
     }
 
     // Button enabler
-    useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, isLocal !== undefined, position, height, locality, file], setDisabled))
+    useEffect(() => buttonEnable([species, acquisitionDate, procurer, genus, position, height, locality, file], setDisabled))
 
     return (
         <section className="w-full flex justify-center">

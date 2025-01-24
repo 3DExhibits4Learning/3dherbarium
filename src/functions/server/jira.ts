@@ -129,7 +129,7 @@ export async function createTask(epicKey: string, summary: string, description: 
 }
 
 /**
- * 
+ * @deprecated use transitionSubtask
  * @param issueKey 
  * @param uuidSlice10 
  * @param subtaskKeyword 
@@ -192,6 +192,32 @@ export async function transitionTask(issueKey: string, uuidSlice8: string, trans
 
         // Transition the issue to "done" with transition ID 31
         await transitionIssue(transitionId, task.key).catch(e => { throw Error(e.message) })
+    }
+    // throw error on catch
+    catch (e: any) { throw Error(e.message) }
+}
+
+/**
+ * 
+ * @param issueKey 
+ * @param uuidSlice8 
+ * @param subtaskKeyword 
+ * @param transitionId 
+ */
+export async function transitionSubtask(issueKey: string, uuidSlice8: string, subtaskKeyword: string, transitionId: number) {
+
+    try {
+        // Get epic JSON data
+        const epic = await getIssue(issueKey).catch(e => { throw Error(e.message) })
+
+        // Find the task including the first 10 chars of the spcimen uuid in the summary
+        const task = getTaskFromEpic(epic, uuidSlice8)
+
+        // Get the task JSON and find the subtask containing both the first 10 chars of the uuid and the subtask keyword
+        const subtask = getSubtaskFromTask(task, uuidSlice8, subtaskKeyword)
+
+        // Transition the issue to "done" with transition ID 31
+        transitionIssue(transitionId, subtask.key)
     }
     // throw error on catch
     catch (e: any) { throw Error(e.message) }
