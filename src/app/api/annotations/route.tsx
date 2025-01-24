@@ -3,7 +3,6 @@
  * 
  * @fileoverview annotation CUD route handler
  * 
- * 
  */
 
 // Typical imports
@@ -12,11 +11,11 @@ import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/
 import { unlink, rm } from "fs/promises"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { autoWrite } from "@/functions/server/files"
+import { transitionSubtask } from "@/functions/server/jira"
+import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
 import prisma from "@/utils/prisma"
-import { transitionSubtask } from "@/functions/server/jira"
-import { sendErrorEmail } from "@/functions/server/email"
 
 // PATH
 const path = 'src/app/api/annotations/route.tsx'
@@ -34,7 +33,7 @@ export async function GET(request: Request) {
     // Return first annotation position if it exists; typical try-catch return
     try {
         const firstAnnotationPosition = await getFirstAnnotationPostion(searchParams.get('uid') as string).catch((e) => routeHandlerErrorHandler(path, e.message, 'getFirstAnnotationPosition()', "Couldn't get annotation position"))
-        return Response.json({ data: 'Annotation Position retrieved', response: firstAnnotationPosition })
+        return routeHandlerTypicalResponse('Annotation Position retrieved', firstAnnotationPosition)
     }
     // Typical catch
     catch (e: any) { return routeHandlerTypicalCatch(e.message) }
@@ -52,7 +51,7 @@ export async function POST(request: Request) {
 
         // Grab form data, ensure subtask is marked as 'in progress'
         const data = await request.formData()
-        await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0,8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
+        await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
 
         // First annotation handler; always taxonomy and description, insert position with typical try-catch return
         if (data.get('index') == '1') {
@@ -155,7 +154,7 @@ export async function PATCH(request: Request) {
 
     // Grab form data
     const data = await request.formData()
-    await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0,8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'PATCH'))
+    await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'PATCH'))
 
     // First annotation handler; always taxonomy and description, insert position with typical try-catch return
     if (data.get('index') === '1') {
