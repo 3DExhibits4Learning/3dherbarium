@@ -1,10 +1,14 @@
-// This class will be moved back server side
+/**
+ * @file src/utils/HerbariumClass.tsx
+ * 
+ * @fileoverview herbarium client class
+ */
 
 'use client'
 
-import { GbifImageResponse, GbifMediaResponse, GbifProfile } from "@/api/types"
+import { GbifImageResponse, GbifProfile } from "@/api/types"
+import { software, image_set, model, photo_annotation, model_annotation, specimen } from "@prisma/client"
 import ModelAnnotations from "./ModelAnnotationsClass"
-import { software, image_set, model, annotations, photo_annotation, model_annotation } from "@prisma/client"
 
 export default class Herbarium {
 
@@ -17,8 +21,9 @@ export default class Herbarium {
   model: model
   profile: GbifProfile
   imageSectionTitle: string
+  specimen: specimen
 
-  private constructor(commonNames: string[], software: software[], image_set: image_set[], images: GbifImageResponse[], profile: GbifProfile, wikiSummary: any, imageSectionTitle: string, model: model, annotations: ModelAnnotations) {
+  private constructor(commonNames: string[], software: software[], image_set: image_set[], images: GbifImageResponse[], profile: GbifProfile, wikiSummary: any, imageSectionTitle: string, model: model, annotations: ModelAnnotations, specimen: specimen) {
     this.commonNames = commonNames
     this.software = software
     this.image_set = image_set
@@ -28,6 +33,7 @@ export default class Herbarium {
     this.profile = profile
     this.wikiSummary = wikiSummary
     this.imageSectionTitle = imageSectionTitle
+    this.specimen = specimen
   }
 
   static async model(usageKey: number, model: model, images: GbifImageResponse[], title: string) {
@@ -36,7 +42,7 @@ export default class Herbarium {
     var annotations: any
     var promises = []
 
-    promises.push(fetch(`/api/collections/herbarium?uid=${model.uid}&usageKey=${usageKey.toString()}&specimenName=${model.spec_name}`)
+    promises.push(fetch(`/api/collections/herbarium?uid=${model.uid}&usageKey=${usageKey.toString()}&specimenName=${model.spec_name}&sid=${model.sid}`)
       .then(res => res.json())
       .then(json => json.response))
 
@@ -47,7 +53,7 @@ export default class Herbarium {
       annotations = res[1]
     })
 
-    return new Herbarium(data[0], data[1], data[2], images, data[3], data[4], title, model, annotations)
+    return new Herbarium(data[0], data[1], data[2], images, data[3], data[4], title, model, annotations, data[5])
   }
 
   getAnnotator() {

@@ -40,11 +40,23 @@ export const annotationSwitchListener = (event: Event, sketchfabApiData: sketchf
     annotationControl(sketchfabApiData.api, sketchfabApiData.annotations, (event.target as HTMLInputElement).checked)
 }
 
+/**
+ * 
+ * @param event 
+ * @param sketchfabApiData 
+ * @param modelViewer 
+ * @param annotationDiv 
+ */
 export const annotationSwitchMobileListener = (event: Event, sketchfabApiData: sketchfabApiData, modelViewer: MutableRefObject<HTMLIFrameElement | undefined>, annotationDiv: MutableRefObject<HTMLDivElement | undefined>) => {
     setViewerWidth(modelViewer.current, annotationDiv.current, (event.target as HTMLInputElement).checked)
     annotationControl(sketchfabApiData.api, sketchfabApiData.annotations, (event.target as HTMLInputElement).checked)
 }
 
+/**
+ * 
+ * @param url 
+ * @param dispatch 
+ */
 export const setImageFromNfs = async (url: string, dispatch: any) => {
 
     // Declare src variable, set loading state true 
@@ -62,6 +74,13 @@ export const setImageFromNfs = async (url: string, dispatch: any) => {
     dispatch({ type: 'photoLoaded', field: 'imgSrc', value: src })
 }
 
+/**
+ * 
+ * @param client 
+ * @param uid 
+ * @param successObj 
+ * @param successObjDesktop 
+ */
 export const initializeModelViewer = (client: any, uid: string, successObj: any, successObjDesktop: any) => {
 
     // Choose initialization success object based on screen size
@@ -73,11 +92,21 @@ export const initializeModelViewer = (client: any, uid: string, successObj: any,
     }
 }
 
+/**
+ * 
+ * @param sRef 
+ * @param props 
+ * @param dispatch 
+ */
 export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, dispatch: any) => {
     sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title)
     dispatch({ type: 'setSpecimen', specimen: sRef.current, annotations: sRef.current.annotations.annotations })
 }
 
+/**
+ * 
+ * @param sketchfabApi 
+ */
 export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData) => {
 
     // Parse position string
@@ -94,6 +123,10 @@ export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData
     })
 }
 
+/**
+ * 
+ * @param sketchfabApi 
+ */
 export const createAnnotationsGreaterThan1 = (sketchfabApi: any) => {
     for (let i = 0; i < sketchfabApi.annotations.length; i++) {
         if (sketchfabApi.annotations[i].position) {
@@ -103,6 +136,11 @@ export const createAnnotationsGreaterThan1 = (sketchfabApi: any) => {
     }
 }
 
+/**
+ * 
+ * @param sketchfabApi 
+ * @param sketchfabApiDispatch 
+ */
 export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
     // Set index when an annotation is selected
     sketchfabApi.api.addEventListener('annotationSelect', function (index: number) {
@@ -121,6 +159,13 @@ export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApi
     })
 }
 
+/**
+ * 
+ * @param annotationSwitch 
+ * @param annotationSwitchMobile 
+ * @param annotationSwitchWrapper 
+ * @param mobileAnnotationSwitchWrapper 
+ */
 export const addAnnotationSwitchListeners = (annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener) => {
     annotationSwitch.addEventListener("change", annotationSwitchWrapper)
     annotationSwitchMobile.addEventListener("change", mobileAnnotationSwitchWrapper)
@@ -135,12 +180,30 @@ export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: D
     }
 }
 
+/**
+ * 
+ * @param client 
+ * @param successObj 
+ * @param successObjDesktop 
+ * @param sRef 
+ * @param props 
+ * @param sketchfabApiDispatch 
+ */
 export const initializeCollections = (client: any, successObj: any, successObjDesktop: any, sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
     // Initialize and instantiate
     initializeModelViewer(client, props.model[0].uid, successObj, successObjDesktop)
     instantiateHerbarium(sRef, props, sketchfabApiDispatch)
 }
 
+/**
+ * 
+ * @param sketchfabApi 
+ * @param sketchfabApiDispatch 
+ * @param annotationSwitch 
+ * @param annotationSwitchMobile 
+ * @param annotationSwitchWrapper 
+ * @param mobileAnnotationSwitchWrapper 
+ */
 export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener) => {
     if (sketchfabApi.s && sketchfabApi.annotations && sketchfabApi.api) {
 

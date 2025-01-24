@@ -1,47 +1,55 @@
-import { getSoftwares, getImageSet, getModelByUid } from '@/api/queries'
+/**
+ * @file src/app/api/collections/herbarium/route.tsx
+ * 
+ * @fileoverview route handler for client side Herbarium class
+ */
+
+// PATH
+const path = 'src/app/api/collections/herbarium/route.tsx'
+
+// Typical imports
+import { getModelByUid } from '@/api/queries'
 import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/api/fetchFunctions";
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
-import { getWikiPediaPageOrSummary } from '@/functions/server/collections';
+import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from '@/functions/server/error';
+
+// Default imports
+import prisma from '@/utils/prisma';
 
 export async function GET(request: Request) {
 
-    var results: any[] = []
-
     try {
 
-        // Variable ini
+        // Variable initialization
+        var results: any[] = []
         const { searchParams } = new URL(request.url)
         const uid = searchParams.get('uid') as string
         const usageKey = parseInt(searchParams.get('usageKey') as string)
         const specimenName = searchParams.get('specimenName') as string
+        const sid = searchParams.get('sid') as string
 
-        // Throw error if data is missing
-        if(!uid || !usageKey || !specimenName){throw Error('/api/collections/herbarium: Missing input data')}
+        // Throw error if data is miissing
+        if (!(uid || usageKey || specimenName || sid)) throw Error('Input data missing')
 
         // Specimen metadata promises
         const promises = [
             fetchGbifVernacularNames(usageKey),
-            getSoftwares(uid),
-            getImageSet(uid),
+            prisma.software.findMany({ where: { uid: uid } }),
+            prisma.image_set.findMany({ where: { uid: uid } }),
             fetchGbifProfile(usageKey),
-            fetchWikiSummary(specimenName)
-            //getWikiPediaPageOrSummary(specimenName),
+            fetchWikiSummary(specimenName),
+            prisma.specimen.findFirst({ where: { sid: sid } })
         ]
 
         // Await promises, throw error if there are issues gathering metadata
-        await Promise.all(promises).then(res => results.push(...res)).catch((e) =>{
-            console.error(e.message)
-            throw Error('/api/collections/herbarium: Error getting specimen metadata')
-        })
+        await Promise.all(promises).then(res => results.push(...res)).catch(e => routeHandlerErrorHandler(path, e.message, 'Promise.all(promises)', "Coulnd't instantiate herbarium object"))
+        
+        // Use common name from 3D model in the event that no vernacular names are found (this has occurred in the past)
+        if (!results[0].length) results[0] = await getModelByUid(uid).then(model => [toUpperFirstLetter(model?.pref_comm_name as string)]).catch(e => routeHandlerErrorHandler(path, e.message, 'getModelByUid', "Coulnd't get model"))
 
-        if(!results[0].length){
-            results[0] = await getModelByUid(uid).then(model => [toUpperFirstLetter(model?.pref_comm_name as string)]).catch((e) =>{
-                console.error(e.message)
-                throw Error('/api/collections/herbarium: Error getting model by uid')
-            })
-        }
-
-        return Response.json({data:"Success", response: results})
+        // Typical response
+        return Response.json({ data: "Success", response: results })
     }
-    catch (e: any) { return Response.json({ data: e.message, response: results }, {status:400, statusText:e.message}) }
+    // Typical catch
+    catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }
