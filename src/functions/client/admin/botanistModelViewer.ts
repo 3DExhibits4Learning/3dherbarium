@@ -4,7 +4,7 @@ import { MutableRefObject, Dispatch, SetStateAction } from "react"
 import { SetPosition, SetActiveAnnotationIndex } from "@/ts/reducer"
 import { fullAnnotation } from "@/api/types"
 
-import Sketchfab from '@sketchfab/viewer-api';
+import Sketchfab from '@sketchfab/viewer-api'
 
 /**
  * 

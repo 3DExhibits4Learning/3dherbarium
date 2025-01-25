@@ -33,43 +33,8 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // iFrame minimum height
     const minHeight = props.minHeight ? props.minHeight : '150px'
 
-    const createAnnotation = (info: any, botanyState: BotanyClientState, sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, newAnnotationEnabled: MutableRefObject<boolean>, dispatch: Dispatch<BotanyClientAction>) => {
-    
-        // Ensure that a new annotation is enabled
-        if (newAnnotationEnabled.current) {
-    
-            // Remove previous annotation if there is a new click
-            if (temporaryAnnotationIndex.current !== undefined) sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
-    
-            // Get camera position
-            sketchfabApi.getCameraLookAt((e: any, camera: any) => {
-                if (e) throw Error(e.message)
-    
-                // Create annotation
-                sketchfabApi.createAnnotationFromScenePosition(info.position3D, camera.position, camera.target, '', '', (e: any, index: any) => {
-                    if (e) throw Error(e.message)
-                    temporaryAnnotationIndex.current = index
-                })
-    
-                // If the click was on the 3d model (and not the background) set position/activeAnnotation data
-                if (info.instanceID) {
-                    console.log("Info: ", info)
-                    const positionArray = Array.from(info.position3D)
-                    const positionDispatch: SetPosition = { type: "setPosition", position: JSON.stringify([positionArray, camera.position, camera.target]) }
-                    dispatch(positionDispatch)
-    
-                    // Ensure that active annotation index is set to 'new'
-                    if (botanyState.activeAnnotationIndex !== 'new') { const indexDispatch: SetActiveAnnotationIndex = { type: 'setActiveAnnotationIndex', index: 'new' }; dispatch(indexDispatch) }
-    
-                }
-                // If not, set position to undefined
-                else { const positionDispatch: SetPosition = { type: "setPosition", position: undefined }; dispatch(positionDispatch) }
-            })
-        }
-    }
-
     // Annotation/successObj function wrappers (callbacks)
-    const createAnnotationWrapper = (info: any) => createAnnotation(info, botanyState, sketchfabApi, temporaryAnnotationIndex, newAnnotationEnabled, dispatch)
+    const createAnnotationWrapper = (info: any) => fn.createAnnotation(info, botanyState, sketchfabApi, temporaryAnnotationIndex, newAnnotationEnabled, dispatch)
     const repositionAnnotationWrapper = (info: any) => fn.repositionAnnotation(info, botanyState, sketchfabApi, temporaryAnnotationIndex, dispatch)
     const annotationSelectWrapper = (index: any) => fn.annotationSelectHandler(index, dispatch, newAnnotationEnabled)
     const successObjectFnWrapper = (api: any) => fn.successObjFn(api, botanyState, setSketchfabApi)
@@ -96,12 +61,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
 
     // Add the createAnnotation listener when the associated state is enabled (or vice versa); cleanup function ensures listener is removed before effect runs again
     useEffect(() => {
-        if (sketchfabApi && botanyState.newAnnotationEnabled) {
-            temporaryAnnotationIndex.current = undefined
-            sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'fast' })
-        }
-
-        else if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' })
+        fn.enableCreateAnnotationListener(sketchfabApi, temporaryAnnotationIndex, botanyState, createAnnotationWrapper)
         return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' }) }
     }, [botanyState.newAnnotationEnabled]) // eslint-disable-line react-hooks/exhaustive-deps
 
