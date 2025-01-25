@@ -231,18 +231,18 @@ export const enableCreateAnnotationListener = (sketchfabApi: any, temporaryAnnot
 
     if (sketchfabApi && botanyState.newAnnotationEnabled) {
         temporaryAnnotationIndex.current = undefined
-        sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'slow' })
+        sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'fast' })
     }
 
-    else if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'slow' })
+    else if (sketchfabApi) sketchfabApi.removeEventListener('click', createAnnotationWrapper, { pick: 'fast' })
 }
 
 export const enableReposition = (botanyState: BotanyClientState, sketchfabApi: any, repositionAnnotationWrapper: Function) => {
     if (sketchfabApi && botanyState.activeAnnotationIndex !== undefined && botanyState.activeAnnotationIndex !== 'new' && botanyState.repositionEnabled) {
-        sketchfabApi.addEventListener('click', repositionAnnotationWrapper, { pick: 'slow' })
+        sketchfabApi.addEventListener('click', repositionAnnotationWrapper, { pick: 'fast' })
     }
 
-    else if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'slow' })
+    else if (sketchfabApi) sketchfabApi.removeEventListener('click', repositionAnnotationWrapper, { pick: 'fast' })
 }
 
 /**
