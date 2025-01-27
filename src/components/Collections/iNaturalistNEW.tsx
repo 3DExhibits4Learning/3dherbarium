@@ -14,7 +14,6 @@ import {Spinner} from "@nextui-org/spinner";
 
 //custom imports
 import { MapNavbar } from "@/components/Collections/iNat/navitems/MapNavbar"
-import { Footer } from "@/components/Collections/iNat/navitems/Footer"
 import { LeaderBoard }  from "@/components/Collections/iNat/LeaderBoard"
 import { MapImageGallery } from "@/components/Collections/iNat/MapImageGallery"
 import { MapDataState, MapDataInitialState } from "@/functions/client/collections/iNat"
@@ -68,6 +67,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     
    
     return (
+        <div className="w-full h-[800px]">
         <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
 
@@ -101,5 +101,6 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         </div>
         )}
         </MapContext.Provider>
+        </div>
     )
 }
