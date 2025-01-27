@@ -8,7 +8,7 @@
 
 "use client"
 //custom imports
-import { MapContext, MapContextData } from '@/components/Collections/iNaturalist';
+import { MapContext, MapContextData } from '@/components/Collections/iNaturalistNEW';
 
 //library imports
 import { useContext, useState } from "react"
