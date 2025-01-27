@@ -56,7 +56,7 @@ export const getAnnotationsObj = async (uid: string, newAnnotationEnabled: Mutab
     const modelAnnotations = await ModelAnnotations.retrieve(uid as string)
 
     // Fetch first annotation position, disable new annotation ref
-    const annotationPosition = await fetch(`/api/annotations?uid=${uid}`, { cache: 'no-store' }).then(res => res.json()).then(json => { if (json.response) return json.response; return '' })
+    const annotationPosition = await fetch(`/api/annotations?uid=${uid}`, { cache: 'no-store' }).then(res => res.json()).then(json => { if (json.response) return JSON.parse(json.response); return '' })
     newAnnotationEnabled.current = false
 
     // Type safe dispatch object and fn call
