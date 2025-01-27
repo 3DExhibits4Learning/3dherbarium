@@ -6,10 +6,11 @@
 
 'use client'
 
-// Imports
+// Typical imports
 import { ApproveModelObject, Models } from "@/api/types"
 import { SetStateAction, Dispatch } from "react"
 
+// Default imports
 import checkToken from "@/utils/checkToken"
 
 /**
@@ -52,6 +53,13 @@ export const createProcurementTask = async (assignee: string, katId: string, hun
     return await fetch('/api/issues/create', { method: 'POST', body: JSON.stringify(data) }).then(res => res.json()).then(json => { console.log(json.response); return json.data })
 }
 
+/**
+ * 
+ * @param model 
+ * @param wild 
+ * @param photoFiles 
+ * @returns 
+ */
 export const approveCommunityModel = async (model: Models, wild: boolean, photoFiles: string[]) => {
 
     const isTokenValid = await checkToken('inaturalist')
@@ -80,6 +88,11 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
     else return "You need to refresh you're iNaturalist token to approve a wild model"
 }
 
+/**
+ * 
+ * @param confirmation 
+ * @param setPhotoFiles 
+ */
 export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatch<SetStateAction<string[]>>) => {
 
     await fetch(`/api/admin/manager/photoFiles?path=public/data/Herbarium/tmp/submittal/${confirmation}`)
@@ -87,7 +100,17 @@ export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatc
         .then(json => setPhotoFiles(json.response))
 }
 
+/**
+ * 
+ * @param index 
+ * @param pendingModels 
+ * @param setApprovalDisabled 
+ */
 export const updateAccordionItemState = (index: number, pendingModels: Models[], setApprovalDisabled: Dispatch<SetStateAction<boolean>>) => {
     const approvable = pendingModels[index].thumbnail.includes('models')
     setApprovalDisabled(!approvable)
+}
+
+export const migrateAnnotatedModelsToTest = () => {
+    
 }

@@ -17,12 +17,17 @@ import ManagerClient from "@/components/Admin/Manager/ManagerClient"
 import Header from "@/components/Header/Header";
 import Foot from "@/components/Shared/Foot";
 import FullPageError from "@/components/Error/FullPageError";
+import prisma from "@/utils/prisma";
 
 // Path
 const path = 'src/app/admin/management/page.tsx'
 
 // Main JSX
 export default async function Page() {
+
+    const s = await prisma.$queryRaw`Select * from userSubmittal`
+
+    console.log(s)
 
     try {
 
