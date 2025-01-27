@@ -7,22 +7,13 @@
 import { LatLngLiteral } from "leaflet"
 
 //When the map first loads it will load here, If there is an error it will also load back to here
-export const defaultCoordinates: LatLngLiteral = { lat: 39.35, lng: -120.26 }
+export const defaultCoordinates: LatLngLiteral = { lat: 40.8665, lng: -124.0828 }
 
 export const userPageUrl : string = "https://www.inaturalist.org/people/"
 
 export const observationUrl : string = "https://www.inaturalist.org/observations/"
 
 export const observationTaxonUrl : string = "https://www.inaturalist.org/taxa/"
-
-/**
- * Value of the searched specimen 
- //todo remove when interfacing with the actual application
- */
- export interface SearchValues {
-    specimenName : string | undefined
-    taxonId : number 
-}
 
 /**
  * The values the user can change 
@@ -88,10 +79,18 @@ export interface iNatFetchObj {
     searchOptions: DisplayOptions
 }
 
+export interface Message {
+    message: {
+        to_user_id: string,
+        subject: string,
+        body: string
+    }
+}
+
 //State for the reducers and context
 
 export interface MapDataState {
-    searchedValue : SearchValues
+    activeSpecies : string
     coordinates : LatLngLiteral,
     displayOptions : DisplayOptions
     activeSection : string,
@@ -116,10 +115,7 @@ export interface Image {
 }
 
 export const MapDataInitialState: MapDataState = {
-    searchedValue: {
-        specimenName: "Poppy", 
-        taxonId: -1 
-    },
+   activeSpecies: "",
 
     displayOptions: {
         radius : 75,
@@ -140,7 +136,7 @@ export const MapDataInitialState: MapDataState = {
     observationTitle: "",
     observationLocation: "",
     observationDate: "",
-    observationIcon: "/img/blankIcon.jpg",
+    observationIcon: "/blankIcon.jpg",
     observationTaxon: "",
     observationTaxonId: ""
 };

@@ -6,7 +6,7 @@ import { useContext } from "react"
 
 import dynamic from "next/dynamic"
 import OccurrenceSwiper from "../GbifSwiper"
-import Inaturalist from "../iNaturalist"
+import Inaturalist from "../iNaturalistNEW"
 import Foot from "@/components/Shared/Foot"
 
 const SketchfabApi = dynamic(() => import('@/components/Collections/SketchfabApi/SketchFabAPI'), { ssr: false })

@@ -6,7 +6,7 @@ import { useContext } from "react"
 import { userSubmittal } from "@prisma/client"
 
 import OccurrenceSwiper from "../GbifSwiper"
-import Inaturalist from "../iNaturalist"
+import Inaturalist from "../iNaturalistNEW"
 import Foot from "@/components/Shared/Foot"
 import CommunitySFAPI from "../CommunitySFAPI"
 

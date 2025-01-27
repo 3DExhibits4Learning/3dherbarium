@@ -23,6 +23,7 @@ export type MapDataAction =
     | { type: "SET_API_FETCH"; payload: Partial<Pick<MapDataState, "observations" | "images" | "topIdentifiers" | "topObservers" | "loading">> }
     | { type: "SET_CREDENTIALS"; payload: Partial<Pick<MapDataState, "observer" | "observationTitle" | "observationLocation" | "observationDate" | "observationIcon" | "observationTaxon" | "observationTaxonId">> }
     | { type: "SET_DISPLAY_OPTIONS"; payload: DisplayOptions }
+    | { type: "SET_ACTIVE_SPECIES"; payload: string }
 
     // Add other action types as needed
 
@@ -31,13 +32,14 @@ export type MapDataAction =
  * @param action what in the state to update
  * @returns the newly updated state
  */
-export default function MapDataReducer(
+export default function INaturalistStateReducer(
     state: MapDataState , 
     action: MapDataAction
 ) : MapDataState {
 
         switch(action.type) {
-
+            case "SET_ACTIVE_SPECIES":
+                return {...state, activeSpecies : action.payload}
             case "SET_COORDINATES":
                 return {...state, coordinates : action.payload}
             case "SET_ACTIVE_SECTION":
