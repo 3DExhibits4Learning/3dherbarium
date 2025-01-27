@@ -67,7 +67,6 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     
    
     return (
-        <div className="w-full h-[800px]">
         <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
 
@@ -101,6 +100,5 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         </div>
         )}
         </MapContext.Provider>
-        </div>
     )
 }

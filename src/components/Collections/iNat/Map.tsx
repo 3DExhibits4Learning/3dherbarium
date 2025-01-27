@@ -69,13 +69,19 @@ export default function Map() {
      * the coordinates when the user clicks on the map
      */
     const LocationFinder = () => {
-        useMapEvents({
+        const map = useMapEvents({
             click(e) {
                 dispatch({
                     type: "SET_COORDINATES",
                     payload: { lat: e.latlng.lat, lng: e.latlng.lng }
                 })
             },
+            zoomend() {
+                dispatch({
+                    type: "SET_ZOOM",
+                    payload: map.getZoom()
+                })
+            }
         })
 
         return  data.coordinates === null ? null : (
@@ -105,7 +111,7 @@ export default function Map() {
             </div>
         }
 
-        <MapContainer className="z-0 rounded-xl h-full w-full" center={[data.coordinates.lat, data.coordinates.lng]} zoom={10} scrollWheelZoom={false}>
+        <MapContainer className="z-0 rounded-xl h-full w-full" center={[data.coordinates.lat, data.coordinates.lng]} zoom={data.zoom} scrollWheelZoom={false}>
             <LocationFinder />
             <RecenterMap position={data.coordinates}/>
             <TileLayer

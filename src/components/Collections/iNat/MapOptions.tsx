@@ -123,7 +123,7 @@ export function MapOptions() {
             onChange={(e) => setGradeType(e.target.value)}
             className="mt-1 block w-full dark:bg-[#27272a] rounded-md p-2 focus:outline-none focus:ring focus:ring-[#004C46]"
             >
-                <option value="needs_id,research,casual">None</option>
+                <option value="needs_id,research,casual">Any</option>
                 <option value="needs_id,research">Verifiable</option>
                 <option value="research">Researched</option>
             </select>

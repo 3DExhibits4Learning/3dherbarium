@@ -92,6 +92,7 @@ export interface Message {
 export interface MapDataState {
     activeSpecies : string
     coordinates : LatLngLiteral,
+    zoom: number,
     displayOptions : DisplayOptions
     activeSection : string,
     loading : boolean,
@@ -126,6 +127,7 @@ export const MapDataInitialState: MapDataState = {
         useCurrentLocation : false },
 
     coordinates: defaultCoordinates,
+    zoom: 8,
     activeSection: "images",
     loading: false,
     images: [],

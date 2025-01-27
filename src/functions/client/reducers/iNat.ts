@@ -24,6 +24,7 @@ export type MapDataAction =
     | { type: "SET_CREDENTIALS"; payload: Partial<Pick<MapDataState, "observer" | "observationTitle" | "observationLocation" | "observationDate" | "observationIcon" | "observationTaxon" | "observationTaxonId">> }
     | { type: "SET_DISPLAY_OPTIONS"; payload: DisplayOptions }
     | { type: "SET_ACTIVE_SPECIES"; payload: string }
+    | { type: "SET_ZOOM"; payload: number}
 
     // Add other action types as needed
 
@@ -48,6 +49,8 @@ export default function INaturalistStateReducer(
                 return {...state, loading : action.payload}
             case "SET_DISPLAY_OPTIONS":
                 return {...state, displayOptions : action.payload}
+            case "SET_ZOOM":
+                return {...state, zoom : action.payload}
             case "SET_API_FETCH":
                 return {...state, ...action.payload }
             case "SET_CREDENTIALS":

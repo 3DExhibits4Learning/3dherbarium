@@ -46,14 +46,14 @@ export const MapImageGallery = () => {
                             <a   
                                 href={observationTaxonUrl + state.observationTaxonId} 
                                 target="_blank"
-                                className="flex w-full justify-center items-center !text-2xl xl:!text-4xl 2xl:!text-5xl"
+                                className="flex w-full justify-center items-center !text-1xl xl:!text-2xl 2xl:!text-3xl"
                                                         >
                                 {toUpperFirstLetter(state.observationTaxon)}
                                 </a>    
                         </div>
 
-                        <div className="flex flex-col items-center justify-center h-[25%]  w-full">
-                            <div id='observationCredentials' className='flex flex-col min-h-[15%] h-[20%] xl:h-[40%] w-4/5 text-center items-center justify-center text-base xl:text-lg 2xl:text-3xl'>
+                        <div className="flex flex-col items-center justify-center h-[20%] w-full">
+                            <div id='observationCredentials' className='flex flex-col min-h-[15%] h-[20%] xl:h-[40%] w-4/5 text-center items-center justify-center text-base xl:text-lg 2xl:text-xl'>
                                 <p className="">{state.observationLocation}</p>
                                 <p className="">{state.observationDate}</p>
                                 <p className='mt-1'>
