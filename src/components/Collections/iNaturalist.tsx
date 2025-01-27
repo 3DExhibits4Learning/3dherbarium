@@ -4,7 +4,6 @@
  * @fileoverview collections inatrualist component
  */
 'use client'
-//todo test comment
 
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react';
 import { LatLngLiteral } from 'leaflet';
