@@ -111,6 +111,4 @@ export const updateAccordionItemState = (index: number, pendingModels: Models[],
     setApprovalDisabled(!approvable)
 }
 
-export const migrateAnnotatedModelsToTest = () => {
-    
-}
+export const migrateAnnotatedModels = async() => await fetch('/api/admin/manager/migrate', {method: 'POST'}).then(res => res.text()).catch(e => e.message)

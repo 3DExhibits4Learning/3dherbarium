@@ -1,7 +1,7 @@
 /**
  * @file src/components/Admin/ManagerClient.tsx
  * 
- * @fileoverview 
+ * @fileoverview management client
  * 
  * @todo move ID props from env or add NEXT_PUBLIC; they are not sensitive data
  * @todo consolidate update thumbnail components into one with a checkbox for community flag
@@ -53,12 +53,17 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const procurementTaskHandler = (assignee: string) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.createProcurementTask, [assignee, props.katId, props.hunterId], "Creating task")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
+    const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
 
     return (
         <>
             <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
-
-            <div className="flex h-48 w-full mt-8">
+            <div className="w-full h-16 flex justify-center items-center">
+                <Button className="bg-[#004C46]" onPress={migrateWrapper}>
+                    Migrate annotated 3D models
+                </Button>
+            </div>
+            <div className="flex h-48 w-full">
                 <ProcurementTask taskee={taskee} setTaskee={setTaskee} procurementTaskHandler={procurementTaskHandler} />
 
                 <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
