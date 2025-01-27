@@ -81,13 +81,7 @@ export async function POST(request: Request) {
                 case 'video':
 
                     // Video annotation 
-                    const videoAnnotation = prisma.video_annotation.create({
-                        data: {
-                            url: data.get('url') as string,
-                            length: data.get('length') as string,
-                            annotation_id: data.get('annotation_id') as string
-                        }
-                    })
+                    const videoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string } })
 
                     // Await transaction, typical response
                     const newVideoAnnotation = await prisma?.$transaction([annotation, videoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(videoAnnotation)', "Couldn't create video anotation"))
@@ -96,13 +90,7 @@ export async function POST(request: Request) {
                 case 'model':
 
                     // Model annotation creation
-                    const modelAnnotation = prisma.model_annotation.create({
-                        data: {
-                            uid: data.get('uid') as string,
-                            annotation: data.get('annotation') as string,
-                            annotation_id: data.get('annotation_id') as string
-                        }
-                    })
+                    const modelAnnotation = prisma.model_annotation.create({ data: { uid: data.get('uid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string } })
 
                     // Await transaction, typical response
                     const newModelAnnotation = await prisma?.$transaction([annotation, modelAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(modelAnnotation)', "Couldn't create model anotation"))
