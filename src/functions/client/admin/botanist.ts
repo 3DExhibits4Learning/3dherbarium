@@ -128,10 +128,12 @@ export const activeAnnotationChangeHandler = (annotationDispatch: Dispatch<Annot
  * @param annotationDispatch 
  */
 export const webPhotoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClientState, annotationState: AnnotationEntryState, isNewPosition: boolean, annotationDispatch: Dispatch<AnnotationEntryAction>) => {
+
     switch (isNew) {
 
         // For databased annotations
         case false:
+
             const caseAnnotation = botanyState.activeAnnotation as photo_annotation
             const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.url, caseAnnotation.author, caseAnnotation.license, caseAnnotation.annotation]
             const currentValues = [annotationState.annotationTitle, annotationState.url, annotationState.author, annotationState.license, annotationState.annotation]
@@ -164,10 +166,12 @@ export const webPhotoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyCli
  * @param annotationDispatch 
  */
 export const hostedPhotoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClientState, annotationState: AnnotationEntryState, isNewPosition: boolean, annotationDispatch: Dispatch<AnnotationEntryAction>) => {
+
     switch (isNew) {
 
         // For databased annotations
         case false:
+
             const caseAnnotation = botanyState.activeAnnotation as photo_annotation
             const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.author, caseAnnotation.license, caseAnnotation.annotation]
             const currentValues = [annotationState.annotationTitle, annotationState.author, annotationState.license, annotationState.annotation]
@@ -181,6 +185,7 @@ export const hostedPhotoSaveButtonEnabler = (isNew: boolean, botanyState: Botany
 
         // New annotations are the default
         default:
+
             const valueArray = [annotationState.annotationTitle, annotationState.file, annotationState.author, annotationState.license, annotationState.annotation, botanyState.position3D]
 
             if (valueArray.every(value => value)) annotationDispatch({ type: 'enableSaveAndCreate' })
@@ -199,9 +204,11 @@ export const hostedPhotoSaveButtonEnabler = (isNew: boolean, botanyState: Botany
  * @param annotationDispatch 
  */
 export const videoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClientState, annotationState: AnnotationEntryState, isNewPosition: boolean, annotationDispatch: Dispatch<AnnotationEntryAction>) => {
+
     switch (isNew) {
 
         case false:
+
             const caseAnnotation = botanyState.activeAnnotation as video_annotation
             const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.url, caseAnnotation.length]
             const currentValues = [annotationState.annotationTitle, annotationState.url, length]
@@ -212,6 +219,7 @@ export const videoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClient
             break
 
         default:
+
             const valueArray = [annotationState.annotationTitle, annotationState.url, length, botanyState.position3D]
             if (valueArray.every(value => value)) annotationDispatch({ type: 'enableSaveAndCreate' })
             else annotationDispatch({ type: 'disableSaveAndCreate' })
@@ -229,9 +237,11 @@ export const videoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClient
  * @param annotationDispatch 
  */
 export const modelSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClientState, annotationState: AnnotationEntryState, isNewPosition: boolean, annotationDispatch: Dispatch<AnnotationEntryAction>) => {
+
     switch (isNew) {
 
         case false:
+
             const caseAnnotation = botanyState.activeAnnotation as model_annotation
             const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.uid, caseAnnotation.annotation]
             const currentValues = [annotationState.annotationTitle, annotationState.modelAnnotationUid, annotationState.annotation]
@@ -242,6 +252,7 @@ export const modelSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClient
             break
 
         default:
+
             const valueArray = [annotationState.annotationTitle, annotationState.modelAnnotationUid, annotationState.annotation, botanyState.position3D]
             if (valueArray.every(value => value)) annotationDispatch({ type: 'enableSaveAndCreate' })
             else annotationDispatch({ type: 'disableSaveAndCreate' })
@@ -263,13 +274,13 @@ export const createOrSaveHandler = (isNew: boolean, botanyState: BotanyClientSta
     // Simple save/create handler for first annotation
     if (index === 1) if (botanyState.position3D) annotationDispatch({ type: 'enableSaveAndCreate' }); else annotationDispatch({ type: 'disableSaveAndCreate' })
     // Web based photo annotation save/create button enable handler
-    else if (botanyState.activeAnnotationType === 'photo' && annotationState.mediaType === 'url') webPhotoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
+    else if (annotationState.annotationType === 'photo' && annotationState.mediaType === 'url') webPhotoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
     // Hosted photo based annotation save/create button enable handler
-    else if (botanyState.activeAnnotationType == 'photo' && annotationState.mediaType == 'upload') hostedPhotoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
+    else if (annotationState.annotationType === 'photo' && annotationState.mediaType === 'upload') hostedPhotoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
     // Video annotation save/create button enable handler
-    else if (botanyState.activeAnnotationType == 'video') videoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
+    else if (annotationState.annotationType === 'video') videoSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
     // Model based save/create button enable handler
-    else if (botanyState.activeAnnotationType == 'model') modelSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
+    else if (annotationState.annotationType === 'model') modelSaveButtonEnabler(isNew, botanyState, annotationState, isNewPosition, annotationDispatch)
 }
 
 /**

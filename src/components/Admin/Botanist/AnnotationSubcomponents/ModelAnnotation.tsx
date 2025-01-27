@@ -2,8 +2,7 @@
 
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
-import { BotanyClientContext } from "../BotanyClient"
-import { annotationEntryContext, botanyClientContext } from "@/ts/botanist"
+import { annotationEntryContext } from "@/ts/botanist"
 import { model } from "@prisma/client"
 
 import TextInput from "@/components/Shared/TextInput"
@@ -17,13 +16,11 @@ const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), { s
 export default function ModelAnnotation(props: { annotationModels: model[] }) {
 
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
-    const botanyContext = useContext(BotanyClientContext) as botanyClientContext
     const annotationState = context.annotationState
-    const botanyState = botanyContext.botanyState
 
     return <>
         {
-            botanyState.activeAnnotationType == 'model' &&
+            annotationState.annotationType === 'model' &&
             <section className="flex my-12 w-full">
                 <div className="flex ml-12 mt-12 flex-col w-3/5 max-w-[750px] mr-12">
                     <TextInput value={annotationState.annotationTitle as string} field='annotationTitle' title='Annotation Title' required />

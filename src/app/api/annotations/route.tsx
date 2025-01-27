@@ -169,10 +169,7 @@ export async function PATCH(request: Request) {
         const updateColumns = data.get('annotation_type') === 'model' ? baseColumns : { ...baseColumns, url: data.get('url') as string }
 
         // Update query (same for all cases in switch)
-        const updateAnnotation = prisma.annotations.update({
-            where: { annotation_id: data.get('annotation_id') as string },
-            data: updateColumns,
-        })
+        const updateAnnotation = prisma.annotations.update({ where: { annotation_id: data.get('annotation_id') as string }, data: updateColumns })
 
         // Switch based on the type of the annotation
         switch (data.get('annotation_type')) {
@@ -189,13 +186,7 @@ export async function PATCH(request: Request) {
                             prisma.model_annotation.delete({ where: { annotation_id: data.get('annotation_id') as string } })
 
                         // Create new video annotation
-                        const newVideoAnnotation = prisma.video_annotation.create({
-                            data: {
-                                url: data.get('url') as string,
-                                length: data.get('length') as string,
-                                annotation_id: data.get('annotation_id') as string
-                            }
-                        })
+                        const newVideoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string } })
 
                         // Await transaction, return with typical response
                         const update = await prisma?.$transaction([deleteAnnotation, updateAnnotation, newVideoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(update)', "Couldn't update annotation or make new video annotation"))
@@ -228,11 +219,7 @@ export async function PATCH(request: Request) {
                             prisma.video_annotation.delete({ where: { annotation_id: data.get('annotation_id') as string } })
 
                         const newModelAnnotation = prisma.model_annotation.create({
-                            data: {
-                                uid: data.get('uid') as string,
-                                annotation: data.get('annotation') as string,
-                                annotation_id: data.get('annotation_id') as string
-                            }
+                            data: { uid: data.get('uid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string }
                         })
 
                         // Await transaction, return with typical response
@@ -297,10 +284,7 @@ export async function PATCH(request: Request) {
                     }
 
                     // Update photo anotation
-                    const updatePhotoAnnotation = prisma.photo_annotation.update({
-                        where: { annotation_id: data.get('annotation_id') as string },
-                        data: photoAnnotationUpdateData
-                    })
+                    const updatePhotoAnnotation = prisma.photo_annotation.update({ where: { annotation_id: data.get('annotation_id') as string }, data: photoAnnotationUpdateData })
 
                     // Await transaction, return with typical response
                     const update = await prisma?.$transaction([updateAnnotation, updatePhotoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(photoAnnotation)', "Couldn't update annotation or update photo annotation"))
