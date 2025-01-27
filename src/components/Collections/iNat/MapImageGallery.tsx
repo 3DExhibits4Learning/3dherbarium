@@ -43,8 +43,7 @@ export const MapImageGallery = () => {
                     <>  
 
                         <div className="my-[10px] 2xl:my-[30px]">
-                            <a  
-                                id="herb-anchor" 
+                            <a   
                                 href={observationTaxonUrl + state.observationTaxonId} 
                                 target="_blank"
                                 className="flex w-full justify-center items-center !text-2xl xl:!text-4xl 2xl:!text-5xl"
@@ -52,14 +51,8 @@ export const MapImageGallery = () => {
                                 {toUpperFirstLetter(state.observationTaxon)}
                                 </a>    
                         </div>
-                                                 
-                        <div className='w-3/5 h-[55%] md:w-2/5 lg:h-[65%] lg:w-[75%]'>
-                            <ImageGallery autoPlay items={state.images as ReactImageGalleryItem[]} slideInterval={4000} 
-                                onSlide={(currentIndex) => setCredentials(currentIndex, state,dispatch)} 
-                                onPlay={(currentIndex) => setCredentials(currentIndex, state, dispatch)
-                                }/>
-                        </div>
-                        <div className="flex flex-col items-center justify-center h-[20%] lg:h-[35%] mt-[5px] w-full">
+
+                        <div className="flex flex-col items-center justify-center h-[25%]  w-full">
                             <div id='observationCredentials' className='flex flex-col min-h-[15%] h-[20%] xl:h-[40%] w-4/5 text-center items-center justify-center text-base xl:text-lg 2xl:text-3xl'>
                                 <p className="">{state.observationLocation}</p>
                                 <p className="">{state.observationDate}</p>
@@ -70,11 +63,19 @@ export const MapImageGallery = () => {
                                         style={{ display: 'inline-block', marginRight: '1rem' }}
                                         />
                                     <span className="">
-                                        <a id='herb-anchor' href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
+                                        <a href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
                                     </span>
                                 </p>
                             </div>
                         </div>
+                                                 
+                        <div className='w-3/5 h-[55%] md:w-2/5 lg:h-[65%] lg:w-[75%]'>
+                            <ImageGallery autoPlay items={state.images as ReactImageGalleryItem[]} slideInterval={4000} 
+                                onSlide={(currentIndex) => setCredentials(currentIndex, state,dispatch)} 
+                                onPlay={(currentIndex) => setCredentials(currentIndex, state, dispatch)
+                                }/>
+                        </div>
+                        
                         
                     </>
                 )}

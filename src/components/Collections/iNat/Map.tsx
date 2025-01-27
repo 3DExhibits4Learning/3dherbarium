@@ -138,8 +138,7 @@ export default function Map() {
                                    <Popup>
                                         <div className="flex h-[200px] w-[300px] justify-between !text-[#004C46]">
                                             <div className="flex flex-col justify-between text-old-growth-green">            
-                                                <a  
-                                                        id="herb-anchor" 
+                                                <a   
                                                         href={observationTaxonUrl + observation.taxon_id} 
                                                         target="_blank"
                                                         className="text-center !m-0 !text-lg !text-[#004C46] dark:!text-white"
@@ -148,7 +147,6 @@ export default function Map() {
                                                     </a>
                                                 <div className="h-[80%] flex flex-col justify-start mt-[8px] text-[#004C46] dark:text-white ">
                                                     <a 
-                                                        id="herb-anchor" 
                                                         href={userPageUrl + observation.user.userName} 
                                                         target="_blank"
                                                         className="text-sm !text-[#004C46] dark:!text-white mb-2"
@@ -163,7 +161,7 @@ export default function Map() {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <a id="herb-anchor" href={observationUrl + observation.id} target="_blank">
+                                            <a href={observationUrl + observation.id} target="_blank">
                                                 <Image 
                                                     src={observation.images.small} 
                                                     className="h-[200px] w-[140px] object-cover rounded-md" 
