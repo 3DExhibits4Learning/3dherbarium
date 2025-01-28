@@ -46,8 +46,6 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         search parameters or clicks somewhere else on the map. 
     */
     useEffect(() => { 
-
-
         if(state.activeSpecies == "") {
             dispatch({
                 type: "SET_ACTIVE_SPECIES",
@@ -94,7 +92,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
                 {state.coordinates && !state.loading && (
                     <section
-                    className={`h-[85%] lg:h-[95%] min-h-[600px] lg:flex justify-center items-center lg:w-1/3 ml-2 mr-3 mt-4 ${
+                    className={`h-[85%] lg:h-[95%] min-h-[500px] lg:flex justify-center items-center lg:w-1/3 ml-2 mr-3 mt-4 ${
                         state.activeSection === "locations" ? "mr-2 flex w-full" : "hidden"
                     }`}
                     >
@@ -109,7 +107,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
             {
              state.observations.length === 0 && !state.loading &&
-                    <div className={`flex flex-col items-center justify-center w-full h-full text-center ml-2 ${state.activeSection === "locations" ? "hidden" : "flex"}`}>
+                    <div className={`flex flex-col items-center justify-center w-full h-full text-center ml-2 ${state.activeSection === "locations" ? "hidden lg:flex" : "flex"}`}>
                         <p className="text-lg md:text-lg lg:text-xl xl:text-2xl">
                             No observations found for the selected location.
                         </p>
