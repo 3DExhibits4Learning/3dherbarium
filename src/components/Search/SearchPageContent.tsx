@@ -1,17 +1,24 @@
 /**
  * @file /components/Search/SearchPageContent.tsx
+ * 
  * @fileoverview list of 3D models available on the site.
+ * 
+ * @todo refactor with context
+ * @todo extract logic and the logic of children into src/functions/client/search.ts
  */
 
 'use client'
 
+// Typical imports
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react"
-import SearchPageModelList from "./SearchPageModelList"
-import SubHeader from "./SubHeader"
 import { fullUserSubmittal } from "@/api/types"
 import { model } from "@prisma/client"
-import MobileSearchFilters from "./MobileFilters"
 import { useSearchParams } from "next/navigation"
+
+// Default imports
+import MobileSearchFilters from "./MobileFilters"
+import SearchPageModelList from "./SearchPageModelList"
+import SubHeader from "./SubHeader"
 
 // For filtering
 const getUniqueModelers = (models: model[]): string[] => {
@@ -31,13 +38,14 @@ const getUniqueAnnotators = (models: model[]): string[] => {
 // Main Component
 const SearchPageContent = () => {
 
+  // Params
   const params = useSearchParams()
-
-  const siteReadyModels = useRef<model[]>()
-
   const modeler = params.get('modeler')
   const annotator = params.get('annotator')
   const orderParam = params.get('order')
+
+  // Ref
+  const siteReadyModels = useRef<model[]>()
 
   const [communityModels, setCommunityModels] = useState<fullUserSubmittal[]>()
   const [modeledByList, setModeledByList] = useState<string[]>()

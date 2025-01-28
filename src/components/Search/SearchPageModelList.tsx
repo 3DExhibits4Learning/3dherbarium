@@ -1,4 +1,10 @@
-import noImage from '../../../public/noImage.png'
+/**
+ * @file src/components/Search/SearchPageModelList.tsx
+ * 
+ * @fileoverview search client component listing all site ready 3D models
+ */
+
+// Typical imports
 import { handleImgError } from '@/utils/imageHandler'
 import { SyntheticEvent, useContext } from 'react'
 import { model } from '@prisma/client'
@@ -6,7 +12,9 @@ import { fullUserSubmittal } from '@/api/types'
 import { Chip } from '@nextui-org/react'
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
 import { QueryContext } from './SearchClient'
-import { useSearchParams } from 'next/navigation'
+
+// Default imports
+import noImage from '../../../public/noImage.png'
 
 // Props interface
 interface SearchPageModelListProps {
@@ -117,8 +125,7 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
     return returnValue as number
   })
 
-  return (
-    <>
+  return <>
       {filteredModels && filteredModels.length === 0 &&
         <div className='h-[35rem] rounded mx-auto flex items-center justify-center'>
           <p className='text-2xl px-5'>No models found matching the current filters. Try adjusting your filter settings for broader results.</p>
@@ -199,8 +206,5 @@ const SearchPageModelList = (props: SearchPageModelListProps) => {
         })}
       </section >
     </>
-  );
-
-};
-
-export default SearchPageModelList;
+}
+export default SearchPageModelList

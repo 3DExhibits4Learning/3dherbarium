@@ -1,11 +1,14 @@
 /**
  * @file /collections/search/page.tsx
+ * 
  * @fileoverview page containing the list of site ready 3D models, for when users visit /collections/search
  */
 
+// Default imports
 import SearchClient from "@/components/Search/SearchClient";
 import Foot from "@/components/Shared/Foot";
 
+// Main JSX
 export default function SearchPage(){
   return (
     <>
