@@ -1,6 +1,6 @@
 'use client'
 
-import { sketchfabApiData } from "@/ts/collections";
+import { setError, sketchfabApiData } from "@/ts/collections";
 import { sketchfabApiReducerAction, setStringOrNumberAction, setSpecimenAction, setMobileAnnotationAction, setApiAction } from "@/ts/collections";
 
 export default function sketchFabApiReducer(apiState: sketchfabApiData, action: sketchfabApiReducerAction): sketchfabApiData {
@@ -83,6 +83,16 @@ export default function sketchFabApiReducer(apiState: sketchfabApiData, action: 
                 ...apiState,
                 annotationModalOpen: false
             }
+
+        case 'error':
+
+        const errorAction = action as setError
+
+        return{
+            ...apiState,
+            error: true,
+            errorMessage: errorAction.errorMessage
+        }
 
         default:
             throw Error("Unknown action type")

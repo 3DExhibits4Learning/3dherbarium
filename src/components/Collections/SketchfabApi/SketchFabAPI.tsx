@@ -17,6 +17,7 @@ import { useEffect, useRef, useContext, createContext, useReducer } from 'react'
 import { CollectionsContext } from '../CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData } from '@/ts/collections';
+import { sketchfabApiContext } from '@/ts/collections';
 
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
@@ -26,7 +27,6 @@ import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataRed
 import ModelViewer from './ModelViewer';
 import Annotation from './Annotation';
 import FullPageError from '../../Error/FullPageError';
-import { sketchfabApiContext } from '@/ts/collections';
 
 // Exported context
 export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
@@ -34,14 +34,12 @@ export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
 // Main JSX
 export default function SFAPI() {
 
-  // try {
-
   // Get context
   const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
   const gMatch = props.gMatch.data as GbifResponse
 
   // Initial context data
-  const initialData = {
+  const initialData: sketchfabApiData = {
     s: undefined, // s = specimen
     annotations: undefined,
     api: undefined,
@@ -51,7 +49,9 @@ export default function SFAPI() {
     annotationTitle: "",
     skeletonClassName: 'bg-black h-full hidden',
     loadingPhoto: false,
-    annotationModalOpen: false
+    annotationModalOpen: false,
+    error: false,
+    errorMessage: undefined
   }
 
   // Reducer
@@ -95,6 +95,8 @@ export default function SFAPI() {
   useEffect(() => fn.initializeAnnotationsAndListeners(sketchfabApi, sketchfabApiDispatch, annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper), [sketchfabApi.api, sketchfabApi.annotations, sketchfabApi.s])
   useEffect(() => fn.photoSrcChangeHandler(sketchfabApi, sketchfabApiDispatch), [sketchfabApi.index]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  if(sketchfabApi.error) return <FullPageError clientErrorMessage={sketchfabApi.errorMessage as string} />
+
   return (
     <SketchfabApiContext.Provider value={sketchfabProviderValue}>
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
@@ -113,6 +115,3 @@ export default function SFAPI() {
     </SketchfabApiContext.Provider>
   )
 }
-// Typical catch
-//catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }
-//}

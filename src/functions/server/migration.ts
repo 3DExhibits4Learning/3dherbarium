@@ -9,66 +9,66 @@ import prisma from "@/utils/prisma"
 
 // Species migration (species table to be deprecated eventually)
 export const speciesMigration = prisma.$queryRaw`insert into Test.species(
-select d.*
-from Development.species as d
-left join Test.species as t
-on d.spec_name = t.spec_name
-where t.spec_name is null);`
+    select d.*
+    from Development.species as d
+    left join Test.species as t
+    on d.spec_name = t.spec_name
+    where t.spec_name is null);`
 
 // Migrate specimen
 export const specimenMigration = prisma.$queryRaw`insert into Test.specimen(
-select d.*
-from Development.specimen as d
-left join Test.specimen as t
-on d.spec_acquis_date = t.spec_acquis_date and d.spec_name = t.spec_name
-where t.spec_name is null);`
+    select d.*
+    from Development.specimen as d
+    left join Test.specimen as t
+    on d.spec_acquis_date = t.spec_acquis_date and d.spec_name = t.spec_name
+    where t.spec_name is null);`
 
 // Migrate 3D models marked as annotated that are in the local db, but not the target db
 export const annotatedModelMigration = prisma.$queryRaw`insert into Test.model(
-select d.* 
-from Development.model as d
-left join Test.model as t
-on d.uid = t.uid
-where t.uid is null and d.annotated is true);`
+    select d.* 
+    from Development.model as d
+    left join Test.model as t
+    on d.uid = t.uid
+    where t.uid is null and d.annotated is true);`
 
 // Migrate image set of those models
 export const imageSetMigration = prisma.$queryRaw`insert into Test.image_set(
-select d.* 
-from Development.image_set as d
-left join Test.image_set as t
-on d.spec_name = t.spec_name and d.spec_acquis_date = t.spec_acquis_date and d.set_no = t.set_no
-where t.spec_name is null and d.uid is not null and d.uid in (select uid from Test.model));`
+    select d.* 
+    from Development.image_set as d
+    left join Test.image_set as t
+    on d.spec_name = t.spec_name and d.spec_acquis_date = t.spec_acquis_date and d.set_no = t.set_no
+    where t.spec_name is null and d.uid is not null and d.uid in (select uid from Test.model));`
 
 // Migrate base annotations of those models
 export const annotationMigration = prisma.$queryRaw`insert into Test.annotations(
-select d.* from Development.annotations as d
-left join Test.annotations as t
-on d.annotation_id = t.annotation_id
-where t.annotation_id is null and d.uid in (select uid from Test.model));`
+    select d.* from Development.annotations as d
+    left join Test.annotations as t
+    on d.annotation_id = t.annotation_id
+    where t.annotation_id is null and d.uid in (select uid from Test.model));`
 
 // Migrate photo annotations of those models
 export const photoAnnotationMigration = prisma.$queryRaw`insert into Test.photo_annotation(
-select d.* 
-from Development.photo_annotation as d
-left join Test.photo_annotation as t
-on d.annotation_id = t.annotation_id
-where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
+    select d.* 
+    from Development.photo_annotation as d
+    left join Test.photo_annotation as t
+    on d.annotation_id = t.annotation_id
+    where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
 
 // Migrate video annotations of those models
 export const videoAnnotationMigration = prisma.$queryRaw`insert into Test.video_annotation(
-select d.* 
-from Development.video_annotation as d
-left join Test.video_annotation as t
-on d.annotation_id = t.annotation_id
-where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
+    select d.* 
+    from Development.video_annotation as d
+    left join Test.video_annotation as t
+    on d.annotation_id = t.annotation_id
+    where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
 
 // Migrate model annotations of those models
 export const modelAnnotationMigration = prisma.$queryRaw`insert into Test.model_annotation(
-select d.* 
-from Development.model_annotation as d
-left join Test.model_annotation as t
-on d.annotation_id = t.annotation_id
-where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
+    select d.* 
+    from Development.model_annotation as d
+    left join Test.model_annotation as t
+    on d.annotation_id = t.annotation_id
+    where t.annotation_id is null and d.annotation_id in (select annotation_id from Test.annotations));`
 
 // Species migration (species table to be deprecated eventually)
 export const productionSpeciesMigration = prisma.$queryRaw`insert into Production.species(

@@ -1,8 +1,7 @@
 'use client'
 
 import { GbifResponse } from "@/api/types"
-import { forwardRef, MutableRefObject, useContext } from "react"
-import { SketchfabApiContext } from "./SketchFabAPI"
+import { forwardRef, MutableRefObject} from "react"
 
 import TaxonomyAndDescription from "./TaxAndDescription"
 import PhotoAnnotation from "./PhotoAnnotation"

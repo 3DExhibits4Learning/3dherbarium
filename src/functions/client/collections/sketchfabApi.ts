@@ -10,7 +10,7 @@
 
 // Typical imports
 import { setViewerWidth, annotationControl } from "@/components/Collections/SketchfabDom"
-import { CollectionsWrapperProps, sketchfabApiData, sketchfabApiReducerAction } from "@/ts/collections"
+import { CollectionsWrapperProps, setStringOrNumberAction, sketchfabApiData, sketchfabApiReducerAction } from "@/ts/collections"
 import { MutableRefObject, Dispatch } from "react"
 import { isMobileOrTablet } from "@/utils/isMobile"
 import { photo_annotation } from "@prisma/client"
@@ -57,7 +57,7 @@ export const annotationSwitchMobileListener = (event: Event, sketchfabApiData: s
  * @param url 
  * @param dispatch 
  */
-export const setImageFromNfs = async (url: string, dispatch: any) => {
+export const setImageFromNfs = async (url: string, dispatch: Dispatch<sketchfabApiReducerAction>) => {
 
     // Declare src variable, set loading state true 
     var src; dispatch({ type: 'setPhotoLoading' })
@@ -71,7 +71,7 @@ export const setImageFromNfs = async (url: string, dispatch: any) => {
     else { const blob = await response.blob(); src = URL.createObjectURL(blob) }
 
     // Dispatch new image src, set loading state false
-    dispatch({ type: 'photoLoaded', field: 'imgSrc', value: src })
+    const action: setStringOrNumberAction = { type: 'photoLoaded', field: 'imgSrc', value: src }; dispatch(action)
 }
 
 /**
@@ -98,8 +98,8 @@ export const initializeModelViewer = (client: any, uid: string, successObj: any,
  * @param props 
  * @param dispatch 
  */
-export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, dispatch: any) => {
-    sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title)
+export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, dispatch: Dispatch<sketchfabApiReducerAction>) => {
+    sRef.current = await Herbarium.model(props.gMatch.data?.usageKey as number, props.model[0], props.noModelData.images, props.noModelData.title).catch(e => dispatch({type:'error', errorMessage: e.message})) as Herbarium
     dispatch({ type: 'setSpecimen', specimen: sRef.current, annotations: sRef.current.annotations.annotations })
 }
 
@@ -107,18 +107,18 @@ export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | un
  * 
  * @param sketchfabApi 
  */
-export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData) => {
+export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData, dispatch: Dispatch<sketchfabApiReducerAction>) => {
 
     // Parse position string
     const position = JSON.parse(sketchfabApi.s?.model.annotationPosition as string)
 
     // Create annotation from position
-    sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (err: any, index: any) => {
-        if (err) throw Error("3D Model Viewer Error")
+    sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (e: any, index: any) => {
+        if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index})
 
         // Go to first annotation based on screen size and user agent
         if (!(isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches)) {
-            sketchfabApi.api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, (err: any, index: any) => { if (err) throw Error("3D Model Viewer Error") })
+            sketchfabApi.api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => { if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index}) })
         }
     })
 }
@@ -127,11 +127,11 @@ export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData
  * 
  * @param sketchfabApi 
  */
-export const createAnnotationsGreaterThan1 = (sketchfabApi: any) => {
+export const createAnnotationsGreaterThan1 = (sketchfabApi: any, dispatch: Dispatch<sketchfabApiReducerAction>) => {
     for (let i = 0; i < sketchfabApi.annotations.length; i++) {
         if (sketchfabApi.annotations[i].position) {
             const position = JSON.parse(sketchfabApi.annotations[i].position as string)
-            sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], `${sketchfabApi.annotations[i].title}`, '', (err: any, index: any) => { if (err) throw Error("3D Model Viewer Error") })
+            sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], `${sketchfabApi.annotations[i].title}`, '', (e: any, index: any) => { if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index}) })
         }
     }
 }
@@ -171,6 +171,11 @@ export const addAnnotationSwitchListeners = (annotationSwitch: HTMLInputElement,
     annotationSwitchMobile.addEventListener("change", mobileAnnotationSwitchWrapper)
 }
 
+/**
+ * 
+ * @param sketchfabApi 
+ * @param sketchfabApiDispatch 
+ */
 export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
 
     if (!!sketchfabApi.index && sketchfabApi.annotations && sketchfabApi.annotations[sketchfabApi.index - 1].annotation_type == 'photo') {
@@ -208,7 +213,7 @@ export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabAp
     if (sketchfabApi.s && sketchfabApi.annotations && sketchfabApi.api) {
 
         // Create annotations an go to first annotation if client appears to be on desktop
-        if (sketchfabApi.s.model.annotationPosition) createAndMaybeGoToFirstAnnotation(sketchfabApi); createAnnotationsGreaterThan1(sketchfabApi)
+        if (sketchfabApi.s.model.annotationPosition) createAndMaybeGoToFirstAnnotation(sketchfabApi, sketchfabApiDispatch); createAnnotationsGreaterThan1(sketchfabApi, sketchfabApiDispatch)
 
         // Add both annotation switch and annotation select event listeners
         addAnnotationSwitchListeners(annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper)

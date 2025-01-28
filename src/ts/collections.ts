@@ -1,7 +1,6 @@
 import { model } from "@prisma/client"
 import { GbifResponse, GbifImageResponse } from "@/api/types"
 import { fullAnnotation } from "@/api/types"
-import { action } from "@/api/types"
 import { Dispatch } from "react"
 
 import Herbarium from "@/utils/HerbariumClass"
@@ -23,32 +22,43 @@ export interface sketchfabApiData {
     annotationTitle: string
     skeletonClassName: string
     loadingPhoto: boolean
-    annotationModalOpen: boolean
+    annotationModalOpen: boolean,
+    error: boolean,
+    errorMessage: string | undefined
 }
-
 export interface sketchfabApiContext {
     sketchfabApi: sketchfabApiData,
     sketchfabApiDispatch: Dispatch<any>
 }
 
+export interface action{
+    type: 'setStringOrNumber' |
+    'setSpecimen' |
+    'setMobileAnnotation' |
+    'setApi' |
+    'setPhotoLoading' | 
+    'photoLoaded' |
+    'openAnnotationModal' |
+    'closeAnnotationModal' |
+    'error'
+} 
+export interface setError extends action{
+    errorMessage: string
+}
 export interface setStringOrNumberAction extends action {
     field: string,
     value: string | number
 }
-
 export interface setSpecimenAction extends action {
     specimen: Herbarium
     annotations: fullAnnotation[]
 }
-
 export interface setApiAction extends action {
     api: any
 }
-
 export interface setMobileAnnotationAction extends action {
     index: number,
     title: string
 }
-
-export type sketchfabApiReducerAction = action | setMobileAnnotationAction | setSpecimenAction | setApiAction | setStringOrNumberAction
+export type sketchfabApiReducerAction = action | setMobileAnnotationAction | setSpecimenAction | setApiAction | setStringOrNumberAction | setError
 
