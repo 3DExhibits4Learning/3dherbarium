@@ -96,6 +96,7 @@ export interface MapDataState {
     displayOptions : DisplayOptions
     activeSection : string,
     loading : boolean,
+    firstLoad : boolean,
     images : Image[],
     observations : iNatUserObservation[],
     topObservers : iNatLeadingUser[],
@@ -128,6 +129,7 @@ export const MapDataInitialState: MapDataState = {
 
     coordinates: defaultCoordinates,
     zoom: 8,
+    firstLoad: true,
     activeSection: "images",
     loading: false,
     images: [],

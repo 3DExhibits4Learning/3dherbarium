@@ -148,6 +148,11 @@ export const iNatFetch = async (
             }
         })
 
+        dispatch({
+            type: "SET_FIRST_LOAD",
+            payload: false
+        })
+
         console.log(state.topIdentifiers)
     } else {
         console.error("Error fetching iNaturalist data:", res.text)

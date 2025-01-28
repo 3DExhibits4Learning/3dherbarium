@@ -20,6 +20,7 @@ export type MapDataAction =
     | { type: "SET_COORDINATES"; payload: LatLngLiteral }
     | { type: "SET_ACTIVE_SECTION"; payload: string }
     | { type: "SET_LOADING"; payload: boolean }
+    | { type: "SET_FIRST_LOAD"; payload: boolean}
     | { type: "SET_API_FETCH"; payload: Partial<Pick<MapDataState, "observations" | "images" | "topIdentifiers" | "topObservers" | "loading">> }
     | { type: "SET_CREDENTIALS"; payload: Partial<Pick<MapDataState, "observer" | "observationTitle" | "observationLocation" | "observationDate" | "observationIcon" | "observationTaxon" | "observationTaxonId">> }
     | { type: "SET_DISPLAY_OPTIONS"; payload: DisplayOptions }
@@ -47,6 +48,8 @@ export default function INaturalistStateReducer(
                 return {...state, activeSection : action.payload}
             case "SET_LOADING":
                 return {...state, loading : action.payload}
+            case "SET_FIRST_LOAD":
+                return {...state, firstLoad: action.payload}
             case "SET_DISPLAY_OPTIONS":
                 return {...state, displayOptions : action.payload}
             case "SET_ZOOM":

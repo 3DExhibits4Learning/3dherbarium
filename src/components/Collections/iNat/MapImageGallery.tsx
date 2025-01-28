@@ -39,7 +39,7 @@ export const MapImageGallery = () => {
 
     return (
         <>
-            {state.observations.length > 0 ? (
+            {state.observations.length > 0 && (
                 <>
                     <a href={observationTaxonUrl + state.observationTaxonId} 
                        className="flex w-full h-[5%] justify-center items-center [@media(max-height:900px)]:text-lg text-xl lg:text-2xl xl:text-3xl"
@@ -57,7 +57,7 @@ export const MapImageGallery = () => {
                                 alt="Observer Icon"
                             />
                           
-                            
+                        
                                     <a href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
                             
                         </p>
@@ -66,7 +66,7 @@ export const MapImageGallery = () => {
                     </div>
 
                 
-                    <div className="w-3/5 h-[55%] md:w-2/5 lg:h-[65%] lg:w-[75%]">
+                    <div className="w-3/5 h-[65%] md:w-3/5 lg:h-[75%] lg:w-[85%]">
                         <ImageGallery
                             autoPlay
                             items={state.images as ReactImageGalleryItem[]}
@@ -76,18 +76,7 @@ export const MapImageGallery = () => {
                         />
                     </div>
                 </>
-            ) : (
-
-            <div className="flex flex-col items-center justify-center w-full h-full text-center ml-2">
-                <p className="text-lg md:text-lg lg:text-xl xl:text-2xl">
-                    No observations found for the selected location.
-                </p>
-                <p className="text-md md:text-md">
-                    Try adjusting your search parameters or selecting a different location.
-                </p>
-            </div>
-
-            )}
-        </>
+              )}
+         </>
     );
 };

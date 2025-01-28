@@ -70,35 +70,71 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
 
-        {state.observations.length === 0 && state.loading ? (
+        {
+        
+        state.observations.length === 0 && state.loading && state.firstLoad && 
             <div className="flex justify-center items-center w-full h-full flex-col border-2 border-pacific-blue rounded-lg">
                 <Spinner size="lg" color="default" />
-                <p className="mt-4 text-2xl 2xl:text-4xl">Loading</p>
+                <p className="mt-4 text-2xl 2xl:text-10xl">Loading Observations</p>
             </div>
 
-        ) : (
+        }
+
         <div className="flex w-full h-full overflow-y-auto">
-            <section className={`h-[85%] lg:h-[95%] min-h-[600px] lg:flex justify-center items-center lg:w-1/3 ml-2 mt-4 ${state.activeSection === "locations" ? "mr-2 flex w-full" : "hidden"}`}>
-                {state.loading ? (
+
+        {
+            !state.firstLoad && (
+                <>
+                {state.loading && !state.firstLoad && (
                     <div className="flex justify-center items-center w-full h-full flex-col border-2 border-pacific-blue rounded-lg">
-                        <Spinner size="lg" color="default" />
-                        <p className="mt-4 text-2xl">Updating Map...</p>
+                    <Spinner size="lg" color="default" />
+                    <p className="mt-4 text-2xl">Updating Observations</p>
                     </div>
-                    ) : (
-                <DynamicMap
-                />
-                    )}
-            </section>
-            
-            <section className={`lg:flex min-h-[600px] lg:w-1/3 items-center justify-start w-full flex-col ${state.activeSection === "images" ? "flex" : "hidden"}`}>
-               <MapImageGallery />
-            </section>
+                )}
+
+                {state.coordinates && !state.loading && (
+                    <section
+                    className={`h-[85%] lg:h-[95%] min-h-[600px] lg:flex justify-center items-center lg:w-1/3 ml-2 mr-3 mt-4 ${
+                        state.activeSection === "locations" ? "mr-2 flex w-full" : "hidden"
+                    }`}
+                    >
+                    <DynamicMap />
+                    </section>
+                )}
+                </>
+        )
+        }
+
+
+
+            {
+             state.observations.length === 0 && !state.loading &&
+                    <div className={`flex flex-col items-center justify-center w-full h-full text-center ml-2 ${state.activeSection === "locations" ? "hidden" : "flex"}`}>
+                        <p className="text-lg md:text-lg lg:text-xl xl:text-2xl">
+                            No observations found for the selected location.
+                        </p>
+                        <p className="text-md md:text-md">
+                            Try adjusting your search parameters or selecting a different location.
+                        </p>
+                    </div>                    
+            }
+
+            {
+                state.observations.length > 0 && state.images && !state.loading && (
+                    <>
+                      <section className={`lg:flex min-h-[600px] lg:w-1/3 items-center justify-start w-full flex-col ${state.activeSection === "images" ? "flex" : "hidden"}`}>
+                            <MapImageGallery />
+                      </section>
     
-            <section className={`lg:flex lg:w-1/3 min-h-[600px] flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%]' : 'hidden'} text-md `}>
-                <LeaderBoard identifiers={state.topIdentifiers} observers={state.topObservers} />
-            </section>
+                      <section className={`lg:flex lg:w-1/3 min-h-[600px] flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%]' : 'hidden'} text-md `}>
+                        <LeaderBoard identifiers={state.topIdentifiers} observers={state.topObservers} />
+                      </section>
+                    </>
+                )
+                
+            }
+
         </div>
-        )}
         </MapContext.Provider>
     )
 }
