@@ -7,7 +7,7 @@ export function MessageButton(props: {userToMessage : string}) {
     const [showForum, setShowForum] = useState<boolean>(false)
 
     const handleClick = () => {
-        setShowForum(!showForum)
+        // setShowForum(!showForum)
         
 
     //   sendMessageToObserver(
