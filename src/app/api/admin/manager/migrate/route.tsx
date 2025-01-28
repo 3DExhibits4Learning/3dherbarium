@@ -27,14 +27,14 @@ export async function POST() {
 
         // Array of data migrations for transaction
         const modelMigrationArray = [
-            migrate.speciesMigration(db, target),
-            migrate.specimenMigration(db, target),
-            migrate.annotatedModelMigration(db, target),
-            migrate.imageSetMigration(db, target),
-            migrate.annotationMigration(db, target),
-            migrate.photoAnnotationMigration(db, target),
-            migrate.videoAnnotationMigration(db, target),
-            migrate.modelAnnotationMigration(db, target),
+            migrate.speciesMigration,
+            migrate.specimenMigration,
+            migrate.annotatedModelMigration,
+            migrate.imageSetMigration,
+            migrate.annotationMigration,
+            migrate.photoAnnotationMigration,
+            migrate.videoAnnotationMigration,
+            migrate.modelAnnotationMigration,
         ]
 
         // Transaction 
