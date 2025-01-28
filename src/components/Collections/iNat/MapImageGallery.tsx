@@ -66,7 +66,7 @@ export const MapImageGallery = () => {
                     </div>
 
                 
-                    <div className="w-3/5 h-[65%] md:w-3/5 lg:h-[75%] lg:w-[85%]">
+                    <div className="w-4/5 h-[65%] lg:h-[70%] lg:w-[98%] xl:h-[78%]">
                         <ImageGallery
                             autoPlay
                             items={state.images as ReactImageGalleryItem[]}
