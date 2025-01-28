@@ -124,7 +124,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                             <MapImageGallery />
                       </section>
     
-                      <section className={`lg:flex lg:w-1/3 min-h-[600px] flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%]' : 'hidden'} text-md `}>
+                      <section className={`lg:flex lg:w-1/3 min-h-[600px] overflow-y-scroll flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%] pb-12 lg:pb-0' : 'hidden'} text-md`}>
                         <LeaderBoard identifiers={state.topIdentifiers} observers={state.topObservers} />
                       </section>
                     </>
