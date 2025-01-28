@@ -18,6 +18,7 @@ import { CollectionsContext } from '../CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData } from '@/ts/collections';
 import { sketchfabApiContext } from '@/ts/collections';
+import { useSearchParams } from 'next/navigation';
 
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
@@ -38,6 +39,12 @@ export default function SFAPI() {
   const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
   const gMatch = props.gMatch.data as GbifResponse
 
+  // Get and test for an annotation number
+  const params = useSearchParams()
+  const re = /[1-9]/
+  const annotationNumberStr = params.get('annotation')
+  const annotationNumberParam = annotationNumberStr && re.test(annotationNumberStr) ? parseInt(annotationNumberStr) : undefined
+
   // Initial context data
   const initialData: sketchfabApiData = {
     s: undefined, // s = specimen
@@ -51,7 +58,8 @@ export default function SFAPI() {
     loadingPhoto: false,
     annotationModalOpen: false,
     error: false,
-    errorMessage: undefined
+    errorMessage: undefined,
+    annotationNumParam: annotationNumberParam
   }
 
   // Reducer

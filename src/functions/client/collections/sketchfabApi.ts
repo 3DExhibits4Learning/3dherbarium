@@ -82,14 +82,8 @@ export const setImageFromNfs = async (url: string, dispatch: Dispatch<sketchfabA
  * @param successObjDesktop 
  */
 export const initializeModelViewer = (client: any, uid: string, successObj: any, successObjDesktop: any) => {
-
-    // Choose initialization success object based on screen size
-    if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) {
-        client.init(uid, successObj)
-    }
-    else {
-        client.init(uid, successObjDesktop)
-    }
+    if (isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches || window.matchMedia('(orientation: portrait)').matches) client.init(uid, successObj)
+    else client.init(uid, successObjDesktop)
 }
 
 /**
@@ -116,9 +110,10 @@ export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData
     sketchfabApi.api.createAnnotationFromScenePosition(position[0], position[1], position[2], 'Taxonomy and Description', '', (e: any, index: any) => {
         if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index})
 
-        // Go to first annotation based on screen size and user agent
+        // Go to first annotation based on screen size and user agent (also check for an annotation number parameter value)
         if (!(isMobileOrTablet() || window.matchMedia('(max-width: 1023.5px)').matches)) {
-            sketchfabApi.api.gotoAnnotation(0, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => { if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index}) })
+            const annotationIndex = sketchfabApi.annotationNumParam && sketchfabApi.annotationNumParam < (sketchfabApi.annotations as fullAnnotation[]).length ? sketchfabApi.annotationNumParam : 0
+            sketchfabApi.api.gotoAnnotation(annotationIndex, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => { if (e) dispatch({type:'error', errorMessage: e.message + 'Annotation' , index}) })
         }
     })
 }
@@ -195,7 +190,6 @@ export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: D
  * @param sketchfabApiDispatch 
  */
 export const initializeCollections = (client: any, successObj: any, successObjDesktop: any, sRef: MutableRefObject<Herbarium | undefined>, props: CollectionsWrapperProps, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
-    // Initialize and instantiate
     initializeModelViewer(client, props.model[0].uid, successObj, successObjDesktop)
     instantiateHerbarium(sRef, props, sketchfabApiDispatch)
 }

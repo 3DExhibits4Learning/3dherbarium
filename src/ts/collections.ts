@@ -24,7 +24,8 @@ export interface sketchfabApiData {
     loadingPhoto: boolean
     annotationModalOpen: boolean,
     error: boolean,
-    errorMessage: string | undefined
+    errorMessage: string | undefined,
+    annotationNumParam: number | undefined
 }
 export interface sketchfabApiContext {
     sketchfabApi: sketchfabApiData,
