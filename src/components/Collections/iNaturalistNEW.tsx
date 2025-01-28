@@ -71,7 +71,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         {
         
         state.observations.length === 0 && state.loading && state.firstLoad && 
-            <div className="flex justify-center items-center w-full h-full flex-col border-2 border-pacific-blue rounded-lg">
+            <div className="flex justify-center items-center w-full h-full flex-col">
                 <Spinner size="lg" color="default" />
                 <p className="mt-4 text-2xl 2xl:text-10xl">Loading Observations</p>
             </div>
@@ -84,7 +84,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
             !state.firstLoad && (
                 <>
                 {state.loading && !state.firstLoad && (
-                    <div className="flex justify-center items-center w-full h-full flex-col border-2 border-pacific-blue rounded-lg">
+                    <div className="flex justify-center items-center w-full h-full flex-col">
                     <Spinner size="lg" color="default" />
                     <p className="mt-4 text-2xl">Updating Observations</p>
                     </div>
