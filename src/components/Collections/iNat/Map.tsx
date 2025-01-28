@@ -95,7 +95,7 @@ export default function Map() {
     }, [context.state.displayOptions]);
 
    return (
-        <div className="relative h-full w-full">
+        <div className="relative h-full w-full mr-3">
         
         <button 
             onClick={() => setShowMapOptions((prev) => !prev)} 
