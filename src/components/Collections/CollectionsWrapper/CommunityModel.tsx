@@ -33,7 +33,7 @@ export default function CollectionsCommunityModel(props: { sizes: any, modelHeig
             }
             {
                 mediaState.observationsChecked &&
-                <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '750px' }}>
+                <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '600px' }}>
                     <Inaturalist activeSpecies={collectionsProps.specimenName} />
                 </div>
 

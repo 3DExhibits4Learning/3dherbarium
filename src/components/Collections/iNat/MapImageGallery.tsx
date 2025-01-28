@@ -39,25 +39,27 @@ export const MapImageGallery = () => {
 
     return (
         <>
-            {state.observations.length > 0 && (
+            {state.observations.length > 0 ? (
                 <>
-                   
-                    <p className="flex w-full h-[5%] justify-center items-center [@media(max-height:900px)]:text-lg text-xl lg:text-2xl xl:text-3xl">
-                        {toUpperFirstLetter(decodeURIComponent(state.observationTitle as string))}
-                    </p>
+                    <a href={observationTaxonUrl + state.observationTaxonId} 
+                       className="flex w-full h-[5%] justify-center items-center [@media(max-height:900px)]:text-lg text-xl lg:text-2xl xl:text-3xl"
+                       target="_blank">
+                        {toUpperFirstLetter(decodeURIComponent(state.observationTaxon as string))}
+                    </a>
 
-                   
                     <div
                         id="observationCredentials"
-                        className="flex flex-col w-3/5 text-center items-center justify-center [@media(max-height:900px)]:text-sm text-md"
-                    >
+                        className="flex flex-col w-3/5 text-center items-center justify-center [@media(max-height:900px)]:text-sm text-md">
                         <p className="mt-2">
                             <img
                                 className="inline-block h-[48px] w-[48px] mr-4"
                                 src={state.observationIcon}
                                 alt="Observer Icon"
                             />
-                            {state.observer}
+                          
+                            
+                                    <a href={userPageUrl + state.observer} target="_blank">{state.observer}</a>
+                            
                         </p>
                         <p>{state.observationLocation}</p>
                         <p>{state.observationDate}</p>
@@ -74,6 +76,17 @@ export const MapImageGallery = () => {
                         />
                     </div>
                 </>
+            ) : (
+
+            <div className="flex flex-col items-center justify-center w-full h-full text-center ml-2">
+                <p className="text-lg md:text-lg lg:text-xl xl:text-2xl">
+                    No observations found for the selected location.
+                </p>
+                <p className="text-md md:text-md">
+                    Try adjusting your search parameters or selecting a different location.
+                </p>
+            </div>
+
             )}
         </>
     );
