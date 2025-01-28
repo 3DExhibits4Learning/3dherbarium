@@ -95,7 +95,7 @@ export const fetchSpecimenObservations = async (specimenName: string, searchPara
     const specimenObservationInfo: iNatSpecimenObservation = {
       photoUrl: result.photos?.[0]?.url?.replace('square', 'large') ?? '',
       title: result.species_guess ?? result.taxon?.preferred_common_name ?? specimenName,
-      userIcon: result.user?.icon ?? '../../public/blankIcon.jpg',
+      userIcon: result.user?.icon ?? '../../blankIcon.jpg',
       pictureHrefLink: result.uri,
       userHrefLink: result.user?.login ?? '',
       observedOnDate: result.observed_on_details?.date ?? '',

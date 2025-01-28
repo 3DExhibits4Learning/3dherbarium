@@ -140,7 +140,7 @@ export const MapDataInitialState: MapDataState = {
     observationTitle: "",
     observationLocation: "",
     observationDate: "",
-    observationIcon: "/blankIcon.jpg",
+    observationIcon: "../../blankIcon.jpg",
     observationTaxon: "",
     observationTaxonId: ""
 };

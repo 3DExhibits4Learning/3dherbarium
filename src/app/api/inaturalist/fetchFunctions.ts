@@ -66,7 +66,7 @@ export const fetchSpecimenObservations = async (specimenName: string, coordinate
             user : {
                 userName: result.user.login,
                 userId: result.user.id,
-                userIcon: result.user.icon ?? '/blankIcon.jpg'
+                userIcon: result.user.icon ?? '../../blankIcon.jpg'
             },
 
             //add more default values if the ?? fails

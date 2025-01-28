@@ -45,7 +45,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
         setObservationTitle(observation.species_guess ?? observation.taxon.name ?? '')
         setObservationDate(observation.observed_on_details.date ?? observation.time_observed_at ?? '')
         setObservationLocation(observation.place_guess ?? '')
-        setObserverIcon(observation.user.icon ?? '../../../blankIcon.jpg')
+        setObserverIcon(observation.user.icon ?? '../../blankIcon.jpg')
     }
 
     useEffect(() => {
