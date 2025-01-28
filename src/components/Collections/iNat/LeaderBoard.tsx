@@ -27,7 +27,7 @@ export function LeaderBoard(props : {identifiers : iNatLeadingUser[], observers 
     return(
         <>
         { props.observers &&
-            <div className="bg-dune-grass dark:bg-[#212121] grid grid-cols-3 w-[95%] h-full my-4 rounded-lg">
+            <div className="bg-dune-grass dark:bg-[#212121] grid grid-cols-3 w-[100%] h-full my-4 rounded-lg">
                  <div className="flex border-b justify-center items-center">#</div>
                  <div className="flex border-b justify-center items-center">Observer</div>
                  <div className="flex border-b justify-center items-center">Observations</div>
@@ -46,7 +46,7 @@ export function LeaderBoard(props : {identifiers : iNatLeadingUser[], observers 
         }
 
         { props.identifiers &&
-             <div className="bg-dune-grass dark:bg-[#212121] grid grid-cols-3 w-[95%] h-full my-4 rounded-lg">
+             <div className="bg-dune-grass dark:bg-[#212121] grid grid-cols-3 w-[100%] h-full my-4 rounded-lg">
                  <div className="flex border-b justify-center items-center">#</div>
                  <div className="flex border-b justify-center items-center">Identifier</div>
                  <div className="flex border-b justify-center items-center">Identifications</div>

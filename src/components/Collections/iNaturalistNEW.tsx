@@ -92,7 +92,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
                 {state.coordinates && !state.loading && (
                     <section
-                    className={`h-[85%] lg:h-[95%] min-h-[500px] lg:flex justify-center items-center lg:w-1/3 ml-2 mt-4 ${
+                    className={`h-[85%] lg:h-[95%] min-h-[500px] lg:flex justify-center items-center lg:w-1/3 mx-5 mt-4 ${
                         state.activeSection === "locations" ? "flex w-full" : "hidden"
                     }`}
                     >
@@ -124,7 +124,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                             <MapImageGallery />
                       </section>
     
-                      <section className={`lg:flex lg:w-1/3 min-h-[600px] border border-red-500 overflow-y-scroll flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%] pb-12 lg:pb-0' : 'hidden'} text-md`}>
+                      <section className={`lg:flex lg:w-1/3 min-h-[600px] mx-5 overflow-y-scroll flex-col justify-center items-center ${state.activeSection === 'leaderboard' ? 'flex w-full lg:h-full h-[90%] pb-12 lg:pb-0' : 'hidden'} text-md`}>
                         <LeaderBoard identifiers={state.topIdentifiers} observers={state.topObservers} />
                       </section>
                     </>
