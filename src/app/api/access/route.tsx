@@ -8,6 +8,7 @@ export async function GET(request: Request) {
     const session = await getServerSession(authOptions)
 
     try{
+        
         let response
         const d = new Date()
         let date = Math.round(d.getTime() / 1000)

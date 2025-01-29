@@ -435,7 +435,7 @@ export const getAccount = async (id: string, provider: string) => {
     where: {
       userId: id,
       provider: provider,
-    },
+    }
   })
 
   return account

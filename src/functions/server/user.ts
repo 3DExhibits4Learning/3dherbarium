@@ -18,13 +18,27 @@ import prisma from "@/utils/prisma"
  */
 export const isAccountLinked = async (provider: 'inaturalist' | 'sketchfab') => {
 
-    // Get session, user ID and accoutns
-    const session = await getServerSession(authOptions)
-    if(!session)
-    const userId = session.user.id
-    const userAccounts = await prisma.account.findMany({ where: { userId: userId } })
+    try {
+        // Get session, user ID and accoutns
+        const session = await getServerSession(authOptions)
+        const userId = session.user.id
+        const userAccounts = await prisma.account.findMany({ where: { userId: userId } })
 
-    // Iterate accounts checking for provider argument; return true if found
-    for (let i in userAccounts) if (userAccounts[i].provider === provider) return true
-    return false
-}   
+        // Iterate accounts checking for provider argument; return true if found
+        for (let i in userAccounts) if (userAccounts[i].provider === provider) return true
+        return false
+    }
+    catch (e) { return false }
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const isSketchFabAccountLinked = () => isAccountLinked('sketchfab')
+
+/**
+ * 
+ * @returns 
+ */
+export const isInatAccountLinked = () => isAccountLinked('inaturalist')
