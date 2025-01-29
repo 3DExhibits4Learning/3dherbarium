@@ -32,9 +32,7 @@ export default function CollectionsNoModel(props: { sizes: any, modelHeight: str
                 }
                 {
                     mediaState.observationsChecked &&
-                    <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '600px' }}>
-                        <Inaturalist activeSpecies={collectionsProps.specimenName} />
-                    </div>
+                        <Inaturalist activeSpecies={collectionsProps.specimenName} sizes={props.sizes} />
                 }
                 <Foot />
             </div>

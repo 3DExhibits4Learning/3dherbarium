@@ -36,7 +36,7 @@ export const MapContext = createContext<MapContextData | ''>('');
  * 
  * @returns a JSX element representing the MapClientWrapper component.
  */
-export default function Inaturalist(props: { activeSpecies: string }) {
+export default function Inaturalist(props: { activeSpecies: string, sizes: any }) {
     const [state, dispatch] = useReducer(MapDataReducer, MapDataInitialState);
     
     /*
@@ -61,7 +61,9 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     }, [state.activeSpecies,state.displayOptions, state.coordinates]);
     
    
-    return <MapContext.Provider value={{state, dispatch}}>
+    return <div className="h-[calc(100vh-217px)] max-lg:h-[calc(100vh-178px)] max-h-[props.sizes.viewportHeightInPx] min-h-[600px] min-w-[500px]">
+
+    <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
         {
         state.observations.length === 0 && state.loading && state.firstLoad && 
@@ -119,4 +121,5 @@ export default function Inaturalist(props: { activeSpecies: string }) {
             }
         </article>
         </MapContext.Provider>
+        </div>
 }
