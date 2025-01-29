@@ -14,20 +14,20 @@
  */
 
 import { LatLngLiteral } from "leaflet"
-import { DisplayOptions, MapDataState} from "@/functions/client/collections/iNat"
+import { DisplayOptions, MapDataState } from "@/functions/client/collections/iNat"
 
 export type MapDataAction =
     | { type: "SET_COORDINATES"; payload: LatLngLiteral }
     | { type: "SET_ACTIVE_SECTION"; payload: string }
     | { type: "SET_LOADING"; payload: boolean }
-    | { type: "SET_FIRST_LOAD"; payload: boolean}
+    | { type: "SET_FIRST_LOAD"; payload: boolean }
     | { type: "SET_API_FETCH"; payload: Partial<Pick<MapDataState, "observations" | "images" | "topIdentifiers" | "topObservers" | "loading">> }
-    | { type: "SET_CREDENTIALS"; payload: Partial<Pick<MapDataState, "observer" | "observationTitle" | "observationLocation" | "observationDate" | "observationIcon" | "observationTaxon" | "observationTaxonId">> }
+    | { type: "SET_CREDENTIALS"; payload: Partial<Pick<MapDataState, "observer" | "observationTitle" | "observationLocation" | "observationDate" | "observationIcon" | "observationTaxon" | "observationTaxonId" | "observationId">> }
     | { type: "SET_DISPLAY_OPTIONS"; payload: DisplayOptions }
     | { type: "SET_ACTIVE_SPECIES"; payload: string }
-    | { type: "SET_ZOOM"; payload: number}
+    | { type: "SET_ZOOM"; payload: number }
 
-    // Add other action types as needed
+// Add other action types as needed
 
 /**
  * @param state the global state of the map
@@ -35,30 +35,30 @@ export type MapDataAction =
  * @returns the newly updated state
  */
 export default function INaturalistStateReducer(
-    state: MapDataState , 
+    state: MapDataState,
     action: MapDataAction
-) : MapDataState {
+): MapDataState {
 
-        switch(action.type) {
-            case "SET_ACTIVE_SPECIES":
-                return {...state, activeSpecies : action.payload}
-            case "SET_COORDINATES":
-                return {...state, coordinates : action.payload}
-            case "SET_ACTIVE_SECTION":
-                return {...state, activeSection : action.payload}
-            case "SET_LOADING":
-                return {...state, loading : action.payload}
-            case "SET_FIRST_LOAD":
-                return {...state, firstLoad: action.payload}
-            case "SET_DISPLAY_OPTIONS":
-                return {...state, displayOptions : action.payload}
-            case "SET_ZOOM":
-                return {...state, zoom : action.payload}
-            case "SET_API_FETCH":
-                return {...state, ...action.payload }
-            case "SET_CREDENTIALS":
-                return {...state, ...action.payload }
-            default: 
-                return state
-        }
+    switch (action.type) {
+        case "SET_ACTIVE_SPECIES":
+            return { ...state, activeSpecies: action.payload }
+        case "SET_COORDINATES":
+            return { ...state, coordinates: action.payload }
+        case "SET_ACTIVE_SECTION":
+            return { ...state, activeSection: action.payload }
+        case "SET_LOADING":
+            return { ...state, loading: action.payload }
+        case "SET_FIRST_LOAD":
+            return { ...state, firstLoad: action.payload }
+        case "SET_DISPLAY_OPTIONS":
+            return { ...state, displayOptions: action.payload }
+        case "SET_ZOOM":
+            return { ...state, zoom: action.payload }
+        case "SET_API_FETCH":
+            return { ...state, ...action.payload }
+        case "SET_CREDENTIALS":
+            return { ...state, ...action.payload }
+        default:
+            return state
+    }
 }

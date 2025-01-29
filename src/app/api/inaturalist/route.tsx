@@ -15,16 +15,16 @@ import { fetchSpecimenObservations } from "@/app/api/inaturalist/fetchFunctions"
  * @returns A response of the data fetched 
  */
 export async function POST(request: Request) {
-    
+
     try {
         const data = await request.json();
-    
+
         const { specimenName, coordinate, searchOptions } = data;
-    
+
         // Validate input
-        if (!specimenName || !coordinate || !searchOptions) 
+        if (!specimenName || !coordinate || !searchOptions)
             return NextResponse.json({ error: "Invalid input" }, { status: 400 });
-    
+
         const observations = await fetchSpecimenObservations(specimenName, coordinate, searchOptions);
 
         return NextResponse.json(observations, { status: 200 });

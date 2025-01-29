@@ -22,9 +22,7 @@ import MapDataReducer, { MapDataAction } from "@/functions/client/reducers/iNat"
 
 //dynamic imports
 import dynamic from 'next/dynamic'
-const DynamicMap = dynamic(() => import('@/components/Collections/iNat/Map'), {
-    ssr: false 
-})
+const DynamicMap = dynamic(() => import('@/components/Collections/iNat/Map'), {ssr: false })
 
 export interface MapContextData {
     state: MapDataState,
@@ -57,29 +55,22 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
     useEffect(() => {
         if (state.activeSpecies) {
-            console.log("Fetching data for species:", state.activeSpecies);
             fetchCoordinates(state, dispatch);
             iNatFetch(state, dispatch);
         }
     }, [state.activeSpecies,state.displayOptions, state.coordinates]);
     
    
-    return (
-        <MapContext.Provider value={{state, dispatch}}>
+    return <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
-
         {
-        
         state.observations.length === 0 && state.loading && state.firstLoad && 
             <div className="flex justify-center items-center w-full h-full flex-col">
                 <Spinner size="lg" color="default" />
                 <p className="mt-4 text-2xl 2xl:text-10xl">Loading Observations</p>
             </div>
-
         }
-
         <article className="flex w-full h-full overflow-y-auto">
-
         {
             !state.firstLoad && (
                 <>
@@ -102,10 +93,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 </>
         )
         }
-
-
-
-            {
+        {
              state.observations.length === 0 && !state.loading &&
                     <div className={`flex flex-col items-center justify-center w-full h-full text-center ml-2 ${state.activeSection === "locations" ? "hidden lg:flex" : "flex"}`}>
                         <p className="text-lg md:text-lg lg:text-xl xl:text-2xl">
@@ -116,7 +104,6 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                         </p>
                     </div>                    
             }
-
             {
                 state.observations.length > 0 && state.images && !state.loading && (
                     <>
@@ -129,10 +116,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                       </section>
                     </>
                 )
-                
             }
-
         </article>
         </MapContext.Provider>
-    )
 }

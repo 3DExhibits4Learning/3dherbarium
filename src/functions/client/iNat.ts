@@ -6,7 +6,7 @@
  * @todo 
  */
 
-import { defaultCoordinates, iNatApiResult, iNatFetchObj, iNatUserObservation, MapDataState, Message} from "@/functions/client/collections/iNat"
+import { defaultCoordinates, iNatApiResult, iNatFetchObj, iNatUserObservation, MapDataState, Message } from "@/functions/client/collections/iNat"
 import { Dispatch } from "react";
 import { MapDataAction } from "@/functions/client/reducers/iNat";
 import { routeHandlerTypicalResponse } from "@/functions/server/response";
@@ -24,7 +24,7 @@ const getCoords = async (): Promise<{ longitude: number; latitude: number; }> =>
             reject(new Error(`Geolocation error: ${error.message}`));
         });
     })
-    
+
     return {
         longitude: pos.coords.longitude,
         latitude: pos.coords.latitude,
@@ -40,42 +40,44 @@ const getCoords = async (): Promise<{ longitude: number; latitude: number; }> =>
  * @param dispatch used to update the state
  */
 export const fetchCoordinates = async (
-    state : MapDataState, 
-    dispatch : Dispatch<MapDataAction>
-    
-    ) => {
-        try {
-            //if the user checked the use location checkbox lets find their location
-            if (state.displayOptions.useCurrentLocation) {
-                const coords = await getCoords()
-        
-                if (!state.coordinates || state.coordinates.lat !== coords.latitude || state.coordinates.lng !== coords.longitude) {
-                   dispatch({ 
+    state: MapDataState,
+    dispatch: Dispatch<MapDataAction>
+
+) => {
+    try {
+        //if the user checked the use location checkbox lets find their location
+        if (state.displayOptions.useCurrentLocation) {
+            const coords = await getCoords()
+
+            if (!state.coordinates || state.coordinates.lat !== coords.latitude || state.coordinates.lng !== coords.longitude) {
+                dispatch({
                     type: "SET_COORDINATES",
                     payload: {
-                        lat: coords.latitude, 
-                        lng: coords.longitude }})
-                }
-                uncheckLocationCheckbox(state,dispatch)
-
-            } else {
-                //The user clicked somewhere on the map, set the coordinates there
-                dispatch({ 
-                    type: "SET_COORDINATES",
-                    payload: state.coordinates || defaultCoordinates,
+                        lat: coords.latitude,
+                        lng: coords.longitude
+                    }
                 })
             }
-        } catch (error) {
-            //An error occurs usually because the user declined the use my location,
-            //just set the coordinates back to default
+            uncheckLocationCheckbox(state, dispatch)
+
+        } else {
+            //The user clicked somewhere on the map, set the coordinates there
             dispatch({
                 type: "SET_COORDINATES",
-                payload: defaultCoordinates,
+                payload: state.coordinates || defaultCoordinates,
             })
+        }
+    } catch (error) {
+        //An error occurs usually because the user declined the use my location,
+        //just set the coordinates back to default
+        dispatch({
+            type: "SET_COORDINATES",
+            payload: defaultCoordinates,
+        })
 
-            uncheckLocationCheckbox(state,dispatch)
+        uncheckLocationCheckbox(state, dispatch)
 
-            console.error("Error fetching coordinates", error)
+        console.error("Error fetching coordinates", error)
     }
 }
 
@@ -86,8 +88,8 @@ export const fetchCoordinates = async (
  * @param dispatch used to update the state
  */
 function uncheckLocationCheckbox(
-    state : MapDataState, 
-    dispatch : Dispatch<MapDataAction>
+    state: MapDataState,
+    dispatch: Dispatch<MapDataAction>
 ) {
 
     if (state.displayOptions.useCurrentLocation) {
@@ -95,8 +97,9 @@ function uncheckLocationCheckbox(
             type: "SET_DISPLAY_OPTIONS",
             payload: {
                 ...state.displayOptions,
-                useCurrentLocation: false}
-            })
+                useCurrentLocation: false
+            }
+        })
     }
 }
 
@@ -109,15 +112,15 @@ function uncheckLocationCheckbox(
  * @param dispatch used to update the state
  */
 export const iNatFetch = async (
-    state : MapDataState, 
-    dispatch : Dispatch<MapDataAction>
+    state: MapDataState,
+    dispatch: Dispatch<MapDataAction>
 
 ) => {
     //Creates the data to be fetched by the API. 
-    const iNatFetchObj : iNatFetchObj = {
+    const iNatFetchObj: iNatFetchObj = {
         specimenName: state.activeSpecies ?? '',
         coordinate: state.coordinates ?? defaultCoordinates,
-        searchOptions : state.displayOptions
+        searchOptions: state.displayOptions
     }
 
     //Disable the map from further clicking since data is about to be fetched
@@ -129,22 +132,22 @@ export const iNatFetch = async (
     const res = await fetch('/api/inaturalist', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',  
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(iNatFetchObj) 
+        body: JSON.stringify(iNatFetchObj)
     })
 
     //if the response is ok put the result into the global state
     if (res.ok) {
-        const json : iNatApiResult = await res.json()
+        const json: iNatApiResult = await res.json()
         dispatch({
             type: "SET_API_FETCH",
             payload: {
-                observations : json.observations,
-                images : json.images,
-                topIdentifiers : json.leadingUsers.identifiers,
-                topObservers : json.leadingUsers.observers,
-                loading : false
+                observations: json.observations,
+                images: json.images,
+                topIdentifiers: json.leadingUsers.identifiers,
+                topObservers: json.leadingUsers.observers,
+                loading: false
             }
         })
 
@@ -153,46 +156,42 @@ export const iNatFetch = async (
             payload: false
         })
 
-        console.log(state.topIdentifiers)
     } else {
         console.error("Error fetching iNaturalist data:", res.text)
     }
 }
 
-export const sendMessageToObserver = async (userToMessage : string, heading: string, content: string) => {
-try{
-    const res = await fetch(`/api/inaturalist/messages?username=${userToMessage}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',  
-        }
-    })
-    
-    if (res.ok) {
-       const data = await res.json()
-       const userToMessageId = data.userId;
-        
-
-        const messageResponse = await fetch(`/api/inaturalist/messages`, {
-            method: 'POST',
+export const sendMessageToObserver = async (userToMessage: string, heading: string, content: string) => {
+    try {
+        const res = await fetch(`/api/inaturalist/messages?username=${userToMessage}`, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',  
-            },
-            body: JSON.stringify({
+                'Content-Type': 'application/json',
+            }
+        })
+
+        if (res.ok) {
+            const data = await res.json()
+            const userToMessageId = data.userId;
+
+
+            const messageResponse = await fetch(`/api/inaturalist/messages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
                     id: userToMessageId,
                     subject: heading,
                     body: content
+                })
             })
-        })
 
-            if (messageResponse.ok) {
-                const responseJson = await messageResponse.json()
-                console.log("Message sent successfully:", responseJson)
-            } else 
+            if (!messageResponse.ok)
                 console.error("Error sending message:", await messageResponse.text())
-        } else 
+        } else
             console.error("Error fetching user ID:", await res.text())
-    }  catch (e) {
+    } catch (e) {
         console.error("An error occurred:", e)
     }
 }
@@ -209,22 +208,23 @@ try{
  */
 export const setCredentials = (
     index: number,
-    state : MapDataState, 
-    dispatch : Dispatch<MapDataAction>
+    state: MapDataState,
+    dispatch: Dispatch<MapDataAction>
 
 ) => {
     const observation = state.observations[index]
 
     dispatch({
-        type:"SET_CREDENTIALS",
+        type: "SET_CREDENTIALS",
         payload: {
-            observer : observation.user.userName,
-            observationTitle : observation.species_guess,
-            observationDate : observation.observedDate,
-            observationLocation : observation.place_guess,
-            observationIcon : observation.user.userIcon,
-            observationTaxon : decodeURIComponent(observation.taxon_name),
-            observationTaxonId : observation.taxon_id
+            observer: observation.user.userName,
+            observationTitle: observation.species_guess,
+            observationDate: observation.observedDate,
+            observationLocation: observation.place_guess,
+            observationIcon: observation.user.userIcon,
+            observationTaxon: decodeURIComponent(observation.taxon_name),
+            observationTaxonId: observation.taxon_id,
+            observationId: Number(observation.id)
         }
     })
 }

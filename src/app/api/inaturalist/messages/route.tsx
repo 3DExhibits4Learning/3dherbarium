@@ -73,8 +73,7 @@ export async function POST(request: Request) {
             // iNaturalist sends a 200 response with 'error' as an object key if there is in fact an error
             if (Object.keys(sendMessage).includes('error')) {
                 console.error("iNaturalist API Error:", sendMessage);
-                console.log(sendMessage.error.original.errors)
-
+                
                 return Response.json({ data: "Error, couldn't send message", response: sendMessage.error.original.error ?? 'error' }, { status: 400, statusText: "Error, couldn't send message" })
             }
 
