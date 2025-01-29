@@ -87,6 +87,7 @@ model model {
   site_ready          Boolean       @default(false)
   pref_comm_name      String        @default("") @db.VarChar(100)
   base_model          Boolean?      @default(true)
+  annotation_number   Int?          @db.TinyInt
   annotated           Boolean?      @default(false)
   annotationPosition  String?       @db.VarChar(250)
   build_process       String?       @default("Photogrammetry") @db.VarChar(50)
