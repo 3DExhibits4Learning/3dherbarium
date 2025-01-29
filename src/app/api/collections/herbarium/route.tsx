@@ -12,6 +12,7 @@ import { getModelByUid } from '@/api/queries'
 import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/api/fetchFunctions";
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from '@/functions/server/error';
+import { getWikiPediaPageOrSummary } from '@/functions/server/collections';
 
 // Default imports
 import prisma from '@/utils/prisma';
@@ -37,7 +38,7 @@ export async function GET(request: Request) {
             prisma.software.findMany({ where: { uid: uid } }),
             prisma.image_set.findMany({ where: { uid: uid } }),
             fetchGbifProfile(usageKey),
-            fetchWikiSummary(specimenName),
+            getWikiPediaPageOrSummary(specimenName),
             prisma.specimen.findFirst({ where: { sid: sid } })
         ]
 

@@ -16,8 +16,8 @@ export const getWikiPediaPageOrSummary = async (species: string) => {
     const re = /<section.*id="External_links"/
     const pageWithoutExternalLinks = wikipediaPage.slice(0, wikipediaPage.search(re))
     //const pageWithScrollRemoved = pageWithoutExternalLinks.replace("<html", "<html style='overflow:hidden'")
-    await writeFile('C:/Users/ab632/Documents/test.txt', pageWithoutExternalLinks).then(() => console.log('WRITTEN')).catch(e => console.error('NOT WRITTEN'))
-    //if (wikipediaPage) return
+    //await writeFile('C:/Users/ab632/Documents/test.txt', pageWithoutExternalLinks).then(() => console.log('WRITTEN')).catch(e => console.error('NOT WRITTEN'))
+    return pageWithoutExternalLinks
 }
 
 // const sectionWithExternalLinksExample = '<section data-mw-section-id="11" id="mwAu4"><h2 id="External_links">External links</h2>'
