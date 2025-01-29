@@ -43,6 +43,7 @@ export async function POST(request: Request) {
         const isViable = model.get('isViable') as string
         const isBase = model.get('isBase') as string
         const katJira = process.env.KAT_JIRA_ID as string
+        const species = model.get('name') as string
 
         // Value check
         const requiredValues = [sid, _3dModel, commonName, modeler, isViable, isBase]
@@ -58,6 +59,7 @@ export async function POST(request: Request) {
         data.set('modelFile', _3dModel)
         data.set('visibility', 'private')
         data.set('options', JSON.stringify({ background: { color: "#000000" } }))
+        data.set('name', species)
 
         // Upload 3D Model, setting uploadProgress in the process
         const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {

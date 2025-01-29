@@ -57,6 +57,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('isViable', isViable ? "yes" : "no")
         data.set('isBase', isBase ? "yes" : "no")
         data.set('model', model as File)
+        data.set('species', props.specimen.spec_name)
 
         // Handle data transfer
         await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering 3D model into database')
