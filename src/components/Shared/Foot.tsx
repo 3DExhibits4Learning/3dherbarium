@@ -38,10 +38,10 @@ function Foot() {
 
           {/* Links in lower right hand corner on large screens */}
           <section className="text-white flex mx-8 justify-around items-center mt-5">
-            <p className='mx-4'><Link href="/about">About</Link></p>
-            <p className='mx-4'><Link href="/contribute">Contribute</Link></p>
-            <p className='mx-4'><Link href="/licensing">License</Link></p>
-            <p className='ml-4'><Link href="/contact">Contact</Link></p>
+            <div className='mx-4'><Link href="/about">About</Link></div>
+            <div className='mx-4'><Link href="/contribute">Contribute</Link></div>
+            <div className='mx-4'><Link href="/licensing">License</Link></div>
+            <div className='ml-4'><Link href="/contact">Contact</Link></div>
           </section>
 
         </section>
