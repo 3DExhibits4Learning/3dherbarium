@@ -26,7 +26,7 @@ export default function VideoAnnotation() {
 
     return <>
         {
-            botanyState.activeAnnotationType == 'video' &&
+            annotationState.annotationType == 'video' &&
             <section className="flex my-12">
                 <div className="flex ml-12 mt-12 flex-col w-1/2 max-w-[750px]">
                     <TextInput value={annotationState.annotationTitle as string} field='annotationTitle' title='Annotation Title' required />
