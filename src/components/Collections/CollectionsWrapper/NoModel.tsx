@@ -5,7 +5,7 @@ import { CollectionsContext } from "../CollectionsWrapper"
 import { useContext, useEffect } from "react"
 
 import OccurrenceSwiper from "../GbifSwiper"
-import Inaturalist from "../iNaturalist"
+import Inaturalist from "@/components/Collections/iNaturalistNEW"
 import Foot from "@/components/Shared/Foot"
 
 export default function CollectionsNoModel(props: { sizes: any, modelHeight: string }) {
@@ -32,7 +32,7 @@ export default function CollectionsNoModel(props: { sizes: any, modelHeight: str
                 }
                 {
                     mediaState.observationsChecked &&
-                    <div style={{ height: "calc(100vh - 217px)", maxHeight: props.sizes.viewportHeightInPx }}>
+                    <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '600px' }}>
                         <Inaturalist activeSpecies={collectionsProps.specimenName} />
                     </div>
                 }

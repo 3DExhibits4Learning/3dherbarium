@@ -6,7 +6,7 @@ import { useContext } from "react"
 
 import dynamic from "next/dynamic"
 import OccurrenceSwiper from "../GbifSwiper"
-import Inaturalist from "../iNaturalist"
+import Inaturalist from "../iNaturalistNEW"
 import Foot from "@/components/Shared/Foot"
 
 const SketchfabApi = dynamic(() => import('@/components/Collections/SketchfabApi/SketchFabAPI'), { ssr: false })
@@ -34,7 +34,7 @@ export default function CollectionsHerbariumModel(props:{sizes: any, modelHeight
             }
             {
                 mediaState.observationsChecked &&
-                <div style={{ height: "calc(100vh - 217px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '800px' }}>
+                <div style={{ height: "calc(100vh - 216px)", maxHeight: props.sizes.viewportHeightInPx, minHeight: '600px' }}>
                     <Inaturalist activeSpecies={collectionsProps.specimenName} />
                 </div>
             }
