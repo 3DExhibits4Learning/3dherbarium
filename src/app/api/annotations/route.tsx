@@ -62,6 +62,8 @@ export async function POST(request: Request) {
         // Else the annotation must be photo, video or model
         else {
 
+            console.log('ANNOTATION_TYPE: ', data.get('annotation_type'))
+
             // Base annotation (same for all annotation types)
             const annotation = prisma.annotations.create({
                 data: {
