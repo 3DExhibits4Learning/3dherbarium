@@ -38,6 +38,7 @@ export async function GET(request: Request) {
             prisma.software.findMany({ where: { uid: uid } }),
             prisma.image_set.findMany({ where: { uid: uid } }),
             fetchGbifProfile(usageKey),
+            //fetchWikiSummary(specimenName),
             getWikiPediaPageOrSummary(specimenName),
             prisma.specimen.findFirst({ where: { sid: sid } })
         ]
