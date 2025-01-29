@@ -101,7 +101,7 @@ export async function POST(request: Request) {
                 default:
 
                     // Write file to data storage if it exists
-                    if (data.get('file')) await autoWrite(data.get('file') as File, data.get('dir') as string, data.get('dir') as string).catch(e => routeHandlerErrorHandler(path, e.message, 'autoWrite()', "Couldn't write photo to storage"))
+                    if (data.get('file')) await autoWrite(data.get('file') as File, data.get('dir') as string, data.get('path') as string).catch(e => routeHandlerErrorHandler(path, e.message, 'autoWrite()', "Couldn't write photo to storage"))
 
                     // Optional photo_annotation data initializtion
                     const website = data.get('website') ? data.get('website') : undefined

@@ -2,7 +2,6 @@
 
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
-import { BotanyClientContext } from "../BotanyClient"
 import { annotationEntryContext, botanyClientContext } from "@/ts/botanist"
 
 import TextInput from "@/components/Shared/TextInput"
@@ -13,9 +12,7 @@ import License from "../AnnotationFields/License"
 export default function PhotoAnnotation(props: {}) {
 
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
-    const botanyContext = useContext(BotanyClientContext) as botanyClientContext
     const annotationState = context.annotationState
-    const botanyState = botanyContext.botanyState
 
     return <>
         {

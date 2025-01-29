@@ -9,7 +9,6 @@
 // Typical imports
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
-import { BotanyClientContext } from "../BotanyClient"
 import { annotationEntryContext, botanyClientContext } from "@/ts/botanist"
 
 // Default imports
@@ -20,9 +19,7 @@ export default function VideoAnnotation() {
 
     // Botany and annotation state contexts
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
-    const botanyContext = useContext(BotanyClientContext) as botanyClientContext
     const annotationState = context.annotationState
-    const botanyState = botanyContext.botanyState
 
     return <>
         {
