@@ -311,7 +311,7 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
     // Annotations table data; sid for jira task
     data.set('uid', botanyState.uid as string)
     data.set('annotation_no', index.toString())
-    data.set('annotation_type', botanyState.activeAnnotationType as 'photo' | 'model' | 'video')
+    data.set('annotation_type', annotationState.annotationType as 'photo' | 'model' | 'video')
     data.set('position', botanyState.position3D as string)
     data.set('title', annotationState.annotationTitle as string)
     data.set('sid', botanyState.sid as string)
@@ -391,7 +391,7 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
 
     // Annotations table data (for update); sid for jira task
     data.set('uid', botanyState.uid as string)
-    data.set('annotation_type', botanyState.activeAnnotationType as 'photo' | 'model' | 'video')
+    data.set('annotation_type', annotationState.annotationType as 'photo' | 'model' | 'video')
     data.set('position', botanyState.position3D as string ?? botanyState.activeAnnotationPosition)
     data.set('title', annotationState.annotationTitle as string)
     data.set('sid', botanyState.sid as string)
