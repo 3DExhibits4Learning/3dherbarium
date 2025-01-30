@@ -30,7 +30,7 @@ export function MapNavbar() {
     }
     return (
         <div className="flex justify-around items-center lg:hidden py-2 px-4 min-h-[60px]">
-            <NavButton label="Locations" onClick={() => handleClick("locations")} />
+            <NavButton label="Map" onClick={() => handleClick("locations")} />
             <NavButton label="Images" onClick={() => handleClick("images")} />
             <NavButton label="Leaderboards" onClick={() => handleClick("leaderboard")} />
         </div>

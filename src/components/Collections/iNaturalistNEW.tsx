@@ -71,7 +71,7 @@ export default function Inaturalist(props: { activeSpecies: string, sizes: any }
                 <p className="mt-4 text-2xl 2xl:text-10xl">Loading Observations</p>
             </div>
         }
-        <article className="flex w-full h-full overflow-y-auto ">
+        <article className="flex w-full h-full overflow-y-auto">
         {
             !state.firstLoad && (
                 <>
