@@ -21,14 +21,15 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
 
   try {
-
     // Route
     const route = 'src/app/api/collections/models/route.tsx'
+    
     // Get Models
-
     const models = await prisma.model.findMany({ where: { site_ready: true }, orderBy: { spec_acquis_date: 'desc' } }).catch(e => routeHandlerErrorHandler(route, e.message, 'prisma.model.findMany()', "Couldn't get 3D models")) as model[]
-    const filteredModels = process.env.LOCAL_ENV === 'development' ? models.filter(model => (model.site_ready && model.base_model) || (model.annotation_number && model.base_model)) :
-      models.filter(model => (model.annotation_number && model.base_model) || (model.site_ready && model.base_model && model.annotator && model.annotated))
+    
+    // Filter models based on development or production/test environments
+    const filteredModels = process.env.LOCAL_ENV === 'development' ? models.filter(model => model.site_ready && (model.base_model || model.annotation_number)) :
+      models.filter(model => (model.site_ready && model.annotation_number) || (model.site_ready && model.base_model && model.annotator && model.annotated))
 
     // Typical return
     return routeHandlerTypicalResponse("Models obtained", filteredModels)

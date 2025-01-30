@@ -15,7 +15,9 @@ import { MutableRefObject, SetStateAction, Dispatch } from "react";
  * @returns 
  */
 export const getUniqueModelers = (models: model[]): string[] => {
-  const uniqueModelers = new Set<string>();
+
+  // Create set, get get modelers and return array from the set
+  const uniqueModelers = new Set<string>()
   models.forEach(model => uniqueModelers.add(model.modeled_by as string))
   return Array.from(uniqueModelers)
 }
@@ -26,7 +28,10 @@ export const getUniqueModelers = (models: model[]): string[] => {
  * @returns 
  */
 export const getUniqueAnnotators = (models: model[]): string[] => {
+
+  // Create set, get annotators and return array from the set
   const uniqueAnnotators = new Set<string>()
+
   // Filter only necessary because unannotated models appear on the collections page in development environments
   models.filter(model => model.annotator !== null).forEach(model => uniqueAnnotators.add(model.annotator as string))
   return Array.from(uniqueAnnotators)
@@ -51,37 +56,42 @@ export const initializeSearchPage = async (siteReadyModels: MutableRefObject<mod
     siteReadyModels.current = json.response
 
     // Get unique modelers and annotators
-    let modelers = getUniqueModelers(siteReadyModels.current as model[])
-    let annotators = getUniqueAnnotators(siteReadyModels.current as model[])
+    var modelers = getUniqueModelers(siteReadyModels.current as model[])
+    var annotators = getUniqueAnnotators(siteReadyModels.current as model[])
 
     // Preface each array with an 'all' option
     modelers.unshift('All')
     annotators.unshift('All')
 
-    // This needs to be restructured
-    if (paramObject.modeler && modelers.includes(paramObject.modeler)) setSearchPageState({ ...searchPageState, selectedModeler: paramObject.modeler })
-    if (paramObject.annotator && annotators.includes(paramObject.annotator)) setSearchPageState({ ...searchPageState, selectedAnnotator: paramObject.annotator })
-    if (paramObject.order && ['Newest First', 'Alphabetical', 'Reverse Alphabetical'].includes(paramObject.order)) setSearchPageState({ ...searchPageState, order: paramObject.order })
+    // Initialize a state object to be ammended based on the presence of parameters
+    var state: SearchPageState = { ...searchPageState, communityModels: communityModels, modeledByList: modelers, annotatedByList: annotators }
 
-    setSearchPageState({ ...searchPageState, communityModels: communityModels, modeledByList: modelers, annotatedByList: annotators })
+    // States set based on parameters 
+    paramObject.modeler && modelers.includes(paramObject.modeler) ? state = { ...state, selectedModeler: paramObject.modeler as string } : state
+    paramObject.annotator && annotators.includes(paramObject.annotator) ? state = { ...state, selectedAnnotator: paramObject.annotator as string } : state
+    paramObject.order && ['Newest First', 'Alphabetical', 'Reverse Alphabetical'].includes(paramObject.order) ? state = { ...state, order: paramObject.order as 'Newest First' | 'Alphabetical' | 'Reverse Alphabetical' } : state
+
+    setSearchPageState(state)
   })
 }
 
 /**
+ * @todo Eventually, the similar fields of community models and herbarium models should be united to eliminate unnecessary sort specification
+ * such as what is required in this function. It also makes type safety cumbersome.
  * 
  * @param models 
  * @param order 
  * @returns 
  */
 export const sortModelsByOrder = (models: Array<model | fullUserSubmittal>, order: 'Newest First' | 'Alphabetical' | 'Reverse Alphabetical') => {
-  
+
   return models.sort((a: any, b: any) => {
 
     var returnValue
 
     switch (order) {
 
-      case 'Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+      case 'Alphabetical':
 
         if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
           const value = a.speciesName.localeCompare(b.spec_name) as number
@@ -102,7 +112,7 @@ export const sortModelsByOrder = (models: Array<model | fullUserSubmittal>, orde
 
         break
 
-      case 'Newest First': // These two data names should be unified in the database to avoid further blocks such as this one
+      case 'Newest First':
 
         if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_acquis_date')) {
           const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
@@ -123,7 +133,7 @@ export const sortModelsByOrder = (models: Array<model | fullUserSubmittal>, orde
 
         break
 
-      case 'Reverse Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
+      case 'Reverse Alphabetical':
 
         if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
           const value = a.speciesName.localeCompare(b.spec_name) as number

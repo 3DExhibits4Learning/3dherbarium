@@ -18,6 +18,8 @@ import CommunityCard from './CommunityCard'
 
 export default function SearchPageModelList(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) {
 
+  console.log('SearchPageModelList')
+
   // Props => variables
   const state = props.state
   const models = props.models
@@ -29,7 +31,7 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
   const query = useContext(QueryContext).query
 
   // Filter by modeler and annotator
-  var filteredModels: Array<fullUserSubmittal | model> = selectedAnnotator === 'All' && selectedAnnotator === 'All' ? models :
+  var filteredModels: Array<fullUserSubmittal | model> = selectedAnnotator === 'All' && selectedModeler === 'All' ? models :
     models.filter(model => (selectedModeler === 'All' || model.modeled_by === selectedModeler) && (selectedAnnotator === 'All' || model.annotator === selectedAnnotator))
 
   // Filter by search query if a query exists
