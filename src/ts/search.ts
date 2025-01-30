@@ -9,3 +9,9 @@ export interface SearchPageState {
     order: string
     communityIncluded: boolean
 }
+
+export interface SearchPageParams {
+    modeler: string | null,
+    annotator: string | null,
+    order: string | null,
+  }

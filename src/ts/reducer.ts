@@ -99,23 +99,4 @@ export interface SetImageSourceAndImageVisible extends AnnotationEntryType {
 }
 export type AnnotationEntryAction = AnnotationEntryType | SetString | SetActiveAnnotationType | SetPhotoAnnotation | SetVideoAnnotation | SetModelAnnotation | SetAnnotationEntryFile | SetImageSourceAndImageVisible 
 
-export interface SearchPageType {
-    type: 'setStringValue' |
-    "setStringArray" |
-    "setCommunityModels" |
-    "setCommunityIncluded" |
-    'setCommunityNotIncluded'
-}
-export interface SetSearchString extends SearchPageType {
-    field: string
-    value: string
-}
-export interface SetSearchStringArray extends SearchPageType{
-    field: string
-    value: string[]
-}
-export interface SetCommunityModels extends SearchPageType{
-    communityModels: fullUserSubmittal[]
-}
-export type SearchPageAction = SearchPageType | SetSearchString | SetSearchStringArray | SetCommunityModels
 
