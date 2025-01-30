@@ -61,8 +61,7 @@ export default function Inaturalist(props: { activeSpecies: string, sizes: any }
     }, [state.activeSpecies,state.displayOptions, state.coordinates]);
     
    
-    return <div className="h-[calc(100vh-217px)] max-lg:h-[calc(100vh-178px)] max-h-[props.sizes.viewportHeightInPx] min-h-[600px] min-w-[500px]">
-
+    return <div className="h-[calc(100vh-217px)] max-lg:h-[calc(100vh-178px)] max-h-[props.sizes.viewportHeightInPx] min-h-[600px] min-w-[300px]">
     <MapContext.Provider value={{state, dispatch}}>
         <MapNavbar/>
         {
@@ -72,7 +71,7 @@ export default function Inaturalist(props: { activeSpecies: string, sizes: any }
                 <p className="mt-4 text-2xl 2xl:text-10xl">Loading Observations</p>
             </div>
         }
-        <article className="flex w-full h-full overflow-y-auto">
+        <article className="flex w-full h-full overflow-y-auto ">
         {
             !state.firstLoad && (
                 <>
