@@ -10,16 +10,18 @@
 'use client'
 
 // Typical imports
-import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react"
+import { useEffect, useState, useRef, SetStateAction, Dispatch, useReducer } from "react"
 import { fullUserSubmittal } from "@/api/types"
 import { model } from "@prisma/client"
 import { useSearchParams } from "next/navigation"
 import { getUniqueAnnotators, getUniqueModelers } from "@/functions/client/search"
+import { SearchPageState } from "@/ts/search"
 
 // Default imports
 import MobileSearchFilters from "./MobileFilters"
 import SearchPageModelList from "./SearchPageModelList"
 import SubHeader from "./SubHeader"
+import searchPageReducer from "@/functions/client/reducers/searchPageReducer"
 
 // Main Component
 const SearchPageContent = () => {
@@ -32,6 +34,18 @@ const SearchPageContent = () => {
 
   // Ref
   const siteReadyModels = useRef<model[]>()
+
+  const initialData: SearchPageState = {
+    communityModels: undefined,
+    modeledByList: undefined,
+    annotatedByList: undefined,
+    selectedAnnotator: 'All',
+    selectedModeler: 'All',
+    order: 'Newest First',
+    communityIncluded: true
+  }
+
+  const [searchPageState, searchPageDispatch] = useReducer(searchPageReducer, initialData)
 
   const [communityModels, setCommunityModels] = useState<fullUserSubmittal[]>()
   const [modeledByList, setModeledByList] = useState<string[]>()
@@ -55,7 +69,7 @@ const SearchPageContent = () => {
         a.unshift('All') 
         b.unshift('All')
 
-        if(modeler && a.includes(modeler)) setSelectedModeler(modeler)
+        if(modeler && a.includes(modeler)) setSelectedModeler(modeler);
         if(annotator && b.includes(annotator)) setSelectedAnnotator(annotator)
         if(orderParam && ['Newest First', 'Alphabetical', 'Reverse Alphabetical'].includes(orderParam)) setOrder(orderParam)
 

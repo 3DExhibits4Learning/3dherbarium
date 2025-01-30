@@ -3,6 +3,7 @@ import { CollectionsWrapperProps } from "./collections"
 import { model, model_annotation, photo_annotation, userSubmittal, video_annotation } from "@prisma/client"
 
 import ModelAnnotations from "@/utils/ModelAnnotationsClass"
+import { fullUserSubmittal } from "@/api/types"
 
 export interface CollectionsMediaAction {
     type: 'modelChecked' | 'observationsChecked' | 'photosChecked'
@@ -97,3 +98,24 @@ export interface SetImageSourceAndImageVisible extends AnnotationEntryType {
     src: string
 }
 export type AnnotationEntryAction = AnnotationEntryType | SetString | SetActiveAnnotationType | SetPhotoAnnotation | SetVideoAnnotation | SetModelAnnotation | SetAnnotationEntryFile | SetImageSourceAndImageVisible 
+
+export interface SearchPageType {
+    type: 'setStringValue' |
+    "setStringArray" |
+    "setCommunityModels" |
+    "setCommunityIncluded" |
+    'setCommunityNotIncluded'
+}
+export interface SetSearchString extends SearchPageType {
+    field: string
+    value: string
+}
+export interface SetSearchStringArray extends SearchPageType{
+    field: string
+    value: string[]
+}
+export interface SetCommunityModels extends SearchPageType{
+    communityModels: fullUserSubmittal[]
+}
+export type SearchPageAction = SearchPageType | SetSearchString | SetSearchStringArray | SetCommunityModels
+
