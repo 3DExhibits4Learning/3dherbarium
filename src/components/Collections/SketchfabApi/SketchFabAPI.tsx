@@ -18,7 +18,7 @@ import { CollectionsContext } from '../CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData } from '@/ts/collections';
 import { sketchfabApiContext } from '@/ts/collections';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, usePathname, useRouter} from 'next/navigation';
 
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
@@ -34,6 +34,9 @@ export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
 
 // Main JSX
 export default function SFAPI() {
+
+  const path = usePathname()
+  const router = useRouter()
 
   // Get context
   const props = (useContext(CollectionsContext) as CollectionsWrapperData).collectionsWrapperProps
@@ -100,7 +103,7 @@ export default function SFAPI() {
 
   // Initialize model viewer and instantiate herbarium specimen object; initialize annotations and event listeners; handle photo source if selected annotation is a photo annotation
   useEffect(() => fn.initializeCollections(new Sketchfab(modelViewer.current), successObj, successObjDesktop, sRef, props, sketchfabApiDispatch), []) // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => fn.initializeAnnotationsAndListeners(sketchfabApi, sketchfabApiDispatch, annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper), [sketchfabApi.api, sketchfabApi.annotations, sketchfabApi.s])
+  useEffect(() => fn.initializeAnnotationsAndListeners(sketchfabApi, sketchfabApiDispatch, annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper, params, path, router), [sketchfabApi.api, sketchfabApi.annotations, sketchfabApi.s])
   useEffect(() => fn.photoSrcChangeHandler(sketchfabApi, sketchfabApiDispatch), [sketchfabApi.index]) // eslint-disable-line react-hooks/exhaustive-deps
 
   if(sketchfabApi.error) return <FullPageError clientErrorMessage={sketchfabApi.errorMessage as string} />
