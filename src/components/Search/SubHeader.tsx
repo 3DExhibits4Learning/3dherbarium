@@ -24,6 +24,7 @@ export default function SubHeader(props: { state: SearchPageState, setState: Dis
   const annotatedByList = state.annotatedByList as string[]
 
   return <Navbar isBordered className="hidden md:flex z-0 w-full bg-[#00856A] dark:bg-[#212121]">
+    
     <NavbarContent>
 
       <NavbarMenuItem>
@@ -56,7 +57,7 @@ export default function SubHeader(props: { state: SearchPageState, setState: Dis
 
         <select
           value={state.selectedAnnotator}
-          onChange={e => setState({ ...state, selectedModeler: e.target.value })}
+          onChange={e => setState({ ...state, selectedAnnotator: e.target.value })}
           className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}>
           <option value="All" disabled selected>Annotated by</option>
           {annotatedByList.map((annotator: string) => <option key={annotator} value={annotator}>{annotator}</option>)}
@@ -64,5 +65,6 @@ export default function SubHeader(props: { state: SearchPageState, setState: Dis
       </div>
 
     </NavbarContent>
+  
   </Navbar>
 }

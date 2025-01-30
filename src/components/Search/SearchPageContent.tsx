@@ -3,8 +3,6 @@
  * 
  * @fileoverview list of 3D models available on the site.
  * 
- * @todo refactor with context
- * @todo extract logic and the logic of children into src/functions/client/search.ts
  */
 
 'use client'
@@ -14,23 +12,12 @@ import { useEffect, useState, useRef, MutableRefObject } from "react"
 import { model } from "@prisma/client"
 import { useSearchParams } from "next/navigation"
 import { initializeSearchPage } from "@/functions/client/search"
-import { SearchPageState, SearchPageParams } from "@/ts/search"
+import { SearchPageState, SearchPageParams, initialState } from "@/ts/search"
 
 // Default imports
 import MobileSearchFilters from "./MobileFilters"
 import SearchPageModelList from "./SearchPageModelList"
 import SubHeader from "./SubHeader"
-
-// Initial state object
-const initialState = {
-  communityModels: undefined,
-  modeledByList: undefined,
-  annotatedByList: undefined,
-  selectedAnnotator: 'All',
-  selectedModeler: 'All',
-  order: 'Newest First',
-  communityIncluded: true
-}
 
 // Main JSX
 export default function SearchPageContent() {
@@ -45,10 +32,10 @@ export default function SearchPageContent() {
     order: params.get('order')
   }
 
-  // Ref
+  // Ref for site ready models
   const siteReadyModels = useRef<model[]>()
 
-  // State
+  // State object for this component and its three immediate children
   const [searchPageState, setSearchPageState] = useState<SearchPageState>(initialState)
 
   // Initialization effect

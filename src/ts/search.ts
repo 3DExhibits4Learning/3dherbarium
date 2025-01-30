@@ -10,6 +10,16 @@ export interface SearchPageState {
     communityIncluded: boolean
 }
 
+export const initialState = {
+    communityModels: undefined,
+    modeledByList: undefined,
+    annotatedByList: undefined,
+    selectedAnnotator: 'All',
+    selectedModeler: 'All',
+    order: 'Newest First',
+    communityIncluded: true
+  }
+
 export interface SearchPageParams {
     modeler: string | null,
     annotator: string | null,

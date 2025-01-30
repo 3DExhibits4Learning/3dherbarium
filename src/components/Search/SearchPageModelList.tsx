@@ -5,206 +5,59 @@
  */
 
 // Typical imports
-import { handleImgError } from '@/utils/imageHandler'
-import { SyntheticEvent, useContext, Dispatch, SetStateAction } from 'react'
+import { useContext, Dispatch, SetStateAction } from 'react'
 import { model } from '@prisma/client'
 import { fullUserSubmittal } from '@/api/types'
-import { Chip } from '@nextui-org/react'
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
 import { QueryContext } from './SearchClient'
 import { SearchPageState } from '@/ts/search'
+import { sortModelsByOrder } from '@/functions/client/search'
 
 // Default imports
-import noImage from '../../../public/noImage.png'
+import HerbariumCard from './HerbariumCard'
+import CommunityCard from './CommunityCard'
 
-// Props interface
-interface SearchPageModelListProps {
-  models: model[]
-  communityModels: fullUserSubmittal[]
-  selectedModeler: string
-  selectedAnnotator: string | undefined
-  order: string
-  communityIncluded: boolean
-}
+export default function SearchPageModelList(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) {
 
-const SearchPageModelList = (props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) => {
-
-  // Props
+  // Props => variables
   const state = props.state
-  const setState = props.setState
   const models = props.models
-
-  // Variable declarations
-  const selectedModeler: string = state.selectedModeler
+  const selectedModeler = state.selectedModeler
   const selectedAnnotator = state.selectedAnnotator
-  const query = useContext(QueryContext).query
   var communityModels = state.communityModels as fullUserSubmittal[]
 
-  // Filter by modeler and annotator
-  var filteredModels: Array<fullUserSubmittal | model> = models.filter(model => (selectedModeler === 'All' || model.modeled_by === selectedModeler) && (selectedAnnotator === 'All' || model.annotator === selectedAnnotator))
+  // Query context from search client
+  const query = useContext(QueryContext).query
 
-  // Filter by search query
+  // Filter by modeler and annotator
+  var filteredModels: Array<fullUserSubmittal | model> = selectedAnnotator === 'All' && selectedAnnotator === 'All' ? models :
+    models.filter(model => (selectedModeler === 'All' || model.modeled_by === selectedModeler) && (selectedAnnotator === 'All' || model.annotator === selectedAnnotator))
+
+  // Filter by search query if a query exists
   if (query) {
     filteredModels = filteredModels.filter(model => (model as model).spec_name.toLowerCase().includes(query.toLowerCase()) || (model as model).pref_comm_name.toLowerCase().includes(query.toLowerCase()))
     communityModels = communityModels.filter(model => model.speciesName.toLowerCase().includes(query.toLowerCase()) || model.commonName.toLowerCase().includes(query.toLowerCase()))
   }
 
-  // Join and organize herbarium models and community models if there is no selected modeler or annotator
+  // Join herbarium models and community models if there is no selected modeler or annotator and the corresponding checkbox is checked; sort models by order
   if (selectedModeler === 'All' && selectedAnnotator === 'All' && state.communityIncluded) filteredModels.push(...communityModels)
-
-  filteredModels = filteredModels.sort((a: any, b: any) => {
-
-    var returnValue
-
-    switch (state.order) {
-
-      case 'Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
-
-        if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
-          const value = a.speciesName.localeCompare(b.spec_name) as number
-          returnValue = value
-        }
-        else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
-          const value = a.spec_name.localeCompare(b.speciesName) as number
-          returnValue = value
-        }
-        else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
-          const value = a.speciesName.localeCompare(b.speciesName) as number
-          returnValue = value
-        }
-        else {
-          const value = a.spec_name.localeCompare(b.spec_name) as number
-          returnValue = value
-        }
-
-        break
-
-      case 'Newest First': // These two data names should be unified in the database to avoid further blocks such as this one
-
-        if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('spec_acquis_date')) {
-          const value = a.dateTime.localeCompare(b.spec_acquis_date) as number
-          returnValue = -value
-        }
-        else if (Object.keys(a).includes('spec_acquis_date') && Object.keys(b).includes('dateTime')) {
-          const value = a.spec_acquis_date.localeCompare(b.dateTime) as number
-          returnValue = -value
-        }
-        else if (Object.keys(a).includes('dateTime') && Object.keys(b).includes('dateTime')) {
-          const value = a.dateTime.localeCompare(b.dateTime) as number
-          returnValue = -value
-        }
-        else {
-          const value = a.spec_acquis_date.localeCompare(b.spec_acquis_date) as number
-          returnValue = -value
-        }
-
-        break
-
-      case 'Reverse Alphabetical': // These two data names should be unified in the database to avoid further blocks such as this one
-
-        if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('spec_name')) {
-          const value = a.speciesName.localeCompare(b.spec_name) as number
-          returnValue = -value
-        }
-        else if (Object.keys(a).includes('spec_name') && Object.keys(b).includes('speciesName')) {
-          const value = a.spec_name.localeCompare(b.speciesName) as number
-          returnValue = -value
-        }
-        else if (Object.keys(a).includes('speciesName') && Object.keys(b).includes('speciesName')) {
-          const value = a.speciesName.localeCompare(b.speciesName) as number
-          returnValue = -value
-        }
-        else {
-          const value = a.spec_name.localeCompare(b.spec_name) as number
-          returnValue = -value
-        }
-
-        break
-    }
-
-    return returnValue as number
-  })
+  filteredModels = sortModelsByOrder(filteredModels, state.order as 'Newest First' | 'Alphabetical' | 'Reverse Alphabetical')
 
   return <>
-    {filteredModels && filteredModels.length === 0 &&
+    {
+      filteredModels && filteredModels.length === 0 &&
       <div className='h-[35rem] rounded mx-auto flex items-center justify-center'>
         <p className='text-2xl px-5'>No models found matching the current filters. Try adjusting your filter settings for broader results.</p>
       </div>
     }
     <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-5 gap-4 mx-5'>
-      {filteredModels && filteredModels.map((model: model | fullUserSubmittal, index: number) => {
-        return (
-          <>
-            {
-              Object.keys(model).includes('spec_name') &&
-              <div key={index} className='noselect'>
-                <article className='rounded-md overflow-hidden mx-1'>
-                  <section className='rounded shadow-md mx-auto'>
-                    <a href={"/collections/" + (model as model).spec_name} tabIndex={-1}>
-                      <img
-                        alt={'Image of ' + (model as model).spec_name}
-                        role='button'
-                        src={model.thumbnail ?? ''}
-                        className='w-full h-[calc(100vh-275px)] min-h-[25rem] max-h-[30rem] object-cover relative z-5 rounded-t-md'
-                        onError={(e: SyntheticEvent<HTMLImageElement, Event>) => { handleImgError(e.currentTarget, noImage); }}
-                      />
-                    </a>
-                  </section>
-                  <section className='bg-[#CDDAD5] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
-                    <section className='flex items-center space-x-0.5rem'>
-                      <a
-                        href={"/collections/" + (model as model).spec_name}
-                        rel='noopener noreferrer'
-                        className='text-[#004C46] dark:text-[#C3D5D1] text-xl'
-                      >
-                        <i className='font-medium'>{(model as model).spec_name.charAt(0).toUpperCase() + (model as model).spec_name.slice(1)}</i>
-                      </a>
-                    </section>
-                    <section className='text-md font-medium text-black dark:text-white'>
-                      {toUpperFirstLetter((model as model).pref_comm_name)}
-                    </section>
-                  </section>
-                </article>
-              </div>
-            }
-
-            {
-              Object.keys(model).includes('speciesName') &&
-              <div key={index} className='noselect'>
-                <article className='rounded-md overflow-hidden mx-1'>
-                  <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white'>Community</Chip>
-                  <section className='rounded shadow-md mx-auto'>
-                    <a href={"/collections/" + (model as fullUserSubmittal).speciesName + `?communityId=${(model as fullUserSubmittal).modeluid}`} tabIndex={-1}>
-                      <img
-                        alt={'Image of ' + (model as fullUserSubmittal).speciesName}
-                        role='button'
-                        className='w-full h-[calc(100vh-275px)] min-h-[25rem] max-h-[30rem] object-cover relative z-5 rounded-t-md'
-                        src={(model as fullUserSubmittal).thumbnail ?? ''}
-                        onError={(e: SyntheticEvent<HTMLImageElement, Event>) => { handleImgError(e.currentTarget, noImage); }}
-                      />
-                    </a>
-                  </section>
-                  <section className='bg-[#CDDAD5] dark:bg-[#3d3d3d] h-[5rem] max-h-[calc(100vh-300px)*0.2] opacity-[0.99] px-5 py-3 rounded-b-md text-center relative z-10 flex flex-col justify-center items-center space-y-1.5 mt-[-1px]'>
-                    <section className='flex items-center space-x-0.5rem'>
-                      <a
-                        href={"/collections/" + (model as fullUserSubmittal).speciesName}
-                        rel='noopener noreferrer'
-                        className='text-[#004C46] dark:text-[#C3D5D1] text-xl'
-                      >
-                        <i className='font-medium'>{(model as fullUserSubmittal).speciesName.charAt(0).toUpperCase() + (model as fullUserSubmittal).speciesName.slice(1)}</i>
-                      </a>
-                    </section>
-                    <section className='text-md font-medium text-black dark:text-white'>
-                      {toUpperFirstLetter((model as fullUserSubmittal).commonName)}
-                    </section>
-                  </section>
-                </article>
-              </div >
-            }
+      {
+        filteredModels && filteredModels.map((model: model | fullUserSubmittal, index: number) => {
+          return <>
+            {Object.keys(model).includes('spec_name') && <HerbariumCard index={index} model={model as model} />}
+            {Object.keys(model).includes('speciesName') && <CommunityCard index={index} model={model as fullUserSubmittal} />}
           </>
-        )
-      })}
+        })
+      }
     </section >
   </>
 }
-export default SearchPageModelList
