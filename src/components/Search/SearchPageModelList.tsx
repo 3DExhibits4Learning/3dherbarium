@@ -18,8 +18,6 @@ import CommunityCard from './CommunityCard'
 
 export default function SearchPageModelList(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) {
 
-  console.log('SearchPageModelList')
-
   // Props => variables
   const state = props.state
   const models = props.models

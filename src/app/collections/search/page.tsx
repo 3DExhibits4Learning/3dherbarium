@@ -13,8 +13,8 @@ export default function SearchPage(){
   return (
     <>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
-      <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
-      <title>3D Herbarium Model Search Page</title>
+      <meta name="description" content="A 3D digital herbarium featuring annotated 3D models of plants"></meta>
+      <title>3D Digital Herbarium</title>
       <SearchClient />
       <Foot />
     </>

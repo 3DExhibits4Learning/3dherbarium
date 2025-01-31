@@ -54,7 +54,7 @@ export async function POST(request: Request) {
         await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
 
         // First annotation handler; always taxonomy and description, insert position with typical try-catch return
-        if (data.get('index') == '1') {
+        if (data.get('index') === '1') {
             const update = await insertFirstAnnotationPosition(data.get('uid') as string, data.get('position') as string).catch((e) => routeHandlerErrorHandler(path, e.message, 'getFirstAnnotationPosition()', "Couldn't get annotation position"))
             return routeHandlerTypicalResponse('Annotation Created', update)
         }
