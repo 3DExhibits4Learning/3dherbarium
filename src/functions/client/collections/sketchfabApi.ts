@@ -178,7 +178,7 @@ export const addAnnotationSelectEventListener = (sketchfabApi: any, sketchfabApi
         const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
 
         // **Note** this event is still triggered even when an annotation is not selected; an index of -1 is returned in that case
-        if (index !== -1) { sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index }); replaceAnnotationNumberInPath(index + 1, params, path, router); console.log(index !== -1) }
+        if (index !== -1) { sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index }); replaceAnnotationNumberInPath(index + 1, params, path, router) }
 
         // Mobile annotation state management
         if (index !== -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
