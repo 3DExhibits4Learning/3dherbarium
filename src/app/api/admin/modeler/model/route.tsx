@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         const isViable = model.get('isViable') as string
         const isBase = model.get('isBase') as string
         const katJira = process.env.KAT_JIRA_ID as string
-        const species = model.get('name') as string
+        const species = model.get('species') as string
 
         // Value check
         const requiredValues = [sid, _3dModel, commonName, modeler, isViable, isBase]
