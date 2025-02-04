@@ -1,7 +1,7 @@
 'use client'
 
 import { CollectionsWrapperData } from "@/ts/reducer"
-import { CollectionsContext } from "../CollectionsWrapper"
+import { CollectionsContext } from "./CollectionsWrapper"
 import { useContext, useEffect } from "react"
 
 import OccurrenceSwiper from "../GbifSwiper"

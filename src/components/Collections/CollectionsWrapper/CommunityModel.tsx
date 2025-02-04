@@ -1,7 +1,7 @@
 'use client'
 
 import { CollectionsWrapperData } from "@/ts/reducer"
-import { CollectionsContext } from "../CollectionsWrapper"
+import { CollectionsContext } from "./CollectionsWrapper"
 import { useContext } from "react"
 import { userSubmittal } from "@prisma/client"
 

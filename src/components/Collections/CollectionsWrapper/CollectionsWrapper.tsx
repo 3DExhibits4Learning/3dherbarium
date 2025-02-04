@@ -19,15 +19,15 @@ import { CollectionsWrapperProps } from '@/ts/collections';
 import { getCommunityModel } from '@/functions/client/collections/collectionsWrapper';
 
 // Default imports
-import Header from '../Header/Header';
-import CollectionsSubheader from './SubHeader';
+import Header from '../../Header/Header';
+import CollectionsSubheader from '../SubHeader';
 import CommunityModelWithoutGmatch from '@/components/Collections/CommunityWithoutGmatch';
 import collectionsMediaReducer from '@/functions/client/reducers/CollectionsMediaStateReducer';
 import Foot from '@/components/Shared/Foot'
-import CollectionsWrapperIdError from '../Error/CollectionsWrapper';
-import CollectionsHerbariumModel from './CollectionsWrapper/HerbariumModel';
-import CollectionsCommunityModel from './CollectionsWrapper/CommunityModel';
-import CollectionsNoModel from './CollectionsWrapper/NoModel';
+import CollectionsWrapperIdError from '../../Error/CollectionsWrapper';
+import CollectionsHerbariumModel from './HerbariumModel';
+import CollectionsCommunityModel from './CommunityModel';
+import CollectionsNoModel from './NoModel';
 
 // Exported context
 export const CollectionsContext = createContext<'' | CollectionsWrapperData>('')
@@ -93,7 +93,7 @@ export default function MainWrap(props: CollectionsWrapperProps) {
           !!props.model.length && !communityId &&
           <>
             <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
-            <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} />
+            <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} numberOfAnnotations={props.numberOfAnnotations as number} />
           </>
         }
         {

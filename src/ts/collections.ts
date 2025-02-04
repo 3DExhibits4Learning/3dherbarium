@@ -10,6 +10,7 @@ export interface CollectionsWrapperProps {
     gMatch: { hasInfo: boolean, data?: GbifResponse },
     specimenName: string,
     noModelData: { title: string, images: GbifImageResponse[] }
+    numberOfAnnotations: number | undefined
 }
 
 export interface sketchfabApiData {
@@ -25,8 +26,25 @@ export interface sketchfabApiData {
     annotationModalOpen: boolean,
     error: boolean,
     errorMessage: string | undefined,
-    annotationNumParam: number | undefined
+    annotationNumParam: string | undefined,
 }
+
+export const initialState: sketchfabApiData = {
+  s: undefined, // s = specimen
+  annotations: undefined,
+  api: undefined,
+  index: null,
+  mobileIndex: null,
+  imgSrc: undefined,
+  annotationTitle: "",
+  skeletonClassName: 'bg-black h-full hidden',
+  loadingPhoto: false,
+  annotationModalOpen: false,
+  error: false,
+  errorMessage: undefined,
+  annotationNumParam: undefined,
+}
+
 export interface sketchfabApiContext {
     sketchfabApi: sketchfabApiData,
     sketchfabApiDispatch: Dispatch<any>
@@ -41,7 +59,7 @@ export interface action{
     'photoLoaded' |
     'openAnnotationModal' |
     'closeAnnotationModal' |
-    'error'
+    'error' 
 } 
 export interface setError extends action{
     errorMessage: string

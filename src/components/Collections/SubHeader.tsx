@@ -2,7 +2,7 @@
 
 import { Switch } from "@nextui-org/react"
 import { SetStateAction, Dispatch, useContext } from "react"
-import { CollectionsContext } from "./CollectionsWrapper"
+import { CollectionsContext } from "./CollectionsWrapper/CollectionsWrapper"
 import CollectionsMediaRadio from "./Radio"
 import { CollectionsWrapperData } from "@/ts/reducer"
 

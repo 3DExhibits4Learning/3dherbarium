@@ -24,8 +24,11 @@ import FullPageError from "@/components/Error/FullPageError"
 // Path
 const path = 'src/app/collections/[specimenName]/page.tsx'
 
+// SINGLETON
+import prisma from "@/utils/prisma"
+
 // Dynamic imports
-const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper'), { ssr: false })
+const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })
 
 // Main JSX (communityId to be used here in the future, hence searchParams)
 export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: { communityId: string } }) {
@@ -39,6 +42,7 @@ export default async function Page({ params, searchParams }: { params: { specime
     var noModelData: any
     var images: any
     const decodedSpecimenName = decodeURI(params.specimenName)
+    var numberOfAnnotations: number | undefined
 
     // Push initial promises onto array (GBIF data, 3D model data, HSC images)
     promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName), fetchHSCImages(params.specimenName))
@@ -57,6 +61,9 @@ export default async function Page({ params, searchParams }: { params: { specime
       noModelData = { title: 'Herbaria images from the Global Biodiversity Information Facility', images: images }
     }
 
+    // Get number of annotations for parameter sanitization
+    if(_3dmodel && _3dmodel.length) numberOfAnnotations = await prisma.annotations.findMany({where: {uid: (_3dmodel as model[])[0].uid}}).then(annotationArray => annotationArray.length)
+
     // If there are no models or images, search for common name information. If there is no common name information, display appropriate message. If there is, redirect to common name search.
     if (!(_3dmodel.length || images.length)) {
 
@@ -69,14 +76,12 @@ export default async function Page({ params, searchParams }: { params: { specime
     }
 
     // Typical client wrapper
-    return (
-      <>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
-        <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
-        <title>3D Herbarium Collections</title>
-        <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} />
-      </>
-    )
+    return <>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
+      <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
+      <title>3D Herbarium Collections</title>
+      <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} numberOfAnnotations={numberOfAnnotations} />
+    </>
   }
   // Typical error component catch
   catch (e: any) { return <FullPageError clientErrorMessage={e.message} /> }

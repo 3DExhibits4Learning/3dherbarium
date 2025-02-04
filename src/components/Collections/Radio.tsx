@@ -1,7 +1,7 @@
 'use client'
 
 import { SetStateAction, useContext, Dispatch } from "react"
-import { CollectionsContext } from "./CollectionsWrapper"
+import { CollectionsContext } from "./CollectionsWrapper/CollectionsWrapper"
 import { CollectionsWrapperData } from "@/ts/reducer"
 
 export default function CollectionsMediaRadio(props: { setIsSelected: Dispatch<SetStateAction<boolean>> }) {
