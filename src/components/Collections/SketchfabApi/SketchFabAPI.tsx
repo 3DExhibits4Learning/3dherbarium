@@ -18,7 +18,7 @@ import { CollectionsContext } from '../CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData } from '@/ts/collections';
 import { sketchfabApiContext } from '@/ts/collections';
-import { useSearchParams, usePathname, useRouter} from 'next/navigation';
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
@@ -99,30 +99,28 @@ export default function SFAPI() {
   const successObjDesktop = { ...successObj, annotation: 1, ui_fadeout: 1 }
 
   // Provider Object
-  const sketchfabProviderValue: sketchfabApiContext = {sketchfabApi, sketchfabApiDispatch}
+  const sketchfabProviderValue: sketchfabApiContext = { sketchfabApi, sketchfabApiDispatch }
 
   // Initialize model viewer and instantiate herbarium specimen object; initialize annotations and event listeners; handle photo source if selected annotation is a photo annotation
   useEffect(() => fn.initializeCollections(new Sketchfab(modelViewer.current), successObj, successObjDesktop, sRef, props, sketchfabApiDispatch), []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => fn.initializeAnnotationsAndListeners(sketchfabApi, sketchfabApiDispatch, annotationSwitch, annotationSwitchMobile, annotationSwitchWrapper, mobileAnnotationSwitchWrapper, params, path, router), [sketchfabApi.api, sketchfabApi.annotations, sketchfabApi.s])
   useEffect(() => fn.photoSrcChangeHandler(sketchfabApi, sketchfabApiDispatch), [sketchfabApi.index]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if(sketchfabApi.error) return <FullPageError clientErrorMessage={sketchfabApi.errorMessage as string} />
+  if (sketchfabApi.error) return <FullPageError clientErrorMessage={sketchfabApi.errorMessage as string} />
 
   return (
     <SketchfabApiContext.Provider value={sketchfabProviderValue}>
+      
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
       <meta name="description" content={`An annotated 3D model of ${props.model[0].spec_name}`}></meta>
-      {
-        sketchfabApi.s &&
-        <AnnotationModal {...props} title={sketchfabApi.annotationTitle} index={sketchfabApi.mobileIndex} specimen={sketchfabApi.s} />
-      }
+      
+      {sketchfabApi.s && <AnnotationModal {...props} title={sketchfabApi.annotationTitle} index={sketchfabApi.mobileIndex} specimen={sketchfabApi.s} />}
+      
       <div id="iframeDiv" className="flex bg-black m-auto min-h-[150px] h-full w-full">
         <ModelViewer uid={props.model[0].uid} ref={modelViewer} />
-        {
-          sketchfabApi.s && sketchfabApi.annotations &&
-          <Annotation sketchfabApi={sketchfabApi} gMatch={gMatch} ref={annotationDiv} />
-        }
+        {sketchfabApi.s && sketchfabApi.annotations && <Annotation sketchfabApi={sketchfabApi} gMatch={gMatch} ref={annotationDiv} />}
       </div >
+    
     </SketchfabApiContext.Provider>
   )
 }

@@ -18,7 +18,7 @@ export default function Profile(props: { sketchfabApi: sketchfabApiData }) {
                 </div>
                 <div className='w-[65%] py-[20px] justify-center items-center text-center px-[2%]'>
                     <p>Date acquired: {s.model.spec_acquis_date.toDateString()}</p>
-                    {s.specimen.height && <p>Height: {s.specimen.height}</p>}
+                    {s.specimen.height && <p>Specimen height: {s.specimen.height} cm</p>}
                     {s.commonNames.length > 1 && <p>Common Names: {addCommas(s.commonNames)}</p>}
                     {s.commonNames.length == 1 && <p>Common Names: {s.commonNames[0]}</p>}
                     {s.profile.extinct !== '' && <p>Extinct: {boolRinse(s.profile.extinct as string)}</p>}

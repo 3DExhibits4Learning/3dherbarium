@@ -3,16 +3,17 @@
  * 
  * @fileoverview herbarium model 'card' displayed in the SearchPageModelList
  */
+
 'use client'
 
 // Typical imports
-import { handleImgError } from "@/utils/imageHandler";
-import { model } from "@prisma/client";
-import { SyntheticEvent } from "react";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
-import Link from "next/link";
+import { handleImgError } from "@/utils/imageHandler"
+import { model } from "@prisma/client"
+import { SyntheticEvent } from "react"
+import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 
 // Default imports
+import Link from "next/link"
 import noImage from "../../../public/noImage.png"
 
 export default function HerbariumCard(props: { index: number, model: model }) {
