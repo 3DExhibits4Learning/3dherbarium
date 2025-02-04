@@ -90,7 +90,8 @@ export async function POST(request: Request) {
                 modeled_by: modeler,
                 site_ready: isViable === 'yes' ? true : false,
                 base_model: isBase === 'yes' ? true : false,
-                thumbnail: thumbUrl ? thumbUrl : ''
+                thumbnail: thumbUrl ? thumbUrl : '',
+                sid: sid
             }
         })
 
