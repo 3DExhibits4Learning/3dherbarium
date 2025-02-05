@@ -74,8 +74,6 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
     ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0
   }
 
-  console.log(props.annotations.find(annotation => annotation.annotation_no === parseInt(annotationNumberParam as string)))
-
   // Add annotation loader if the parameter is a model annotation
   if(isModelParam) Object.assign(successObj, {annotation: parseInt(annotationNumberParam as string)})
 
