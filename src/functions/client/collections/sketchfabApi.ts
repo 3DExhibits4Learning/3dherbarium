@@ -180,7 +180,6 @@ export const annotationSelectHandler = (index: number, sketchfabApi: any, sketch
     const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
 
     if (index !== -1) {
-        console.log('Annotation select handler just ran, index: ,', index)
         sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
         replaceAnnotationNumberInPath(index + 1, params, path, router)
     }
@@ -209,6 +208,8 @@ export const replaceAnnotationNumberInPath = (annotationNumber: number, params: 
  */
 export const isAnnotationParamValid = (param: string, numberOfAnnotations: number) => {
     const re = /[1-9]+/
+    console.log('Param test: ', re.test(param))
+    console.log('Number of annotations: ', numberOfAnnotations)
     if (re.test(param) && parseInt(param) < numberOfAnnotations) return true
     return false
 }
