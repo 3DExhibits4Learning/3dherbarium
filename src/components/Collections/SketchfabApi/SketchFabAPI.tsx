@@ -71,6 +71,7 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
   }
 
   //  Success object for init method of Sketchfab object (desktop); provider object
+  console.log('Annotation Number Param: ', sketchfabApi.annotationNumParam)
   const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1 }
   const sketchfabProviderValue: sketchfabApiContext = { sketchfabApi, sketchfabApiDispatch }
 

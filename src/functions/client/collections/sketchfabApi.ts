@@ -74,8 +74,8 @@ export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabAp
 
         // Create annotations and go to first annotation if client appears to be on desktop (if this a database annotated model)
         if (sketchfabApi.s.model.annotationPosition) {
-            createAndMaybeGoToFirstAnnotation(sketchfabApi, sketchfabApiDispatch)
-            createAnnotationsGreaterThan1(sketchfabApi, sketchfabApiDispatch)
+            createFirstAnnotation(sketchfabApi, sketchfabApiDispatch)
+            createRemainingAnnotations(sketchfabApi, sketchfabApiDispatch)
         }
 
         // Add both annotation switch and annotation select event listeners
@@ -85,10 +85,10 @@ export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabAp
 }
 
 /**
- * 
+ * @requires model.annotationPostion
  * @param sketchfabApi 
  */
-export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData, dispatch: Dispatch<sketchfabApiReducerAction>) => {
+export const createFirstAnnotation = (sketchfabApi: sketchfabApiData, dispatch: Dispatch<sketchfabApiReducerAction>) => {
 
     // Parse position string
     const position = JSON.parse(sketchfabApi.s?.model.annotationPosition as string)
@@ -103,7 +103,7 @@ export const createAndMaybeGoToFirstAnnotation = (sketchfabApi: sketchfabApiData
  * @requires model.annotationPostion
  * @param sketchfabApi 
  */
-export const createAnnotationsGreaterThan1 = (sketchfabApi: sketchfabApiData, dispatch: Dispatch<sketchfabApiReducerAction>) => {
+export const createRemainingAnnotations = (sketchfabApi: sketchfabApiData, dispatch: Dispatch<sketchfabApiReducerAction>) => {
 
     // Declarations
     const annotations = sketchfabApi.annotations as fullAnnotation[]
@@ -180,6 +180,7 @@ export const annotationSelectHandler = (index: number, sketchfabApi: any, sketch
     const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
 
     if (index !== -1) {
+        console.log('Annotation select handler just ran, index: ,', index)
         sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
         replaceAnnotationNumberInPath(index + 1, params, path, router)
     }
