@@ -17,6 +17,7 @@ import { CollectionsContext } from '../CollectionsWrapper/CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { sketchfabApiData, sketchfabApiContext, initialState } from '@/ts/collections';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { annotations } from '@prisma/client';
 
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
@@ -31,7 +32,7 @@ import FullPageError from '../../Error/FullPageError';
 export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
 
 // Main JSX
-export default function SFAPI(props: { numberOfAnnotations: number }) {
+export default function SFAPI(props: { numberOfAnnotations: number, annotations: annotations[] }) {
 
   const path = usePathname()
   const router = useRouter()
@@ -44,6 +45,9 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
   const params = useSearchParams()
   const annotationParam = params.get('annotation')
   const annotationNumberParam = annotationParam && fn.isAnnotationParamValid(annotationParam, props.numberOfAnnotations) ? annotationParam : undefined
+
+  // Determine if url param is a model annotation
+  const isModelParam = annotationNumberParam && props.annotations.find(annotation => annotation.annotation_no === parseInt(annotationNumberParam))?.annotation_type === 'model' ? true : false 
 
   // Initial state and reducer
   const initialData: sketchfabApiData = { ...initialState, annotationNumParam: annotationNumberParam }
@@ -69,6 +73,11 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
     error: (e: any) => { throw Error(e.message) },
     ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0
   }
+
+  console.log(props.annotations.find(annotation => annotation.annotation_no === parseInt(annotationNumberParam as string)))
+
+  // Add annotation loader if the parameter is a model annotation
+  if(isModelParam) Object.assign(successObj, {annotation: parseInt(annotationNumberParam as string)})
 
   //  Success object for init method of Sketchfab object (desktop); provider object
   const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1 }

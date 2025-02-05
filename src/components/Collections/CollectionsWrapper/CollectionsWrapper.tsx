@@ -13,7 +13,7 @@
 import { useEffect, useState, createContext, useReducer } from 'react'
 import { useSearchParams } from "next/navigation"
 import { isMobileOrTablet } from '@/utils/isMobile';
-import { userSubmittal } from '@prisma/client';
+import { annotations, userSubmittal } from '@prisma/client';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { CollectionsWrapperProps } from '@/ts/collections';
 import { getCommunityModel } from '@/functions/client/collections/collectionsWrapper';
@@ -93,7 +93,7 @@ export default function MainWrap(props: CollectionsWrapperProps) {
           !!props.model.length && !communityId &&
           <>
             <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
-            <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} numberOfAnnotations={props.numberOfAnnotations as number} />
+            <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} numberOfAnnotations={props.annotations?.length as number} annotations={props.annotations as annotations[]} />
           </>
         }
         {

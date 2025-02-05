@@ -1,4 +1,4 @@
-import { model } from "@prisma/client"
+import { annotations, model } from "@prisma/client"
 import { GbifResponse, GbifImageResponse } from "@/api/types"
 import { fullAnnotation } from "@/api/types"
 import { Dispatch } from "react"
@@ -10,7 +10,7 @@ export interface CollectionsWrapperProps {
     gMatch: { hasInfo: boolean, data?: GbifResponse },
     specimenName: string,
     noModelData: { title: string, images: GbifImageResponse[] }
-    numberOfAnnotations: number | undefined
+    annotations: annotations[] | undefined
 }
 
 export interface sketchfabApiData {

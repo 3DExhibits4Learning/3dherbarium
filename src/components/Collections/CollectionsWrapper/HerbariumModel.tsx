@@ -16,12 +16,13 @@ import dynamic from "next/dynamic"
 import OccurrenceSwiper from "../GbifSwiper"
 import Inaturalist from "../iNaturalist"
 import Foot from "@/components/Shared/Foot"
+import { annotations } from "@prisma/client"
 
 // Dynamic imports
 const SketchfabApi = dynamic(() => import('@/components/Collections/SketchfabApi/SketchFabAPI'), { ssr: false })
 
 // Main JSX
-export default function CollectionsHerbariumModel(props: { sizes: any, modelHeight: string, numberOfAnnotations: number }) {
+export default function CollectionsHerbariumModel(props: { sizes: any, modelHeight: string, numberOfAnnotations: number, annotations: annotations[] }) {
 
     // Context
     const context = useContext(CollectionsContext) as CollectionsWrapperData
@@ -32,7 +33,7 @@ export default function CollectionsHerbariumModel(props: { sizes: any, modelHeig
         {
             mediaState.modelChecked &&
             <div style={{ height: props.modelHeight, maxHeight: props.sizes.viewportHeightInPx }}>
-                <SketchfabApi numberOfAnnotations={props.numberOfAnnotations} />
+                <SketchfabApi numberOfAnnotations={props.numberOfAnnotations} annotations={props.annotations} />
             </div>
         }
         {

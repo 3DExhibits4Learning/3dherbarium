@@ -12,7 +12,7 @@ import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/api/types"
 import { getModel } from '@/api/queries'
 import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions"
 import { fetchHSCImages } from "@/api/fetchFunctions"
-import { model } from "@prisma/client"
+import { annotations, model } from "@prisma/client"
 import { redirect } from "next/navigation"
 import { serverErrorHandler } from "@/functions/server/error"
 
@@ -42,7 +42,7 @@ export default async function Page({ params, searchParams }: { params: { specime
     var noModelData: any
     var images: any
     const decodedSpecimenName = decodeURI(params.specimenName)
-    var numberOfAnnotations: number | undefined
+    var annotations: annotations[] | undefined
 
     // Push initial promises onto array (GBIF data, 3D model data, HSC images)
     promises.push(fetchSpecimenGbifInfo(params.specimenName), getModel(decodedSpecimenName), fetchHSCImages(params.specimenName))
@@ -62,7 +62,7 @@ export default async function Page({ params, searchParams }: { params: { specime
     }
 
     // Get number of annotations for parameter sanitization
-    if(_3dmodel && _3dmodel.length) numberOfAnnotations = await prisma.annotations.findMany({where: {uid: (_3dmodel as model[])[0].uid}}).then(annotationArray => annotationArray.length)
+    if(_3dmodel && _3dmodel.length) annotations = await prisma.annotations.findMany({where: {uid: (_3dmodel as model[])[0].uid}})
 
     // If there are no models or images, search for common name information. If there is no common name information, display appropriate message. If there is, redirect to common name search.
     if (!(_3dmodel.length || images.length)) {
@@ -80,7 +80,7 @@ export default async function Page({ params, searchParams }: { params: { specime
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
       <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
       <title>3D Herbarium Collections</title>
-      <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} numberOfAnnotations={numberOfAnnotations} />
+      <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} annotations={annotations}  />
     </>
   }
   // Typical error component catch
