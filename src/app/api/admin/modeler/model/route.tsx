@@ -107,8 +107,17 @@ export async function POST(request: Request) {
             data: { uid: modelUid }
         })
 
+        // Create software records
+        const insertSoftware = prisma.software.createMany({
+            data: [
+                {uid: modelUid, software: 'Agisoft Metashape'},
+                {uid: modelUid, software: 'Blender'},
+                {uid: modelUid, software: 'Instant Meshes'}
+            ]
+        })
+
         // Await transaction
-        await prisma.$transaction([insert, update]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
+        await prisma.$transaction([insert, update, insertSoftware]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
 
         // Mark 3D model subtask as complete and the parent model task as complete
         await Promise.all([markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build"), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
