@@ -44,7 +44,6 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
   const params = useSearchParams()
   const annotationParam = params.get('annotation')
   const annotationNumberParam = annotationParam && fn.isAnnotationParamValid(annotationParam, props.numberOfAnnotations) ? annotationParam : undefined
-  if(annotationParam) console.log('annotationValid: ', fn.isAnnotationParamValid(annotationParam, props.numberOfAnnotations))
 
   // Initial state and reducer
   const initialData: sketchfabApiData = { ...initialState, annotationNumParam: annotationNumberParam }
@@ -72,7 +71,6 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
   }
 
   //  Success object for init method of Sketchfab object (desktop); provider object
-  console.log('Annotation Number Param: ', sketchfabApi.annotationNumParam)
   const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1 }
   const sketchfabProviderValue: sketchfabApiContext = { sketchfabApi, sketchfabApiDispatch }
 
