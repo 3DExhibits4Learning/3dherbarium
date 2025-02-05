@@ -123,7 +123,7 @@ export const createRemainingAnnotations = (sketchfabApi: sketchfabApiData, dispa
 
     // Go to the parameterized or first annotation
     const annotationToGoTo = annotationNumParam ? annotationNumParam - 1 : 0
-    sketchfabApi.api.gotoAnnotation(annotationToGoTo, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => {
+    if(!isMobileOrTablet()) sketchfabApi.api.gotoAnnotation(annotationToGoTo, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => {
         if (e) dispatch({ type: 'error', errorMessage: e.message + 'Annotation', index })
     })
 }
@@ -185,9 +185,9 @@ export const annotationSelectHandler = (index: number, sketchfabApi: any, sketch
     }
 
     // Mobile annotation state management
-    if (index !== -1 && mediaQueryWidth.matches || index != -1 && mediaQueryOrientation.matches) {
-        //sketchfabApiDispatch({type: 'openAnnotationModal'})
-        sketchfabApi.api.getAnnotation(index, function (err: any, information: any) { if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name }) })
+    if (index !== -1 && mediaQueryWidth.matches || index !== -1 && mediaQueryOrientation.matches) {
+        sketchfabApiDispatch({type: 'openAnnotationModal'})
+        sketchfabApi.getAnnotation(index, function (err: any, information: any) { if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name }) })
     }
 }
 
