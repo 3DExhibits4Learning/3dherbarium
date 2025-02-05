@@ -44,6 +44,7 @@ export default function SFAPI(props: { numberOfAnnotations: number }) {
   const params = useSearchParams()
   const annotationParam = params.get('annotation')
   const annotationNumberParam = annotationParam && fn.isAnnotationParamValid(annotationParam, props.numberOfAnnotations) ? annotationParam : undefined
+  if(annotationParam) console.log('annotationValid: ', fn.isAnnotationParamValid(annotationParam, props.numberOfAnnotations))
 
   // Initial state and reducer
   const initialData: sketchfabApiData = { ...initialState, annotationNumParam: annotationNumberParam }
