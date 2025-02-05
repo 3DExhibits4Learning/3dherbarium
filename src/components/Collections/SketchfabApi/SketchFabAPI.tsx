@@ -3,6 +3,8 @@
  * 
  * @fileoverview client component which renders the 3D models and annotations
  * 
+ * @todo look at server side loading of more of the Herbarium object now that the annotations have to be brought in server side
+ * 
  */
 
 "use client"

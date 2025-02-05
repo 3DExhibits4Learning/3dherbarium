@@ -78,50 +78,43 @@ export default function MainWrap(props: CollectionsWrapperProps) {
 
   // Else return appropriate collections content
   else {
-    return (
-      <CollectionsContext.Provider value={collectionsContext}>
-        <Header
-          searchTerm={props.specimenName}
-          headerTitle={props.specimenName}
-          hasModel={!!props.model.length}
-          pageRoute="collections"
-          annotationsEnabled={isSelected}
-          setAnnotationsEnabled={setIsSelected}
-        />
-        {
-          // Displayed if there is an herbarium 3D model available for searched specimen
-          !!props.model.length && !communityId &&
-          <>
-            <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
-            <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} numberOfAnnotations={props.annotations?.length as number} annotations={props.annotations as annotations[]} />
-          </>
-        }
-        {
-          // Displayed if there is a communityId parameter (and the corresponding model uid is found), or if there are only community model(s) available for the searched specimen
-          (!props.model.length || communityId) && userModel && props.gMatch.hasInfo &&
-          <>
-            <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
-            <CollectionsCommunityModel sizes={sizes} modelHeight={modelHeight} userModel={userModel} />
-          </>
-        }
-        {
-          // Displayed for community specimens where no external data is found (such as ornamental plants)
-          (!props.model.length || communityId) && userModel && !props.gMatch.hasInfo &&
-          <>
-            <CommunityModelWithoutGmatch communityModel={userModel} />
-            <Foot />
-          </>
-        }
-        {
-          // Displayed when no 3D models are available (only images and observations are displayed)
-          !props.model.length && props.gMatch.hasInfo && userModel === undefined &&
-          <>
-            <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
-            <CollectionsNoModel sizes={sizes} modelHeight={modelHeight} />
-          </>
-        }
-      </CollectionsContext.Provider>
-    )
+    return <CollectionsContext.Provider value={collectionsContext}>
+      <Header
+        searchTerm={props.specimenName}
+        headerTitle={props.specimenName}
+        hasModel={!!props.model.length}
+        pageRoute="collections"
+        annotationsEnabled={isSelected}
+        setAnnotationsEnabled={setIsSelected} />
+      {
+        // Displayed if there is an herbarium 3D model available for searched specimen
+        !!props.model.length && !communityId &&
+        <>
+          <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
+          <CollectionsHerbariumModel sizes={sizes} modelHeight={modelHeight} numberOfAnnotations={props.annotations?.length as number} annotations={props.annotations as annotations[]} />
+        </>
+      }
+      {
+        // Displayed if there is a communityId parameter (and the corresponding model uid is found), or if there are only community model(s) available for the searched specimen
+        (!props.model.length || communityId) && userModel && props.gMatch.hasInfo &&
+        <>
+          <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
+          <CollectionsCommunityModel sizes={sizes} modelHeight={modelHeight} userModel={userModel} />
+        </>
+      }
+      {
+        // Displayed for community specimens where no external data is found (such as ornamental plants)
+        (!props.model.length || communityId) && userModel && !props.gMatch.hasInfo && <><CommunityModelWithoutGmatch communityModel={userModel} /><Foot /></>
+      }
+      {
+        // Displayed when no 3D models are available (only images and observations are displayed)
+        !props.model.length && props.gMatch.hasInfo && userModel === undefined &&
+        <>
+          <CollectionsSubheader isSelected={isSelected} setIsSelected={setIsSelected} communityId={communityId} />
+          <CollectionsNoModel sizes={sizes} modelHeight={modelHeight} />
+        </>
+      }
+    </CollectionsContext.Provider>
   }
 }
 
