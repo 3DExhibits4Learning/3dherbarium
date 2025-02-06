@@ -77,11 +77,12 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
     ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: 9
   }
 
-  // Add annotation loader if the parameter is a model annotation
+  // Add annotation loader if the parameter is a model annotation; establish zoom out contraints
   if(isModelParam) Object.assign(successObj, {annotation: parseInt(annotationNumberParam as string)})
+  const maxZoomOut = wrapperProps.model[0].max_zoom_out ? wrapperProps.model[0].max_zoom_out : 9
 
-  //  Success object for init method of Sketchfab object (desktop); provider object
-  const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: 9 }
+  // Success object for init method of Sketchfab object (desktop); provider object
+  const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: maxZoomOut }
   const sketchfabProviderValue: sketchfabApiContext = { sketchfabApi, sketchfabApiDispatch }
 
   // Initialize model viewer and instantiate herbarium specimen object; initialize annotations and event listeners; handle photo source if selected annotation is a photo annotation

@@ -60,7 +60,8 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 mediaType: 'model',
                 modelAnnotationUid: modelAnnotation.uid,
                 annotationTitle: setModelAction.annotationTitle,
-                annotationType: 'model'
+                annotationType: 'model',
+                annotation: modelAnnotation.annotation
             }
 
         case 'activeAnnotationIsHostedPhoto':

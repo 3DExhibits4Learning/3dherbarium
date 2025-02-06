@@ -92,7 +92,7 @@ export async function POST(request: Request) {
                 case 'model':
 
                     // Model annotation creation
-                    const modelAnnotation = prisma.model_annotation.create({ data: { uid: data.get('uid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string } })
+                    const modelAnnotation = prisma.model_annotation.create({ data: { uid: data.get('modelAnnotationUid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string } })
 
                     // Await transaction, typical response
                     const newModelAnnotation = await prisma?.$transaction([annotation, modelAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(modelAnnotation)', "Couldn't create model anotation"))
@@ -221,7 +221,7 @@ export async function PATCH(request: Request) {
                             prisma.video_annotation.delete({ where: { annotation_id: data.get('annotation_id') as string } })
 
                         const newModelAnnotation = prisma.model_annotation.create({
-                            data: { uid: data.get('uid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string }
+                            data: { uid: data.get('modelAnnotationUid') as string, annotation: data.get('annotation') as string, annotation_id: data.get('annotation_id') as string }
                         })
 
                         // Await transaction, return with typical response
@@ -232,7 +232,7 @@ export async function PATCH(request: Request) {
                     // Update model annotation
                     const updateModelAnnotation = prisma.model_annotation.update({
                         where: { annotation_id: data.get('annotation_id') as string },
-                        data: { uid: data.get('uid') as string, annotation: data.get('annotation') as string }
+                        data: { uid: data.get('modelAnnotationUid') as string, annotation: data.get('annotation') as string }
                     })
 
                     // Await transaction, return with typical response

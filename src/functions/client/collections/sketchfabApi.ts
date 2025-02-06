@@ -211,7 +211,7 @@ export const replaceAnnotationNumberInPath = (annotationNumber: number, params: 
  */
 export const isAnnotationParamValid = (param: string, numberOfAnnotations: number) => {
     const re = /[1-9]+/
-    if (re.test(param) && parseInt(param) <= numberOfAnnotations) return true
+    if (re.test(param) && parseInt(param) <= numberOfAnnotations + 1) return true
     return false
 }
 
