@@ -12,7 +12,8 @@ export interface CollectionsMediaAction {
 export interface CollectionsMediaObject {
     modelChecked: boolean,
     observationsChecked: boolean,
-    photosChecked: boolean
+    photosChecked: boolean,
+    scale: boolean
 }
 
 export interface CollectionsWrapperData {

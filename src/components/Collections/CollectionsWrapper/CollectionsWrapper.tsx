@@ -64,7 +64,7 @@ export default function MainWrap(props: CollectionsWrapperProps) {
   })
 
   // Initial media state and reducer
-  const initialMediaState = { modelChecked: true, observationsChecked: false, photosChecked: false }
+  const initialMediaState = { modelChecked: true, observationsChecked: false, photosChecked: false, scale: false }
   const [mediaState, mediaStateDispatch] = useReducer(collectionsMediaReducer, initialMediaState)
 
   // Context object

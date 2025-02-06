@@ -87,7 +87,6 @@ export default function Tasks(props: { epic: any, botanist?: boolean }) {
                 <Accordion>
                     {
                         doneTasks.map((issue: any, index: any) => {
-                            console.log('Done tasks map is running')
                             return <AccordionItem key={index + 100} aria-label={issue.fields.summary} title={issue.fields.summary.slice(0, -11)} classNames={{ title: 'text-[ #004C46]' }}>
                                 <Button size='sm' className="text-sm bg-[#004C46] text-[#F5F3E7]" onPress={() => transitionHandler(21, issue.key)}>{"Mark as 'In Progress'"}</Button>
                             </AccordionItem>

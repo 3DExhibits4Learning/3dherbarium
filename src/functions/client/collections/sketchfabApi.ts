@@ -67,10 +67,13 @@ export const instantiateHerbarium = async (sRef: MutableRefObject<Herbarium | un
  * @param annotationSwitchWrapper 
  * @param mobileAnnotationSwitchWrapper 
  */
-export const initializeAnnotationsAndListeners = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener, annotationSelectWrapper: Function) => {
+export const initializeAnnotationsAndListeners = (sketchfabApi: sketchfabApiData, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, annotationSwitch: HTMLInputElement, annotationSwitchMobile: HTMLInputElement, annotationSwitchWrapper: EventListener, mobileAnnotationSwitchWrapper: EventListener, annotationSelectWrapper: Function) => {
 
     // This block only needs to run once everything has loaded
     if (sketchfabApi.s && sketchfabApi.annotations && sketchfabApi.api) {
+
+        // For scale implementation
+        //sketchfabApi.api.getSceneGraph((e: any, result: any) => console.log('Result: ', result))
 
         // Create annotations and go to first annotation if client appears to be on desktop (if this a database annotated model)
         if (sketchfabApi.s.model.annotationPosition) {

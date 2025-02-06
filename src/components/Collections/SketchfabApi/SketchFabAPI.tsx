@@ -9,7 +9,7 @@
 
 "use client"
 
-// Import all corresponding functions
+// Import logic file
 import * as fn from '@/functions/client/collections/sketchfabApi'
 
 // Typical imports
@@ -36,6 +36,7 @@ export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
 // Main JSX
 export default function SFAPI(props: { numberOfAnnotations: number, annotations: annotations[] }) {
 
+  // Get path, router
   const path = usePathname()
   const router = useRouter()
 
@@ -73,14 +74,14 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
   const successObj = {
     success: (api: any) => { api.start(); api.addEventListener('viewerready', () => sketchfabApiDispatch({ type: 'setApi', api: api })) },
     error: (e: any) => { throw Error(e.message) },
-    ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0
+    ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: 9
   }
 
   // Add annotation loader if the parameter is a model annotation
   if(isModelParam) Object.assign(successObj, {annotation: parseInt(annotationNumberParam as string)})
 
   //  Success object for init method of Sketchfab object (desktop); provider object
-  const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1 }
+  const successObjDesktop = { ...successObj, annotation: sketchfabApi.annotationNumParam ? parseInt(sketchfabApi.annotationNumParam) : 1, ui_fadeout: 1, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: 9 }
   const sketchfabProviderValue: sketchfabApiContext = { sketchfabApi, sketchfabApiDispatch }
 
   // Initialize model viewer and instantiate herbarium specimen object; initialize annotations and event listeners; handle photo source if selected annotation is a photo annotation
