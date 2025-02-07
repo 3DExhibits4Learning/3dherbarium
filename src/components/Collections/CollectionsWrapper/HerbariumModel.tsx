@@ -10,13 +10,13 @@
 import { CollectionsWrapperData } from "@/ts/reducer"
 import { CollectionsContext } from "./CollectionsWrapper"
 import { useContext } from "react"
+import { annotations } from "@prisma/client"
 
 // Default imports
 import dynamic from "next/dynamic"
 import OccurrenceSwiper from "../GbifSwiper"
 import Inaturalist from "../iNaturalist"
 import Foot from "@/components/Shared/Foot"
-import { annotations } from "@prisma/client"
 
 // Dynamic imports
 const SketchfabApi = dynamic(() => import('@/components/Collections/SketchfabApi/SketchFabAPI'), { ssr: false })

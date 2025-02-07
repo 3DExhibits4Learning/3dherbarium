@@ -14,7 +14,7 @@ const path = 'src/app/api/admin/manager/migrate/route.tsx'
 
 /**
  * 
- * @returns 
+ * @returns string message of result of operation
  */
 export async function POST() {
 
