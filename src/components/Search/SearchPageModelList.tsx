@@ -34,6 +34,7 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
 
   // Filter by search query if a query exists
   if (query) {
+    filteredModels = filteredModels.filter(model => !Object.keys(model).includes('confirmation'))
     filteredModels = filteredModels.filter(model => (model as model).spec_name.toLowerCase().includes(query.toLowerCase()) || (model as model).pref_comm_name.toLowerCase().includes(query.toLowerCase()))
     communityModels = communityModels.filter(model => model.speciesName.toLowerCase().includes(query.toLowerCase()) || model.commonName.toLowerCase().includes(query.toLowerCase()))
   }
