@@ -31,6 +31,14 @@ export const annotatedModelMigration = prisma.$queryRaw`insert into Test.model(
     on d.uid = t.uid
     where t.uid is null and d.annotated is true);`
 
+// Migrate annotation 3D models
+export const annotationModelMigration = prisma.$queryRaw`insert into Test.model(
+    select d.* 
+    from Development.model as d
+    left join Test.model as t
+    on d.uid = t.uid
+    where t.uid is null and d.base_model is false);`
+
 // Migrate image set of those models
 export const imageSetMigration = prisma.$queryRaw`insert into Test.image_set(
     select d.* 
@@ -93,6 +101,14 @@ export const productionModelMigration = prisma.$queryRaw`insert into Production.
     left join Production.model as t
     on d.uid = t.uid
     where t.uid is null and d.annotated is true);`
+
+    // Migrate annotation 3D models
+export const ProductionAnnotationModelMigration = prisma.$queryRaw`insert into Production.model(
+    select d.* 
+    from Test.model as d
+    left join Production.model as t
+    on d.uid = t.uid
+    where t.uid is null and d.base_model is false);`
 
 // Migrate image set of those models
 export const productionImageSetMigration = prisma.$queryRaw`insert into Production.image_set(
