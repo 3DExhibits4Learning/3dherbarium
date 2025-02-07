@@ -4,6 +4,7 @@
  * @fileoverview 3D model viewer for annotations
  * 
  * @todo pass down error state/context for viewer
+ * @todo add maximum and minum zoom to model annotation schema
  */
 
 'use client'
@@ -14,7 +15,6 @@ import Sketchfab from '@sketchfab/viewer-api';
 
 // Main JSX
 export default function ModelAnnotation(props: { uid: string }) {
-
 
     // Success object
     const successObj = {
@@ -29,10 +29,9 @@ export default function ModelAnnotation(props: { uid: string }) {
         ui_color: "004C46",
         orbit_constraint_zoom_in: 1,
         orbit_constraint_zoom_out: 9,
-
     }
 
-    // Initialize viewer
+    // Effect syncs viewer api
     useEffect(() => {
 
         // Declarations
@@ -40,6 +39,7 @@ export default function ModelAnnotation(props: { uid: string }) {
         var uid = props.uid
         var client = new Sketchfab(iframe)
         
+        // Sketchfab client initialization method
         client.init(uid, successObj)
     }, [])
 
