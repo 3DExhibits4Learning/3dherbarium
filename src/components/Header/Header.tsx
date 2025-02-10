@@ -15,7 +15,7 @@ import { Navbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarMenu, Navba
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { SearchIcon } from "./SearchIcon"
 import { SearchHeaderProps } from "@/api/types"
-import { addDarkThemeListener, removeDarkThemeListener } from "./darkTheme"
+import { addDarkThemeListener, removeDarkThemeListener} from "@/components/Header/headerLogic"
 
 // Default imports
 import LogoAndSignIn from "./LogoAndSignIn"
@@ -53,11 +53,8 @@ export default function Header (props: SearchHeaderProps) {
     "Submit a 3D Model",
   ]
 
-  // Fetch autocomplete options and refresh corresponding state
-
   const fetchAutoCompleteOptions = async () => {
-    const autocompleteOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=47126&rank=species,genus&q=${searchQuery.current}`)
-      .then(res => res.json()).then(json => json.results)
+    const autocompleteOptions = await fetch(`https://api.inaturalist.org/v1/taxa/autocomplete?taxon_id=47126&rank=species,genus&q=${searchQuery.current}`).then(res => res.json()).then(json => json.results)
     setAutocompleteOptions(autocompleteOptions)
   }
 

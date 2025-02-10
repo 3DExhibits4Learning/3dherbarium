@@ -3,18 +3,24 @@
  * @fileoverview the plantID page where users can upload an image of a plant to identify what it could possibly be.
  */
 
-'use client';
+'use client'
 
-import { handlePlantIdSubmit } from '@/api/fetchFunctions';
-import { PlantIdApiResponse, PlantIdSuggestion } from '@/api/types';
-import { trimString } from '@/utils/trimString';
-import Header from '@/components/Header/Header';
-import { useState } from 'react';
-import PageWrapper from '@/components/Shared/PageWrapper';
-import { useIsClient } from '@/utils/isClient';
-import Foot from '@/components/Shared/Foot';
+// Typical imports
+import { handlePlantIdSubmit } from '@/api/fetchFunctions'
+import { PlantIdApiResponse, PlantIdSuggestion } from '@/api/types'
+import { trimString } from '@/utils/trimString'
+import { useState } from 'react'
+import { useIsClient } from '@/utils/isClient'
 
-var searchTerm: string | null;
+// Default imports
+import dynamic from 'next/dynamic'
+import PageWrapper from '@/components/Shared/PageWrapper'
+import Foot from '@/components/Shared/Foot'
+
+// Dynamic imports
+const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
+
+var searchTerm: string | null
 
 const PlantIdPage = () => {
 
@@ -28,9 +34,9 @@ const PlantIdPage = () => {
     }
   }
 
-  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [plantIdResults, setPlantIdResults] = useState<PlantIdApiResponse | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [plantIdResults, setPlantIdResults] = useState<PlantIdApiResponse | null>(null)
 
   /**
    * @function handlePlantIdSubmitWithTimeout 
@@ -48,9 +54,9 @@ const PlantIdPage = () => {
       const result = await Promise.race([plantIdPromise, timeoutPromise])
 
       if (result === timeoutPromise) {
-        console.error("handlePlantIdSubmit timed out");
+        console.error("handlePlantIdSubmit timed out")
       } else {
-        setPlantIdResults(result as PlantIdApiResponse);
+        setPlantIdResults(result as PlantIdApiResponse)
       }
     } catch (error) {
       console.error("Error occurred during plant identification", error)
@@ -82,9 +88,9 @@ const PlantIdPage = () => {
         filesArr.map((file) => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader()
-            reader.onload = (e) => { 
-                const base64String = e.target?.result;
-                resolve(base64String)
+            reader.onload = (e) => {
+              const base64String = e.target?.result;
+              resolve(base64String)
             }
             reader.onerror = () => reject(new Error('Problem reading the file'));
             reader.readAsDataURL(file);
@@ -133,8 +139,8 @@ const PlantIdPage = () => {
                   return (
                     <section key={suggestion.id + '-' + index} className='sm:text-left text-center p-5 flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0 mb-5'>
                       <div className="min-w-[80px] flex-shrink-0 text-center text-dark font-bold overflow-hidden">
-                      {(suggestion.probability * 100).toFixed(2)}%
-                    </div>
+                        {(suggestion.probability * 100).toFixed(2)}%
+                      </div>
                       <div className="flex justify-center md:justify-start space-x-4 w-full md:w-auto">
                         <div
                           className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
@@ -193,7 +199,7 @@ const PlantIdPage = () => {
       }
 
     </div>
-  );
-};
+  )
+}
 
-export default PlantIdPage;
+export default PlantIdPage

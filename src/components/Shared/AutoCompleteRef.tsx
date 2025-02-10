@@ -1,3 +1,11 @@
+/**
+ * 
+ * @file src/components/Shared/AutoCompleteRef.tsx
+ * 
+ * @fileoverview autocomplete build from scratch with ref; to be DEPRECATED; use AutoComplete.tsx
+ * 
+ */
+
 // TODO: 
 // Bug: When empty, the autocomplete field requires two tab key presses to focus on the next component
 
@@ -122,8 +130,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     }, [props.options]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
-    return (
-        <>
+    return <>
             <div className="flex">
                 <input
                     ref={selectedValue as LegacyRef<HTMLInputElement>}
@@ -145,7 +152,8 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
                 }
             </div>
         </>
-    )
 })
+
+// Display name, export
 Autocomplete.displayName = 'Autocomplete'
 export default Autocomplete
