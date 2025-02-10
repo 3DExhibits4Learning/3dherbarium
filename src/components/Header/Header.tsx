@@ -6,6 +6,7 @@
  */
 
 'use client'
+
 // Typical imports
 import { MobileSearch } from "./MobileSearch"
 import { useSession, } from "next-auth/react"

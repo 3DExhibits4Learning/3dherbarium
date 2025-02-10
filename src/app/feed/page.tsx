@@ -22,7 +22,7 @@ export default function Page() {
         <Header pageRoute="collections" headerTitle='feed' />
         <p className="mt-8 ml-4 mb-2">10-31-2024</p>
         <Divider />
-        <main className="min-h-[calc(100vh-177px)] h-fit flex justify-center">
+        <main className="min-h-[calc(100vh-242px)] h-fit flex justify-center">
             <article className='w-4/5 h-fit text-center flex flex-col items-center'>
                 <p className="text-3xl mt-8">Welcome to the new 3D Digital Herbarium Feed!</p>
                 <br></br><br></br>

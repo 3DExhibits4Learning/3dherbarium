@@ -10,10 +10,12 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { userIsAdmin } from "@/api/queries"
 import { cookies } from 'next/headers'
+import { Suspense } from "react"
 
 // Default imports
 import SessionProvider from '@/components/Shared/SessionProvider'
 import './globals.css'
+import Loading from "@/components/Shared/LoadingComponent"
 
 // Layout
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -43,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <body className="overflow-hidden min-h-[100vh] dark:bg-[#181818] text-[#004C46] dark:text-[#F5F3E7]">
       <SessionProvider session={session}>
         <Providers>
-          {children}
+            {children}
         </Providers>
       </SessionProvider>
     </body>

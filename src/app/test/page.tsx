@@ -1,10 +1,12 @@
+import LoadingComponent from '@/components/Shared/LoadingComponent'
 import Link from 'next/link'
  
 export default function Home() {
-  return (
-    <div>
-      <h1>Home</h1>
-      <Link href="/about">About</Link>
-    </div>
-  )
+  // return (
+  //   <div>
+  //     <h1>Home</h1>
+  //     <Link href="/about">About</Link>
+  //   </div>
+  // )
+  return <LoadingComponent />
 }
