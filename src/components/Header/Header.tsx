@@ -6,30 +6,32 @@
  */
 
 'use client'
-
-import LogoAndSignIn from "./LogoAndSignIn"
+// Typical imports
+import { MobileSearch } from "./MobileSearch"
 import { useSession, } from "next-auth/react"
 import { useParams } from "next/navigation"
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import { Navbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarMenu, NavbarMenuItem, Divider, Switch } from "@nextui-org/react"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { SearchIcon } from "./SearchIcon"
+import { SearchHeaderProps } from "@/api/types"
+import { addDarkThemeListener, removeDarkThemeListener } from "./darkTheme"
+
+// Default imports
+import LogoAndSignIn from "./LogoAndSignIn"
 import AutoComplete from "./Autocomplete"
 import Links from "./Links"
 import MobileSessionOptions from "./MobileSessionOptions"
 import MobileModelOptions from "./MobileModelOptions"
-import { MobileSearch } from "./MobileSearch"
 import MobileMenuOptions from "./MobileMenuOptions"
-import windowMethods from "./WindowMethods"
-import { SearchHeaderProps } from "@/api/types"
 
-const Header = (props: SearchHeaderProps) => {
+// Main JSX
+export default function Header (props: SearchHeaderProps) {
 
   // Variable declarations
   const params = useParams()
   const { data: session } = useSession()
 
-  const [isSelected, setIsSelected] = useState<boolean>(true)
   const [autocompleteOptions, setAutocompleteOptions] = useState<any[]>([])
   const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false)
 
@@ -44,16 +46,12 @@ const Header = (props: SearchHeaderProps) => {
     "Plant.id",
     "Feed",
     "Accessibility"
-  ];
+  ]
 
   const userItems: string[] = [
     "Dashboard",
     "Submit a 3D Model",
-  ];
-
-  // All window methods such as checking for dark mode 
-
-  windowMethods()
+  ]
 
   // Fetch autocomplete options and refresh corresponding state
 
@@ -63,8 +61,9 @@ const Header = (props: SearchHeaderProps) => {
     setAutocompleteOptions(autocompleteOptions)
   }
 
-  return (
-    <>
+  useEffect(() => {addDarkThemeListener(); return () => removeDarkThemeListener()}, [])
+
+  return <>
       <Navbar isBordered className="justify-between max-w-none bg-[#004C46] dark:bg-[#212121] text-white dark:text-white">
 
         {/* Mobile Menu Toggle */}
@@ -152,12 +151,7 @@ const Header = (props: SearchHeaderProps) => {
             props.setAnnotationsEnabled &&
             <MobileModelOptions hasModel={props.hasModel} isSelected={props.annotationsEnabled} setIsSelected={props.setAnnotationsEnabled} />
           }
-
-
         </NavbarMenu>
       </Navbar >
     </>
-  );
-};
-
-export default Header
+}
