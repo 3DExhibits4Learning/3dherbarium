@@ -10,12 +10,10 @@ import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { userIsAdmin } from "@/api/queries"
 import { cookies } from 'next/headers'
-import { Suspense } from "react"
 
 // Default imports
 import SessionProvider from '@/components/Shared/SessionProvider'
 import './globals.css'
-import Loading from "@/components/Shared/LoadingComponent"
 
 // Layout
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
