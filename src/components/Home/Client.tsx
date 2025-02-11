@@ -6,11 +6,11 @@
 'use client'
 
 // Typical imports
-import { isMobileOrTablet } from '@/utils/isMobile';
-import { useRouter } from 'next/navigation';
+import { isMobileOrTablet } from '@/utils/isMobile'
+import { useRouter } from 'next/navigation'
 
 // Default imports
-import dynamic from 'next/dynamic';
+import dynamic from 'next/dynamic'
 
 // Dynamic imports
 const HomeModel = dynamic(() => import('@/components/Home/model'), { ssr: false })

@@ -5,11 +5,9 @@
  */
 
 // Default imports
-import Footer from '@/components/Shared/Foot'
 import dynamic from 'next/dynamic'
 
 // Dynamic imports
-const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false })
 const HomePageClient = dynamic(() => import('@/components/Home/Client'), { ssr: false })
 
 // Main JSX
@@ -21,15 +19,9 @@ export default async function Page() {
 
     <title>3D Digital Herbarium</title>
 
-    <Header headerTitle='Home' pageRoute='collections' page="home" />
-
-    <section className='flex flex-col h-auto w-full'>
-      <div className='flex h-[calc(100vh-177px)]'>
+    <section className='h-[100vh]'>
         <HomePageClient />
-      </div>
     </section>
-
-    <Footer />
   </>
 }
 
