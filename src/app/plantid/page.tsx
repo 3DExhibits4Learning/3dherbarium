@@ -115,7 +115,7 @@ const PlantIdPage = () => {
 
       {isClient &&
         <PageWrapper>
-          <section className="flex flex-col min-h-[calc(100vh-175px)]">
+          <section className="flex flex-col min-h-[calc(100vh-177px)]">
             <h1 className="text-xl p-5">Identify a plant through just an image. JPEGs and PNGs only!</h1>
             <input
               id='plantIdFileInput'
