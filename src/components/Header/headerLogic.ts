@@ -40,7 +40,7 @@ export const detectDarkTheme = () => {
     document.cookie = "theme=dark"
   }
   
-  else {
+  else if(typeof window !== 'undefined') {
     document.getElementById('layoutHTML')?.classList.remove("dark")
     document.cookie = "theme=light"
   }

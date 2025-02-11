@@ -126,7 +126,7 @@ export const createRemainingAnnotations = (sketchfabApi: sketchfabApiData, dispa
 
     // Go to the parameterized or first annotation
     const annotationToGoTo = annotationNumParam ? annotationNumParam - 1 : 0
-    if(!isMobileOrTablet()) sketchfabApi.api.gotoAnnotation(annotationToGoTo, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => {
+    if (!isMobileOrTablet()) sketchfabApi.api.gotoAnnotation(annotationToGoTo, { preventCameraAnimation: true, preventCameraMove: false }, (e: any, index: any) => {
         if (e) dispatch({ type: 'error', errorMessage: e.message + 'Annotation', index })
     })
 }
@@ -177,7 +177,7 @@ export const annotationSwitchMobileListener = (event: Event, sketchfabApiData: s
  * @param path 
  * @param router 
  */
-export const annotationSelectHandler = (index: number, sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, params: ReadonlyURLSearchParams, path: string, router: AppRouterInstance) => {
+export const annotationSelectHandler = (index: number, sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>, params: ReadonlyURLSearchParams, path: string, router: AppRouterInstance, uid: string) => {
 
     const mediaQueryWidth = window.matchMedia('(max-width: 1023.5px)')
     const mediaQueryOrientation = window.matchMedia('(orientation: portrait)')
@@ -185,11 +185,12 @@ export const annotationSelectHandler = (index: number, sketchfabApi: any, sketch
     if (index !== -1) {
         sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
         replaceAnnotationNumberInPath(index + 1, params, path, router)
+        sketchfabApi.getAnnotationList((e: any, annotations: any) => updateLegacyAnnotations(annotations, uid))
     }
 
     // Mobile annotation state management
     if (index !== -1 && mediaQueryWidth.matches || index !== -1 && mediaQueryOrientation.matches) {
-        sketchfabApiDispatch({type: 'openAnnotationModal'})
+        sketchfabApiDispatch({ type: 'openAnnotationModal' })
         sketchfabApi.getAnnotation(index, function (err: any, information: any) { if (!err) sketchfabApiDispatch({ type: 'setMobileAnnotation', index: index, title: information.name }) })
     }
 }
@@ -257,4 +258,19 @@ export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: D
         if (isDataStoragePhoto(sketchfabApi)) setImageFromNfs((sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url, sketchfabApiDispatch)
         else sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'imgSrc', value: sketchfabApi.annotations[sketchfabApi.index - 1].url as string })
     }
+}
+
+/**
+ * 
+ */
+export const updateLegacyAnnotations = (annotations: any[], uid: string) => {
+
+    const data: {uid: string, annotations: any} = { uid: uid, annotations: [] }
+    
+    annotations.every(annotation => data.annotations.push({title: annotation.name, position: [annotation.position, annotation.eye, annotation.target]}))
+    
+    fetch('/api/reAnnotation', {
+        method: 'PATCH', 
+        body: JSON.stringify(JSON.stringify(data)) // Nested object needs to be double stringified
+    }).then(res => res.json()).then(json => console.log(json.data))
 }

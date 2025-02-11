@@ -68,7 +68,7 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
   // Annotation switch wrappers; annotationSelectWrapper
   const annotationSwitchWrapper = (event: Event) => fn.annotationSwitchListener(event, sketchfabApi, modelViewer, annotationDiv)
   const mobileAnnotationSwitchWrapper = (event: Event) => fn.annotationSwitchMobileListener(event, sketchfabApi, modelViewer, annotationDiv)
-  const annotationSelectWrapper = (index: number) => fn.annotationSelectHandler(index, sketchfabApi.api, sketchfabApiDispatch, params, path, router)
+  const annotationSelectWrapper = (index: number) => fn.annotationSelectHandler(index, sketchfabApi.api, sketchfabApiDispatch, params, path, router, wrapperProps.model[0].uid)
 
   // Success object for init method of Sketchfab object (mobile)
   const successObj = {
