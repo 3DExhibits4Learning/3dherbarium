@@ -16,7 +16,7 @@ import { Navbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarMenu, Navba
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { SearchIcon } from "./SearchIcon"
 import { SearchHeaderProps } from "@/api/types"
-import { addDarkThemeListener, removeDarkThemeListener} from "@/components/Header/headerLogic"
+import { addDarkThemeListener, detectDarkTheme, removeDarkThemeListener} from "@/components/Header/headerLogic"
 
 // Default imports
 import LogoAndSignIn from "./LogoAndSignIn"
@@ -59,6 +59,8 @@ export default function Header (props: SearchHeaderProps) {
     setAutocompleteOptions(autocompleteOptions)
   }
 
+  // Dark theme effects
+  useEffect(() => detectDarkTheme(), [])
   useEffect(() => {addDarkThemeListener(); return () => removeDarkThemeListener()}, [])
 
   return <>

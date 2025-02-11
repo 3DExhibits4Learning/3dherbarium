@@ -16,8 +16,8 @@ export const darkModeMediaQuery = typeof window !== 'undefined' ? window.matchMe
  * @param event dark mode selection event 
  */
 export const darkModeChangeEventHandler = (event: MediaQueryListEvent) => {
-  if (event.matches) {document.getElementById('layoutHTML')?.classList.add("dark"); document.cookie = "theme=dark"}
-  else {document.getElementById('layoutHTML')?.classList.remove("dark"); document.cookie = "theme=light"}
+  if (event.matches) { document.getElementById('layoutHTML')?.classList.add("dark"); document.cookie = "theme=dark" }
+  else { document.getElementById('layoutHTML')?.classList.remove("dark"); document.cookie = "theme=light" }
 }
 
 /**
@@ -29,3 +29,19 @@ export const addDarkThemeListener = () => darkModeMediaQuery?.addEventListener('
  * @description remove dark theme listener
  */
 export const removeDarkThemeListener = () => darkModeMediaQuery?.removeEventListener('change', darkModeChangeEventHandler)
+
+/**
+ * 
+ */
+export const detectDarkTheme = () => {
+  
+  if (typeof window !== 'undefined' && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+    document.getElementById('layoutHTML')?.classList.add("dark")
+    document.cookie = "theme=dark"
+  }
+  
+  else {
+    document.getElementById('layoutHTML')?.classList.remove("dark")
+    document.cookie = "theme=light"
+  }
+}
