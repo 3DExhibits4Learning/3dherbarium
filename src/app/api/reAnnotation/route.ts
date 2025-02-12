@@ -1,4 +1,6 @@
 /**
+ * @deprecated (all legacy annotations have been updated)
+ * 
  * @file src/app/api/reAnnotation/route.ts
  * 
  * @fileoverview temporary route handler for reannotation of legacy 3D models

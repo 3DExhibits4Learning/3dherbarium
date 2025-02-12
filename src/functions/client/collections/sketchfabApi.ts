@@ -185,7 +185,6 @@ export const annotationSelectHandler = (index: number, sketchfabApi: any, sketch
     if (index !== -1) {
         sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'index', value: index })
         replaceAnnotationNumberInPath(index + 1, params, path, router)
-        sketchfabApi.getAnnotationList((e: any, annotations: any) => updateLegacyAnnotations(annotations, uid))
     }
 
     // Mobile annotation state management
@@ -261,7 +260,9 @@ export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: D
 }
 
 /**
- * 
+ * @deprecated (all legacy annotations have been updated)
+ * @param annotations 
+ * @param uid 
  */
 export const updateLegacyAnnotations = (annotations: any[], uid: string) => {
 
