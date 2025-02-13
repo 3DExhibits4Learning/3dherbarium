@@ -15,7 +15,7 @@ import { useRef, useState, useEffect } from "react"
 import { Navbar, NavbarContent, NavbarMenuToggle, NavbarBrand, NavbarMenu, NavbarMenuItem, Divider, Switch } from "@nextui-org/react"
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { SearchIcon } from "./SearchIcon"
-import { SearchHeaderProps } from "@/api/types"
+import { SearchHeaderProps } from "@/ts/types"
 import { addDarkThemeListener, detectDarkTheme, removeDarkThemeListener} from "@/components/Header/headerLogic"
 
 // Default imports

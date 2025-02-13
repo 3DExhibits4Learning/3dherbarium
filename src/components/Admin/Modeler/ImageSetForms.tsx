@@ -1,7 +1,7 @@
 'use client'
 
 import ImageSetForm from "./ImageSetForm"
-import { specimenWithImageSet } from "@/api/types"
+import { specimenWithImageSet } from "@/ts/types"
 
 export default function ImageSetForms(props: { specimen: specimenWithImageSet[] }) {
 

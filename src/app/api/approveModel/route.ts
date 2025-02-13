@@ -9,14 +9,14 @@
  */
 
 // Typical imports
-import { approveModel, getAccount } from "@/api/queries"
+import { approveModel, getAccount } from "@/functions/server/queries"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../auth/[...nextauth]/route"
 import { Account } from "@prisma/client"
 import { readFile } from "fs/promises"
-import { ApproveModelObject, GbifResponse } from "@/api/types"
-import { fetchSpecimenGbifInfo } from "@/api/fetchFunctions"
-import { updateCommunityId } from "@/api/queries"
+import { ApproveModelObject, GbifResponse } from "@/ts/types"
+import { fetchSpecimenGbifInfo } from "@/functions/server/fetchFunctions"
+import { updateCommunityId } from "@/functions/server/queries"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { sendHTMLEmail } from "@/functions/server/email"

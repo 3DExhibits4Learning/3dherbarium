@@ -8,14 +8,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { Adapter } from "next-auth/adapters";
 import { SessionStrategy } from "next-auth";
-import { prismaClient } from "@/api/queries";
+import { prismaClient } from "@/functions/server/queries";
 
 // Default imports
 import NextAuth from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import EmailProvider from "next-auth/providers/email";
-import iNaturalistProvider from "@/api/iNatualistProvider";
-import SketchfabProvider from "@/api/sketchfabProvider";
+import iNaturalistProvider from "@/providers/iNatualistProvider";
+import SketchfabProvider from "@/providers/sketchfabProvider";
 
 // singleton prisma client
 const prisma = prismaClient()

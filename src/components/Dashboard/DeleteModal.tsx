@@ -1,7 +1,7 @@
 import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
 import { SetStateAction, useState, Dispatch } from "react";
 import { Spinner } from "@nextui-org/react";
-import { ModelDeleteObject } from "@/api/types";
+import { ModelDeleteObject } from "@/ts/types";
 
 export default function Delete(props: { confirmation: string, modelUid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
 

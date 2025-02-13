@@ -6,7 +6,7 @@
 'use client'
 
 // Typical imports
-import { GbifResponse } from "@/api/types"
+import { GbifResponse } from "@/ts/types"
 import { sketchfabApiData } from "@/ts/collections"
 
 // Default imports

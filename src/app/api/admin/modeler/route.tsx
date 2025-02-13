@@ -1,8 +1,8 @@
 // TODO: Split if-else statement to mulitple route handlers
 // TODO: Condense sequential awaits to Promise.all()
 
-import { prismaClient } from "@/api/queries"
-import { imageInsertion, modelInsertion, specimenInsertion } from "@/api/types"
+import { prismaClient } from "@/functions/server/queries"
+import { imageInsertion, modelInsertion, specimenInsertion } from "@/ts/types"
 const prisma = prismaClient()
 
 export async function POST(request: Request) {

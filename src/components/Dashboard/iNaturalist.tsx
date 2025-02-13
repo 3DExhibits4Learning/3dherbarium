@@ -7,7 +7,7 @@ import { Divider } from "@nextui-org/react"
 import ImageGallery from 'react-image-gallery'
 import "react-image-gallery/styles/css/image-gallery.css";
 import { ReactImageGalleryItem } from "react-image-gallery"
-import { iNatApiResponse } from "@/api/types"
+import { iNatApiResponse } from "@/ts/types"
 import DashMap from "../Map/DashMap"
 import { LatLngExpression } from "leaflet"
 import { signIn } from "next-auth/react"

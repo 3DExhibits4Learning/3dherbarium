@@ -5,8 +5,8 @@
  * to from the iNaturalist page.
  */
 
-import { fetchCommonNameInfo } from "@/api/fetchFunctions";
-import { CommonNameInfo, SiteReadyModels } from "@/api/types";
+import { fetchCommonNameInfo } from "@/functions/server/fetchFunctions";
+import { CommonNameInfo, SiteReadyModels } from "@/ts/types";
 
 import CommonNameList from "@/components/CommonName/CommonNameList";
 import Header from "@/components/Header/Header";

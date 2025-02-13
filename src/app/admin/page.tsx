@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import Header from "@/components/Header/Header"
 import Foot from "@/components/Shared/Foot"
-import { userIsAdmin } from "@/api/queries"
+import { userIsAdmin } from "@/functions/server/queries"
 
 export default async function Page() {
 

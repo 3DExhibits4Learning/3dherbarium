@@ -13,7 +13,7 @@ import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
 import TextInput from '../Shared/TextInput';
 import DataTransferModal from '../Shared/DataTransferModal';
 import Delete from './DeleteModal';
-import { ModelUpdateObject } from '@/api/types';
+import { ModelUpdateObject } from '@/ts/types';
 
 interface EditModelFormProps {
     speciesName: string

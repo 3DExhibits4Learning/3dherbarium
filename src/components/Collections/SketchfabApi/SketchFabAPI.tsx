@@ -13,7 +13,7 @@
 import * as fn from '@/functions/client/collections/sketchfabApi'
 
 // Typical imports
-import { GbifResponse } from '@/api/types';
+import { GbifResponse } from '@/ts/types';
 import { useEffect, useRef, useContext, createContext, useReducer } from 'react';
 import { CollectionsContext } from '../CollectionsWrapper/CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';

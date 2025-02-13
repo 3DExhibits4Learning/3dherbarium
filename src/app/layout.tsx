@@ -8,7 +8,7 @@
 import { Providers } from "./providers"
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
-import { userIsAdmin } from "@/api/queries"
+import { userIsAdmin } from "@/functions/server/queries"
 import { cookies } from 'next/headers'
 
 // Default imports

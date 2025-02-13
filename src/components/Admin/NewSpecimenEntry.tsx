@@ -13,7 +13,7 @@ import { ModelerContext } from "./Modeler/ModelerDash"
 import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared"
 import { LatLngLiteral } from "leaflet"
-import { dataTransfer } from "@/api/types"
+import { dataTransfer } from "@/ts/types"
 
 // Default imports
 import TextInput from "../Shared/Form Fields/TextInput"

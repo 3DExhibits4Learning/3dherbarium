@@ -1,4 +1,4 @@
-import { getAccount } from "@/api/queries";
+import { getAccount } from "@/functions/server/queries";
 import { Account } from "@prisma/client";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]/route";

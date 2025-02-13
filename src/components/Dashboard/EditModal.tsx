@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal, ModalContent, ModalBody, ModalHeader } from "@nextui-org/react"
-import { ModelsWithTagsAndSoftware } from "@/api/types"
+import { ModelsWithTagsAndSoftware } from "@/ts/types"
 import { SetStateAction, Dispatch } from "react";
 import ModelEditForm from "./EditForm";
 

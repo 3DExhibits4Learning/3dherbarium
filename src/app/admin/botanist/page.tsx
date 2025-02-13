@@ -5,7 +5,7 @@
  * @fileoverview botanist admin server page
  */
 
-import { getAllAnnotationModels, getModelsToAnnotate, getAdmin  } from "@/api/queries"
+import { getAllAnnotationModels, getModelsToAnnotate, getAdmin  } from "@/functions/server/queries"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { authed } from "@prisma/client"

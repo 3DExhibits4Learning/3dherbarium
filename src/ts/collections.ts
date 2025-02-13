@@ -1,6 +1,6 @@
 import { annotations, model } from "@prisma/client"
-import { GbifResponse, GbifImageResponse } from "@/api/types"
-import { fullAnnotation } from "@/api/types"
+import { GbifResponse, GbifImageResponse } from "@/ts/types"
+import { fullAnnotation } from "@/ts/types"
 import { Dispatch } from "react"
 
 import Herbarium from "@/utils/HerbariumClass"

@@ -1,4 +1,4 @@
-import { getPublishedUserSubmittals, getSubmittalSoftware, getSubmittalTags } from "@/api/queries"
+import { getPublishedUserSubmittals, getSubmittalSoftware, getSubmittalTags } from "@/functions/server/queries"
 
 export const dynamic = 'force-dynamic'
 

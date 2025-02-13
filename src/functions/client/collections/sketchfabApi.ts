@@ -14,7 +14,7 @@ import { CollectionsWrapperProps, setStringOrNumberAction, sketchfabApiData, ske
 import { MutableRefObject, Dispatch } from "react"
 import { isMobileOrTablet } from "@/utils/isMobile"
 import { photo_annotation } from "@prisma/client"
-import { fullAnnotation } from "@/api/types"
+import { fullAnnotation } from "@/ts/types"
 import { ReadonlyURLSearchParams } from "next/navigation"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 

@@ -1,4 +1,4 @@
-import { fullUserSubmittal } from "@/api/types";
+import { fullUserSubmittal } from "@/ts/types";
 
 export interface SearchPageState {
     communityModels: fullUserSubmittal[] | undefined

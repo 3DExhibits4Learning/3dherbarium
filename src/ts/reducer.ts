@@ -3,7 +3,7 @@ import { CollectionsWrapperProps } from "./collections"
 import { model, model_annotation, photo_annotation, userSubmittal, video_annotation } from "@prisma/client"
 
 import ModelAnnotations from "@/utils/ModelAnnotationsClass"
-import { fullUserSubmittal } from "@/api/types"
+import { fullUserSubmittal } from "@/ts/types"
 
 export interface CollectionsMediaAction {
     type: 'modelChecked' | 'observationsChecked' | 'photosChecked'

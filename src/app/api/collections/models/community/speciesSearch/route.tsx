@@ -8,7 +8,7 @@
 export const dynamic = 'force-dynamic'
 
 // Imports
-import { getPublishedUserSubmittalsBySpecies } from "@/api/queries";
+import { getPublishedUserSubmittalsBySpecies } from "@/functions/server/queries";
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
 import { routeHandlerTypicalResponse } from "@/functions/server/response";
 

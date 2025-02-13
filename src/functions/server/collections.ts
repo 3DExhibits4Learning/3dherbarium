@@ -1,4 +1,4 @@
-import { fetchWikiSummary } from "@/api/fetchFunctions"
+import { fetchWikiSummary } from "@/functions/server/fetchFunctions"
 import { writeFile } from "fs/promises"
 
 export interface WikipediaPageResponse {

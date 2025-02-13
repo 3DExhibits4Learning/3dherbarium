@@ -11,7 +11,7 @@ import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
 import { useState, useContext, useEffect } from "react"
 import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
-import { imageInsertion, specimenWithImageSet, dataTransfer } from "@/api/types"
+import { imageInsertion, specimenWithImageSet, dataTransfer } from "@/ts/types"
 import { insertImageSetIntoDatabase } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared";
 

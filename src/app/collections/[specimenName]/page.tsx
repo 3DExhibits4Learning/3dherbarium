@@ -8,10 +8,10 @@
  */
 
 // Typical imports
-import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/api/types"
-import { getModel } from '@/api/queries'
-import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions"
-import { fetchHSCImages } from "@/api/fetchFunctions"
+import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/ts/types"
+import { getModel } from '@/functions/server/queries'
+import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/functions/server/fetchFunctions"
+import { fetchHSCImages } from "@/functions/server/fetchFunctions"
 import { annotations, model } from "@prisma/client"
 import { redirect } from "next/navigation"
 import { serverErrorHandler } from "@/functions/server/error"

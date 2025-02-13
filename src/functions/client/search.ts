@@ -4,7 +4,7 @@
  * @fileoverview search client logic file
  */
 
-import { fullUserSubmittal } from "@/api/types";
+import { fullUserSubmittal } from "@/ts/types";
 import { SearchPageParams, SearchPageState } from "@/ts/search";
 import { model } from "@prisma/client";
 import { MutableRefObject, SetStateAction, Dispatch } from "react";

@@ -5,8 +5,8 @@
  */
 
 // Imports
-import { prismaClient } from "@/api/queries";
-import { ModelUploadResponse } from '@/api/types';
+import { prismaClient } from "@/functions/server/queries";
+import { ModelUploadResponse } from '@/ts/types';
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"

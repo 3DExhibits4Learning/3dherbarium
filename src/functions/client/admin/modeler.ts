@@ -1,4 +1,4 @@
-import { imageInsertion } from "@/api/types"
+import { imageInsertion } from "@/ts/types"
 import { getSubtaskFromTask } from "@/functions/server/jira";
 import { SetStateAction, Dispatch } from "react";
 

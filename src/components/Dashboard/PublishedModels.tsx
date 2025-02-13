@@ -2,7 +2,7 @@
 
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
-import { PublishedModelProps, ModelsWithTagsAndSoftware } from "@/api/types";
+import { PublishedModelProps, ModelsWithTagsAndSoftware } from "@/ts/types";
 import EditModal from "./EditModal";
 import { useState } from "react";
 import ModelViewer from "../Shared/ModelViewer";

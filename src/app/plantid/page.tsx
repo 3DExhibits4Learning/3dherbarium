@@ -6,8 +6,8 @@
 'use client'
 
 // Typical imports
-import { handlePlantIdSubmit } from '@/api/fetchFunctions'
-import { PlantIdApiResponse, PlantIdSuggestion } from '@/api/types'
+import { handlePlantIdSubmit } from '@/functions/server/fetchFunctions'
+import { PlantIdApiResponse, PlantIdSuggestion } from '@/ts/types'
 import { trimString } from '@/utils/trimString'
 import { useState } from 'react'
 import { useIsClient } from '@/utils/isClient'

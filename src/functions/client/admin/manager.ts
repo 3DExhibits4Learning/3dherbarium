@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { ApproveModelObject, Models } from "@/api/types"
+import { ApproveModelObject, Models } from "@/ts/types"
 import { SetStateAction, Dispatch } from "react"
 
 // Default imports

@@ -7,7 +7,7 @@
  */
 
 // Typical imports
-import { imageInsertion } from "@/api/types"
+import { imageInsertion } from "@/ts/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { markSubtaskAsDone, markTaskAsInProgress } from "@/functions/server/jira"

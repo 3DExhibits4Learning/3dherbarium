@@ -1,4 +1,4 @@
-import { getPublishedUserSubmittalsByUid } from "@/api/queries";
+import { getPublishedUserSubmittalsByUid } from "@/functions/server/queries";
 import { NextRequest } from "next/server";
 
 export const dynamic = 'force-dynamics'

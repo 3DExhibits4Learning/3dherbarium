@@ -1,4 +1,4 @@
-import { updateThumbUrl } from "@/api/queries"
+import { updateThumbUrl } from "@/functions/server/queries"
 
 export async function GET(request: Request) {
 

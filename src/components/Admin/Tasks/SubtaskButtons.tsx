@@ -9,7 +9,7 @@
 import { Button } from "@nextui-org/react"
 import { useContext } from "react"
 import { ModelerContext } from "../Modeler/ModelerDash"
-import { dataTransfer } from "@/api/types"
+import { dataTransfer } from "@/ts/types"
 import { isIssueAutoMarkedDone, transitionIssue } from "@/functions/client/admin/modeler"
 
 // Default imports

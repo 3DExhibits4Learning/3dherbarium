@@ -1,4 +1,4 @@
-import { userIsAdmin } from "@/api/queries";
+import { userIsAdmin } from "@/functions/server/queries";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {

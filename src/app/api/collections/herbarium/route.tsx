@@ -8,8 +8,8 @@
 const path = 'src/app/api/collections/herbarium/route.tsx'
 
 // Typical imports
-import { getModelByUid } from '@/api/queries'
-import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/api/fetchFunctions";
+import { getModelByUid } from '@/functions/server/queries'
+import { fetchGbifProfile, fetchGbifVernacularNames, fetchWikiSummary } from "@/functions/server/fetchFunctions";
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from '@/functions/server/error';
 

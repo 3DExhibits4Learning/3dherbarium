@@ -12,7 +12,7 @@
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Skeleton } from "@nextui-org/react";
 import { boolRinse, addCommas, arrayFromObjects } from '../SketchfabDom';
 import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
-import { GbifResponse, annotationModalProps } from "@/api/types";
+import { GbifResponse, annotationModalProps } from "@/ts/types";
 import { model_annotation, photo_annotation } from "@prisma/client";
 import { SketchfabApiContext } from "./SketchFabAPI";
 import { useContext } from "react";
