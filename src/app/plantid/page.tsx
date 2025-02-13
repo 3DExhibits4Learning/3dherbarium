@@ -105,101 +105,97 @@ const PlantIdPage = () => {
     }
   };
 
-  return (
-    <div className="flex flex-col min-h-screen">
+  return <div className="flex flex-col min-h-screen">
 
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
-      <title>3D Herbarium plantID Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
+    <title>3D Herbarium Plant.id</title>
 
-      <Header headerTitle='plantid' searchTerm={searchTerm as string} pageRoute='collections' />
+    <Header headerTitle='plantid' searchTerm={searchTerm as string} pageRoute='collections' />
 
-      {isClient &&
-        <PageWrapper>
-          <section className="flex flex-col min-h-[calc(100vh-177px)]">
-            <h1 className="text-xl p-5">Identify a plant through just an image. JPEGs and PNGs only!</h1>
-            <input
-              id='plantIdFileInput'
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageSelect}
-              className="m-5"
-            />
-            {loading && <p className="text-lg p-5">Loading...</p>}
-            {!loading && selectedPhoto &&
-              <section className="flex flex-col items-center justify-center p-5">
-                <h2 className="text-center mb-4">Uploaded Image:</h2>
-                <img src={selectedPhoto} className="w-[60%] md:w-[25%] h-auto object-cover rounded" alt="User Uploaded Image" />
-              </section>
-            }
-            <br />
-            {plantIdResults &&
-              <>
-                {plantIdResults.suggestions.map((suggestion: PlantIdSuggestion, index: number) => {
-                  return (
-                    <section key={suggestion.id + '-' + index} className='sm:text-left text-center p-5 flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0 mb-5'>
-                      <div className="min-w-[80px] flex-shrink-0 text-center text-dark font-bold overflow-hidden">
-                        {(suggestion.probability * 100).toFixed(2)}%
+    {
+      isClient &&
+      <>
+        <section className="flex flex-col min-h-[calc(100vh-177px)]">
+          <h1 className="text-xl p-5">Identify a plant through just an image. JPEGs and PNGs only!</h1>
+          <input
+            id='plantIdFileInput'
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageSelect}
+            className="m-5" />
+          {loading && <p className="text-lg p-5">Loading...</p>}
+          {
+            !loading && selectedPhoto &&
+            <section className="flex flex-col items-center justify-center p-5">
+              <h2 className="text-center mb-4">Uploaded Image:</h2>
+              <img src={selectedPhoto} className="w-[60%] md:w-[25%] h-auto object-cover rounded" alt="User Uploaded Image" />
+            </section>
+          }
+          <br />
+          {
+            plantIdResults &&
+            <>
+              {
+                plantIdResults.suggestions.map((suggestion: PlantIdSuggestion, index: number) =>
+                  <section key={suggestion.id + '-' + index} className='sm:text-left text-center p-5 flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0 mb-5'>
+                    <div className="min-w-[80px] flex-shrink-0 text-center text-dark font-bold overflow-hidden">
+                      {(suggestion.probability * 100).toFixed(2)}%
+                    </div>
+                    <div className="flex justify-center md:justify-start space-x-4 w-full md:w-auto">
+                      <div
+                        className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
+                        style={{ backgroundImage: `url(${suggestion.similar_images[0].url})` }}>
                       </div>
-                      <div className="flex justify-center md:justify-start space-x-4 w-full md:w-auto">
-                        <div
-                          className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
-                          style={{ backgroundImage: `url(${suggestion.similar_images[0].url})` }}
-                        ></div>
-                        <div
-                          className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
-                          style={{ backgroundImage: `url(${suggestion.similar_images[1].url})` }}
-                        ></div>
+                      <div
+                        className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
+                        style={{ backgroundImage: `url(${suggestion.similar_images[1].url})` }}>
                       </div>
-                      <div className="flex-grow">
-                        <h3 className='text-xl pb-1'>
-                          <a
-                            className="underline text-[#004C46] dark:text-[#C3D5D1]"
-                            href={`/collections/${suggestion.plant_details.scientific_name}`}
-                          >
-                            {suggestion.plant_details.scientific_name}
-                          </a>{" "}
-                          ({'species' in suggestion.plant_details.structured_name ? 'Species' : 'Genus'})
-                        </h3>
-                        <i>
-                          <p className="pb-1">
-                            {suggestion.plant_details.common_names
-                              ? suggestion.plant_details.common_names.join(', ')
-                              : ''}
-                          </p>
-                        </i>
-                        <p>Probability: <b>{(suggestion.probability * 100).toFixed(2)}%</b></p>
-                        <br />
+                    </div>
+                    <div className="flex-grow">
+                      <h3 className='text-xl pb-1'>
+                        <a
+                          className="underline text-[#004C46] dark:text-[#C3D5D1]"
+                          href={`/collections/${suggestion.plant_details.scientific_name}`}>
+                          {suggestion.plant_details.scientific_name}
+                        </a>{" "}
+                        ({'species' in suggestion.plant_details.structured_name ? 'Species' : 'Genus'})
+                      </h3>
+                      <i>
                         <p className="pb-1">
-                          {suggestion.plant_details.wiki_description &&
-                            'value' in suggestion.plant_details.wiki_description
-                            ? trimString(suggestion.plant_details.wiki_description.value, 375)
+                          {suggestion.plant_details.common_names
+                            ? suggestion.plant_details.common_names.join(', ')
                             : ''}
                         </p>
-                        <p>
-                          <a
-                            href={suggestion.plant_details.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="underline text-[#004C46] dark:text-[#C3D5D1]"
-                          >
-                            Learn More
-                          </a>
-                        </p>
-                      </div>
-                    </section>
-                  )
-                })
-                }
-              </>
-            }
-          </section>
-          <Foot />
-        </PageWrapper>
-      }
-
-    </div>
-  )
+                      </i>
+                      <p>Probability: <b>{(suggestion.probability * 100).toFixed(2)}%</b></p>
+                      <br />
+                      <p className="pb-1">
+                        {suggestion.plant_details.wiki_description &&
+                          'value' in suggestion.plant_details.wiki_description
+                          ? trimString(suggestion.plant_details.wiki_description.value, 375)
+                          : ''}
+                      </p>
+                      <p>
+                        <a
+                          href={suggestion.plant_details.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline text-[#004C46] dark:text-[#C3D5D1]">
+                          Learn More
+                        </a>
+                      </p>
+                    </div>
+                  </section>
+                )
+              }
+            </>
+          }
+        </section>
+        <Foot />
+      </>
+    }
+  </div>
 }
 
 export default PlantIdPage
