@@ -5,7 +5,7 @@
  */
 
 // SINGLETON
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Migration file import
 import * as migrate from '@/functions/server/migration'

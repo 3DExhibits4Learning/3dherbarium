@@ -8,9 +8,9 @@
 
 // Typical imports
 import { Accordion, AccordionItem } from "@nextui-org/react"
-import { specimenWithImageSet } from "@/api/types"
+import { specimenWithImageSet } from "@/ts/types"
 import { useState, createContext, memo } from "react"
-import { dataTransfer } from "@/api/types"
+import { dataTransfer } from "@/ts/types"
 
 // Default imports
 import NewSpecimenEntry from "../NewSpecimenEntry"

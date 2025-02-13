@@ -6,10 +6,10 @@
 
 'use client'
 
-import { fullAnnotation } from "@/api/types"
+import { fullAnnotation } from "@/ts/types"
 import { BotanyClientState } from "@/ts/botanist"
 import { BotanyClientAction, NewModelClicked, NewModelOrAnnotation, SetActiveAnnotationIndex, SetPosition } from "@/ts/reducer"
-import ModelAnnotations from "@/utils/ModelAnnotationsClass"
+import ModelAnnotations from "@/functions/client/utils/ModelAnnotationsClass"
 
 /**
  * 

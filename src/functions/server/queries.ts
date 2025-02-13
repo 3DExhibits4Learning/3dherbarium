@@ -5,7 +5,7 @@
 
 // Imports
 import { model } from "@prisma/client";
-import prisma from '@/utils/prisma'
+import prisma from '@/functions/server/utils/prisma'
 
 // Singleton prisma export
 export function prismaClient() { return prisma }

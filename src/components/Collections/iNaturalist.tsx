@@ -7,7 +7,7 @@
 
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react';
 import { LatLngLiteral } from 'leaflet';
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter';
 import { ReactImageGalleryItem } from "react-image-gallery"
 import { Spinner } from '@nextui-org/react';
 

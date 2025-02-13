@@ -2,7 +2,7 @@
 
 import { SetStateAction, Dispatch } from "react"
 import { model } from "@prisma/client"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 
 export default function Select(props: { value: string, setValue: Dispatch<SetStateAction<string>>, models: model[], title?: string, required?: string }) {
     return (

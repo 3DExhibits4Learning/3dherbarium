@@ -1,6 +1,6 @@
 'use client'
 
-import { GbifResponse } from "@/api/types";
+import { GbifResponse } from "@/ts/types";
 
 export default function Classification(props: { gMatch: GbifResponse }) {
 

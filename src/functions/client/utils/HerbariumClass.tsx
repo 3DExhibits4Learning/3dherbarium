@@ -6,7 +6,7 @@
 
 'use client'
 
-import { GbifImageResponse, GbifProfile } from "@/api/types"
+import { GbifImageResponse, GbifProfile } from "@/ts/types"
 import { software, image_set, model, photo_annotation, model_annotation, specimen } from "@prisma/client"
 import ModelAnnotations from "./ModelAnnotationsClass"
 

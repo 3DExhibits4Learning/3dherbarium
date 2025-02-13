@@ -11,10 +11,10 @@ import noImage from '../../../public/noImage.png';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
-import { GbifImageResponse } from '@/api/types';
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter';
+import { GbifImageResponse } from '@/ts/types';
 import { useRef } from 'react';
-import { isMobileOrTablet } from '@/utils/isMobile';
+import { isMobileOrTablet } from '@/functions/client/utils/isMobile';
 
 const handleImgError = (currentTarget: HTMLImageElement) => {
   currentTarget.onerror = null;

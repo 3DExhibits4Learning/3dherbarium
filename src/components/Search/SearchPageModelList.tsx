@@ -10,7 +10,7 @@
 // Typical imports
 import { useContext, Dispatch, SetStateAction } from 'react'
 import { model } from '@prisma/client'
-import { fullUserSubmittal } from '@/api/types'
+import { fullUserSubmittal } from '@/ts/types'
 import { QueryContext } from './SearchClient'
 import { SearchPageState } from '@/ts/search'
 import { sortModelsByOrder } from '@/functions/client/search'

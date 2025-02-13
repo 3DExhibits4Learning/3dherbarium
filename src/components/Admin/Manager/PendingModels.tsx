@@ -10,7 +10,7 @@
 import * as fn from "@/functions/client/admin/manager"
 
 // Typical imports
-import { Models } from "@/api/types"
+import { Models } from "@/ts/types"
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";

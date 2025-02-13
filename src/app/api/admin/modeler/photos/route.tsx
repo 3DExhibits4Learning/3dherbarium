@@ -7,14 +7,14 @@
  */
 
 // Typical imports
-import { imageInsertion } from "@/api/types"
+import { imageInsertion } from "@/ts/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { markSubtaskAsDone, markTaskAsInProgress } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Path, issueKey
 const path = 'src/app/api/admin/modeler/photos/route.tsx'

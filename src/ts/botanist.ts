@@ -1,4 +1,4 @@
-import { fullAnnotation } from "@/api/types"
+import { fullAnnotation } from "@/ts/types"
 import { photo_annotation, video_annotation, model_annotation } from "@prisma/client"
 import { AnnotationEntryAction, BotanyClientAction } from "./reducer"
 import { Dispatch } from "react"

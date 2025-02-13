@@ -8,10 +8,10 @@
  */
 
 // Typical imports
-import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/api/types"
-import { getModel } from '@/api/queries'
-import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/api/fetchFunctions"
-import { fetchHSCImages } from "@/api/fetchFunctions"
+import { GbifImageResponse, GbifResponse, CommonNameInfo } from "@/ts/types"
+import { getModel } from '@/functions/server/queries'
+import { fetchCommonNameInfo, fetchSpecimenGbifInfo, fetchGbifImages } from "@/functions/server/fetchFunctions"
+import { fetchHSCImages } from "@/functions/server/fetchFunctions"
 import { annotations, model } from "@prisma/client"
 import { redirect } from "next/navigation"
 import { serverErrorHandler } from "@/functions/server/error"
@@ -25,7 +25,7 @@ import FullPageError from "@/components/Error/FullPageError"
 const path = 'src/app/collections/[specimenName]/page.tsx'
 
 // SINGLETON
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Dynamic imports
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })

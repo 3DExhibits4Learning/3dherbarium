@@ -1,16 +1,16 @@
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import Foot from "@/components/Shared/Foot"
-import { getPendingModels } from "@/api/queries"
-import { getPublishedModels } from "@/api/queries"
+import { getPendingModels } from "@/functions/server/queries"
+import { getPublishedModels } from "@/functions/server/queries"
 import { redirect } from "next/navigation"
-import { updateThumbUrl } from "@/api/queries"
-import { ModelsWithTagsAndSoftware } from "@/api/types"
+import { updateThumbUrl } from "@/functions/server/queries"
+import { ModelsWithTagsAndSoftware } from "@/ts/types"
 import dynamic from 'next/dynamic'
-import { getAccountProviders } from "@/api/queries"
+import { getAccountProviders } from "@/functions/server/queries"
 import { Account } from "@prisma/client"
-import { getSubmittalSoftware } from "@/api/queries"
-import { getSubmittalTags } from "@/api/queries"
+import { getSubmittalSoftware } from "@/functions/server/queries"
+import { getSubmittalTags } from "@/functions/server/queries"
 const DashboardClient = dynamic(() => import('@/components/Dashboard/DashboardClient'), { ssr: false });
 const Header = dynamic(() => import('@/components/Header/Header'))
 

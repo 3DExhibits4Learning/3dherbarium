@@ -1,7 +1,7 @@
 'use client'
 
 import ModelForm from "./ModelForm"
-import { specimenWithImageSet } from "@/api/types"
+import { specimenWithImageSet } from "@/ts/types"
 
 export default function ModelForms(props: { specimen: specimenWithImageSet[] }) {
 

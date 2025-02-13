@@ -5,7 +5,7 @@
  * Because these are raw queries, the schemas don't appear to be able to be referenced by variable (hence seperate functions for d => t and t => p, respectively)
  */
 
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Species migration (species table to be deprecated eventually)
 export const speciesMigration = prisma.$queryRaw`insert into Test.species(

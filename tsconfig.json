@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-, "src/app/api/annotations/photos", "src/utils/Email/transporter.js", "src/components/Admin/Botanist/AnnotationSubcomponents"  ],
+, "src/app/api/annotations/photos", "src/functions/server/utils/Email/transporter.js", "src/components/Admin/Botanist/AnnotationSubcomponents"  ],
   "exclude": [
     "node_modules"
   ]

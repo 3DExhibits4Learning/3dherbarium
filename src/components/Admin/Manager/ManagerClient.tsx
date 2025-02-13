@@ -16,7 +16,7 @@ import * as fn from "@/functions/client/admin/manager"
 import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
 import { Button } from "@nextui-org/react"
-import { Models } from "@/api/types"
+import { Models } from "@/ts/types"
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal"

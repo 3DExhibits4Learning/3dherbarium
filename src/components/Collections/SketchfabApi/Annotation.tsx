@@ -8,7 +8,7 @@
 'use client'
 
 // Typical imports
-import { GbifResponse } from "@/api/types"
+import { GbifResponse } from "@/ts/types"
 import { forwardRef, MutableRefObject } from "react"
 
 // Default imports

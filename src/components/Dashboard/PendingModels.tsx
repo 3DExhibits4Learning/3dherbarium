@@ -1,6 +1,6 @@
 'use client'
 import { Accordion, AccordionItem } from "@nextui-org/react";
-import { PendingModelProps } from "@/api/types";
+import { PendingModelProps } from "@/ts/types";
 import ModelViewer from "../Shared/ModelViewer";
 
 export default function PendingModels(props: PendingModelProps) {

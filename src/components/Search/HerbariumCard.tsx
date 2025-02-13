@@ -7,10 +7,11 @@
 'use client'
 
 // Typical imports
-import { handleImgError } from "@/utils/imageHandler"
+import { handleImgError } from "@/functions/client/utils/imageHandler"
 import { model } from "@prisma/client"
 import { SyntheticEvent } from "react"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
+import { Chip } from "@nextui-org/react"
 
 // Default imports
 import Link from "next/link"
@@ -28,6 +29,8 @@ export default function HerbariumCard(props: { index: number, model: model }) {
     return <div key={index} className='noselect'>
 
         <article className='rounded-md overflow-hidden mx-1'>
+
+        {!model.base_model && <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white bg-[#004C46]'>Annotation</Chip>}
 
             <section className='rounded shadow-md mx-auto'>
                 <Link href={href} tabIndex={-1}>

@@ -1,4 +1,4 @@
-import { getAnnotations, getCitations } from "@/api/queries";
+import { getAnnotations, getCitations } from "@/functions/server/queries";
 
 export async function citationHandler(annotations: any) {
   var citations: any = [];

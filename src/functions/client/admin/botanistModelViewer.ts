@@ -2,7 +2,7 @@ import { BotanyClientState } from "@/ts/botanist"
 import { BotanyClientAction } from "@/ts/reducer"
 import { MutableRefObject, Dispatch, SetStateAction } from "react"
 import { SetPosition, SetActiveAnnotationIndex } from "@/ts/reducer"
-import { fullAnnotation } from "@/api/types"
+import { fullAnnotation } from "@/ts/types"
 
 import Sketchfab from '@sketchfab/viewer-api'
 

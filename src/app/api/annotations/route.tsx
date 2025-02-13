@@ -6,7 +6,7 @@
  */
 
 // Typical imports
-import { insertFirstAnnotationPosition, getFirstAnnotationPostion, deleteAnnotation } from "@/api/queries"
+import { insertFirstAnnotationPosition, getFirstAnnotationPostion, deleteAnnotation } from "@/functions/server/queries"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { unlink, rm } from "fs/promises"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
@@ -15,7 +15,7 @@ import { transitionSubtask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // PATH
 const path = 'src/app/api/annotations/route.tsx'

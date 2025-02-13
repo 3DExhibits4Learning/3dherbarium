@@ -8,9 +8,9 @@
 
 // Typical imports
 import { Chip } from "@nextui-org/react";
-import { fullUserSubmittal } from "@/api/types";
-import { handleImgError } from "@/utils/imageHandler";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
+import { fullUserSubmittal } from "@/ts/types";
+import { handleImgError } from "@/functions/client/utils/imageHandler";
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
 import { SyntheticEvent } from "react";
 
 // Default imports
@@ -27,7 +27,7 @@ export default function CommunityCard(props: { model: fullUserSubmittal, index: 
         
         <article className='rounded-md overflow-hidden mx-1'>
             
-            <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white'>Community</Chip>
+            <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white bg-[#004C46]'>Community</Chip>
             
             <section className='rounded shadow-md mx-auto'>
                 <Link href={"/collections/" + model.speciesName + `?communityId=${model.modeluid}`} tabIndex={-1}>

@@ -6,10 +6,10 @@
  * @todo add try catch
  */
 
-import { getModelerSpecimen } from "@/api/queries";
+import { getModelerSpecimen } from "@/functions/server/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { getAdmin } from "@/api/queries";
+import { getAdmin } from "@/functions/server/queries";
 import { authed } from "@prisma/client";
 import { getIssue } from "@/functions/server/jira";
 

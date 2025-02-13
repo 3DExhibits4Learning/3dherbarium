@@ -9,7 +9,7 @@ import { readFile } from "fs/promises";
 import { routeHandlerErrorHandler } from "@/functions/server/error";
 import { specimen } from "@prisma/client";
 import { routeHandlerTypicalCatch } from "@/functions/server/error";
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // PATH
 const path = 'src/app/api/admin/modeler/photos/getTaskPhoto/route.ts'

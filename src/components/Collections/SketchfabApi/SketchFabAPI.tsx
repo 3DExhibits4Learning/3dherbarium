@@ -13,7 +13,7 @@
 import * as fn from '@/functions/client/collections/sketchfabApi'
 
 // Typical imports
-import { GbifResponse } from '@/api/types';
+import { GbifResponse } from '@/ts/types';
 import { useEffect, useRef, useContext, createContext, useReducer } from 'react';
 import { CollectionsContext } from '../CollectionsWrapper/CollectionsWrapper';
 import { CollectionsWrapperData } from '@/ts/reducer';
@@ -24,7 +24,7 @@ import { annotations } from '@prisma/client';
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
 import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal';
-import Herbarium from '@/utils/HerbariumClass';
+import Herbarium from '@/functions/client/utils/HerbariumClass';
 import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer';
 import ModelViewer from './ModelViewer';
 import Annotation from './Annotation';

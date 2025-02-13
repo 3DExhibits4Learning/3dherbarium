@@ -1,5 +1,5 @@
-import { prismaClient } from "@/api/queries";
-import { ModelDeleteObject, ModelUpdateObject } from "@/api/types";
+import { prismaClient } from "@/functions/server/queries";
+import { ModelDeleteObject, ModelUpdateObject } from "@/ts/types";
 import { NextRequest } from "next/server";
 const prisma = prismaClient()
 

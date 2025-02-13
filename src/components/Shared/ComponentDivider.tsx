@@ -1,6 +1,6 @@
 "use client"
 
-import { useIsClient } from "@/utils/isClient";
+import { useIsClient } from "@/functions/client/utils/isClient";
 
 type dividerProps = {
   title: string;

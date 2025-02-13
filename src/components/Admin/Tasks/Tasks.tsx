@@ -12,7 +12,7 @@ import { useMemo, useContext } from "react"
 import { countCompletedSubtasks, transitionIssue, arrangeSubtasks } from "@/functions/client/admin/modeler"
 import { ModelerContext } from "../Modeler/ModelerDash"
 import { Button } from "@nextui-org/react"
-import { dataTransfer } from "@/api/types"
+import { dataTransfer } from "@/ts/types"
 import { BotanyClientContext } from "../Botanist/BotanyClient"
 import { botanyClientContext } from "@/ts/botanist"
 

@@ -1,6 +1,6 @@
 'use client'
 
-import { fullAnnotation } from "@/api/types"
+import { fullAnnotation } from "@/ts/types"
 
 class ModelAnnotations {
 

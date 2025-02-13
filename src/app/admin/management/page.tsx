@@ -5,10 +5,10 @@
  */
 
 // Typical imports
-import { getAllPendingModels } from "@/api/queries";
+import { getAllPendingModels } from "@/functions/server/queries";
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { getAdmin } from "@/api/queries";
+import { getAdmin } from "@/functions/server/queries";
 import { authed } from "@prisma/client";
 import { serverErrorHandler } from "@/functions/server/error";
 

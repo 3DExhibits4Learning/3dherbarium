@@ -3,8 +3,8 @@
  * @fileoverview the API functions used throughout the application
  */
 
-import { iNatUrl, gbifUrl } from '@/utils/urlConfig';
-import { GbifMediaResponse, GbifImageResponse, GbifResponse, iNatApiResponse, iNatSpecimenObservation, iNatSpecimenLeader, SpeciesListInfo, CommonNameInfo, GbifProfile } from '@/api/types';
+import { iNatUrl, gbifUrl } from '@/functions/server/utils/urlConfig';
+import { GbifMediaResponse, GbifImageResponse, GbifResponse, iNatApiResponse, iNatSpecimenObservation, iNatSpecimenLeader, SpeciesListInfo, CommonNameInfo, GbifProfile } from '@/ts/types';
 
 const plantIdKey = process.env.PLANTID_KEY
 

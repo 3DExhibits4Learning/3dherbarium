@@ -7,10 +7,10 @@
  */
 
 // Imports
-import { prismaClient } from "@/api/queries"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { prismaClient } from "@/functions/server/queries"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
-import { ModelUploadResponse } from "@/api/types"
+import { ModelUploadResponse } from "@/ts/types"
 import { markSubtaskAsDone, transitionTask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 import { createTask } from "@/functions/server/jira"

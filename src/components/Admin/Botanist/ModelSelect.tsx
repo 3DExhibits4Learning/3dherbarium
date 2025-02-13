@@ -3,7 +3,7 @@
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { model } from "@prisma/client";
 import { forwardRef, MutableRefObject, SetStateAction, useRef, Dispatch } from "react";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
 import { NewModelClicked } from "@/ts/reducer";
 import { useContext } from "react";
 import { BotanyClientContext } from "./BotanyClient";
