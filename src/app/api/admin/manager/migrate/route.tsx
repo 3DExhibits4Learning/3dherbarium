@@ -4,9 +4,13 @@
  * @fileoverview annotated model data migration route handler
  */
 
-// Imports
+// SINGLETON
 import prisma from "@/utils/prisma"
+
+// Migration file import
 import * as migrate from '@/functions/server/migration'
+
+// Typical imports
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 
 // PATH
