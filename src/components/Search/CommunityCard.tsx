@@ -27,7 +27,7 @@ export default function CommunityCard(props: { model: fullUserSubmittal, index: 
         
         <article className='rounded-md overflow-hidden mx-1'>
             
-            <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white'>Community</Chip>
+            <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white bg-[#004C46]'>Community</Chip>
             
             <section className='rounded shadow-md mx-auto'>
                 <Link href={"/collections/" + model.speciesName + `?communityId=${model.modeluid}`} tabIndex={-1}>
