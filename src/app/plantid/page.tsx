@@ -14,7 +14,6 @@ import { useIsClient } from '@/utils/isClient'
 
 // Default imports
 import dynamic from 'next/dynamic'
-import PageWrapper from '@/components/Shared/PageWrapper'
 import Foot from '@/components/Shared/Foot'
 
 // Dynamic imports
@@ -22,7 +21,7 @@ const Header = dynamic(() => import('@/components/Header/Header'), { ssr: false 
 
 var searchTerm: string | null
 
-const PlantIdPage = () => {
+export default function PlantIdPage() {
 
   const isClient: boolean = useIsClient()
 
@@ -116,14 +115,9 @@ const PlantIdPage = () => {
       isClient &&
       <>
         <section className="flex flex-col min-h-[calc(100vh-177px)]">
+
           <h1 className="text-xl p-5">Identify a plant through just an image. JPEGs and PNGs only!</h1>
-          <input
-            id='plantIdFileInput'
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageSelect}
-            className="m-5" />
+          <input id='plantIdFileInput' type="file" accept="image/*" multiple onChange={handleImageSelect} className="m-5" />
           {loading && <p className="text-lg p-5">Loading...</p>}
           {
             !loading && selectedPhoto &&
@@ -138,56 +132,28 @@ const PlantIdPage = () => {
             <>
               {
                 plantIdResults.suggestions.map((suggestion: PlantIdSuggestion, index: number) =>
+
                   <section key={suggestion.id + '-' + index} className='sm:text-left text-center p-5 flex flex-col md:flex-row items-center space-x-0 md:space-x-4 space-y-4 md:space-y-0 mb-5'>
-                    <div className="min-w-[80px] flex-shrink-0 text-center text-dark font-bold overflow-hidden">
-                      {(suggestion.probability * 100).toFixed(2)}%
-                    </div>
+
+                    <div className="min-w-[80px] flex-shrink-0 text-center text-dark font-bold overflow-hidden">{(suggestion.probability * 100).toFixed(2)}%</div>
+
                     <div className="flex justify-center md:justify-start space-x-4 w-full md:w-auto">
-                      <div
-                        className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
-                        style={{ backgroundImage: `url(${suggestion.similar_images[0].url})` }}>
-                      </div>
-                      <div
-                        className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded"
-                        style={{ backgroundImage: `url(${suggestion.similar_images[1].url})` }}>
-                      </div>
+                      <div className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded" style={{ backgroundImage: `url(${suggestion.similar_images[0].url})` }}></div>
+                      <div className="w-48 md:w-48 h-48 md:h-48 bg-cover bg-center rounded" style={{ backgroundImage: `url(${suggestion.similar_images[1].url})` }}></div>
                     </div>
+
                     <div className="flex-grow">
                       <h3 className='text-xl pb-1'>
-                        <a
-                          className="underline text-[#004C46] dark:text-[#C3D5D1]"
-                          href={`/collections/${suggestion.plant_details.scientific_name}`}>
-                          {suggestion.plant_details.scientific_name}
-                        </a>{" "}
+                        <a className="underline text-[#004C46] dark:text-[#C3D5D1]" href={`/collections/${suggestion.plant_details.scientific_name}`}>{suggestion.plant_details.scientific_name}</a>{" "}
                         ({'species' in suggestion.plant_details.structured_name ? 'Species' : 'Genus'})
                       </h3>
-                      <i>
-                        <p className="pb-1">
-                          {suggestion.plant_details.common_names
-                            ? suggestion.plant_details.common_names.join(', ')
-                            : ''}
-                        </p>
-                      </i>
-                      <p>Probability: <b>{(suggestion.probability * 100).toFixed(2)}%</b></p>
-                      <br />
-                      <p className="pb-1">
-                        {suggestion.plant_details.wiki_description &&
-                          'value' in suggestion.plant_details.wiki_description
-                          ? trimString(suggestion.plant_details.wiki_description.value, 375)
-                          : ''}
-                      </p>
-                      <p>
-                        <a
-                          href={suggestion.plant_details.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="underline text-[#004C46] dark:text-[#C3D5D1]">
-                          Learn More
-                        </a>
-                      </p>
+                      <i><p className="pb-1">{suggestion.plant_details.common_names ? suggestion.plant_details.common_names.join(', ') : ''}</p></i>
+                      <p>Probability: <b>{(suggestion.probability * 100).toFixed(2)}%</b></p><br />
+                      <p className="pb-1">{suggestion.plant_details.wiki_description && 'value' in suggestion.plant_details.wiki_description ? trimString(suggestion.plant_details.wiki_description.value, 375) : ''}</p>
+                      <p><a href={suggestion.plant_details.url} target="_blank" rel="noopener noreferrer" className="underline text-[#004C46] dark:text-[#C3D5D1]">Learn More</a></p>
                     </div>
-                  </section>
-                )
+
+                  </section>)
               }
             </>
           }
@@ -197,5 +163,3 @@ const PlantIdPage = () => {
     }
   </div>
 }
-
-export default PlantIdPage
