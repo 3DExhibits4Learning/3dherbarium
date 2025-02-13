@@ -1,9 +1,9 @@
 'use client'
 import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@nextui-org/react"
 import { SetStateAction, Dispatch } from "react";
-import CommunityHerbarium from "@/utils/Community3dModel";
+import CommunityHerbarium from "@/functions/client/utils/Community3dModel";
 import { addCommas, boolRinse } from "./SketchfabDom";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
 import Image from "next/image";
 import { Divider } from "@nextui-org/react";
 

@@ -3,8 +3,8 @@
 import { sketchfabApiData } from "@/ts/collections"
 import { addCommas } from "../SketchfabDom"
 import { boolRinse } from "../SketchfabDom"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
-import Herbarium from "@/utils/HerbariumClass"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
+import Herbarium from "@/functions/client/utils/HerbariumClass"
 
 export default function Profile(props: { sketchfabApi: sketchfabApiData }) {
 

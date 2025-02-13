@@ -9,8 +9,8 @@
 // Typical imports
 import { Chip } from "@nextui-org/react";
 import { fullUserSubmittal } from "@/ts/types";
-import { handleImgError } from "@/utils/imageHandler";
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter";
+import { handleImgError } from "@/functions/client/utils/imageHandler";
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
 import { SyntheticEvent } from "react";
 
 // Default imports

@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { useState, useContext, useEffect } from "react"
 import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"

@@ -3,7 +3,7 @@ import { GbifResponse, GbifImageResponse } from "@/ts/types"
 import { fullAnnotation } from "@/ts/types"
 import { Dispatch } from "react"
 
-import Herbarium from "@/utils/HerbariumClass"
+import Herbarium from "@/functions/client/utils/HerbariumClass"
 
 export interface CollectionsWrapperProps {
     model: model[],

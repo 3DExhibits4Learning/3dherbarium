@@ -4,7 +4,7 @@
 import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet'
 import L, { LatLngExpression } from 'leaflet'
 import 'leaflet/dist/leaflet.css';
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter';
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter';
 import SendInatMsg from '../Shared/SendInatMsg';
 import { useState } from 'react';
 import Image from 'next/image';

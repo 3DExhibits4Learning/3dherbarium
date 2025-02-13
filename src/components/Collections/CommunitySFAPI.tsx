@@ -8,14 +8,14 @@
 // Typical imports
 import { useEffect, useState } from 'react'
 import { boolRinse, addCommas } from './SketchfabDom'
-import { toUpperFirstLetter } from '@/utils/toUpperFirstLetter'
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
 import { Chip } from '@nextui-org/react';
 import { userSubmittal } from '@prisma/client';
 import { GbifImageResponse, GbifResponse } from '@/ts/types';
 
 // Default imports
 import Image from 'next/image';
-import CommunityHerbarium from '@/utils/Community3dModel';
+import CommunityHerbarium from '@/functions/client/utils/Community3dModel';
 import dynamic from 'next/dynamic'
 import CommunityDataModal from './CommunityDataModal';
 import Geolocation from './SketchfabApi/Geolocation';

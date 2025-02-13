@@ -7,7 +7,7 @@
  */
 
 // Typical imports
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { v4 as uuidv4 } from 'uuid'
 import { writeFile, mkdir } from "fs/promises"
@@ -16,7 +16,7 @@ import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { createTask } from "@/functions/server/jira"
 
 // Default imports
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Path
 const path = 'src/app/api/admin/modeler/specimen/route.tsx'

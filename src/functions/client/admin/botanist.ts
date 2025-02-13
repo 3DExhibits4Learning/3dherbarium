@@ -14,7 +14,7 @@ import { model_annotation, video_annotation } from "@prisma/client"
 import { arrStrCompare } from "../shared"
 import { v4 as uuidv4 } from 'uuid'
 
-import ModelAnnotations from "@/utils/ModelAnnotationsClass"
+import ModelAnnotations from "@/functions/client/utils/ModelAnnotationsClass"
 
 /**
  * 

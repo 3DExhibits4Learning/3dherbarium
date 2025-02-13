@@ -24,7 +24,7 @@ import { annotations } from '@prisma/client';
 // Default imports
 import Sketchfab from '@sketchfab/viewer-api';
 import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal';
-import Herbarium from '@/utils/HerbariumClass';
+import Herbarium from '@/functions/client/utils/HerbariumClass';
 import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer';
 import ModelViewer from './ModelViewer';
 import Annotation from './Annotation';

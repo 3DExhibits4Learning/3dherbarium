@@ -8,9 +8,9 @@
 // Typical imports
 import { handlePlantIdSubmit } from '@/functions/server/fetchFunctions'
 import { PlantIdApiResponse, PlantIdSuggestion } from '@/ts/types'
-import { trimString } from '@/utils/trimString'
+import { trimString } from '@/functions/client/utils/trimString'
 import { useState } from 'react'
-import { useIsClient } from '@/utils/isClient'
+import { useIsClient } from '@/functions/client/utils/isClient'
 
 // Default imports
 import dynamic from 'next/dynamic'

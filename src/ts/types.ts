@@ -7,7 +7,7 @@ import { Dispatch, SetStateAction, ReactElement } from "react"
 import { specimen, annotations, photo_annotation, video_annotation, userSubmittal, model, model_annotation } from "@prisma/client"
 import { LatLngLiteral } from "leaflet"
 
-import Herbarium from "@/utils/HerbariumClass"
+import Herbarium from "@/functions/client/utils/HerbariumClass"
 
 export interface dataTransfer {
   initializeDataTransferHandler: Function

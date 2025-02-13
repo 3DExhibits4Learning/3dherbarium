@@ -2,7 +2,7 @@
 
 import { SetStateAction, Dispatch } from "react"
 import { model } from "@prisma/client"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
 import { annotationEntryContext } from "@/ts/botanist"

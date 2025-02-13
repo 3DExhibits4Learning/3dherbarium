@@ -7,7 +7,7 @@ import { useSession, signOut, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { Modal, ModalContent, ModalBody, ModalFooter, useDisclosure, Button } from "@nextui-org/react"
 import DataTransferModal from "./DataTransferModal"
-import checkToken from "@/utils/checkToken"
+import checkToken from "@/functions/client/utils/checkToken"
 
 export default function SendInatMsg(props: { username: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>> }) {
 

@@ -12,7 +12,7 @@
 // Typical imports
 import { useEffect, useState, createContext, useReducer } from 'react'
 import { useSearchParams } from "next/navigation"
-import { isMobileOrTablet } from '@/utils/isMobile';
+import { isMobileOrTablet } from '@/functions/client/utils/isMobile';
 import { annotations, userSubmittal } from '@prisma/client';
 import { CollectionsWrapperData } from '@/ts/reducer';
 import { CollectionsWrapperProps } from '@/ts/collections';

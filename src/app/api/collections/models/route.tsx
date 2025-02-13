@@ -10,7 +10,7 @@ import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { model } from "@prisma/client"
 
 // SINGLETON
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Force dynamic results
 export const dynamic = 'force-dynamic'

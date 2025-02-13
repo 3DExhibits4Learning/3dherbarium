@@ -11,7 +11,7 @@ import { ApproveModelObject, Models } from "@/ts/types"
 import { SetStateAction, Dispatch } from "react"
 
 // Default imports
-import checkToken from "@/utils/checkToken"
+import checkToken from "@/functions/client/utils/checkToken"
 
 /**
  * 

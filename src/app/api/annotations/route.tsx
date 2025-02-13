@@ -15,7 +15,7 @@ import { transitionSubtask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // PATH
 const path = 'src/app/api/annotations/route.tsx'

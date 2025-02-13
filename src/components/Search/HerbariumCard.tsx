@@ -7,10 +7,10 @@
 'use client'
 
 // Typical imports
-import { handleImgError } from "@/utils/imageHandler"
+import { handleImgError } from "@/functions/client/utils/imageHandler"
 import { model } from "@prisma/client"
 import { SyntheticEvent } from "react"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 
 // Default imports
 import Link from "next/link"

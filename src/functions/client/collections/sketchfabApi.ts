@@ -12,14 +12,14 @@
 import { setViewerWidth, annotationControl } from "@/components/Collections/SketchfabDom"
 import { CollectionsWrapperProps, setStringOrNumberAction, sketchfabApiData, sketchfabApiReducerAction } from "@/ts/collections"
 import { MutableRefObject, Dispatch } from "react"
-import { isMobileOrTablet } from "@/utils/isMobile"
+import { isMobileOrTablet } from "@/functions/client/utils/isMobile"
 import { photo_annotation } from "@prisma/client"
 import { fullAnnotation } from "@/ts/types"
 import { ReadonlyURLSearchParams } from "next/navigation"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 // Default imports
-import Herbarium from "@/utils/HerbariumClass"
+import Herbarium from "@/functions/client/utils/HerbariumClass"
 
 /**
  * 

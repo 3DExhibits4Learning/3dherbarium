@@ -9,7 +9,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { getServerSession } from "next-auth/next"
 
 // SINGLETON
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 /**
  * 

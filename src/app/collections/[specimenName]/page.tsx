@@ -25,7 +25,7 @@ import FullPageError from "@/components/Error/FullPageError"
 const path = 'src/app/collections/[specimenName]/page.tsx'
 
 // SINGLETON
-import prisma from "@/utils/prisma"
+import prisma from "@/functions/server/utils/prisma"
 
 // Dynamic imports
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })

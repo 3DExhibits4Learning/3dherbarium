@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useIsClient } from '@/utils/isClient';
+import { useIsClient } from '@/functions/client/utils/isClient';
 import { useState, useEffect } from 'react';
 
 

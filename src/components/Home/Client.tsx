@@ -6,7 +6,7 @@
 'use client'
 
 // Typical imports
-import { isMobileOrTablet } from '@/utils/isMobile'
+import { isMobileOrTablet } from '@/functions/client/utils/isMobile'
 import { useRouter } from 'next/navigation'
 
 // Default imports

@@ -11,7 +11,7 @@ import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/
 import { routeHandlerTypicalResponse } from "@/functions/server/response";
 
 // SINGLETON
-import prisma from "@/utils/prisma";
+import prisma from "@/functions/server/utils/prisma";
 
 // PATH
 const path = 'src/app/api/reAnnotation/route.ts'

@@ -8,7 +8,7 @@
 
 // Imports
 import { prismaClient } from "@/functions/server/queries"
-import { toUpperFirstLetter } from "@/utils/toUpperFirstLetter"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { ModelUploadResponse } from "@/ts/types"
 import { markSubtaskAsDone, transitionTask } from "@/functions/server/jira"
