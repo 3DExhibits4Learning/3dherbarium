@@ -4,6 +4,7 @@
  * @fileoverview botany admin logic
  */
 
+// Typical imports
 import { AnnotationEntryState, BotanyClientState } from "@/ts/botanist"
 import { AnnotationEntryAction, BotanyClientAction } from "@/ts/reducer"
 import { Dispatch, MutableRefObject } from "react"
@@ -14,6 +15,7 @@ import { model_annotation, video_annotation } from "@prisma/client"
 import { arrStrCompare } from "../shared"
 import { v4 as uuidv4 } from 'uuid'
 
+// Default imports
 import ModelAnnotations from "@/functions/client/utils/ModelAnnotationsClass"
 
 /**

@@ -18,6 +18,9 @@ import Header from "@/components/Header/Header";
 import Foot from "@/components/Shared/Foot";
 import FullPageError from "@/components/Error/FullPageError";
 
+// TEMP
+import { writeAnnotationPhotosToDataStorage } from "@/functions/server/utils/temp";
+
 // Path
 const path = 'src/app/admin/management/page.tsx'
 
@@ -25,6 +28,8 @@ const path = 'src/app/admin/management/page.tsx'
 export default async function Page() {
 
     try {
+
+        //await writeAnnotationPhotosToDataStorage('709cd4b1e7c54157b0c1ebe25eb37f22')
 
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))

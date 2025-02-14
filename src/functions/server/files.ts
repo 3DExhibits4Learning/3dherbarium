@@ -12,3 +12,15 @@ export const autoWrite = async (file: File, dir: string, path: string) => {
     await mkdir(dir, { recursive: true })
     await writeFile(path, photoBuffer)
 }
+
+/**
+ * 
+ * @param file 
+ * @param dir 
+ * @param path 
+ */
+export const autoWriteArrayBuffer = async (arrayBuffer: ArrayBuffer, dir: string, path: string) => {
+    const photoBuffer = Buffer.from(arrayBuffer)
+    await mkdir(dir, { recursive: true })
+    await writeFile(path, photoBuffer)
+}
