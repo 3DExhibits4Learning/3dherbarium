@@ -40,7 +40,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   // JSX
   return <html id='layoutHTML' className={`${theme?.value} max-w-[100vw] bg-[#F5F3E7] dark:bg-[#181818] overflow-x-hidden`} lang="en">
-    <body className="overflow-hidden min-h-[100vh] dark:bg-[#181818] text-[#004C46] dark:text-[#F5F3E7]">
+    <body className="overflow-hidden min-h-[100vh] dark:bg-[#181818] text-[#004C46] dark:text-[#F5F3E7] min-w-[400px]">
       <SessionProvider session={session}>
         <Providers>
             {children}

@@ -97,7 +97,7 @@ export default function Header (props: SearchHeaderProps) {
 
         {/* Large screen link section */}
 
-        <NavbarContent className="hidden lg:flex gap-4" justify="center">
+        <NavbarContent className="hidden lg:flex gap-4 ml-[6%]" justify="center">
           <Links page={props.page} />
         </NavbarContent>
 
