@@ -14,6 +14,7 @@ import { ModelerContext } from "./ModelerDash"
 import { specimenWithImageSet, dataTransfer } from "@/ts/types"
 import { buttonEnable } from "@/functions/client/shared";
 import { insertModelIntoDatabase } from "@/functions/client/admin/modeler"
+import { isZipFile } from "@/functions/client/utils/zip"
 
 // Default imports
 import Form from "@/components/Shared/Form"
@@ -54,7 +55,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         const zip = new JSZip()
         const _3dModel = model as File
         zip.file(_3dModel.name, _3dModel)
-        const zippedModel = _3dModel.name.endsWith('.zip') ? _3dModel : await zip.generateAsync({ type: 'blob' })
+        const zippedModel = await isZipFile(_3dModel) ? _3dModel : await zip.generateAsync({ type: 'blob' })
 
         // Instantiate form data
         const data = new FormData()
@@ -63,7 +64,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('modeler', modeler)
         data.set('isViable', isViable ? "yes" : "no")
         data.set('isBase', isBase ? "yes" : "no")
-        data.set('model', zippedModel)
+        data.set('model', zippedModel, `${props.specimen.spec_name}.zip`)
         data.set('species', props.specimen.spec_name)
 
         // Handle data transfer

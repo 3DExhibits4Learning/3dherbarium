@@ -26,6 +26,7 @@ import DataTransfer from './DataTransfer';
 import WildSelect from './Wild';
 import Link from 'next/link';
 import JSZip from 'jszip';
+import { isZipFile } from '@/functions/client/utils/zip';
 
 // Dynamic imports
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
@@ -79,7 +80,7 @@ export default function ModelSubmitForm() {
             const zip = new JSZip()
             const model = file as File
             zip.file(model.name, model)
-            const zippedModel = model.name.endsWith('.zip') ? model : await zip.generateAsync({ type: 'blob' })
+            const zippedModel = await isZipFile(model) ? model : await zip.generateAsync({ type: 'blob' })
 
             // Set remaining data
             data.set('artist', artistName)
