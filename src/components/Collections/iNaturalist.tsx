@@ -3,19 +3,23 @@
  * 
  * @fileoverview collections inatrualist component
  */
+
 'use client'
 
-import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react';
-import { LatLngLiteral } from 'leaflet';
-import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter';
+// Typical imports
+import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react'
+import { LatLngLiteral } from 'leaflet'
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
 import { ReactImageGalleryItem } from "react-image-gallery"
-import { Spinner } from '@nextui-org/react';
+import { Spinner } from '@nextui-org/react'
 
-import Leaderboards from './Leaderboards';
-import dynamic from 'next/dynamic';
+// Default imports
+import Leaderboards from './Leaderboards'
+import dynamic from 'next/dynamic'
 import ImageGallery from 'react-image-gallery'
-import "react-image-gallery/styles/css/image-gallery.css";
+import "react-image-gallery/styles/css/image-gallery.css"
 
+// Dynamic imports
 const InatMap = dynamic(() => import('../Map/iNaturalist'), { ssr: false })
 
 export default function Inaturalist(props: { activeSpecies: string }) {
@@ -40,7 +44,8 @@ export default function Inaturalist(props: { activeSpecies: string }) {
     const setCredentials = (index: number) => {
         var observation
         if (observations) observation = observations[index]
-        else observation = observationsRef.current[index]
+        else if(observationsRef.current) observation = observationsRef.current[index]
+        else {setLoading(false); return}
         setObserver(observation.user.login_exact ?? observation.user.login ?? '')
         setObservationTitle(observation.species_guess ?? observation.taxon.name ?? '')
         setObservationDate(observation.observed_on_details.date ?? observation.time_observed_at ?? '')
