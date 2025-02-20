@@ -59,6 +59,7 @@ export default function ModelSubmitForm() {
     const uploadModelAndEnterIntoDb = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
         try {
+
             // Prevent default, set data transfer states
             e.preventDefault()
             setOpen(true)
@@ -72,7 +73,13 @@ export default function ModelSubmitForm() {
             const confirmation = uid()
 
             // Set number of photos and photo files
-            if (photos?.length) {data.set('numberOfPhotos', photos.length.toString()); for (let i = 0; i < photos.length; i++) { data.set(`photo${i}`, photos[i]) }}
+            if (photos?.length) { data.set('numberOfPhotos', photos.length.toString()); for (let i = 0; i < photos.length; i++) { data.set(`photo${i}`, photos[i]) } }
+
+            // Zip file if it isn't
+            const zip = new JSZip()
+            const model = file as File
+            zip.file(model.name, model)
+            const zippedModel = model.name.endsWith('.zip') ? model : await zip.generateAsync({ type: 'blob' })
 
             // Set remaining data
             data.set('artist', artistName)
@@ -82,18 +89,13 @@ export default function ModelSubmitForm() {
             data.set('software', software)
             data.set('tags', tags)
             data.set('position', pos)
-            data.set('file', file as File)
+            data.set('file', zippedModel, `${speciesName}.zip`)
             data.set('confirmation', confirmation)
             data.set('wildOrCultivated', wildOrCultivated as string)
 
             // Route handler fetch
-            const result = await fetch('/api/modelSubmit', {
-                method: 'POST',
-                body: data
-            })
-                .then(res => { if (!res.ok) throw Error(res.statusText); return res.json() })
-                .then(json => json.data)
-                .catch(e => { throw Error(e.message) })
+            const result = await fetch('/api/modelSubmit', { method: 'POST', body: data })
+                .then(res => { if (!res.ok) throw Error(res.statusText); return res.json() }).then(json => json.data).catch(e => { throw Error(e.message) })
 
             // Set success results
             setResult(result)
@@ -112,59 +114,57 @@ export default function ModelSubmitForm() {
     // Check all necessary fields upon update to enable/disable the upload button
     useEffect(() => { if (requiredValues.every(value => value)) setUploadDisabled(false); else setUploadDisabled(true) }, effectDependencies)
 
-    return (
-        <>
-            <DataTransfer open={open} transferring={transferring} result={result} success={success} />
+    return <>
+        <DataTransfer open={open} transferring={transferring} result={result} success={success} />
 
-            <div className='flex w-full lg:w-3/5 lg:ml-[20%] justify-between'>
-                <h1 className='hidden lg:block text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
-                <div className='hidden lg:flex items-center'>
-                    <span className='ml-8 mr-2 text-lg block'><Link href="/about/modelContribution">How it works</Link></span>
-                    <img src='/linkIcon.svg' />
-                </div>
+        <div className='flex w-full lg:w-3/5 lg:ml-[20%] justify-between'>
+            <h1 className='hidden lg:block text-3xl py-8'>Submit a 3D Model of a Plant!</h1>
+            <div className='hidden lg:flex items-center'>
+                <span className='ml-8 mr-2 text-lg block'><Link href="/about/modelContribution">How it works</Link></span>
+                <img src='/linkIcon.svg' />
+            </div>
+        </div>
+
+        <form className='w-full px-12 lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
+
+            <div className='flex pr-6 justify-end lg:hidden'>
+                <span className='mr-2 text-lg block'><Link href="/about/modelContribution">How it works</Link></span>
+                <img src='/linkIcon.svg' />
             </div>
 
-            <form className='w-full px-12 lg:w-3/5 lg:border-2 m-auto lg:border-[#004C46] lg:rounded-md bg-[#D5CB9F] dark:bg-[#212121] lg:mb-16'>
+            <Divider />
 
-                <div className='flex pr-6 justify-end lg:hidden'>
-                    <span className='mr-2 text-lg block'><Link href="/about/modelContribution">How it works</Link></span>
-                    <img src='/linkIcon.svg' />
-                </div>
+            <div className='flex items-center h-[75px]'>
+                <p className='text-3xl'>Specimen Data</p>
+            </div>
 
-                <Divider />
+            <Divider className='mb-6' />
 
-                <div className='flex items-center h-[75px]'>
-                    <p className='text-3xl'>Specimen Data</p>
-                </div>
+            <WildSelect setValue={setWildOrCultivated as Dispatch<SetStateAction<string>>} />
+            <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
+            <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required topMargin='mt-12' bottomMargin='mb-12' multiple />
+            <FormMap position={position} setPosition={setPosition} title required />
+            <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
 
-                <Divider className='mb-6' />
+            <Divider className='mt-12' />
 
-                <WildSelect setValue={setWildOrCultivated as Dispatch<SetStateAction<string>>} />
-                <AutoCompleteWrapper value={speciesName} setValue={setSpeciesName} title='Species Name' required />
-                <PhotoInput setFile={setPhotos as Dispatch<SetStateAction<FileList>>} title="Upload a photo of the specimen for community ID (max: 5)" required topMargin='mt-12' bottomMargin='mb-12' multiple />
-                <FormMap position={position} setPosition={setPosition} title required />
-                <TagInput title="Enter tags to describe your specimen, such as phenotype(fruits, flowers, development stage, etc.)" setTags={setTagArr} />
+            <h1 className=' text-3xl mt-4 mb-4'>Model Data</h1>
 
-                <Divider className='mt-12' />
+            <Divider className='mb-12' />
 
-                <h1 className=' text-3xl mt-4 mb-4'>Model Data</h1>
+            <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required />
+            <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
+            <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
+            <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<{ value: string }[]>>} />
 
-                <Divider className='mb-12' />
+            <ModelInput setFile={setFile as Dispatch<SetStateAction<File>>} />
 
-                <TextInput value={artistName} setValue={setArtistName} title='3D Modeler Name' required  />
-                <MobileSelect value={madeWithMobile} setValue={setMadeWithMobile} />
-                <ProcessSelect value={buildMethod} setValue={setBuildMethod} />
-                <TagInput title="Enter software used to create the model (must enter at least one)" required setTags={setSoftwareArr as Dispatch<SetStateAction<{ value: string }[]>>} />
-
-                <ModelInput setFile={setFile as Dispatch<SetStateAction<File>>} />
-
-                <Button
-                    isDisabled={uploadDisabled}
-                    color='primary'
-                    onClick={uploadModelAndEnterIntoDb}
-                    className='text-white text-xl mb-24 mt-8'>Upload 3D Model
-                </Button>
-            </form>
-        </>
-    )
+            <Button
+                isDisabled={uploadDisabled}
+                color='primary'
+                onClick={uploadModelAndEnterIntoDb}
+                className='text-white text-xl mb-24 mt-8'>Upload 3D Model
+            </Button>
+        </form>
+    </>
 }

@@ -21,6 +21,7 @@ import TextInput from "@/components/Shared/Form Fields/TextInput"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 import YesOrNo from "@/components/Shared/Form Fields/YesOrNo"
 import ModelInput from "@/components/ModelSubmit/ModelInput"
+import JSZip from "jszip"
 
 
 // Main JSX
@@ -49,14 +50,20 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     // Model data insertion handeler
     const insertModelDataHandler = async () => {
 
-        const data = new FormData()
+        // Zip file if it isn't
+        const zip = new JSZip()
+        const _3dModel = model as File
+        zip.file(_3dModel.name, _3dModel)
+        const zippedModel = _3dModel.name.endsWith('.zip') ? _3dModel : await zip.generateAsync({ type: 'blob' })
 
+        // Instantiate form data
+        const data = new FormData()
         data.set('sid', props.specimen.sid)
         data.set('commonName', commonName)
         data.set('modeler', modeler)
         data.set('isViable', isViable ? "yes" : "no")
         data.set('isBase', isBase ? "yes" : "no")
-        data.set('model', model as File)
+        data.set('model', zippedModel)
         data.set('species', props.specimen.spec_name)
 
         // Handle data transfer
@@ -66,24 +73,22 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     // Button enabler effect
     useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
 
-    return (
-        <section className="flex justify-center w-full mb-6">
-            <Form width='w-4/5'>
-                <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
-                <div className="w-full h-2/5 mb-8 max-h-[300px]">
-                    <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} onError={() =>  setImgSrc('/noImage.png')}/>
-                </div>
-                <TextInput value={modeler} setValue={setModeler} title='3D Modeler' required textSize="text-2xl" />
-                <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
-                <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required key={'select1'} />
-                <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo key={'select2'} />
-                <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
-                <div>
-                    <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>
-                        Enter 3D Model into Database
-                    </Button>
-                </div>
-            </Form>
-        </section>
-    )
+    return <section className="flex justify-center w-full mb-6">
+        <Form width='w-4/5'>
+            <h1 className="text-3xl mb-8">{toUpperFirstLetter(props.specimen.spec_name)}</h1>
+            <div className="w-full h-2/5 mb-8 max-h-[300px]">
+                <img className='h-full w-full' src={imgSrc} alt={`Photo of ${props.specimen.spec_name}`} onError={() => setImgSrc('/noImage.png')} />
+            </div>
+            <TextInput value={modeler} setValue={setModeler} title='3D Modeler' required textSize="text-2xl" />
+            <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
+            <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required key={'select1'} />
+            <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo key={'select2'} />
+            <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
+            <div>
+                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>
+                    Enter 3D Model into Database
+                </Button>
+            </div>
+        </Form>
+    </section>
 }
