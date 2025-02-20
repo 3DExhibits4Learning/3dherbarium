@@ -25,6 +25,7 @@ import ModelInput from './ModelInput';
 import DataTransfer from './DataTransfer';
 import WildSelect from './Wild';
 import Link from 'next/link';
+import JSZip from 'jszip';
 
 // Dynamic imports
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
