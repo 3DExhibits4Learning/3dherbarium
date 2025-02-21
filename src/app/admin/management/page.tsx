@@ -5,21 +5,21 @@
  */
 
 // Typical imports
-import { getAllPendingModels } from "@/functions/server/queries";
+import { getAllPendingModels } from "@/functions/server/queries"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { getAdmin } from "@/functions/server/queries";
-import { authed } from "@prisma/client";
-import { serverErrorHandler } from "@/functions/server/error";
+import { getAdmin } from "@/functions/server/queries"
+import { authed } from "@prisma/client"
+import { serverErrorHandler } from "@/functions/server/error"
 
 // Default imports
 import ManagerClient from "@/components/Admin/Manager/ManagerClient"
-import Header from "@/components/Header/Header";
-import Foot from "@/components/Shared/Foot";
-import FullPageError from "@/components/Error/FullPageError";
+import Header from "@/components/Header/Header"
+import Foot from "@/components/Shared/Foot"
+import FullPageError from "@/components/Error/FullPageError"
 
 // TEMP
-import { writeAnnotationPhotosToDataStorage } from "@/functions/server/utils/temp";
+import { writeAnnotationPhotosToDataStorage } from "@/functions/server/utils/temp"
 
 // Path
 const path = 'src/app/admin/management/page.tsx'
@@ -29,7 +29,7 @@ export default async function Page() {
 
     try {
 
-        await writeAnnotationPhotosToDataStorage('a8649632c78f478e9c4ce826a012873f')
+        await writeAnnotationPhotosToDataStorage('709cd4b1e7c54157b0c1ebe25eb37f22')
 
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))

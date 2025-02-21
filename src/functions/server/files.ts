@@ -58,6 +58,6 @@ export const getFileExtensionOfBuffer = (buffer: Buffer) => {
       '25504446': 'pdf'
     }
   
-    return signatures[hex] || ''
+    return '.' + signatures[hex] || ''
   }
   

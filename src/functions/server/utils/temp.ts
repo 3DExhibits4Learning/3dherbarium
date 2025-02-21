@@ -25,15 +25,15 @@ export const writeAnnotationPhotosToDataStorage = async (uid: string) => {
 
             console.log(`Updating annotation ${annotations[i].annotation_no}, it's a web annotation`)
 
-            const storageUrl = `/data/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}/Annotation ${annotations[i].annotation_no}`
-            const dir = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
-            const photoPath = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}/Annotation ${annotations[i].annotation_no}`
+            const storageUrl = `/data/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
+            const dir = `X:/Herbarium/Annotations/${annotations[i].uid}`
+            const photoPath = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
 
             // Fetch photo from the web
             console.log('Fetching photo...')
             var contentType: any
             const photo = await fetch(annotations[i].url).then(res => {contentType = res.headers.get('Content-Type'); return res.arrayBuffer()})
-            const extension = contentType ? contentType.split('/')[1] : ''
+            const extension = contentType ? '.' + contentType.split('/')[1] : ''
             console.log('Photo obtained...')
 
             // Write photo to data storage
@@ -55,9 +55,9 @@ export const writeAnnotationPhotosToDataStorage = async (uid: string) => {
         else if (annotations[i].annotation_type === 'photo' && annotations[i].url.startsWith('../../../')) {
 
             console.log(`Updating annotation ${annotations[i].annotation_no}, it's an annotation in the public folder`)
-            const storageUrl = `/data/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}/Annotation ${annotations[i].annotation_no}`
-            const dir = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
-            const photoPath = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}/Annotation ${annotations[i].annotation_no}`
+            const storageUrl = `/data/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
+            const dir = `X:/Herbarium/Annotations/${annotations[i].uid}`
+            const photoPath = `X:/Herbarium/Annotations/${annotations[i].uid}/${annotations[i].annotation_id}`
             const photo = await readFile(annotations[i].url.replace('../../..', 'public'))
             const extension = getFileExtensionOfBuffer(photo)
 
