@@ -13,22 +13,22 @@
 import * as fn from '@/functions/client/collections/sketchfabApi'
 
 // Typical imports
-import { GbifResponse } from '@/ts/types';
-import { useEffect, useRef, useContext, createContext, useReducer } from 'react';
-import { CollectionsContext } from '../CollectionsWrapper/CollectionsWrapper';
-import { CollectionsWrapperData } from '@/ts/reducer';
-import { sketchfabApiData, sketchfabApiContext, initialState } from '@/ts/collections';
-import { useSearchParams, usePathname, useRouter } from 'next/navigation';
-import { annotations } from '@prisma/client';
+import { GbifResponse } from '@/ts/types'
+import { useEffect, useRef, useContext, createContext, useReducer } from 'react'
+import { CollectionsContext } from '../CollectionsWrapper/CollectionsWrapper'
+import { CollectionsWrapperData } from '@/ts/reducer'
+import { sketchfabApiData, sketchfabApiContext, initialState } from '@/ts/collections'
+import { useSearchParams, usePathname, useRouter } from 'next/navigation'
+import { annotations } from '@prisma/client'
 
 // Default imports
-import Sketchfab from '@sketchfab/viewer-api';
-import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal';
-import Herbarium from '@/functions/client/utils/HerbariumClass';
-import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer';
-import ModelViewer from './ModelViewer';
-import Annotation from './Annotation';
-import FullPageError from '../../Error/FullPageError';
+import Sketchfab from '@sketchfab/viewer-api'
+import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal'
+import Herbarium from '@/functions/client/utils/HerbariumClass'
+import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer'
+import ModelViewer from './ModelViewer'
+import Annotation from './Annotation'
+import FullPageError from '../../Error/FullPageError'
 
 // Exported context
 export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')

@@ -221,7 +221,7 @@ export const isAnnotationParamValid = (param: string, numberOfAnnotations: numbe
  * @description will be deprecated after all photos are transitioned to data storage
  * @returns boolean indicating whether or not a photo has been retrievd from the NFS data storage container
  */
-export const isDataStoragePhoto = (sketchfabApi: sketchfabApiData) => ((sketchfabApi.annotations as fullAnnotation[])[sketchfabApi.index as number - 1].annotation as photo_annotation)?.url.startsWith('/data/Herbarium/Annotations')
+export const isDataStoragePhoto = (sketchfabApi: sketchfabApiData) => (sketchfabApi.annotations as fullAnnotation[])[sketchfabApi.index as number - 1].url?.startsWith('/data')
 
 /**
  * 
@@ -252,10 +252,10 @@ export const setImageFromNfs = async (url: string, dispatch: Dispatch<sketchfabA
  */
 export const photoSrcChangeHandler = (sketchfabApi: any, sketchfabApiDispatch: Dispatch<sketchfabApiReducerAction>) => {
 
-    if (!!sketchfabApi.index && sketchfabApi.annotations && sketchfabApi.annotations[sketchfabApi.index - 1].annotation_type == 'photo') {
+    if (!!sketchfabApi.index && sketchfabApi.annotations && sketchfabApi.annotations[sketchfabApi.index - 1].annotation_type === 'photo') {
 
-        if (isDataStoragePhoto(sketchfabApi)) setImageFromNfs((sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url, sketchfabApiDispatch)
-        else sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'imgSrc', value: sketchfabApi.annotations[sketchfabApi.index - 1].url as string })
+        if (isDataStoragePhoto(sketchfabApi)) {setImageFromNfs((sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation)?.url, sketchfabApiDispatch)}
+        else {sketchfabApiDispatch({ type: 'setStringOrNumber', field: 'imgSrc', value: sketchfabApi.annotations[sketchfabApi.index - 1].url as string }); console.log('ELSE RAN')}
     }
 }
 
