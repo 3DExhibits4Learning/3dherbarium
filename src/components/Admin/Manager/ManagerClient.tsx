@@ -69,8 +69,6 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         await fetch('/api/test', {method: 'POST', body: data}).then(res => res.json()).then(json => json.data)
     }
 
-    if(tempFile) console.log(tempFile.name.includes('.zip'))
-
     return <>
         <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
         <div className="flex h-48 w-full">
