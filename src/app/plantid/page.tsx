@@ -1,5 +1,6 @@
 /**
  * @file /app/plantid/page.tsx
+ * 
  * @fileoverview the plantID page where users can upload an image of a plant to identify what it could possibly be.
  */
 
@@ -81,18 +82,18 @@ export default function PlantIdPage() {
 
       const filesArr = Array.from(files)
       setSelectedPhoto(URL.createObjectURL(files[0]));
-      setLoading(true);
+      setLoading(true)
 
       const base64Strings = await Promise.all(
-        filesArr.map((file) => {
+        filesArr.map(file => {
           return new Promise((resolve, reject) => {
             const reader = new FileReader()
-            reader.onload = (e) => {
-              const base64String = e.target?.result;
+            reader.onload = e => {
+              const base64String = e.target?.result
               resolve(base64String)
             }
-            reader.onerror = () => reject(new Error('Problem reading the file'));
-            reader.readAsDataURL(file);
+            reader.onerror = () => reject(new Error('Problem reading the file'))
+            reader.readAsDataURL(file)
           })
         }),
       )

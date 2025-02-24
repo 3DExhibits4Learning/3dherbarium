@@ -10,6 +10,7 @@
 import { ModelUploadResponse } from "@/ts/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import fs from 'fs'
 
 // PATH
 const path = 'src/app/api/test/route.ts'
@@ -17,17 +18,22 @@ const path = 'src/app/api/test/route.ts'
 export async function POST(request: Request) {
 
   try {
+    
     const requestData = await request.formData()
 
     const model = requestData.get('file') as File
+    // const arraryBuffer = await model.arrayBuffer()
+    // const buffer = Buffer.from(arraryBuffer)
+    // const stream = fs.createReadStream(buffer)
+
     const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
-    const data = new FormData()
+    var data: FormData | null = new FormData()
     data.set('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
     data.set('modelFile', model)
     data.set('visibility', 'private')
     data.set('options', JSON.stringify({ background: { color: "#000000" } }))
-    data.set('name', 'Zip Test')
+    data.set('name', 'stream test')
 
     // Upload 3D Model, setting uploadProgress in the process
     const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
@@ -39,7 +45,9 @@ export async function POST(request: Request) {
       .then(json => json)
       .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
 
+      data = null
       return routeHandlerTypicalResponse('Model Uploaded', sketchfabUpload)
+
   }
   catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

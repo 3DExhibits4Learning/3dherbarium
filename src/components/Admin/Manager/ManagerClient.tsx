@@ -53,19 +53,19 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
-    const tempUploadHandler = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, modelUploadHandler, [], "Testing zipped model upload")
+    const tempUploadHandler = async() => await dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, modelUploadHandler, [], "Testing zipped model upload")
 
     const modelUploadHandler = async() => {
 
         const zip = new JSZip()
         const model = tempFile as File
+        
         zip.file(model.name, model)
         const zipBlob = await zip.generateAsync({type: 'blob'})
-
-
+        
         const data = new FormData()
         data.set('file', zipBlob, 'model.zip')
-
+        
         await fetch('/api/test', {method: 'POST', body: data}).then(res => res.json()).then(json => json.data)
     }
 

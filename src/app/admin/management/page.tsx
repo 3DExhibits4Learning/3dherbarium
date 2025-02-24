@@ -29,7 +29,7 @@ export default async function Page() {
 
     try {
 
-        await writeAnnotationPhotosToDataStorage('709cd4b1e7c54157b0c1ebe25eb37f22')
+        //await writeAnnotationPhotosToDataStorage('709cd4b1e7c54157b0c1ebe25eb37f22')
 
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))

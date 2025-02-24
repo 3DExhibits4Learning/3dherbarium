@@ -80,3 +80,9 @@ export const writeAnnotationPhotosToDataStorage = async (uid: string) => {
         else if(annotations[i].annotation_type === 'photo' && annotations[i].url.startsWith('/data')) console.log(`The photo for annotation ${annotations[i].annotation_no} is in data storage`)
     }
 }
+
+export const streamUpload = async(file: File) => {
+    const data = new FormData()
+    data.set('file', file)
+    await fetch('/api/test')
+}
