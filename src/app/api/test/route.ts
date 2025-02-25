@@ -26,11 +26,11 @@ export async function POST(request: Request) {
 
     const requestData = await request.formData()
 
-    var model = requestData.get('file') as File
+    var model: any = requestData.get('file') as File
 
     const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
-    const data = new FormData()
+    var data: any = new FormData()
     data.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
     data.append('modelFile', model)
     data.append('visibility', 'private')
@@ -46,6 +46,8 @@ export async function POST(request: Request) {
       .then(res => { if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request"); return res.json() })
       .then(json => json)
       .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
+
+      model = null; data = null
 
       return routeHandlerTypicalResponse('Model Uploaded', sketchfabUpload)
 

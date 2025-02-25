@@ -66,7 +66,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         const data = new FormData()
         data.set('file', zipBlob, 'model.zip')
         
-        await fetch('/api/test', {method: 'POST', body: data}).then(res => res.json()).then(json => json.data)
+        await fetch('/api/test', {method: 'POST', body: data, cache: 'no-store'}).then(res => res.json()).then(json => json.data)
     }
 
     return <>
