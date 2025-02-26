@@ -52,6 +52,7 @@ export async function POST(request: Request) {
     //   return routeHandlerTypicalResponse('Model Uploaded', sketchfabUpload)
 
     const formData = new FormData()
+    
     formData.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
     formData.append('visibility', 'private')
     formData.append('options', JSON.stringify({ background: { color: "#000000" } }))
@@ -60,27 +61,21 @@ export async function POST(request: Request) {
 
     const headers = { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string }
 
-    // const req = https.request(
-    //   {
-    //     hostname: `api.sketchfab.com`,
-    //     path: `/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`,
-    //     method: "POST",
-    //     headers: formData.getHeaders(headers),
-    //   },
-    //   res => {
-    //     let response = ''
-
-    //     res.on('data', chunk => response += chunk)
-    //     res.on('end', () => console.log('Upload Response:', JSON.parse(response)))
-    //   }
-    // )
-
-    formData.submit({
+    const req = https.request({
       hostname: `api.sketchfab.com`,
       path: `/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`,
       method: "POST",
-      headers: formData.getHeaders(headers)
-    })
+      headers: formData.getHeaders(headers),
+    },
+      res => {
+        let response = ''
+
+        res.on('data', chunk => response += chunk)
+        res.on('end', () => console.log('Upload Response:', JSON.parse(response)))
+      }
+    )
+
+    formData.pipe(req)
 
     return routeHandlerTypicalResponse('Model Uploaded', '0')
   }
