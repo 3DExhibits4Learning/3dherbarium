@@ -26,34 +26,36 @@ export async function POST(request: Request) {
 
   try {
 
-    // const requestData = await request.formData()
+    var requestData: any = await request.formData()
 
-    // const model = requestData.get('file') as File
-    // const dir = process.env.LOCAL_ENV === 'development' ? 'X:/Herbarium/models' : 'public/data/Herbarium/models'
-    // await autoWrite(model, dir, dir + '/' + model.name)
+    var model: any = requestData.get('file') as File
+    const dir = process.env.LOCAL_ENV === 'development' ? 'X:/Herbarium/models' : 'public/data/Herbarium/models'
+    var write: any = await autoWrite(model, dir, dir + '/' + model.name)
 
-    const model = await readFile('public/data/Herbarium/models/MeshroomVersusWebODM.blend')
+    requestData = null; model = null, write = null
 
-    const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
+    // const model = await readFile('public/data/Herbarium/models/MeshroomVersusWebODM.blend')
 
-    const data = new FormData()
-    data.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
-    data.append('modelFile', new Blob([model]))
-    data.append('visibility', 'private')
-    data.append('options', JSON.stringify({ background: { color: "#000000" } }))
-    data.append('name', 'stream test')
+    // const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
-    // Upload 3D Model, setting uploadProgress in the process
-    const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
-      headers: { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string },
-      method: 'POST',
-      body: data
-    })
-      .then(res => { if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request"); return res.json() })
-      .then(json => json)
-      .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
+    // const data = new FormData()
+    // data.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
+    // data.append('modelFile', new Blob([model]))
+    // data.append('visibility', 'private')
+    // data.append('options', JSON.stringify({ background: { color: "#000000" } }))
+    // data.append('name', 'stream test')
 
-      return routeHandlerTypicalResponse('Model Uploaded', sketchfabUpload)
+    // // Upload 3D Model, setting uploadProgress in the process
+    // const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
+    //   headers: { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string },
+    //   method: 'POST',
+    //   body: data
+    // })
+    //   .then(res => { if (!res.ok) routeHandlerErrorHandler(path, res.statusText, "fetch(orgModelUploadEnd)", "Bad Sketchfab Request"); return res.json() })
+    //   .then(json => json)
+    //   .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
+
+      return routeHandlerTypicalResponse('Model Uploaded', 'success')
 
     // const formData = new FormData()
     
