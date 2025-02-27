@@ -22,17 +22,16 @@ export const dynamic = 'force-dynamic'
 // PATH
 const path = 'src/app/api/test/route.ts'
 
-export async function POST(request: Request) {
+export async function POST(request: Request | null) {
 
   try {
 
-    var requestData: any = await request.formData()
-
+    var requestData: any = await request?.formData()
     var model: any = requestData.get('file') as File
     const dir = process.env.LOCAL_ENV === 'development' ? 'X:/Herbarium/models' : 'public/data/Herbarium/models'
     var write: any = await autoWrite(model, dir, dir + '/' + model.name)
 
-    requestData = null; model = null, write = null
+    requestData = null; model = null, write = null, request = null
 
     // const model = await readFile('public/data/Herbarium/models/MeshroomVersusWebODM.blend')
 
