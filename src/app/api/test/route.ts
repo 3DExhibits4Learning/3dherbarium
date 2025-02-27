@@ -28,7 +28,8 @@ export async function POST(request: Request) {
     const requestData = await request.formData()
 
     const model = requestData.get('file') as File
-    await autoWrite(model, 'X:/Herbarium/models', `X:/Herbarium/models/${model.name}`)
+    const dir = process.env.LOCAL_ENV === 'development' ? 'X:/Herbarium/models' : 'public/data/Herbarium/models'
+    await autoWrite(model, dir, dir + '/' + model.name)
 
     // const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 

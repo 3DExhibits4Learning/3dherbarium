@@ -109,7 +109,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         // }
 
         const data = new FormData()
-        data.set('model', tempFile as File)
+        data.set('file', tempFile as File)
 
         return await fetch('/api/test', {method: 'POST', body: data}).then(res => res.json()).then(json => json.data)
     }
