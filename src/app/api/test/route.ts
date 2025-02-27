@@ -13,7 +13,8 @@ import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
 import https from 'https'
 import fs from 'fs'
-import FormData from "form-data"
+import { autoWrite } from "@/functions/server/files"
+//import FormData from "form-data"
 
 export const dynamic = 'force-dynamic'
 
@@ -24,15 +25,16 @@ export async function POST(request: Request) {
 
   try {
 
-    // const requestData = await request.formData()
+    const requestData = await request.formData()
 
-    // var model: any = requestData.get('file') as File
+    const model = requestData.get('file') as File
+    await autoWrite(model, 'X:/Herbarium/models', `X:/Herbarium/models/${model.name}`)
 
     // const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
-    // var data: any = new FormData()
+    // const data = new FormData()
     // data.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
-    // data.append('modelFile', model.stream())
+    // data.append('modelFile', model)
     // data.append('visibility', 'private')
     // data.append('options', JSON.stringify({ background: { color: "#000000" } }))
     // data.append('name', 'stream test')
@@ -47,37 +49,35 @@ export async function POST(request: Request) {
     //   .then(json => json)
     //   .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
 
-    //   model = null; data = null
+      return routeHandlerTypicalResponse('Model Uploaded', 'sucess')
 
-    //   return routeHandlerTypicalResponse('Model Uploaded', sketchfabUpload)
-
-    const formData = new FormData()
+    // const formData = new FormData()
     
-    formData.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
-    formData.append('visibility', 'private')
-    formData.append('options', JSON.stringify({ background: { color: "#000000" } }))
-    formData.append('name', 'stream test')
-    formData.append("modelFile", fs.createReadStream('X:/Herbarium/models/mushroom.blend'))
+    // formData.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
+    // formData.append('visibility', 'private')
+    // formData.append('options', JSON.stringify({ background: { color: "#000000" } }))
+    // formData.append('name', 'stream test')
+    // formData.append("modelFile", fs.createReadStream('X:/Herbarium/models/mushroom.blend'))
 
-    const headers = { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string }
+    // const headers = { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string }
 
-    const req = https.request({
-      hostname: `api.sketchfab.com`,
-      path: `/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`,
-      method: "POST",
-      headers: formData.getHeaders(headers),
-    },
-      res => {
-        let response = ''
+    // const req = https.request({
+    //   hostname: `api.sketchfab.com`,
+    //   path: `/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`,
+    //   method: "POST",
+    //   headers: formData.getHeaders(headers),
+    // },
+    //   res => {
+    //     let response = ''
 
-        res.on('data', chunk => response += chunk)
-        res.on('end', () => console.log('Upload Response:', JSON.parse(response)))
-      }
-    )
+    //     res.on('data', chunk => response += chunk)
+    //     res.on('end', () => console.log('Upload Response:', JSON.parse(response)))
+    //   }
+    // )
 
-    formData.pipe(req)
+    // formData.pipe(req)
 
-    return routeHandlerTypicalResponse('Model Uploaded', '0')
+    // return routeHandlerTypicalResponse('Model Uploaded', '0')
   }
   catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }
