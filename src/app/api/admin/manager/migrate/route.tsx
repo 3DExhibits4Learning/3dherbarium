@@ -36,6 +36,7 @@ export async function POST() {
             migrate.annotatedModelMigration,
             migrate.annotationModelMigration,
             migrate.imageSetMigration,
+            migrate.softwareMigration,
             migrate.annotationMigration,
             migrate.photoAnnotationMigration,
             migrate.videoAnnotationMigration,

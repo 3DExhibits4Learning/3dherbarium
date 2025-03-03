@@ -39,13 +39,21 @@ export const annotationModelMigration = prisma.$queryRaw`insert into Test.model(
     on d.uid = t.uid
     where t.uid is null and d.base_model is false);`
 
-// Migrate image set of those models
+// Migrate image sets of those models
 export const imageSetMigration = prisma.$queryRaw`insert into Test.image_set(
     select d.* 
     from Development.image_set as d
     left join Test.image_set as t
     on d.spec_name = t.spec_name and d.spec_acquis_date = t.spec_acquis_date and d.set_no = t.set_no
     where t.spec_name is null and d.uid is not null and d.uid in (select uid from Test.model));`
+
+// Migrate software of those models
+export const softwareMigration = prisma.$queryRaw`insert into Test.software(
+    select d.*
+    from Development.software as d
+    left join Test.software as t
+    on d.software = t.software and d.uid = t.uid
+    where t.software is null and d.uid in (select uid from Test.model));`
 
 // Migrate base annotations of those models
 export const annotationMigration = prisma.$queryRaw`insert into Test.annotations(
@@ -102,7 +110,7 @@ export const productionModelMigration = prisma.$queryRaw`insert into Production.
     on d.uid = t.uid
     where t.uid is null and d.annotated is true);`
 
-    // Migrate annotation 3D models
+// Migrate annotation 3D models
 export const ProductionAnnotationModelMigration = prisma.$queryRaw`insert into Production.model(
     select d.* 
     from Test.model as d
@@ -117,6 +125,14 @@ export const productionImageSetMigration = prisma.$queryRaw`insert into Producti
     left join Production.image_set as t
     on d.spec_name = t.spec_name and d.spec_acquis_date = t.spec_acquis_date and d.set_no = t.set_no
     where t.spec_name is null and d.uid is not null and d.uid in (select uid from Production.model));`
+
+// Migrate software of those models
+export const productionSoftwareMigration = prisma.$queryRaw`insert into Test.software(
+    select d.*
+    from Test.software as d
+    left join Production.software as t
+    on d.software = t.software and d.uid = t.uid
+    where t.software is null and t.uid in (select uid from Production.model));`
 
 // Migrate base annotations of those models
 export const productionAnnotationMigration = prisma.$queryRaw`insert into Production.annotations(
