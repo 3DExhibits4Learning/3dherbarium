@@ -50,34 +50,6 @@ export async function POST(request: Request | null) {
       .catch(e => routeHandlerErrorHandler(path, e.message, "fetch(orgModelUploadEnd)", "Coulnd't upload to Sketchfab"))
 
       return routeHandlerTypicalResponse('Model Uploaded', 'success')
-
-    // const formData = new FormData()
-    
-    // formData.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
-    // formData.append('visibility', 'private')
-    // formData.append('options', JSON.stringify({ background: { color: "#000000" } }))
-    // formData.append('name', 'stream test')
-    // formData.append("modelFile", fs.createReadStream('X:/Herbarium/models/mushroom.blend'))
-
-    // const headers = { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string }
-
-    // const req = https.request({
-    //   hostname: `api.sketchfab.com`,
-    //   path: `/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`,
-    //   method: "POST",
-    //   headers: formData.getHeaders(headers),
-    // },
-    //   res => {
-    //     let response = ''
-
-    //     res.on('data', chunk => response += chunk)
-    //     res.on('end', () => console.log('Upload Response:', JSON.parse(response)))
-    //   }
-    // )
-
-    // formData.pipe(req)
-
-    // return routeHandlerTypicalResponse('Model Uploaded', '0')
   }
   catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }

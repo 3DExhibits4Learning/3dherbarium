@@ -13,15 +13,41 @@
  * @returns formatted string output detailing the error
  */
 export function routeHandlerError(route: string, errorMessage: string, fn: string, method?: string | undefined, nonFatal?: boolean) {
-    return (
-        `Date: ${new Date().toDateString()}\n
+    return `Date: ${new Date().toDateString()}\n
     Time: ${new Date().toTimeString()}\n
     Route: ${route} \n 
     Fatal: ${nonFatal ? "No" : "Yes"}\n
     HTTPMethod: ${method ? method : 'N/A'}\n
     Function: ${fn} \n
     Error Message: ${errorMessage}`
-    )
+}
+
+/**
+ * @param route path of the route handler
+ * @param errorMessage message from the error object
+ * @param fn function that returned the rror
+ * @param method HTTP method of the route handler function
+ * @returns formatted string output detailing the error
+ */
+export function serverActionError(errorMessage: string, fn: string, nonFatal?: boolean) {
+    return `Date: ${new Date().toDateString()}\n
+    Time: ${new Date().toTimeString()}\n
+    Fatal: ${nonFatal ? "No" : "Yes"}\n
+    Function: ${fn} \n
+    Error Message: ${errorMessage}`
+}
+
+/**
+ * @param route path of the route handler
+ * @param errorMessage message from the error object
+ * @param fn function that returned the rror
+ * @param clientErrorMessage error message that is displayed to the client
+ * @param method HTTP method of the route handler function
+ * @description Logs an error to the console and throws an error with client error message
+ */
+export function serverActionErrorHandler(errorMessage: string, fn: string, clientErrorMessage: string, nonFatal?: boolean) {
+    console.error(serverActionError(errorMessage, fn, nonFatal))
+    throw Error(clientErrorMessage)
 }
 
 /**

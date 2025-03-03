@@ -29,9 +29,7 @@ export async function POST(request: Request) {
     // Typical auth redirect
     const session = await getServerSession(authOptions)
 
-    if (!session || !session.user) {
-        redirect('/api/auth/signin')
-    }
+    if (!session || !session.user) redirect('/api/auth/signin')
 
     try {
 

@@ -19,5 +19,10 @@ module.exports = {
             pathname: '/**',
           },
         ],
-      }
-}
+      },
+      experimental: {
+        serverActions: {
+          bodySizeLimit: '500mb',
+        },
+      },
+    }
