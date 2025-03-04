@@ -69,6 +69,17 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         router.push('/admin')
     }
 
+    const streamReq = async () => {
+        const res = await fetch('/api/test', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/octet-stream',
+                'x-file-name': encodeURIComponent((tempFile as File).name)
+            },
+            body: (tempFile as File).stream(),
+        }).then(res => res.json()).then(json => console.log(json))
+    }
+
     return <>
         <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
         <div className="flex h-48 w-full">
@@ -121,7 +132,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                     placeholder="Enter UID">
                 </input>
-                <Button className="bg-[#004C46] mt-4" onPress={uploadHandler}>
+                <Button className="bg-[#004C46] mt-4" onPress={streamReq}>
                     Server Action Upload
                 </Button>
             </div>
