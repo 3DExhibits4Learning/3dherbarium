@@ -64,8 +64,8 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         return fileString
     }
 
-    const uploadHandler = () => {
-        uploadModel()
+    const uploadHandler = async () => {
+        await uploadModel()
         router.push('/admin')
     }
 

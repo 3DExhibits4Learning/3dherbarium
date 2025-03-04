@@ -34,7 +34,7 @@ export const uploadModel = async () => {
         const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
 
         // Form data
-        const data = new FormData()
+        var data: any = new FormData()
         data.append('orgProject', process.env.SKETCHFAB_PROJECT_TEST as string)
         data.append('modelFile', file)
         data.append('visibility', 'private')
@@ -42,7 +42,7 @@ export const uploadModel = async () => {
         data.append('name', 'Server Action Test')
 
         // Upload 3D Model
-        const sketchfabUpload: ModelUploadResponse = await fetch(orgModelUploadEnd, {
+        var sketchfabUpload: ModelUploadResponse | null = await fetch(orgModelUploadEnd, {
             headers: { 'Authorization': process.env.SKETCHFAB_API_TOKEN as string },
             method: 'POST',
             body: data
@@ -51,7 +51,7 @@ export const uploadModel = async () => {
             .then(json => json)
             .catch(e => serverActionErrorHandler(e.message, "uploadModel()", "Coulnd't upload to Sketchfab", true))
 
-        buffer = blob = file = null
+        buffer = blob = file = sketchfabUpload = data = null
 
         console.log('Upload complete')
     }
