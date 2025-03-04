@@ -30,11 +30,11 @@ export function routeHandlerError(route: string, errorMessage: string, fn: strin
  * @returns formatted string output detailing the error
  */
 export function serverActionError(errorMessage: string, fn: string, nonFatal?: boolean) {
-    return `Date: ${new Date().toDateString()}\n
+    console.error( `Date: ${new Date().toDateString()}\n
     Time: ${new Date().toTimeString()}\n
     Fatal: ${nonFatal ? "No" : "Yes"}\n
     Function: ${fn} \n
-    Error Message: ${errorMessage}`
+    Error Message: ${errorMessage}`)
 }
 
 /**

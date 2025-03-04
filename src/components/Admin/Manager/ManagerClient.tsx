@@ -113,7 +113,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                     placeholder="Enter UID">
                 </input>
-                <Button className="bg-[#004C46] mt-4" onPress={async () => uploadModel(await fileTo64(tempFile as File))}>
+                <Button className="bg-[#004C46] mt-4" onPress={() => uploadModel()}>
                     Server Action Upload
                 </Button>
             </div>

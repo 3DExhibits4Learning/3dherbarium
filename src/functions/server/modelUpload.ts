@@ -11,20 +11,23 @@
 import { ModelUploadResponse } from "@/ts/types"
 import { serverActionErrorHandler, routeHandlerTypicalCatch } from "./error"
 import { redirect } from "next/navigation"
+import { readFile } from "fs/promises"
 
 /**
  * 
  * @param base64FileString 
  * @returns route handler style response with success message and ModelUploadResponse (or error messages onCatch)
  */
-export const uploadModel = async (base64FileString: string) => {
+export const uploadModel = async () => {
 
     try {
 
         console.log('Uploading model')
 
         // Transition argument from base64 => file
-        const buffer = Buffer.from(base64FileString, 'base64')
+        const path = process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' ? 'X:/Herbarium/models/mushroom.blend' : 'public/data/Herbarium/models/MeshroomVersusWebODM.blend'
+        const buffer = await readFile(path)
+        //const buffer = Buffer.from(base64FileString, 'base64')
         const blob = new Blob([buffer])
         const file = new File([blob], "ServerAction.Blend")
 
@@ -50,7 +53,9 @@ export const uploadModel = async (base64FileString: string) => {
             .catch(e => serverActionErrorHandler(e.message, "uploadModel()", "Coulnd't upload to Sketchfab", true))
 
         console.log('Upload complete')
-        redirect('/admin/management')
+        
+        redirect('/')
+        console.log('Page did not refresh')
     }
-    catch(e: any) {return routeHandlerTypicalCatch(e.message)}
+    catch(e: any) {console.error(e.message)}
 }
