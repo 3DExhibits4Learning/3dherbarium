@@ -18,6 +18,7 @@ import { useState } from "react"
 import { Button } from "@nextui-org/react"
 import { Models } from "@/ts/types"
 import { uploadModel } from "@/functions/server/modelUpload"
+import { useRouter } from "next/navigation"
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal"
@@ -28,6 +29,8 @@ import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHan
 
 // Main JSX
 export default function ManagerClient(props: { pendingModels: string, katId: string, hunterId: string }) {
+
+    const router = useRouter()
 
     // First we parse the strigified pending models and recreate the Date objects; finally declare/type pendingModels
     const models = JSON.parse(props.pendingModels)
@@ -59,6 +62,11 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         const arrayBuffer = await (tempFile as File).arrayBuffer()
         const fileString = Buffer.from(arrayBuffer).toString('base64')
         return fileString
+    }
+
+    const uploadHandler = () => {
+        uploadModel()
+        router.push('/admin')
     }
 
     return <>
@@ -113,7 +121,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                     placeholder="Enter UID">
                 </input>
-                <Button className="bg-[#004C46] mt-4" onPress={() => uploadModel()}>
+                <Button className="bg-[#004C46] mt-4" onPress={uploadHandler}>
                     Server Action Upload
                 </Button>
             </div>

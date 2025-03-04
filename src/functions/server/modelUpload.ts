@@ -9,7 +9,7 @@
 
 // Typical imports
 import { ModelUploadResponse } from "@/ts/types"
-import { serverActionErrorHandler, routeHandlerTypicalCatch } from "./error"
+import { serverActionErrorHandler} from "./error"
 import { redirect } from "next/navigation"
 import { readFile } from "fs/promises"
 
@@ -26,10 +26,9 @@ export const uploadModel = async () => {
 
         // Transition argument from base64 => file
         const path = process.env.NEXT_PUBLIC_LOCAL_ENV === 'development' ? 'X:/Herbarium/models/mushroom.blend' : 'public/data/Herbarium/models/MeshroomVersusWebODM.blend'
-        const buffer = await readFile(path)
-        //const buffer = Buffer.from(base64FileString, 'base64')
-        const blob = new Blob([buffer])
-        const file = new File([blob], "ServerAction.Blend")
+        var buffer: any = await readFile(path)
+        var blob: any = new Blob([buffer])
+        var file: any = new File([blob], "ServerAction.Blend")
 
         // Upload endpoint
         const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
@@ -52,10 +51,9 @@ export const uploadModel = async () => {
             .then(json => json)
             .catch(e => serverActionErrorHandler(e.message, "uploadModel()", "Coulnd't upload to Sketchfab", true))
 
+        buffer = blob = file = null
+
         console.log('Upload complete')
-        
-        redirect('/')
-        console.log('Page did not refresh')
     }
     catch(e: any) {console.error(e.message)}
 }
