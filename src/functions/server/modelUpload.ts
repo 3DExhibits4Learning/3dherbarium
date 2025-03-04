@@ -52,6 +52,9 @@ export const uploadModel = async () => {
             .catch(e => serverActionErrorHandler(e.message, "uploadModel()", "Coulnd't upload to Sketchfab", true))
 
         buffer = blob = file = sketchfabUpload = data = null
+        
+        if(global.gc) global.gc()
+        else console.log('No cleanup')
 
         console.log('Upload complete')
     }
