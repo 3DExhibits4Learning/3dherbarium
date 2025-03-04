@@ -319,7 +319,7 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
     data.set('sid', botanyState.sid as string)
 
     // Set relevant data based on botanyState.activeAnnotationType
-    switch (botanyState.activeAnnotationType) {
+    switch (annotationState.annotationType) {
 
         case 'video':
             // Video_annotation table data
@@ -411,6 +411,7 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
             // Model_annotation table data
             data.set('modelAnnotationUid', annotationState.modelAnnotationUid as string)
             data.set('annotation', annotationState.annotation)
+            console.log('MODEL CASE RAN')
 
             break
 
@@ -462,7 +463,7 @@ export const deleteAnnotation = async (botanyState: BotanyClientState) => {
     const requestObj = {
         annotation_id: botanyState.activeAnnotation?.annotation_id,
         modelUid: botanyState.uid,
-        path: (botanyState.activeAnnotation as photo_annotation).url.startsWith('/data/Herbarium') ? `public/data/Herbarium/Annotations/${botanyState.uid}/${botanyState.activeAnnotation?.annotation_id}` : ''
+        path: (botanyState.activeAnnotation as photo_annotation).url?.startsWith('/data/Herbarium') ? `public/data/Herbarium/Annotations/${botanyState.uid}/${botanyState.activeAnnotation?.annotation_id}` : ''
     }
 
     // Fetch delete, set modal states
