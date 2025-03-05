@@ -22,10 +22,28 @@ export const dynamic = 'force-dynamic'
 // PATH
 const path = 'src/app/api/test/route.ts'
 
-export async function POST(request: Request | null) {
+export async function POST(request: Request) {
 
   try {
-    console.log(request)
+    // await fs.createWriteStream('public/data/Herbarium/model/')
+    const headers = Object.fromEntries(request.headers)
+    const fileName = headers['x-file-name']
+    //const writable = await fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
+    const writable = new WritableStream({
+      start(controller) {
+        console.log("Writable stream started");
+      },
+      write(chunk, controller) {
+        fs.appendFileSync(fileName, chunk);
+      },
+      close() {
+        console.log("File write complete!");
+      },
+      abort(err) {
+        console.error("Stream aborted due to error:", err);
+      }
+    })
+    request.body?.pipeTo(writable)
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }
   catch (e: any) { return routeHandlerTypicalCatch(e.message) }
