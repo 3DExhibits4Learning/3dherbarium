@@ -34,7 +34,7 @@ export async function POST(request: Request) {
         console.log("Writable stream started");
       },
       write(chunk, controller) {
-        fs.appendFileSync(`public/data/Hebarium/models/${fileName}`, chunk);
+        fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, chunk);
       },
       close() {
         console.log("File write complete!");
