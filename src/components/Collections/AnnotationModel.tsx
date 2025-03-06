@@ -28,7 +28,7 @@ export default function ModelAnnotation(props: { uid: string }) {
         ui_annotations: 0,
         ui_color: "004C46",
         orbit_constraint_zoom_in: 1,
-        orbit_constraint_zoom_out: 9,
+        orbit_constraint_zoom_out: 15,
     }
 
     // Effect syncs viewer api

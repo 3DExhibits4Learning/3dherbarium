@@ -15,7 +15,7 @@ import https from 'https'
 import fs from 'fs'
 import { autoWrite } from "@/functions/server/files"
 import { readFile } from "fs/promises"
-//import FormData from "form-data"
+// import FormData from "form-data"
 
 export const dynamic = 'force-dynamic'
 
@@ -25,25 +25,30 @@ const path = 'src/app/api/test/route.ts'
 export async function POST(request: Request) {
 
   try {
+
     // await fs.createWriteStream('public/data/Herbarium/model/')
     const headers = Object.fromEntries(request.headers)
     const fileName = headers['x-file-name']
-    //const writable = await fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
-    const writable = new WritableStream({
-      start(controller) {
-        console.log("Writable stream started");
-      },
-      write(chunk, controller) {
-        fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, chunk);
-      },
-      close() {
-        console.log("File write complete!");
-      },
-      abort(err) {
-        console.error("Stream aborted due to error:", err);
-      }
-    })
-    request.body?.pipeTo(writable)
+    // const writable = await fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
+    // const writable = new WritableStream({
+    //   start(controller) {
+    //     console.log("Writable stream started")
+    //   },
+    //   write(chunk, controller) {
+    //     fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, chunk)
+    //   },
+    //   close() {
+    //     console.log("File write complete!")
+    //   },
+    //   abort(err) {
+    //     console.error("Stream aborted due to error:", err)
+    //   }
+    // })
+    // request.body?.pipeTo(writable)
+
+    const stream = request.body
+    const reader = stream?.getReader()
+
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }
   catch (e: any) { return routeHandlerTypicalCatch(e.message) }
