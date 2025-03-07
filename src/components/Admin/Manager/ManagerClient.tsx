@@ -76,8 +76,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
 
         return new ReadableStream({
             start(controller) {
-                controller.enqueue(model.slice(0, chunkSize))
-                offset += chunkSize
+                console.log('Beginning stream')
             },
             async pull(controller) {
                 if (offset >= model.size) {
@@ -95,16 +94,17 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     }
 
     const streamReq = async () => {
-        const res = await fetch('/api/test', {
+        const stream = largeFileReadableStream()
+        await fetch('/api/test', {
             method: 'POST',
             headers: {
                 'content-type': 'application/octet-stream',
                 'x-file-name': encodeURIComponent((tempFile as File).name)
             },
-            body: (tempFile as File).stream(),
+            body: stream,
             // @ts-ignore
             duplex: 'half'
-        }).then(res => res.json()).then(json => console.log(json))
+        }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
     }
 
     return <>
