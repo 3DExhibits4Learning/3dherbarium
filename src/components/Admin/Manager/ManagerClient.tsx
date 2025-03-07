@@ -70,7 +70,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     }
 
     const largeFileReadableStream = () => {
-        const chunkSize = 4 * 1024 * 1024
+        const chunkSize = 1024 * 1024
         var offset = 0
         const model = tempFile as File
 
