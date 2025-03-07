@@ -85,6 +85,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 offset += chunkSize
                 const arrayBuffer = await chunk.arrayBuffer()
                 controller.enqueue(new Uint8Array(arrayBuffer))
+                console.log(`Enqued chunk ${offset} - ${offset + chunkSize}`)
             }
         },
             { highWaterMark: 4 })

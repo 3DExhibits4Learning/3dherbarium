@@ -53,6 +53,7 @@ export async function POST(request: Request) {
       const {done, value} = await reader.read()
       if (done) return
       fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
+      console.log('Writing chunk')
       readStream()
     }
 
