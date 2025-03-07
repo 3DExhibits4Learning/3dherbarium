@@ -101,7 +101,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 'content-type': 'application/octet-stream',
                 'x-file-name': encodeURIComponent((tempFile as File).name)
             },
-            body: largeFileReadableStream(),
+            body: (tempFile as File).stream(),
             // @ts-ignore
             duplex: 'half'
         }).then(res => res.json()).then(json => console.log(json))
