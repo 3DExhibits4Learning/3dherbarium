@@ -88,7 +88,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 console.log(`Enqued chunk ${offset} - ${offset + chunkSize}`)
             }
         },
-            { highWaterMark: 4 })
+            { highWaterMark: 9 })
     }
 
     const streamReq = async () => {
