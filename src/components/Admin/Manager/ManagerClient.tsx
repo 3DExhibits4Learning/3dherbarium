@@ -56,28 +56,25 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
-    const tempUploadHandler = async () => await dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, uploadModel, [await fileTo64(tempFile as File)], "Testing server action upload")
+    //const tempUploadHandler = async () => await dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, uploadModel, [await fileTo64(tempFile as File)], "Testing server action upload")
 
-    const fileTo64 = async (file: File) => {
-        const arrayBuffer = await (tempFile as File).arrayBuffer()
-        const fileString = Buffer.from(arrayBuffer).toString('base64')
-        return fileString
-    }
+    // const fileTo64 = async (file: File) => {
+    //     const arrayBuffer = await (tempFile as File).arrayBuffer()
+    //     const fileString = Buffer.from(arrayBuffer).toString('base64')
+    //     return fileString
+    // }
 
-    const uploadHandler = async () => {
-        await uploadModel()
-        router.push('/admin')
-    }
+    // const uploadHandler = async () => {
+    //     await uploadModel()
+    //     router.push('/admin')
+    // }
 
     const largeFileReadableStream = () => {
-        const chunkSize = 1024 * 1024
+        const chunkSize = 100 * 1024
         var offset = 0
         const model = tempFile as File
 
         return new ReadableStream({
-            start(controller) {
-                console.log('Beginning stream')
-            },
             async pull(controller) {
                 if (offset >= model.size) {
                     controller.close()
