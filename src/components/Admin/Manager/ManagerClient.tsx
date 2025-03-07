@@ -69,6 +69,31 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         router.push('/admin')
     }
 
+    const largeFileReadableStream = () => {
+        const chunkSize = 4 * 1024 * 1024
+        var offset = 0
+        const model = tempFile as File
+
+        return new ReadableStream({
+            start(controller) {
+                controller.enqueue(model.slice(0, chunkSize))
+                offset += chunkSize
+            },
+            async pull(controller) {
+                if (offset >= model.size) {
+                    controller.close()
+                    return
+                }
+
+                const chunk = model.slice(offset, offset + chunkSize)
+                offset += chunkSize
+                const arrayBuffer = await chunk.arrayBuffer()
+                controller.enqueue(new Uint8Array(arrayBuffer))
+            }
+        },
+            { highWaterMark: 4 })
+    }
+
     const streamReq = async () => {
         const res = await fetch('/api/test', {
             method: 'POST',
@@ -76,7 +101,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 'content-type': 'application/octet-stream',
                 'x-file-name': encodeURIComponent((tempFile as File).name)
             },
-            body: (tempFile as File).stream(),
+            body: largeFileReadableStream(),
             // @ts-ignore
             duplex: 'half'
         }).then(res => res.json()).then(json => console.log(json))
@@ -97,7 +122,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 </input>
                 <Button
                     className="w-1/2 text-white bg-[#004C46]"
-                    onClick={() => thumbnailHandler(uid, false)} 
+                    onClick={() => thumbnailHandler(uid, false)}
                 >
                     Update
                 </Button>

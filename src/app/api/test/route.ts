@@ -46,8 +46,17 @@ export async function POST(request: Request) {
     // })
     // request.body?.pipeTo(writable)
 
-    const stream = request.body
-    const reader = stream?.getReader()
+    const stream = request.body as ReadableStream
+    const reader = stream.getReader()
+
+    const readStream = async () => {
+      const {done, value} = await reader.read()
+      if (done) return
+      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
+      readStream()
+    }
+
+    readStream()
 
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }
