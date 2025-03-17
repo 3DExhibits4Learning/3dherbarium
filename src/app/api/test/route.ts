@@ -7,16 +7,13 @@
  */
 
 // Typical imports
-// import { ModelUploadResponse } from "@/ts/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
-// import https from 'https'
+// Default imports
 import fs from 'fs'
-// import { autoWrite } from "@/functions/server/files"
-// import { readFile } from "fs/promises"
-// import FormData from "form-data"
 
+// DYNAMIC ROUTE
 export const dynamic = 'force-dynamic'
 
 // PATH
