@@ -92,7 +92,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     }
 
     const streamReq = async () => {
-        const stream = largeFileReadableStream()
+        const stream = (tempFile as File).stream()
         await fetch('/api/test', {
             method: 'POST',
             headers: {
