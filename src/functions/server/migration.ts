@@ -5,7 +5,21 @@
  * Because these are raw queries, the schemas don't appear to be able to be referenced by variable (hence seperate functions for d => t and t => p, respectively)
  */
 
+// SINGLETON
 import prisma from "@/functions/server/utils/prisma"
+
+export const annotationNumberUpdate = (uid: string) => {
+    return prisma.$queryRaw`update Test.annotations as t
+    join Development.annotations as d
+    on d.annotation_id = t.annotation_id
+    set t.annotation_no = d.annotation_no
+    where t.uid = ${uid};`
+}
+
+export const selectByUid = (uid: string) => {
+    return prisma.$queryRaw`select * from annotations 
+    where uid = ${uid};`
+}
 
 // Species migration (species table to be deprecated eventually)
 export const speciesMigration = prisma.$queryRaw`insert into Test.species(
@@ -164,3 +178,4 @@ export const productionModelAnnotationMigration = prisma.$queryRaw`insert into P
     left join Production.model_annotation as t
     on d.annotation_id = t.annotation_id
     where t.annotation_id is null and d.annotation_id in (select annotation_id from Production.annotations));`
+

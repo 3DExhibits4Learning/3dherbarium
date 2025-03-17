@@ -26,8 +26,12 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
+import { migrateLateAdditionOfModelAnnotation } from "@/functions/server/migrations"
+
 // Main JSX
 export default function ManagerClient(props: { pendingModels: string, katId: string, hunterId: string }) {
+
+    //migrateLateAdditionOfModelAnnotation()
 
     const router = useRouter()
 
