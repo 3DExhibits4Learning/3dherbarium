@@ -127,7 +127,7 @@ export const productionImageSetMigration = prisma.$queryRaw`insert into Producti
     where t.spec_name is null and d.uid is not null and d.uid in (select uid from Production.model));`
 
 // Migrate software of those models
-export const productionSoftwareMigration = prisma.$queryRaw`insert into Test.software(
+export const productionSoftwareMigration = prisma.$queryRaw`insert into Production.software(
     select d.*
     from Test.software as d
     left join Production.software as t
