@@ -7,14 +7,14 @@
  */
 
 // Typical imports
-import { ModelUploadResponse } from "@/ts/types"
+// import { ModelUploadResponse } from "@/ts/types"
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
-import https from 'https'
+// import https from 'https'
 import fs from 'fs'
-import { autoWrite } from "@/functions/server/files"
-import { readFile } from "fs/promises"
+// import { autoWrite } from "@/functions/server/files"
+// import { readFile } from "fs/promises"
 // import FormData from "form-data"
 
 export const dynamic = 'force-dynamic'
@@ -48,23 +48,19 @@ export async function POST(request: Request) {
 
     var reader: any = (request.body as ReadableStream).getReader()
 
-    var readStream: any = async () => {
-      var tempObj: any = await reader.read()
-      if (tempObj.done) {
+    const readStream = async () => {
+      const {done, value} = await reader.read().catch((e: any) => routeHandlerErrorHandler(path, e.message, 'reader.read()', 'Reader error'))
+      if (done) {
         reader.releaseLock()
         return
       }
-      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, tempObj.value)
+      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
       console.log('Writing Chunk')
-      tempObj = null
+      console.log(value)
       readStream()
     }
 
     readStream()
-
-    reader = readStream = null
-
-    if(global.gc) global.gc()
 
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }

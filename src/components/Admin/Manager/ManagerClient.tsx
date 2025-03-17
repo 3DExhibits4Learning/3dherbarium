@@ -105,6 +105,30 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
         }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
     }
 
+    const chunkUpload = async () => {
+        const chunkSize = 50 * 1024 * 1024
+        var offset = 0
+        const model = tempFile as File
+
+        while(offset < model.size){
+            const chunk = model.slice(offset, offset + chunkSize)
+            offset += chunkSize
+            const arrayBuffer = await chunk.arrayBuffer()
+            const iterable = new Uint8Array(arrayBuffer)
+
+            await fetch('/api/test', {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/octet-stream',
+                    'x-file-name': encodeURIComponent((tempFile as File).name)
+                },
+                body: iterable,
+                // @ts-ignore
+                duplex: 'half'
+            }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
+        }
+    }
+
     return <>
         <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
         <div className="flex h-48 w-full">
