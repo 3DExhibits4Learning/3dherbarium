@@ -49,9 +49,10 @@ export async function POST(request: Request) {
     const reader = (request.body as ReadableStream).getReader()
 
     const readStream = async () => {
-      const {done, value} = await reader.read()
-      if (done) return
-      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
+      var tempObj: any = await reader.read()
+      if (tempObj.done) return
+      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, tempObj.value)
+      tempObj = null
       readStream()
     }
 
