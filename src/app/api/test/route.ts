@@ -26,37 +26,15 @@ export async function POST(request: Request) {
 
   try {
 
-    // await fs.createWriteStream('public/data/Herbarium/model/')
     const headers = Object.fromEntries(request.headers)
     const fileName = headers['x-file-name']
-    // const writable = await fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
-    // const writable = new WritableStream({
-    //   start(controller) {
-    //     console.log("Writable stream started")
-    //   },
-    //   write(chunk, controller) {
-    //     fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, chunk)
-    //   },
-    //   close() {
-    //     console.log("File write complete!")
-    //   },
-    //   abort(err) {
-    //     console.error("Stream aborted due to error:", err)
-    //   }
-    // })
-    // request.body?.pipeTo(writable)
-
     var reader: any = (request.body as ReadableStream).getReader()
-    const fileStream = fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
 
-    while (true) {
-      const { done, value } = await reader.read()
+    while(true){
+      const {done, value} = await reader.read().catch((e: any) => routeHandlerErrorHandler(path, e.message, 'reader.read()', 'Reader error'))
       if (done) break
-      console.log('Writing Chunk')
-      console.log(value)
-      fileStream.write(value)
+      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
     }
-    fileStream.end()
 
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }
