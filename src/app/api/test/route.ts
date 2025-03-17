@@ -47,20 +47,16 @@ export async function POST(request: Request) {
     // request.body?.pipeTo(writable)
 
     var reader: any = (request.body as ReadableStream).getReader()
+    const fileStream = fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
 
-    const readStream = async () => {
-      const {done, value} = await reader.read().catch((e: any) => routeHandlerErrorHandler(path, e.message, 'reader.read()', 'Reader error'))
-      if (done) {
-        reader.releaseLock()
-        return
-      }
-      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
       console.log('Writing Chunk')
       console.log(value)
-      readStream()
+      fileStream.write(value)
     }
-
-    readStream()
+    fileStream.end()
 
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }
