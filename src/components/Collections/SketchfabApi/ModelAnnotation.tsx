@@ -8,11 +8,15 @@
 
 import { model_annotation } from "@prisma/client"
 import ModelAnnotation from "../AnnotationModel"
+import { sketchfabApiData } from "@/ts/collections"
+import { fullAnnotation } from "@/ts/types"
 
-export default function ModelAnnotationMedia(props: { sketchfabApi: any }) {
+export default function ModelAnnotationMedia(props: { sketchfabApi: sketchfabApiData }) {
 
     const sketchfabApi = props.sketchfabApi
-    const modelAnnotation = sketchfabApi.annotations[sketchfabApi.index - 1].annotation as model_annotation
+    const annotations = sketchfabApi.annotations as fullAnnotation[]
+    const annotation = annotations[sketchfabApi.index as number - 1]
+    const modelAnnotation = annotation.annotation as model_annotation
 
     return <>
         <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>

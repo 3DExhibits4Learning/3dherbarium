@@ -116,6 +116,8 @@ model model_annotation {
   annotator     String      @db.VarChar(25) @default("Kat Lim")
   annotation    String      @db.VarChar(4000)
   annotation_id String      @id @db.VarChar(36)
+  max_zoom_in   String?     @db.Char(1)
+  max_zoom_out  String?     @db.Char(2) 
   uid           String      @unique @db.VarChar(36)
   modelUid      model       @relation(fields: [uid], references: [uid], onDelete: Cascade, map: "modelAnnotationFk2")      
   annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "modelAnnotationFk1")

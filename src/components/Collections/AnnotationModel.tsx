@@ -10,8 +10,8 @@
 'use client'
 
 // Imports
-import { useEffect } from 'react';
-import Sketchfab from '@sketchfab/viewer-api';
+import { useEffect } from 'react'
+import Sketchfab from '@sketchfab/viewer-api'
 
 // Main JSX
 export default function ModelAnnotation(props: { uid: string }) {
