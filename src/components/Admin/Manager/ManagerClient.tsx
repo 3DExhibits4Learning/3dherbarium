@@ -17,7 +17,6 @@ import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
 import { Button } from "@nextui-org/react"
 import { Models } from "@/ts/types"
-import { uploadModel } from "@/functions/server/modelUpload"
 import { useRouter } from "next/navigation"
 
 // Default imports
@@ -56,54 +55,6 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
-    //const tempUploadHandler = async () => await dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, uploadModel, [await fileTo64(tempFile as File)], "Testing server action upload")
-
-    // const fileTo64 = async (file: File) => {
-    //     const arrayBuffer = await (tempFile as File).arrayBuffer()
-    //     const fileString = Buffer.from(arrayBuffer).toString('base64')
-    //     return fileString
-    // }
-
-    // const uploadHandler = async () => {
-    //     await uploadModel()
-    //     router.push('/admin')
-    // }
-
-    const largeFileReadableStream = () => {
-        const chunkSize = 100 * 1024
-        var offset = 0
-        const model = tempFile as File
-
-        return new ReadableStream({
-            async pull(controller) {
-                if (offset >= model.size) {
-                    controller.close()
-                    return
-                }
-
-                const chunk = model.slice(offset, offset + chunkSize)
-                offset += chunkSize
-                const arrayBuffer = await chunk.arrayBuffer()
-                controller.enqueue(new Uint8Array(arrayBuffer))
-                console.log(`Enqued chunk ${offset} - ${offset + chunkSize}`)
-            }
-        },
-            { highWaterMark: 9, size: () => 1024})
-    }
-
-    const streamReq = async () => {
-        const stream = (tempFile as File).stream()
-        await fetch('/api/test', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/octet-stream',
-                'x-file-name': encodeURIComponent((tempFile as File).name)
-            },
-            body: stream,
-            // @ts-ignore
-            duplex: 'half'
-        }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
-    }
 
     const chunkUpload = async () => {
         const chunkSize = 10 * 1024 * 1024
