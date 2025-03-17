@@ -106,7 +106,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     }
 
     const chunkUpload = async () => {
-        const chunkSize = 50 * 1024 * 1024
+        const chunkSize = 10 * 1024 * 1024
         var offset = 0
         const model = tempFile as File
 
