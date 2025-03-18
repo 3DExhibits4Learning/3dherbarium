@@ -16,6 +16,7 @@ import { Chip } from "@nextui-org/react"
 // Default imports
 import Link from "next/link"
 import noImage from "../../../public/noImage.png"
+import { configureNfsUrl} from "@/functions/client/utils"
 
 export default function HerbariumCard(props: { index: number, model: model }) {
 
@@ -23,8 +24,9 @@ export default function HerbariumCard(props: { index: number, model: model }) {
     const index = props.index
     const model = props.model
 
-    // Determine hyperlink URL based on whether or not the model is a base model
+    // Determine hyperlink URL based on whether or not the model is a base model; determine thumbnail path
     const href = model.base_model ? `/collections/${model.spec_name}` : `/collections/${model.spec_name}?annotation=${model.annotation_number}`
+    const thumbnailPath = model.thumbnail.includes('/data/Herbarium/thumbnails') ? configureNfsUrl(model.thumbnail) : model.thumbnail
 
     return <div key={index} className='noselect'>
 
@@ -37,7 +39,7 @@ export default function HerbariumCard(props: { index: number, model: model }) {
                     <img
                         alt={'Image of ' + model.spec_name}
                         role='button'
-                        src={model.thumbnail ?? ''}
+                        src={thumbnailPath}
                         className='w-full h-[calc(100vh-275px)] min-h-[25rem] max-h-[30rem] object-cover relative z-5 rounded-t-md'
                         onError={(e: SyntheticEvent<HTMLImageElement, Event>) => { handleImgError(e.currentTarget, noImage); }} />
                 </Link>

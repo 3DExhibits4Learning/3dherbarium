@@ -12,10 +12,7 @@ export async function GET(request: Request) {
         // Obtain thumbnail from sketchfab
         await fetch(`https://api.sketchfab.com/v3/models/${uid}`)
             .then(res => res.json())
-            .then(data => {
-                console.log(data.thumbnails)
-                thumbUrl = data.thumbnails.images[0].url
-            })
+            .then(data => thumbUrl = data.thumbnails.images[0].url)
             .catch((e) => {
                 console.error('Error getting thumbnail from sketchfab, error message: ', e.message)
                 throw Error('Error obtaining thumbnail')

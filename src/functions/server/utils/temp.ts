@@ -32,7 +32,7 @@ export const writeAnnotationPhotosToDataStorage = async (uid: string) => {
             // Fetch photo from the web
             console.log('Fetching photo...')
             var contentType: any
-            const photo = await fetch(annotations[i].url).then(res => {contentType = res.headers.get('Content-Type'); return res.arrayBuffer()})
+            const photo = await fetch(annotations[i].url).then(res => { contentType = res.headers.get('Content-Type'); return res.arrayBuffer() })
             const extension = contentType ? '.' + contentType.split('/')[1] : ''
             console.log('Photo obtained...')
 
@@ -77,12 +77,29 @@ export const writeAnnotationPhotosToDataStorage = async (uid: string) => {
             console.log(`Annotation ${annotations[i].annotation_id} successfully migrated to data storage`)
         }
 
-        else if(annotations[i].annotation_type === 'photo' && annotations[i].url.startsWith('/data')) console.log(`The photo for annotation ${annotations[i].annotation_no} is in data storage`)
+        else if (annotations[i].annotation_type === 'photo' && annotations[i].url.startsWith('/data')) console.log(`The photo for annotation ${annotations[i].annotation_no} is in data storage`)
     }
 }
 
-export const streamUpload = async(file: File) => {
-    const data = new FormData()
-    data.set('file', file)
-    await fetch('/api/test')
+/**
+ * 
+ */
+export const cacheThumbnails = async () => {
+    const dir = 'X:/Herbarium/thumbnails'
+    const cloudDir = '/data/Herbarium/thumbnails'
+    const models = await prisma.model.findMany({ where: { site_ready: true } }).then(models => models.filter(model => !model.thumbnail.includes('/data/Herbarium') && model.thumbnail))
+
+    //console.log(models[0])
+
+    for (let i in models) {
+        const thumbnail = await fetch(models[i].thumbnail).then(res => {
+            if (res.ok) return res.arrayBuffer()
+            return null
+        })
+
+        if (thumbnail) autoWriteArrayBuffer(thumbnail, dir, `${dir}/${models[i].uid}.jpeg`)
+        await prisma.model.update({ where: { uid: models[i].uid }, data: { thumbnail: `${cloudDir}/${models[i].uid}.jpeg` } })
+
+        console.log(`Thumbnail for ${models[i].spec_name} saved to storage`)
+    }
 }
