@@ -8,6 +8,7 @@
 // SINGLETON
 import prisma from "@/functions/server/utils/prisma"
 
+// Used to update annotation numbers when a new annotation is added after a model has been pushed down the pipeline
 export const annotationNumberUpdate = (uid: string) => {
     return prisma.$queryRaw`update Test.annotations as t
     join Development.annotations as d
