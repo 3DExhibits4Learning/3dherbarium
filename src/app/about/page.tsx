@@ -17,9 +17,9 @@ const About = async () => <>
 
   <Header pageRoute='collections' headerTitle='About' />
 
-    <h1 className='text-2xl dark:text-white xl:ml-[12.5%] my-5 font-medium text-center xl:text-left'>About the 3D Digital Herbarium</h1>
+  <h1 className='text-2xl dark:text-white xl:ml-[12.5%] my-5 font-medium text-center xl:text-left'>About the 3D Digital Herbarium</h1>
 
-    <article className='flex flex-col w-full'>
+  <article className='flex flex-col w-full'>
 
     <section className='flex flex-col xl:flex-row xl:w-[75%] w-full items-center justify-between m-auto xl:mb-12'>
 
@@ -31,7 +31,7 @@ const About = async () => <>
       </section>
 
       <section className='flex justify-center h-[400px] w-full max-w-[400px] my-12 xl:my-0'>
-          <img className='object-fill rounded' src='/emergingTechAward.png' alt='ALA RUSA Best Emerging Tech Award 2024'></img>
+        <img className='object-fill rounded' src='/emergingTechAward.png' alt='ALA RUSA Best Emerging Tech Award 2024'></img>
       </section>
 
     </section>
@@ -78,11 +78,20 @@ const About = async () => <>
     </section>
 
     <section className='flex-col items-center text-lg dark:text-white w-[90%] sm:w-[75%] m-auto pb-10'>
-      <p>This work was supported in part by NSF awards OAC-2346701, CNS-1730158, ACI-1540112, ACI-1541349, OAC-1826967, OAC-2112167, CNS-2120019, the University of California Office of the President, and the University of California San Diego’s California Institute for Telecommunications and Information Technology/Qualcomm Institute.</p><br></br>
+      <p>This work was supported in part by NSF awards OAC-2346701, CNS-1730158, ACI-1540112, ACI-1541349, OAC-1826967, OAC-2112167, CNS-2120019,
+        the University of California Office of the President, and the University of California San Diego’s California Institute for Telecommunications and Information Technology/Qualcomm Institute.
+      </p>
+      <br></br>
+      <p>This work used resources available through the National Research Platform (NRP) at the
+        University of California, San Diego. NRP has been developed, and is supported in part, by funding
+        from National Science Foundation, from awards 1730158, 1540112, 1541349, 1826967,
+        2112167, 2100237, and 2120019, as well as additional funding from community partners
+      </p>
+      <br></br>
       <p>We thank the High Performance Computing Center team at Cal Poly Humboldt, especially Ravi Chalasani, Brian Campbell and John Gerving for their support with NRP installation and application.</p>
     </section>
 
-    </article>
+  </article>
 
   <Foot />
 </>
