@@ -17,7 +17,7 @@ import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
 import { Button } from "@nextui-org/react"
 import { Models } from "@/ts/types"
-import { useRouter } from "next/navigation"
+import { updateThumbnail } from "@/functions/server/manager"
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal"
@@ -26,14 +26,8 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import terminateDataTransfer from "@/functions/client/dataTransfer/terminateDataTransfer"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
-import { migrateLateAdditionOfModelAnnotation } from "@/functions/server/migrations"
-
 // Main JSX
 export default function ManagerClient(props: { pendingModels: string, katId: string, hunterId: string }) {
-
-    //migrateLateAdditionOfModelAnnotation()
-
-    const router = useRouter()
 
     // First we parse the strigified pending models and recreate the Date objects; finally declare/type pendingModels
     const models = JSON.parse(props.pendingModels)
@@ -56,7 +50,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
 
     // Task handlers
-    const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.updateThumbnail, [uid, community], "Updating thumbnail")
+    const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
 

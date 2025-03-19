@@ -6,7 +6,7 @@
 
 'use client'
 
-import { SetStateAction, Dispatch } from "react";
+import { SetStateAction, Dispatch } from "react"
 
 export default function initializeDataTransfer(setOpenModal: Dispatch<SetStateAction<boolean>>, setTransferring: Dispatch<SetStateAction<boolean>>, setLoadingLabel: Dispatch<SetStateAction<string>>, loadingLabel: string) {
     setOpenModal(true)

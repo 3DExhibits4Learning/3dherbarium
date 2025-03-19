@@ -18,9 +18,6 @@ import Header from "@/components/Header/Header"
 import Foot from "@/components/Shared/Foot"
 import FullPageError from "@/components/Error/FullPageError"
 
-import prisma from "@/functions/server/utils/prisma"
-import { autoWriteArrayBuffer } from "@/functions/server/files"
-
 // Path
 const path = 'src/app/admin/management/page.tsx'
 
@@ -28,8 +25,6 @@ const path = 'src/app/admin/management/page.tsx'
 export default async function Page() {
 
     try {
-
-        //await cacheThumbnails()
 
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))

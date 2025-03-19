@@ -51,6 +51,14 @@ export function serverActionErrorHandler(errorMessage: string, fn: string, clien
 }
 
 /**
+ * @param errorMessage response object for catch() on route handelers
+ * @returns Response object with client error message as data, response and statusText values and a 400 status
+ */
+export function serverActionCatch(errorMessage: string) {
+    return `Error: ${errorMessage}`
+}
+
+/**
  * @param route path of the route handler
  * @param errorMessage message from the error object
  * @param fn function that returned the rror

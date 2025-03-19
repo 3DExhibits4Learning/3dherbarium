@@ -15,18 +15,6 @@ import checkToken from "@/functions/client/utils/checkToken"
 
 /**
  * 
- * @param uid of the 3D model
- * @param community flag indicating whether the model is a community model or not
- * @returns message indicating the status of the thumbnail update
- */
-
-export const updateThumbnail = async (uid: string, community: boolean) => {
-    const path = community ? `/api/sketchfab/thumbnail?uid=${uid}&community=true` : `/api/sketchfab/thumbnail?uid=${uid}`
-    return await fetch(path).then(res => res.json()).then(res => res.data).catch(e => { if (process.env.NEXT_PUBLIC_NODE_ENV !== 'production') console.error(e.message); throw Error("Route handler error") })
-}
-
-/**
- * 
  * @param assignee task assignee
  * @param katId Kat's Jira ID
  * @param hunterId Hunter's Jira ID

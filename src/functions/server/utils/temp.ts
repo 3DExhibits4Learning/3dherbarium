@@ -89,8 +89,6 @@ export const cacheThumbnails = async () => {
     const cloudDir = '/data/Herbarium/thumbnails'
     const models = await prisma.model.findMany({ where: { site_ready: true } }).then(models => models.filter(model => !model.thumbnail.includes('/data/Herbarium') && model.thumbnail))
 
-    //console.log(models[0])
-
     for (let i in models) {
         const thumbnail = await fetch(models[i].thumbnail).then(res => {
             if (res.ok) return res.arrayBuffer()
