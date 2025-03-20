@@ -467,7 +467,7 @@ export const deleteAnnotation = async (botanyState: BotanyClientState) => {
     }
 
     // Fetch delete, set modal states
-    await fetch('/api/annotations', { method: 'DELETE', body: JSON.stringify(requestObj) }).then(res => res.json()).then(json => json.data)
+    return await fetch('/api/annotations', { method: 'DELETE', body: JSON.stringify(requestObj) }).then(res => res.json()).then(json => json.data)
 }
 
 export const photoVisibilityHandler = (index: number | 'new' | undefined, botanyState: BotanyClientState, annotationState: AnnotationEntryState, annotationDispatch: Dispatch<AnnotationEntryAction>, isNew: boolean) => {
