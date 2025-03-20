@@ -12,12 +12,22 @@ import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
 // Default imports
 import fs from 'fs'
+import { Readable } from "stream"
 
 // DYNAMIC ROUTE
 export const dynamic = 'force-dynamic'
 
+//
+
 // PATH
 const path = 'src/app/api/test/route.ts'
+
+// Disable body parser..?
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
 
 export async function POST(request: Request) {
 
@@ -25,13 +35,26 @@ export async function POST(request: Request) {
 
     const headers = Object.fromEntries(request.headers)
     const fileName = headers['x-file-name']
-    var reader: any = (request.body as ReadableStream).getReader()
+    const reader = (request.body as ReadableStream).getReader()
 
-    while(true){
-      const {done, value} = await reader.read().catch((e: any) => routeHandlerErrorHandler(path, e.message, 'reader.read()', 'Reader error'))
-      if (done) break
-      fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
-    }
+    // while(true){
+    //   const {done, value} = await reader.read().catch((e: any) => routeHandlerErrorHandler(path, e.message, 'reader.read()', 'Reader error'))
+    //   if (done) break
+    //   fs.appendFileSync(`public/data/Herbarium/models/${fileName}`, value)
+    // }
+
+    const readable = new Readable({
+      async read(){
+        const {done, value} = await reader.read()
+        if(done) this.push(null)
+        else this.push(value)
+      }
+    })
+
+    const writeStream = fs.createWriteStream(`public/data/Herbarium/models/${fileName}`)
+    readable.pipe(writeStream)
+
+    readable.on('end', () => console.log('File Uploaded'))
 
     return routeHandlerTypicalResponse('Model Uploaded', 'success')
   }

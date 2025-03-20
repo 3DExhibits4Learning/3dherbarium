@@ -54,12 +54,41 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
 
+    const streamUpload = async () => {
+        const modelFile = tempFile as File
+        const reader = modelFile.stream().getReader()
+
+        const stream = new ReadableStream({
+            start(ctrl) {
+                const push = () => {
+                    reader.read().then(({ done, value }) => {
+                        if (done) { ctrl.close(); return }
+                        ctrl.enqueue(value)
+                        push()
+                    })
+                }
+                push()
+            }
+        })
+
+        await fetch('/api/test', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/octet-stream',
+                'x-file-name': encodeURIComponent((tempFile as File).name)
+            },
+            body: stream,
+            // @ts-ignore
+            duplex: 'half'
+        }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
+    }
+
     const chunkUpload = async () => {
         const chunkSize = 10 * 1024 * 1024
         var offset = 0
         const model = tempFile as File
 
-        while(offset < model.size){
+        while (offset < model.size) {
             const chunk = model.slice(offset, offset + chunkSize)
             offset += chunkSize
             const arrayBuffer = await chunk.arrayBuffer()
@@ -130,7 +159,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                     className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
                     placeholder="Enter UID">
                 </input>
-                <Button className="bg-[#004C46] mt-4" onPress={chunkUpload}>
+                <Button className="bg-[#004C46] mt-4" onPress={streamUpload}>
                     Server Action Upload
                 </Button>
             </div>
