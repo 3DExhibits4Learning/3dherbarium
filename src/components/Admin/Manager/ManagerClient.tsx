@@ -54,35 +54,6 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
 
-    const streamUpload = async () => {
-        const modelFile = tempFile as File
-        const reader = modelFile.stream().getReader()
-
-        const stream = new ReadableStream({
-            start(ctrl) {
-                const push = () => {
-                    reader.read().then(({ done, value }) => {
-                        if (done) { ctrl.close(); return }
-                        ctrl.enqueue(value)
-                        push()
-                    })
-                }
-                push()
-            }
-        })
-
-        await fetch('/api/test', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/octet-stream',
-                'x-file-name': encodeURIComponent((tempFile as File).name)
-            },
-            body: stream,
-            // @ts-ignore
-            duplex: 'half'
-        }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
-    }
-
     const chunkUpload = async () => {
         const chunkSize = 4 * 1024 * 1024
         var offset = 0
