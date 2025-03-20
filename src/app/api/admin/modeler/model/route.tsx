@@ -110,9 +110,9 @@ export async function POST(request: Request) {
         // Create software records
         const insertSoftware = prisma.software.createMany({
             data: [
-                {uid: modelUid, software: 'Agisoft Metashape'},
-                {uid: modelUid, software: 'Blender'},
-                {uid: modelUid, software: 'Instant Meshes'}
+                { uid: modelUid, software: 'Agisoft Metashape' },
+                { uid: modelUid, software: 'Blender' },
+                { uid: modelUid, software: 'Instant Meshes' }
             ]
         })
 
@@ -123,15 +123,15 @@ export async function POST(request: Request) {
         await Promise.all([markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build"), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
             .catch(e => sendErrorEmail(path, 'Promise.all(markSubtask, transitionTask)', e.message, true))
 
-        // Create annotation task if the model is viable
-        if (isViable === 'yes') {
+        // Create annotation task if the model is a viable base model
+        if (isViable === 'yes' && isBase === 'yes') {
 
             // Await task, get task key to make subtasks
             const task = await createTask(
                 'SPRIN-1',
                 `Annotate ${toUpperFirstLetter(imageSet.spec_name)} (${sid.slice(0, 8)})`,
                 `Annotate ${imageSet.spec_name}`,
-                process.env.HUNTER_JIRA_ID as string
+                katJira
             ).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
 
             // Subtasks (annotation and sketchfab metadata)
@@ -144,6 +144,20 @@ export async function POST(request: Request) {
             // Typical response
             return routeHandlerTypicalResponse('Model Data Entered Successfully', { task, insert, update })
         }
+
+        // Create a metadata task if the model is a viable annotation model
+        else if (isViable === 'yes' && isBase === 'no') {
+            const task = await createTask(
+                'SPRIN-1',
+                `Add metadata for ${toUpperFirstLetter(imageSet.spec_name)} (${sid.slice(0, 8)})`,
+                `Add metadata for ${imageSet.spec_name}`,
+                katJira
+            ).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
+
+            // Typical response
+            return routeHandlerTypicalResponse('Model Data Entered Successfully', { task, insert, update })
+        }
+
         // Typical response without task
         return routeHandlerTypicalResponse('Model Data Entered Successfully', { insert, update })
     }

@@ -187,7 +187,7 @@ export async function transitionTask(issueKey: string, uuidSlice8: string, trans
         // Get epic JSON data
         const epic = await getIssue(issueKey).catch(e => { throw Error(e.message) })
 
-        // Find the task including the first 10 chars of the spcimen uuid in the summary
+        // Find the task including the first 8 chars of the spcimen uuid in the summary
         const task = getTaskFromEpic(epic, uuidSlice8)
 
         // Transition the issue to "done" with transition ID 31
@@ -213,10 +213,10 @@ export async function transitionSubtask(issueKey: string, uuidSlice8: string, su
         // Find the task including the first 10 chars of the spcimen uuid in the summary
         const task = getTaskFromEpic(epic, uuidSlice8)
 
-        // Get the task JSON and find the subtask containing both the first 10 chars of the uuid and the subtask keyword
+        // Get the task JSON and find the subtask containing both the first 8 chars of the uuid and the subtask keyword
         const subtask = getSubtaskFromTask(task, uuidSlice8, subtaskKeyword)
 
-        // Transition the issue to "done" with transition ID 31
+        // Transition the issue to to transitionId
         transitionIssue(transitionId, subtask.key)
     }
     // throw error on catch
