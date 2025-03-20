@@ -39,6 +39,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     const [isViable, setIsViable] = useState<boolean>(false)
     const [isBase, setIsBase] = useState<boolean>(true)
     const [model, setModel] = useState<File>()
+    const [height, setHeight] = useState<string>('')
 
     // Image source, button state
     const url = props.specimen.photoUrl
@@ -66,6 +67,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('isBase', isBase ? "yes" : "no")
         data.set('model', zippedModel, `${props.specimen.spec_name}.zip`)
         data.set('species', props.specimen.spec_name)
+        data.set('height', height)
 
         // Handle data transfer
         await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering 3D model into database')
@@ -84,6 +86,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
             <TextInput value={commonName} setValue={setCommonName} title='Common name' required textSize="text-2xl" />
             <YesOrNo value={isBase} setValue={setIsBase} title="Is this a base model?" required key={'select1'} />
             <YesOrNo value={isViable} setValue={setIsViable} title="Is the model viable?" required defaultNo key={'select2'} />
+            <TextInput value={height} setValue={setHeight} title='Specimen height (cm)' type='number' textSize="text-2xl" maxWidth="max-w-[250px]" />
             <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
             <div>
                 <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>

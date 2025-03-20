@@ -15,6 +15,7 @@ import { markSubtaskAsDone, transitionTask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 import { createTask } from "@/functions/server/jira"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import { Prisma } from "@prisma/client"
 
 // Prisma singleton
 const prisma = prismaClient()
@@ -116,8 +117,12 @@ export async function POST(request: Request) {
             ]
         })
 
+        // Declare transaction array and determine if height update needs to be added
+        const transactionArr: Prisma.PrismaPromise<any>[] = [insert, update, insertSoftware]
+        if(data.get('height')) transactionArr.push(prisma.specimen.update({where: {sid: sid}, data:{height: data.get('height') as string}}))
+
         // Await transaction
-        await prisma.$transaction([insert, update, insertSoftware]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
+        await prisma.$transaction(transactionArr).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
 
         // Mark 3D model subtask as complete and the parent model task as complete
         await Promise.all([markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build"), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
