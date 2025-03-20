@@ -17,18 +17,6 @@ import { Readable } from "stream"
 // DYNAMIC ROUTE
 export const dynamic = 'force-dynamic'
 
-//
-
-// PATH
-const path = 'src/app/api/test/route.ts'
-
-// Disable body parser..?
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-}
-
 export async function POST(request: Request) {
 
   try {
