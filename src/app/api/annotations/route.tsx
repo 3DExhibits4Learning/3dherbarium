@@ -39,7 +39,6 @@ export async function GET(request: Request) {
     catch (e: any) { return routeHandlerTypicalCatch(e.message) }
 }
 
-
 /**
  * 
  * @param request 

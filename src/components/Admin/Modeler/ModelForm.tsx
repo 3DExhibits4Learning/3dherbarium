@@ -24,7 +24,6 @@ import YesOrNo from "@/components/Shared/Form Fields/YesOrNo"
 import ModelInput from "@/components/ModelSubmit/ModelInput"
 import JSZip from "jszip"
 
-
 // Main JSX
 export default function ModelForm(props: { specimen: specimenWithImageSet }) {
 
