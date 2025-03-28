@@ -15,4 +15,4 @@ export const configureNfsUrl = (url: string) => isLocalEnv() ? `/api/nfs?path=X:
  * 
  * @returns 
  */
-export const configureThumbnailDir = () => isLocalEnv() ? 'X:/Herbarium/thumbnails' : '/data/Herbarium/thumbnails'
+export const configureThumbnailDir = () => isLocalEnv() ? 'X:/Herbarium/thumbnails' : 'public/data/Herbarium/thumbnails'
