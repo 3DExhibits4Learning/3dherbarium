@@ -403,6 +403,9 @@ export const getModelsToAnnotate = async () => {
         gte: new Date('2024-06-01'),
       }
     },
+    orderBy: {
+      spec_acquis_date: 'asc'
+    }
   })
 
   return modelsToAnnotate
