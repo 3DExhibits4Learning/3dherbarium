@@ -10,7 +10,11 @@
 import { configureThumbnailDir } from "../client/utils"
 import { serverActionCatch, serverActionErrorHandler } from "./error"
 import { autoWriteArrayBuffer } from "./files"
+import { migrateAnnotationNumbers, migrateBaseAnnotation, migrateModelAnnotation } from "./migration"
 import { updateThumbUrl } from "./queries"
+
+// SINGLETON
+import prisma from "./utils/prisma"
 
 /**
  * 
@@ -57,4 +61,29 @@ export const updateThumbnail = async (uid: string, isCommunity: boolean) => {
     }
     // Catch message
     catch (e: any) { return serverActionCatch(e.message) }
+}
+
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const addModelAnnotationToAnnotatedModel = async (uid: string) => {
+    try {
+        const annotationId = await prisma.model_annotation.findUnique({ where: { uid: uid } }).then(annotation => annotation?.annotation_id)
+            .catch(e => serverActionErrorHandler(e.message, 'await prisma.model_annotation.findUnique()', "Couldn't get annotation id")) as string
+
+        const baseModelUid = await prisma.annotations.findUnique({ where: { annotation_id: annotationId } }).then(annotation => annotation?.uid)
+            .catch(e => serverActionErrorHandler(e.message, 'prisma.annotations.findUnique', "Couldn't get base model uid")) as string
+
+        const transaction = [
+            migrateAnnotationNumbers(baseModelUid),
+            migrateBaseAnnotation(annotationId),
+            migrateModelAnnotation(annotationId)
+        ]
+
+        await prisma.$transaction(transaction).catch(e => serverActionErrorHandler(e.message, 'prisma.$transaction(transaction)', "Couldn't migrate new model annotation"))
+        return 'Model annotation added to test server'
+    }
+    catch (e: any) { serverActionCatch(e.message) }
 }

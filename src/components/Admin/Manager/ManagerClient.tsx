@@ -17,7 +17,7 @@ import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
 import { Button } from "@nextui-org/react"
 import { Models } from "@/ts/types"
-import { updateThumbnail } from "@/functions/server/manager"
+import { addModelAnnotationToAnnotatedModel, updateThumbnail } from "@/functions/server/manager"
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal"
@@ -53,13 +53,14 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
+    const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, addModelAnnotationToAnnotatedModel, ['cf42d4bb5fee4bfdb86d90984816fcd8'], "Migrating model annotation")
 
     const chunkUpload = async () => {
         const chunkSize = 10 * 1024 * 1024
         var offset = 0
         const model = tempFile as File
 
-        while(offset < model.size){
+        while (offset < model.size) {
             const chunk = model.slice(offset, offset + chunkSize)
             offset += chunkSize
             const arrayBuffer = await chunk.arrayBuffer()
@@ -123,6 +124,13 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
             </div>
 
             <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
+                <label className='text-2xl block mb-2'>Add model annotation to existing model</label>
+                <Button className="bg-[#004C46] mt-14" onPress={migrateModelAnnotationWrapper}>
+                    Migrate annotated 3D models
+                </Button>
+            </div>
+
+            {/* <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                 <label className='text-2xl block mb-2'>Test zip upload</label>
                 <input
                     onChange={e => e.target.files ? setTempFile(e.target.files[0]) : setTempFile(undefined)}
@@ -133,7 +141,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 <Button className="bg-[#004C46] mt-4" onPress={chunkUpload}>
                     Server Action Upload
                 </Button>
-            </div>
+            </div> */}
 
         </div>
         {pendingModels && <PendingModelsAdmin pendingModels={pendingModels as unknown as Models[]} approveWrapper={approveWrapper} />}

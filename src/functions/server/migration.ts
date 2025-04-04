@@ -8,19 +8,30 @@
 // SINGLETON
 import prisma from "@/functions/server/utils/prisma"
 
-// Used to update annotation numbers when a new annotation is added after a model has been pushed down the pipeline
-export const annotationNumberUpdate = (uid: string) => {
-    return prisma.$queryRaw`update Test.annotations as t
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const migrateAnnotationNumbers = (uid: string) => prisma.$queryRaw`update Test.annotations as t
     join Development.annotations as d
     on d.annotation_id = t.annotation_id
     set t.annotation_no = d.annotation_no
     where t.uid = ${uid};`
-}
 
-export const selectByUid = (uid: string) => {
-    return prisma.$queryRaw`select * from annotations 
-    where uid = ${uid};`
-}
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const migrateBaseAnnotation = (annotationId: string) => prisma.$queryRaw`insert into Test.annotations(select * from Development.annotations where uid = ${annotationId};`
+
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const migrateModelAnnotation = (annotationId: string) => prisma.$queryRaw`insert into Test.model_annotation(select * from Development.model_annotation where uid = ${annotationId};`
 
 // Species migration (species table to be deprecated eventually)
 export const speciesMigration = prisma.$queryRaw`insert into Test.species(
