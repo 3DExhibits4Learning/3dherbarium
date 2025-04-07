@@ -17,6 +17,7 @@ import * as annotationModelMigrate from "@/functions/server/migrations/annotatio
 
 // SINGLETON
 import prisma from "./utils/prisma"
+import { getAnnotatedAndAnnotationModelsMigrationArray } from "./migrations/annotatedAndAnnotation"
 
 /**
  * 
@@ -97,5 +98,22 @@ export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid:
         return 'Model annotation added to test server'
     }
     // Typical catch
+    catch (e: any) { serverActionCatch(e.message) }
+}
+
+
+export const migrateAnnotatedAndAnnotationModels = async() => {
+    try{
+
+        // Determine databased for migration based on env
+        const local = process.env.LOCAL_ENV
+        const d1 = local === 'development' ? 'Development' : 'Test'
+        const d2 = local === 'development' ? 'Test' : 'Production'
+
+        // Get transaction array and await transaction
+        const migrationTransactionArray = getAnnotatedAndAnnotationModelsMigrationArray(d1, d2)
+        await prisma.$transaction(migrationTransactionArray).catch(e => serverActionErrorHandler(e.message, 'prisma.$transaction(transaction)', "Couldn't migrate models"))
+        return `Annotated and annotation 3D models from ${d1} database have been migrated to ${d2} database`
+    }
     catch (e: any) { serverActionCatch(e.message) }
 }

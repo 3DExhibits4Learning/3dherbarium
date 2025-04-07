@@ -1,3 +1,10 @@
+/**
+ * @file src\functions\server\migrations\annotationModel.ts
+ * 
+ * @fileoverview functions to migrate an annotation model as an annotation to a model that has already been annotated
+ */
+
+// SINGLETON
 import prisma from "../utils/prisma"
 
 /**

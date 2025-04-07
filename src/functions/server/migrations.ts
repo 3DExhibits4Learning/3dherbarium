@@ -9,7 +9,7 @@
 
 import { serverActionErrorHandler } from "./error"
 // Typical imports
-import { annotationModelMigration, modelAnnotationMigration, selectByUid } from "./migrations/baseModel"
+import { annotationModelMigration, modelAnnotationMigration, selectByUid } from "./migrations/annotatedAndAnnotation"
 
 export const migrateLateAdditionOfModelAnnotation = async () => {
 
