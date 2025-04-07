@@ -110,8 +110,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
                 </input>
                 <Button
                     className="w-1/2 text-white bg-[#004C46]"
-                    onClick={() => thumbnailHandler(communityUid, true)}
-                >
+                    onClick={() => thumbnailHandler(communityUid, true)}>
                     Update
                 </Button>
             </div>

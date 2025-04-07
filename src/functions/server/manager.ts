@@ -7,7 +7,7 @@
 'use server'
 
 // Typical imports
-import { configureThumbnailDir } from "../client/utils"
+import { configureThumbnailDir, isLocalEnv } from "../client/utils"
 import { serverActionCatch, serverActionErrorHandler } from "./error"
 import { autoWriteArrayBuffer } from "./files"
 import { updateThumbUrl } from "./queries"
@@ -80,12 +80,16 @@ export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid:
         const baseModelUid = await prisma.annotations.findUnique({ where: { annotation_id: annotationId } }).then(annotation => annotation?.uid)
             .catch(e => serverActionErrorHandler(e.message, 'prisma.annotations.findUnique', "Couldn't get base model uid")) as string
 
+        // Establish database to migrate to/from based on environment
+        const d1 = isLocalEnv() ? 'Development' : 'Test'
+        const d2 = isLocalEnv() ? 'Test' : 'Production'
+
         // Prisma transaction array
         const transaction = [
-            annotationModelMigrate.migrateAnnotationModelData(baseModelUid),
-            annotationModelMigrate.migrateAnnotationNumbers(baseModelUid),
-            annotationModelMigrate.migrateBaseAnnotation(annotationId),
-            annotationModelMigrate.migrateModelAnnotation(annotationId)
+            annotationModelMigrate.migrateAnnotationModelData(baseModelUid, d1, d2),
+            annotationModelMigrate.migrateAnnotationNumbers(baseModelUid, d1, d2),
+            annotationModelMigrate.migrateBaseAnnotation(annotationId, d1, d2),
+            annotationModelMigrate.migrateModelAnnotation(annotationId, d1, d2)
         ]
 
         // Await transaction, return
