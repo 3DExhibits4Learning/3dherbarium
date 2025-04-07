@@ -8,31 +8,6 @@
 // SINGLETON
 import prisma from "@/functions/server/utils/prisma"
 
-/**
- * 
- * @param uid 
- * @returns 
- */
-export const migrateAnnotationNumbers = (uid: string) => prisma.$queryRaw`update Test.annotations as t
-    join Development.annotations as d
-    on d.annotation_id = t.annotation_id
-    set t.annotation_no = d.annotation_no
-    where t.uid = ${uid};`
-
-/**
- * 
- * @param uid 
- * @returns 
- */
-export const migrateBaseAnnotation = (annotationId: string) => prisma.$queryRaw`insert into Test.annotations(select * from Development.annotations where uid = ${annotationId};`
-
-/**
- * 
- * @param uid 
- * @returns 
- */
-export const migrateModelAnnotation = (annotationId: string) => prisma.$queryRaw`insert into Test.model_annotation(select * from Development.model_annotation where uid = ${annotationId};`
-
 // Species migration (species table to be deprecated eventually)
 export const speciesMigration = prisma.$queryRaw`insert into Test.species(
     select d.*
@@ -63,7 +38,7 @@ export const annotationModelMigration = prisma.$queryRaw`insert into Test.model(
     from Development.model as d
     left join Test.model as t
     on d.uid = t.uid
-    where t.uid is null and d.base_model is false);`
+    where t.uid is null and d.base_model is false and d.annotation_number is not null);`
 
 // Migrate image sets of those models
 export const imageSetMigration = prisma.$queryRaw`insert into Test.image_set(

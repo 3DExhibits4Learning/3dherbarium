@@ -17,7 +17,7 @@ import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
 import { Button } from "@nextui-org/react"
 import { Models } from "@/ts/types"
-import { addModelAnnotationToAnnotatedModel, updateThumbnail } from "@/functions/server/manager"
+import { migrateModelAnnotationToAnnotatedModel, updateThumbnail } from "@/functions/server/manager"
 
 // Default imports
 import DataTransferModal from "../../Shared/DataTransferModal"
@@ -53,7 +53,7 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.migrateAnnotatedModels, [], 'Migrating annotated 3D models')
-    const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, addModelAnnotationToAnnotatedModel, ['cf42d4bb5fee4bfdb86d90984816fcd8'], "Migrating model annotation")
+    const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateModelAnnotationToAnnotatedModel, ['cf42d4bb5fee4bfdb86d90984816fcd8'], "Migrating model annotation")
 
     const chunkUpload = async () => {
         const chunkSize = 10 * 1024 * 1024

@@ -8,7 +8,7 @@
 import prisma from "@/functions/server/utils/prisma"
 
 // Migration file import
-import * as migrate from '@/functions/server/migration'
+import * as migrate from '@/functions/server/migrations/baseModel'
 
 // Typical imports
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
