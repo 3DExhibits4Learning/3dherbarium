@@ -11,13 +11,14 @@ import { configureThumbnailDir, isLocalEnv } from "../client/utils"
 import { serverActionCatch, serverActionErrorHandler } from "./error"
 import { autoWriteArrayBuffer } from "./files"
 import { updateThumbUrl } from "./queries"
+import { getAnnotatedAndAnnotationModelsMigrationArray } from "./migrations/annotatedAndAnnotation"
+import { readdir } from "fs/promises"
 
 // Import all migration logic
 import * as annotationModelMigrate from "@/functions/server/migrations/annotationModel"
 
 // SINGLETON
 import prisma from "./utils/prisma"
-import { getAnnotatedAndAnnotationModelsMigrationArray } from "./migrations/annotatedAndAnnotation"
 
 /**
  * 
@@ -101,9 +102,12 @@ export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid:
     catch (e: any) { serverActionCatch(e.message) }
 }
 
-
-export const migrateAnnotatedAndAnnotationModels = async() => {
-    try{
+/**
+ * 
+ * @returns 
+ */
+export const migrateAnnotatedAndAnnotationModels = async () => {
+    try {
 
         // Determine databased for migration based on env
         const local = process.env.LOCAL_ENV
@@ -116,4 +120,14 @@ export const migrateAnnotatedAndAnnotationModels = async() => {
         return `Annotated and annotation 3D models from ${d1} database have been migrated to ${d2} database`
     }
     catch (e: any) { serverActionCatch(e.message) }
+}
+
+/**
+ * 
+ * @param path path of directory to read
+ * @returns ideally, a string[] containing all file names in a given directory; returns empty string on error
+ */
+export const readDirectory = async (path: string) => {
+    try { return await readdir(path).catch(e => serverActionErrorHandler(e.message, 'readdir(path)', "Directory not found")) }
+    catch (e: any) { return [] }
 }
