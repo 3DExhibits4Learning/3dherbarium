@@ -14,7 +14,8 @@ import { ModelerContext } from "./ModelerDash"
 import { specimenWithImageSet, dataTransfer } from "@/ts/types"
 import { buttonEnable } from "@/functions/client/shared";
 import { insertModelIntoDatabase } from "@/functions/client/admin/modeler"
-import { isZipFile } from "@/functions/client/utils/zip"
+import { chunkFileToDisk } from "@/functions/client/modelSubmit"
+import { getBackupPath } from "@/functions/server/modelSubmit"
 
 // Default imports
 import Form from "@/components/Shared/Form"
@@ -22,7 +23,6 @@ import TextInput from "@/components/Shared/Form Fields/TextInput"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 import YesOrNo from "@/components/Shared/Form Fields/YesOrNo"
 import ModelInput from "@/components/ModelSubmit/ModelInput"
-import JSZip from "jszip"
 
 // Main JSX
 export default function ModelForm(props: { specimen: specimenWithImageSet }) {
@@ -51,11 +51,9 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     // Model data insertion handeler
     const insertModelDataHandler = async () => {
 
-        // Zip file if it isn't
-        const zip = new JSZip()
-        const _3dModel = model as File
-        zip.file(_3dModel.name, _3dModel)
-        const zippedModel = await isZipFile(_3dModel) ? _3dModel : await zip.generateAsync({ type: 'blob' })
+        const modelFile = model as File
+        const speciesAndSidSlice = `${props.specimen.spec_name}-${props.specimen.sid.slice(0,10)}`
+        await chunkFileToDisk(model as File, speciesAndSidSlice, 'backup')
 
         // Instantiate form data
         const data = new FormData()
@@ -64,9 +62,10 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('modeler', modeler)
         data.set('isViable', isViable ? "yes" : "no")
         data.set('isBase', isBase ? "yes" : "no")
-        data.set('model', zippedModel, `${props.specimen.spec_name}.zip`)
         data.set('species', props.specimen.spec_name)
         data.set('height', height)
+        data.set('modelPath', await getBackupPath(speciesAndSidSlice))
+        data.set('fileName', modelFile.name)
 
         // Handle data transfer
         await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering 3D model into database')

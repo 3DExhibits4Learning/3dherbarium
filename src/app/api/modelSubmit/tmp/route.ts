@@ -5,7 +5,6 @@
  */
 
 // Typical imports
-import { getTmpPath } from '@/functions/server/modelSubmit'
 import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from '@/functions/server/error'
 
 // Route

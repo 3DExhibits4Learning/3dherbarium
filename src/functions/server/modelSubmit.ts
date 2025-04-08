@@ -21,4 +21,4 @@ export const getTmpPath = async (tmpId: string) => process.env.LOCAL_ENV === 'de
  * @param speciesAndUid 
  * @returns 
  */
-export const getBackupPath = async (speciesAndUid: string) => process.env.LOCAL_ENV === 'development' ? `X:/Herbarium/backup/models/${speciesAndUid}` : `public/data/Herbarium/backup/models/${speciesAndUid}`
+export const getBackupPath = async (speciesAndSidSlice: string) => process.env.LOCAL_ENV === 'development' ? `X:/Herbarium/backup/models/${speciesAndSidSlice}` : `public/data/Herbarium/backup/models/${speciesAndSidSlice}`

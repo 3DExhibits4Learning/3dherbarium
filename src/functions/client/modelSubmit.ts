@@ -6,17 +6,19 @@
 
 'use client'
 
+// Typical imports
 import { isZipFile } from './utils/zip'
+import { getBackupPath, getTmpPath } from '../server/modelSubmit'
+
+// Default imports
 import JSZip from 'jszip'
-import { v4 as uuidv4 } from 'uuid'
-import { getTmpPath } from '../server/modelSubmit'
 
 /**
  * 
  * @param zip 
  * @param tmpId 
  */
-export const chunkFileToTmp = async (file: File, tmpId: string) => {
+export const chunkFileToDisk = async (file: File, id: string, dir: 'backup' | 'tmp') => {
     // Declare chunk size and offset
     const chunkSize = 4 * 1024 * 1024 // 4 MB chunks
     var offset = 0
@@ -29,41 +31,12 @@ export const chunkFileToTmp = async (file: File, tmpId: string) => {
         // Set form data
         const data = new FormData()
         data.set('chunk', chunk)
-        data.set('path', await getTmpPath(tmpId))
+        data.set('path', dir === 'tmp' ? await getTmpPath(id): await getBackupPath(id))
 
         // Await fetch
         const res = await fetch('/api/modelSubmit/tmp', { method: 'POST', body: data })
         if (!res.ok) throw Error("Couldn't write file to disk")
     }
-
-    return
-}
-
-/**
- * 
- * @param zip 
- * @param tmpId 
- */
-export const chunkFileToBackup = async (file: File, tmpId: string) => {
-    // Declare chunk size and offset
-    const chunkSize = 4 * 1024 * 1024 // 4 MB chunks
-    var offset = 0
-
-    // Fetch chunks until file upload is complete
-    while (offset < file.size) {
-        const chunk = file.slice(offset, offset + chunkSize)
-        offset += chunkSize
-
-        // Set form data
-        const data = new FormData()
-        data.set('chunk', chunk)
-        data.set('tmpId', tmpId)
-
-        // Await fetch
-        const res = await fetch('/api/modelSubmit/tmp', { method: 'POST', body: data })
-        if (!res.ok) throw Error("Couldn't write file to disk")
-    }
-
     return
 }
 

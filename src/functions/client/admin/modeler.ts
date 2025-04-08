@@ -1,42 +1,26 @@
 import { imageInsertion } from "@/ts/types"
-import { getSubtaskFromTask } from "@/functions/server/jira";
-import { SetStateAction, Dispatch } from "react";
 
 /**
  * 
  * @param specimenInsertData data to be inserted into db
  * @returns text indicating success or failure of route handler
  */
-export const insertSpecimenIntoDatabase = async (specimenInsertData: FormData) => {
-    return await fetch('/api/admin/modeler/specimen', {
-        method: 'POST',
-        body: specimenInsertData
-    }).then(res => res.json()).then(json => { console.log(json); return json.data })
-}
+export const insertSpecimenIntoDatabase = async (specimenInsertData: FormData) => await fetch('/api/admin/modeler/specimen', { method: 'POST', body: specimenInsertData }).then(res => res.json()).then(json => json.data)
 
 /**
  * 
  * @param data data to be inserted into db
  * @returns text indicating success or failure of route handler
  */
-export const insertModelIntoDatabase = async (data: FormData) => {
-    await fetch('/api/admin/modeler/model', {
-        method: 'POST',
-        body: data
-    }).then(res => res.json()).then(json => { console.log(json); return json.data })
-}
+export const insertModelIntoDatabase = async (data: FormData) => await fetch('/api/admin/modeler/model', { method: 'POST', body: data }).then(res => res.json()).then(json => json.data)
 
 /**
  * 
  * @param imageSetInsertData data to be inserted into db
  * @returns text indicating success or failure of route handler
  */
-export const insertImageSetIntoDatabase = async (imageSetInsertData: imageInsertion) => {
-    return await fetch('/api/admin/modeler/photos', {
-        method: 'POST',
-        body: JSON.stringify(imageSetInsertData)
-    }).then(res => res.json()).then(json => { console.log(json); return json.data })
-}
+export const insertImageSetIntoDatabase = async (imageSetInsertData: imageInsertion) => await fetch('/api/admin/modeler/photos', { method: 'POST', body: JSON.stringify(imageSetInsertData) })
+    .then(res => res.json()).then(json => json.data)
 
 /**
  * 
@@ -57,10 +41,8 @@ export const isIssueAutoMarkedDone = (summary: string) => summary.includes('Buil
  * @param transitionId 
  * @returns 
  */
-export const transitionIssue = async (transitionId: number, issueKey: string) => await fetch('/api/issues/transition', {
-    method: 'POST',
-    body: JSON.stringify({ issueKey: issueKey, transitionId: transitionId })
-}).then(res => res.text()).then(text => text)
+export const transitionIssue = async (transitionId: number, issueKey: string) => await fetch('/api/issues/transition', { method: 'POST', body: JSON.stringify({ issueKey: issueKey, transitionId: transitionId }) })
+    .then(res => res.text()).then(text => text)
 
 
 /**
