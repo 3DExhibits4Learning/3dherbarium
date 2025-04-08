@@ -10,13 +10,13 @@
 // Typical imports
 import { fullAnnotation, GbifResponse } from "@/ts/types"
 import { forwardRef, MutableRefObject } from "react"
+import { sketchfabApiData } from "@/ts/collections"
 
 // Default imports
 import TaxonomyAndDescription from "./TaxAndDescription"
 import PhotoAnnotation from "./PhotoAnnotation"
 import VideoAnnotation from "./VideoAnnotation"
 import ModelAnnotationMedia from "./ModelAnnotation"
-import { sketchfabApiData } from "@/ts/collections"
 
 // Main JSX
 export const Annotation = forwardRef((props: { gMatch: GbifResponse, sketchfabApi: sketchfabApiData }, ref) => {

@@ -1,7 +1,7 @@
 /**
- * @file src/components/Admin/Modeler/ImageSetForm.tsx
+ * @file src\components\Admin\Modeler\ModelForm.tsx
  * 
- * @fileoverview form for 3D modeler to enter image set data into the database
+ * @fileoverview form for 3D modeler to enter 3D models into the database
  */
 
 'use client'
@@ -51,6 +51,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
     // Model data insertion handeler
     const insertModelDataHandler = async () => {
 
+        // Chunk file to disk
         const modelFile = model as File
         const speciesAndSidSlice = `${props.specimen.spec_name}-${props.specimen.sid.slice(0,10)}`
         await chunkFileToDisk(model as File, speciesAndSidSlice, 'backup')

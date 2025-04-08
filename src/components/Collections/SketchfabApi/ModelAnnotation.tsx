@@ -6,11 +6,15 @@
 
 'use client'
 
+// Typical imports
 import { model_annotation } from "@prisma/client"
-import ModelAnnotation from "../AnnotationModel"
 import { sketchfabApiData } from "@/ts/collections"
 import { fullAnnotation } from "@/ts/types"
 
+// Default imports
+import ModelAnnotation from "@/components/Collections/AnnotationModel"
+
+// Main JSX
 export default function ModelAnnotationMedia(props: { sketchfabApi: sketchfabApiData }) {
 
     const sketchfabApi = props.sketchfabApi

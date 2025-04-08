@@ -12,11 +12,11 @@ import { model } from "@prisma/client"
 import { SyntheticEvent } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { Chip } from "@nextui-org/react"
+import { configureNfsUrl} from "@/functions/client/utils"
 
 // Default imports
 import Link from "next/link"
 import noImage from "../../../public/noImage.png"
-import { configureNfsUrl} from "@/functions/client/utils"
 
 export default function HerbariumCard(props: { index: number, model: model }) {
 
