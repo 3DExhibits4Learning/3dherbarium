@@ -7,8 +7,7 @@ import { mapMarker } from "./icons"
 import Map from "./Map"
 
 export default function MapWithPoint(props: { position: LatLngLiteral }) {
-    return (
-        <Map center={props.position}>
+    return <Map center={props.position}>
             <Marker position={props.position} icon={mapMarker}>
                 <Popup>
                     <p>Latitude: {props.position.lat}</p>
@@ -16,5 +15,4 @@ export default function MapWithPoint(props: { position: LatLngLiteral }) {
                 </Popup>
             </Marker>
         </Map>
-    )
 }

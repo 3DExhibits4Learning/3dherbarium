@@ -108,7 +108,6 @@ export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid:
  */
 export const migrateAnnotatedAndAnnotationModels = async () => {
     try {
-
         // Determine databased for migration based on env
         const local = process.env.LOCAL_ENV
         const d1 = local === 'development' ? 'Development' : 'Test'
