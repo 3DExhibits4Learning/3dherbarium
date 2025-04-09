@@ -20,7 +20,7 @@ const MapWithPoint = dynamic(() => import("@/components/Map/MapWithPoint"))
 
 // Main JSX
 export default function MobileAnnotationModelModal(props: { isOpen: boolean, model: model }) {
-    
+
     // Annotation model data state, loader and effect
     const [annotationModelData, setAnnotationModelData] = useState<{ annotation: model_annotation, specimen: specimen }>()
     const loadAnnotationModelData = async () => setAnnotationModelData(await getAnnotationModelData(props.model))
@@ -38,8 +38,8 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
                         </div>
 
                         <div className='text-[1.25rem] border-b border-t border-[#004C46] w-full'>
-                      <p className="text-center font-medium text-xl my-1"> Specimen Data </p>
-                    </div>
+                            <p className="text-center font-medium text-xl my-1"> Specimen Data </p>
+                        </div>
 
                         {
                             annotationModelData.specimen.lat && annotationModelData.specimen.lng &&
@@ -50,15 +50,13 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
 
                         {
                             annotationModelData.specimen.locality &&
-                                <p dangerouslySetInnerHTML={{ __html: `Locality: ` + toUpperFirstLetter(annotationModelData.specimen.locality) }} className='fade inline' />
+                            <p dangerouslySetInnerHTML={{ __html: `<span style="font-weight:500;">Locality:</span> ` + toUpperFirstLetter(annotationModelData.specimen.locality) }} className='fade inline' />
                         }
 
-                        {annotationModelData.specimen.height && <p>*Specimen height: {annotationModelData.specimen.height} cm</p>}
+                        {annotationModelData.specimen.height && <p><span className="font-medium">*Specimen height:</span> {annotationModelData.specimen.height} cm</p>}
 
-                        <div>
-                            <p className='fade w-[95%]'>3D Model by {annotationModelData.annotation.modeler}</p>
-                            <p className='fade w-[95%]'>Annotation by {annotationModelData.annotation.annotator}</p>
-                        </div>
+                        <p className='fade w-[95%]'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
+                        <p className='fade w-[95%]'><span className="font-medium">Annotation by:</span> {annotationModelData.annotation.annotator}</p>
                     </>
                 }
             </ModalBody>
