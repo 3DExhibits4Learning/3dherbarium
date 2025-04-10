@@ -7,9 +7,10 @@
 // Typical imports
 import { Modal, ModalBody, ModalContent } from "@nextui-org/react"
 import { model, specimen, model_annotation } from "@prisma/client"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState, Dispatch } from "react"
 import { getAnnotationModelData } from "@/functions/server/search"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
+import { Button } from "@nextui-org/react"
 
 // Default imports
 import dynamic from "next/dynamic"
@@ -19,7 +20,7 @@ const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'))
 const MapWithPoint = dynamic(() => import("@/components/Map/MapWithPoint"))
 
 // Main JSX
-export default function MobileAnnotationModelModal(props: { isOpen: boolean, model: model }) {
+export default function MobileAnnotationModelModal(props: { isOpen: boolean, model: model, setIsOpen: Dispatch<SetStateAction<boolean>> }) {
 
     // Annotation model data state, loader and effect
     const [annotationModelData, setAnnotationModelData] = useState<{ annotation: model_annotation, specimen: specimen }>()
@@ -57,6 +58,8 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
 
                         <p className='fade w-[95%]'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
                         <p className='fade w-[95%]'><span className="font-medium">Annotation by:</span> {annotationModelData.annotation.annotator}</p>
+
+                        <div className="flex justify-center my-4"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
                     </>
                 }
             </ModalBody>

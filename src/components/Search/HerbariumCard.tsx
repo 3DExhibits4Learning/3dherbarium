@@ -20,6 +20,7 @@ import Link from "next/link"
 import noImage from "../../../public/noImage.png"
 import MobileAnnotationModelModal from "@/components/Search/MobileAnnotationModel"
 
+// Main JSX
 export default function HerbariumCard(props: { index: number, model: model }) {
 
     // Props => variables
@@ -35,7 +36,7 @@ export default function HerbariumCard(props: { index: number, model: model }) {
 
     return <>
         <div key={index} className='noselect'>
-        {!model.base_model && mobileAnnotationModalOpen && <MobileAnnotationModelModal isOpen={mobileAnnotationModalOpen} model={model} />}
+        {!model.base_model && mobileAnnotationModalOpen && <MobileAnnotationModelModal isOpen={mobileAnnotationModalOpen} model={model} setIsOpen={setMobileAnnotationModalOpen} />}
 
             <article className='rounded-md overflow-hidden mx-1'>
 
