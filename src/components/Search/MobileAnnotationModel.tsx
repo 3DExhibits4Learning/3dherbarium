@@ -5,7 +5,7 @@
  */
 
 // Typical imports
-import { Modal, ModalBody, ModalContent } from "@nextui-org/react"
+import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
 import { model, model_annotation } from "@prisma/client"
 import { SetStateAction, useEffect, useState, Dispatch } from "react"
 import { getAnnotationModel } from "@/functions/server/search"
@@ -34,12 +34,14 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
 
     return <Modal isOpen={props.isOpen} size="full" placement="center" scrollBehavior={"inside"} hideCloseButton className="!h-[100vh] !min-h-[100vh]">
         <ModalContent>
+            <ModalHeader className="flex justify-end m-0 p-0">
+                <div className="flex justify-end text-lg mt-2 mr-6">
+                    <button onClick={() => props.setIsOpen(false)}>x</button>
+                </div>
+            </ModalHeader>
             <ModalBody>
 
-                <div className="flex justify-end text-lg"><button onClick={() => props.setIsOpen(false)}>x</button></div>
-
-                <i><p className="text-center font-medium text-xl">{toUpperFirstLetter(props.model.spec_name)}</p></i>
-
+                <i><p className="text-center font-medium text-2xl">{toUpperFirstLetter(props.model.spec_name)}</p></i>
                 <ModelViewer uid={props.model.uid} />
 
                 {
@@ -63,12 +65,12 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
 
                         {annotationModelData.model.specimen.height && <p><span className="font-medium">*Specimen height:</span> {annotationModelData.model.specimen.height} cm</p>}
 
-                        <p className='fade w-[95%]'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
                         <p className='fade w-[95%]'><span className="font-medium">Annotation by:</span> {annotationModelData.annotation.annotator}</p>
+                        <p className='fade w-[95%]'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
                         <p className='fade'><span className="font-medium">Build Method:</span> {annotationModelData.model.build_process}</p>
                         <p className='fade'><span className="font-medium">Build Software:</span> {...annotationModelData.model.software.map((software, index) => index === annotationModelData.model.software.length - 1 ? software.software : software.software + ', ')}</p>
 
-                        <div className="flex justify-center my-4"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
+                        <div className="flex justify-center my-8"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
                     </>
                 }
 
@@ -80,7 +82,7 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
                         <p className='fade'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
                         <p className='fade'><span className="font-medium">Build Method:</span> {annotationModelData.model.build_process}</p>
                         <p className='fade'><span className="font-medium">Build Software:</span> {...annotationModelData.model.software.map((software, index) => index === annotationModelData.model.software.length - 1 ? software.software : software.software + ', ')}</p>
-                        
+
                         <div className="flex justify-center my-8"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
                     </>
                 }
