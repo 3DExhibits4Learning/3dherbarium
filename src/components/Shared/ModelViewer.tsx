@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import Sketchfab from '@sketchfab/viewer-api';
-import { MutableRefObject, useEffect, useRef } from 'react';
+import Sketchfab from '@sketchfab/viewer-api'
+import { MutableRefObject, useEffect, useRef } from 'react'
 
 export default function ModelViewer(props: { uid: string, minHeight?: string, noAutoStart?: boolean }) {
 
@@ -18,7 +18,7 @@ export default function ModelViewer(props: { uid: string, minHeight?: string, no
         ui_infos: 0,
         ui_inspector: 0,
         ui_settings: 0,
-        ui_watermark: 0,
+        ui_watermark: 0, 
         ui_annotations: 0,
         ui_color: "004C46",
         ui_fadeout: 0
@@ -44,6 +44,7 @@ export default function ModelViewer(props: { uid: string, minHeight?: string, no
             web-share="true"
             allowFullScreen
             style={{ width: "100%", height: "100%" }}
+            className={`!min-h-[${minHeight}]`}
         />
     </div>
 }
