@@ -32,7 +32,7 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
     })
     useEffect(() => { loadAnnotationModelData() }, [])
 
-    return <Modal isOpen={props.isOpen} size="full" placement="center" scrollBehavior={"inside"} hideCloseButton>
+    return <Modal isOpen={props.isOpen} size="full" placement="center" scrollBehavior={"inside"} hideCloseButton className="!h-[100vh] !min-h-[100vh]">
         <ModalContent>
             <ModalBody>
                 <i><p className="text-center font-medium text-xl">{toUpperFirstLetter(props.model.spec_name)}</p></i>
