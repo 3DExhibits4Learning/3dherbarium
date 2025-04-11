@@ -12,13 +12,13 @@ import { getAnnotationModel } from "@/functions/server/search"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { Button } from "@nextui-org/react"
 import { ModelIncludingSpecimenAndSoftware } from "@/components/Collections/SketchfabApi/ModelAnnotation"
+import { getAnnotationModelIncludingSpecimen } from "@/functions/server/collections"
 
 // Default imports
 import dynamic from "next/dynamic"
-import { getAnnotationModelIncludingSpecimen } from "@/functions/server/collections"
 
 // Dynamic imports
-const ModelViewer = dynamic(() => import('@/components/Shared/AnnotationModalModelViewer'), {ssr: false})
+const ModelViewer = dynamic(() => import('@/components/Shared/AnnotationModalModelViewer'), { ssr: false })
 const MapWithPoint = dynamic(() => import("@/components/Map/MapWithPoint"))
 
 // Main JSX
@@ -35,15 +35,17 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
     return <Modal isOpen={props.isOpen} size="full" placement="center" scrollBehavior={"inside"} hideCloseButton className="!h-[100vh] !min-h-[100vh]">
         <ModalContent>
             <ModalBody>
+
+                <div className="flex justify-end text-lg"><button onClick={() => props.setIsOpen(false)}>x</button></div>
+
                 <i><p className="text-center font-medium text-xl">{toUpperFirstLetter(props.model.spec_name)}</p></i>
-                
-                    <ModelViewer uid={props.model.uid}/>
-                
+
+                <ModelViewer uid={props.model.uid} />
+
                 {
-                    annotationModelData && <>
-                        <div>
-                            <p dangerouslySetInnerHTML={{ __html: annotationModelData.annotation.annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade' />
-                        </div>
+                    annotationModelData && annotationModelData.model.specimen.locality && // Locality indicates that the specimen should have all other relevant data for the following contional JSX
+                    <>
+                        <div><p dangerouslySetInnerHTML={{ __html: annotationModelData.annotation.annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade' /></div>
 
                         <div className='text-[1.25rem] border-b border-t border-[#004C46] w-full'>
                             <p className="text-center font-medium text-xl my-1"> Specimen Data </p>
@@ -69,7 +71,20 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
                         <div className="flex justify-center my-4"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
                     </>
                 }
-            
+
+                {
+                    annotationModelData && !annotationModelData?.model.specimen.locality && // Lack of locality indicates a legacy annotation model
+                    <>
+                        <p dangerouslySetInnerHTML={{ __html: annotationModelData.annotation.annotation }} className='m-auto pr-[3%] pl-[2%] fade border-b pb-8' />
+                        <p className='fade w-[95%] mt-8'><span className="font-medium">Annotation by:</span> {annotationModelData.annotation.annotator}</p>
+                        <p className='fade'><span className="font-medium">3D Model by:</span> {annotationModelData.annotation.modeler}</p>
+                        <p className='fade'><span className="font-medium">Build Method:</span> {annotationModelData.model.build_process}</p>
+                        <p className='fade'><span className="font-medium">Build Software:</span> {...annotationModelData.model.software.map((software, index) => index === annotationModelData.model.software.length - 1 ? software.software : software.software + ', ')}</p>
+                        
+                        <div className="flex justify-center my-8"><Button onClick={() => props.setIsOpen(false)}>Back to Collections</Button></div>
+                    </>
+                }
+
             </ModalBody>
         </ModalContent>
     </Modal>
