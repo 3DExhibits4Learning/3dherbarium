@@ -18,7 +18,7 @@ import dynamic from "next/dynamic"
 import { getAnnotationModelIncludingSpecimen } from "@/functions/server/collections"
 
 // Dynamic imports
-const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), {ssr: false})
+const ModelViewer = dynamic(() => import('@/components/Shared/AnnotationModalModelViewer'), {ssr: false})
 const MapWithPoint = dynamic(() => import("@/components/Map/MapWithPoint"))
 
 // Main JSX
@@ -37,7 +37,7 @@ export default function MobileAnnotationModelModal(props: { isOpen: boolean, mod
             <ModalBody>
                 <i><p className="text-center font-medium text-xl">{toUpperFirstLetter(props.model.spec_name)}</p></i>
                 
-                    <ModelViewer uid={props.model.uid} minHeight="50vh" />
+                    <ModelViewer uid={props.model.uid}/>
                 
                 {
                     annotationModelData && <>

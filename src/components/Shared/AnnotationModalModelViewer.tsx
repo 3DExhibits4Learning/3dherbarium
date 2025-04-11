@@ -1,18 +1,21 @@
+/**
+ * @file src/components/Shared/AnnotationModalModelViewer.tsx
+ * 
+ * @fileoverview this file only exists because nextui/heroui components behave weird af; the main difference between this and the regular one is that this has a fixed size
+ * 
+ */
+
 "use client"
 
 import Sketchfab from '@sketchfab/viewer-api'
 import { MutableRefObject, useEffect, useRef } from 'react'
 
-export default function ModelViewer(props: { uid: string, minHeight?: string, noAutoStart?: boolean }) {
+export default function ModelViewer(props: { uid: string}) {
 
     const modelViewer = useRef<HTMLIFrameElement>()
-    const minHeight = props.minHeight ? props.minHeight : '150px'
 
     const successObj = {
-        success: function onSuccess(api: any) {
-            if (props.noAutoStart) { }
-            else api.start()
-        },
+        success: (api: any) => api.start(),
         error: function onError() { },
         ui_stop: 0,
         ui_infos: 0,
@@ -31,7 +34,7 @@ export default function ModelViewer(props: { uid: string, minHeight?: string, no
         client.init(props.uid, successObj)
     }, [props.uid]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return <div className={`flex bg-black m-auto !min-h-[${minHeight}]`} style={{ height: "100%", width: "100%" }}>
+    return <div className={`flex bg-black m-auto !min-h-[50vh]`} style={{ height: "100%", width: "100%" }}>
         <iframe
             ref={modelViewer as MutableRefObject<HTMLIFrameElement>}
             src=""
