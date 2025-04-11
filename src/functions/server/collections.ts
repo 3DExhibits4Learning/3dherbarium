@@ -1,5 +1,10 @@
+'use server'
+
 import { fetchWikiSummary } from "@/functions/server/fetchFunctions"
 import { writeFile } from "fs/promises"
+
+// SINGLETON
+import prisma from "@/functions/server/utils/prisma"
 
 export interface WikipediaPageResponse {
     parse: {
@@ -18,6 +23,13 @@ export const getWikiPediaPageOrSummary = async (species: string) => {
     //const pageWithScrollRemoved = pageWithoutExternalLinks.replace("<html", "<html style='overflow:hidden'")
     await writeFile('C:/Users/ab632/Documents/test.txt', pageWithoutExternalLinks).then(() => console.log('WRITTEN')).catch(e => console.error('NOT WRITTEN'))
     //if (wikipediaPage) return
+    // const sectionWithExternalLinksExample = '<section data-mw-section-id="11" id="mwAu4"><h2 id="External_links">External links</h2>'
 }
 
-// const sectionWithExternalLinksExample = '<section data-mw-section-id="11" id="mwAu4"><h2 id="External_links">External links</h2>'
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const getAnnotationModelIncludingSpecimen = async (uid: string) => await prisma.model.findUnique({ where: { uid: uid }, include: {specimen: true, software: true} })
+

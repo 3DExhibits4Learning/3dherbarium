@@ -36,9 +36,7 @@ export default function DataTransferModal(props: { open: boolean, transferring: 
                 }
                 {
                     !props.transferring && !props.href && props.closeFn &&
-                    <Button color="primary" onPress={() => {
-                        (props.closeFn as Function)(!props.closeVar)
-                    }}>OK</Button>
+                    <Button color="primary" onPress={() => {(props.closeFn as Function)(!props.closeVar)}}>OK</Button>
                 }
             </ModalFooter>
         </ModalContent>

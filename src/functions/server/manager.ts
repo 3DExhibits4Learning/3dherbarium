@@ -7,10 +7,18 @@
 'use server'
 
 // Typical imports
-import { configureThumbnailDir } from "../client/utils"
+import { configureThumbnailDir, isLocalEnv } from "../client/utils"
 import { serverActionCatch, serverActionErrorHandler } from "./error"
 import { autoWriteArrayBuffer } from "./files"
 import { updateThumbUrl } from "./queries"
+import { getAnnotatedAndAnnotationModelsMigrationArray } from "./migrations/annotatedAndAnnotation"
+import { readdir } from "fs/promises"
+
+// Import all migration logic
+import * as annotationModelMigrate from "@/functions/server/migrations/annotationModel"
+
+// SINGLETON
+import prisma from "./utils/prisma"
 
 /**
  * 
@@ -57,4 +65,68 @@ export const updateThumbnail = async (uid: string, isCommunity: boolean) => {
     }
     // Catch message
     catch (e: any) { return serverActionCatch(e.message) }
+}
+
+/**
+ * 
+ * @param uid 
+ * @returns 
+ */
+export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid: string) => {
+    try {
+        // Get annotation id from model annotation uid
+        const annotationId = await prisma.model_annotation.findUnique({ where: { uid: modelAnnotationUid } }).then(annotation => annotation?.annotation_id)
+            .catch(e => serverActionErrorHandler(e.message, 'await prisma.model_annotation.findUnique()', "Couldn't get annotation id")) as string
+
+        // Get base model uid from annotation id
+        const baseModelUid = await prisma.annotations.findUnique({ where: { annotation_id: annotationId } }).then(annotation => annotation?.uid)
+            .catch(e => serverActionErrorHandler(e.message, 'prisma.annotations.findUnique', "Couldn't get base model uid")) as string
+
+        // Establish database to migrate to/from based on environment
+        const d1 = isLocalEnv() ? 'Development' : 'Test'
+        const d2 = isLocalEnv() ? 'Test' : 'Production'
+
+        // Prisma transaction array
+        const transaction = [
+            annotationModelMigrate.migrateAnnotationModelData(baseModelUid, d1, d2),
+            annotationModelMigrate.migrateAnnotationNumbers(baseModelUid, d1, d2),
+            annotationModelMigrate.migrateBaseAnnotation(annotationId, d1, d2),
+            annotationModelMigrate.migrateModelAnnotation(annotationId, d1, d2)
+        ]
+
+        // Await transaction, return
+        await prisma.$transaction(transaction).catch(e => serverActionErrorHandler(e.message, 'prisma.$transaction(transaction)', "Couldn't migrate new model annotation"))
+        return 'Model annotation added to test server'
+    }
+    // Typical catch
+    catch (e: any) { serverActionCatch(e.message) }
+}
+
+/**
+ * 
+ * @returns 
+ */
+export const migrateAnnotatedAndAnnotationModels = async () => {
+    try {
+        // Determine databased for migration based on env
+        const local = process.env.LOCAL_ENV
+        const d1 = local === 'development' ? 'Development' : 'Test'
+        const d2 = local === 'development' ? 'Test' : 'Production'
+
+        // Get transaction array and await transaction
+        const migrationTransactionArray = getAnnotatedAndAnnotationModelsMigrationArray(d1, d2)
+        await prisma.$transaction(migrationTransactionArray).catch(e => serverActionErrorHandler(e.message, 'prisma.$transaction(transaction)', "Couldn't migrate models"))
+        return `Annotated and annotation 3D models from ${d1} database have been migrated to ${d2} database`
+    }
+    catch (e: any) { serverActionCatch(e.message) }
+}
+
+/**
+ * 
+ * @param path path of directory to read
+ * @returns ideally, a string[] containing all file names in a given directory; returns empty string on error
+ */
+export const readDirectory = async (path: string) => {
+    try { return await readdir(path).catch(e => serverActionErrorHandler(e.message, 'readdir(path)', "Directory not found")) }
+    catch (e: any) { return [] }
 }

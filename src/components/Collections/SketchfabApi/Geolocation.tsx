@@ -17,7 +17,7 @@ export default function Geolocation(props: { position: LatLngLiteral, locality?:
                     </div>
 
                     <section className='w-[65%] py-[20px] justify-center items-center text-center px-[10%] h-fit'>
-                        <div className="h-[225px] w-full mb-1">
+                        <div className="!h-[225px] w-full mb-1">
                             <MapWithPoint position={props.position as {lat: number, lng: number}}/>
                         </div>
                         {props.locality && <p dangerouslySetInnerHTML={{ __html: props.locality }} className='m-auto pr-[3%] pl-[2%] text-center fade inline' />}

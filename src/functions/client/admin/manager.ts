@@ -12,6 +12,7 @@ import { SetStateAction, Dispatch } from "react"
 
 // Default imports
 import checkToken from "@/functions/client/utils/checkToken"
+import { readDirectory } from "@/functions/server/manager"
 
 /**
  * 
@@ -82,10 +83,9 @@ export const approveCommunityModel = async (model: Models, wild: boolean, photoF
  * @param setPhotoFiles 
  */
 export const getPhotoFiles = async (confirmation: string, setPhotoFiles: Dispatch<SetStateAction<string[]>>) => {
-
-    await fetch(`/api/admin/manager/photoFiles?path=public/data/Herbarium/tmp/submittal/${confirmation}`)
-        .then(res => res.json())
-        .then(json => setPhotoFiles(json.response))
+    const path = `/api/admin/manager/photoFiles?path=public/data/Herbarium/tmp/submittal/${confirmation}`
+    const photoFiles = await readDirectory(path)
+    setPhotoFiles(photoFiles as string[])
 }
 
 /**

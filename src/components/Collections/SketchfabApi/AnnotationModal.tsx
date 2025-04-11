@@ -9,17 +9,17 @@
 "use client"
 
 // Typical imports
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Skeleton } from "@nextui-org/react";
-import { boolRinse, addCommas, arrayFromObjects } from '../SketchfabDom';
-import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter';
-import { GbifResponse, annotationModalProps } from "@/ts/types";
-import { model_annotation, photo_annotation } from "@prisma/client";
-import { SketchfabApiContext } from "./SketchFabAPI";
-import { useContext } from "react";
-import { sketchfabApiContext } from "@/ts/collections";
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Skeleton } from "@nextui-org/react"
+import { boolRinse, addCommas, arrayFromObjects } from '../SketchfabDom'
+import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
+import { GbifResponse, annotationModalProps } from "@/ts/types"
+import { model_annotation, photo_annotation } from "@prisma/client"
+import { SketchfabApiContext } from "./SketchFabAPI"
+import { useContext } from "react"
+import { sketchfabApiContext } from "@/ts/collections"
 
 // Default imports
-import dynamic from "next/dynamic";
+import dynamic from "next/dynamic"
 
 // Dynamic imports
 const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), { ssr: false })

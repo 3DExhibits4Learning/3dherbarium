@@ -16,6 +16,7 @@ import { sendErrorEmail } from "@/functions/server/email"
 import { createTask } from "@/functions/server/jira"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { Prisma } from "@prisma/client"
+import { readFile } from "fs/promises"
 
 // Prisma singleton
 const prisma = prismaClient()
@@ -38,17 +39,23 @@ export async function POST(request: Request) {
         // Variable initialization
         const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
         const sid = model.get('sid') as string
-        const _3dModel = model.get('model') as File
         const commonName = model.get('commonName') as string
         const modeler = model.get('modeler') as string
         const isViable = model.get('isViable') as string
         const isBase = model.get('isBase') as string
         const katJira = process.env.KAT_JIRA_ID as string
         const species = model.get('species') as string
+        const modelPath = model.get('modelPath') as string
+        const fileName = model.get('fileName') as string
 
         // Value check
-        const requiredValues = [sid, _3dModel, commonName, modeler, isViable, isBase]
+        const requiredValues = [sid, modelPath, fileName, commonName, modeler, isViable, isBase]
         if (!requiredValues.every(value => value)) { throw Error("Missing model input data") }
+
+        // Read file from backup
+        const buffer = await readFile(modelPath)
+        const typedArray = new Uint8Array(buffer)
+        const blob = new Blob([typedArray])
 
         // Ensure that image_set data has been entered first *Note sid will be implemented as key in the future
         const imageSet = await prisma.image_set.findFirst({ where: { sid: sid } }).catch(e => routeHandlerErrorHandler(path, e.message, "prisma.image_set.findFirst()", "Couldn't find corresponding image set data"))
@@ -57,7 +64,7 @@ export async function POST(request: Request) {
         // Set from data
         const data = new FormData()
         data.set('orgProject', process.env.SKETCHFAB_PROJECT_HUNTER as string)
-        data.set('modelFile', _3dModel)
+        data.set('modelFile', blob, fileName)
         data.set('visibility', 'private')
         data.set('options', JSON.stringify({ background: { color: "#000000" } }))
         data.set('name', species)
