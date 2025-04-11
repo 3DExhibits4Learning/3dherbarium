@@ -31,5 +31,5 @@ export const getWikiPediaPageOrSummary = async (species: string) => {
  * @param uid 
  * @returns 
  */
-export const getAnnotationModelSpecimen = async (uid: string) => await prisma.model.findUnique({ where: { uid: uid }, include: {specimen: true} })
+export const getAnnotationModelIncludingSpecimen = async (uid: string) => await prisma.model.findUnique({ where: { uid: uid }, include: {specimen: true, software: true} })
 

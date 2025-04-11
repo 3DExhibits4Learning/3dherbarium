@@ -7,18 +7,20 @@
 'use client'
 
 // Typical imports
-import { model_annotation, specimen } from "@prisma/client"
+import { model, model_annotation, software, specimen } from "@prisma/client"
 import { sketchfabApiData } from "@/ts/collections"
 import { fullAnnotation } from "@/ts/types"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { useEffect, useState } from "react"
-import { getAnnotationModelSpecimen } from "@/functions/server/collections"
+import { getAnnotationModelIncludingSpecimen } from "@/functions/server/collections"
 
 // Default imports
 import ModelAnnotation from "@/components/Collections/AnnotationModel"
 import dynamic from "next/dynamic"
 
 const MapWithPoint = dynamic(() => import('@/components/Map/MapWithPoint'))
+
+export interface ModelIncludingSpecimenAndSoftware extends model {specimen: specimen, software: software[]}
 
 // Main JSX
 export default function ModelAnnotationMedia(props: { sketchfabApi: sketchfabApiData }) {
@@ -30,8 +32,8 @@ export default function ModelAnnotationMedia(props: { sketchfabApi: sketchfabApi
     const modelAnnotation = annotation.annotation as model_annotation
 
     // Annotation model specimen state, fn and effect to set state
-    const [specimen, setSpecimen] = useState<specimen>()
-    const setAnnotationModelSpecimenData = async () => setSpecimen(await getAnnotationModelSpecimen(modelAnnotation.uid).then(modelIncludingSpecimen => modelIncludingSpecimen?.specimen))
+    const [modelWithSpecimen, setModelWithSpecimen] = useState<ModelIncludingSpecimenAndSoftware>()
+    const setAnnotationModelSpecimenData = async () => setModelWithSpecimen(await getAnnotationModelIncludingSpecimen(modelAnnotation.uid) as ModelIncludingSpecimenAndSoftware)
     useEffect(() => { setAnnotationModelSpecimenData() }, [])
 
     return <>
@@ -41,32 +43,34 @@ export default function ModelAnnotationMedia(props: { sketchfabApi: sketchfabApi
 
         <div id="annotationDivText">
             <br></br>
-            <p dangerouslySetInnerHTML={{ __html: modelAnnotation.annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade' />
+            <p dangerouslySetInnerHTML={{ __html: modelAnnotation.annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade'/>
         </div>
 
         <div className='text-[1.25rem] border-b border-t border-[#004C46] w-full justify-center my-6'>
-            <p className="text-center font-medium text-xl my-1">Specimen Data </p>
+            <p className="text-center font-medium text-xl my-1">Annotation Specimen Data </p>
         </div>
 
         {
-            specimen &&
-            <section className="flex w-full mb-8">
-                <section className="flex flex-col w-1/2">
-                    {specimen.locality && <p dangerouslySetInnerHTML={{ __html: `<span style="font-weight:500;">Locality:</span> ` + toUpperFirstLetter(specimen.locality) }} className='fade inline mb-1' />}
-                    {specimen.height && <p className="mb-1"><span className="font-medium">*Height:</span> {specimen.height} cm</p>}
+            modelWithSpecimen &&
+            <section className="flex w-full mb-8 min-h-[200px] h-[250px]">
+                <section className="flex flex-col justify-between w-1/2 h-full">
+                    {modelWithSpecimen?.specimen.locality && <p dangerouslySetInnerHTML={{ __html: `<span style="font-weight:500;">Locality:</span> ` + toUpperFirstLetter(modelWithSpecimen?.specimen.locality) }} className='fade inline mb-1' />}
+                    {modelWithSpecimen?.specimen.height && <p><span className="font-medium">*Height:</span> {modelWithSpecimen?.specimen.height} cm</p>}
                     <p className='fade'><span className="font-medium">3D Model by:</span> {modelAnnotation.modeler}</p>
+                    <p className='fade'><span className="font-medium">Build Method:</span> {modelWithSpecimen.build_process}</p>
+                    <p className='fade'><span className="font-medium">Build Software:</span> {...modelWithSpecimen.software.map((software, index) => index === modelWithSpecimen.software.length - 1 ? software.software : software.software + ', ')}</p>
                 </section>
                 {
-                    specimen.lat && specimen.lng &&
-                    <div className="!min-h-[200px] !h-[200px] w-1/2 mb-1 flex justify-center">
+                    modelWithSpecimen?.specimen.lat && modelWithSpecimen?.specimen.lng &&
+                    <div className="!min-h-[250px] !h-[250px] w-1/2 flex justify-center">
                         <div className="h-full w-[300px]">
-                            <MapWithPoint position={{ lat: parseFloat(specimen.lat), lng: parseFloat(specimen.lng) }} />
+                            <MapWithPoint position={{ lat: parseFloat(modelWithSpecimen?.specimen.lat), lng: parseFloat(modelWithSpecimen?.specimen.lng) }} />
                         </div>
                     </div>
                 }
             </section>
         }
 
-        {!specimen && <p className='fade text-center mb-8'><span className="font-medium">3D Model by:</span> {modelAnnotation.modeler}</p>}
+        {!modelWithSpecimen && <p className='fade text-center mb-8'><span className="font-medium">3D Model by:</span> {modelAnnotation.modeler}</p>}
     </>
 }
