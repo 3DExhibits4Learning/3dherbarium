@@ -36,7 +36,7 @@ export default function Tasks(props: { epic: any, botanist?: boolean }) {
     const doneTasks = useMemo(() => props.epic.issues.filter((issue: any) => issue.fields.status.name === 'Done'), [props.epic])
 
     // More code that needed to be written because an assistant didn't feel the need to follow instructions
-    const dueDate = '4/11/2025'
+    const dueDate = '4/18/2025'
     const modelerTitle = (issue: any) => issue.fields.summary.slice(0, -11) + ` (${countCompletedSubtasks(issue.fields.subtasks)}/${issue.fields.subtasks.length})`
     const botanistTitle = (issue: any) => <span>{issue.fields.summary.slice(0, -11)}<br />Subtasks completed: {countCompletedSubtasks(issue.fields.subtasks)} of {issue.fields.subtasks.length}<br /> Due: {dueDate}</span>
 
@@ -62,7 +62,7 @@ export default function Tasks(props: { epic: any, botanist?: boolean }) {
                                         </AccordionItem>
                                     })
                                 }
-                            </Accordion>S
+                            </Accordion>
                         </AccordionItem>
                     })
                 }
