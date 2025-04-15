@@ -57,7 +57,7 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
         <p className='text-2xl px-5'>No models found matching the current filters. Try adjusting your filter settings for broader results.</p>
       </div>
     }
-    <section className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 4xl:grid-cols-5 gap-4 mx-5'>
+    <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-4 mx-5'>
       {filteredModels && filteredModels.map((model: model | fullUserSubmittal, index: number) => {
         return <>
           {Object.keys(model).includes('spec_name') && <HerbariumCard index={index} model={model as model} />}
