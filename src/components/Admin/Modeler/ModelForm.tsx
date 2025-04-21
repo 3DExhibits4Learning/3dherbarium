@@ -88,7 +88,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
             <TextInput value={height} setValue={setHeight} title='Specimen height (cm)' type='number' textSize="text-2xl" maxWidth="max-w-[250px]" />
             <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
             <div>
-                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onPress={insertModelDataHandler}>
+                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onClick={insertModelDataHandler}>
                     Enter 3D Model into Database
                 </Button>
             </div>
