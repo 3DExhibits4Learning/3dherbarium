@@ -12,7 +12,7 @@ import { useState, useContext, useEffect, SetStateAction, Dispatch } from "react
 import { Button } from "@nextui-org/react"
 import { ModelerContext } from "./ModelerDash"
 import { specimenWithImageSet, dataTransfer } from "@/ts/types"
-import { buttonEnable } from "@/functions/client/shared";
+import { buttonEnable } from "@/functions/client/shared"
 import { insertModelIntoDatabase } from "@/functions/client/admin/modeler"
 import { chunkFileToDisk } from "@/functions/client/modelSubmit"
 import { getBackupPath } from "@/functions/server/modelSubmit"
@@ -68,9 +68,10 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('modelPath', await getBackupPath(speciesAndSidSlice))
         data.set('fileName', modelFile.name)
 
-        // Handle data transfer
-        await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelIntoDatabase, [data], 'Entering 3D model into database')
+        return await insertModelIntoDatabase(data)
     }
+
+    const insertModelWrapper = async () => await dataTransferHandler(initializeTransfer, terminateTransfer, insertModelDataHandler, [], 'Entering 3D model into database')
 
     // Button enabler effect
     useEffect(() => buttonEnable([modeler, commonName, model], setIsDisabled), [requiredValues])
@@ -88,7 +89,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
             <TextInput value={height} setValue={setHeight} title='Specimen height (cm)' type='number' textSize="text-2xl" maxWidth="max-w-[250px]" />
             <ModelInput setFile={setModel as Dispatch<SetStateAction<File>>} title="Zip your .obj, .mtl and texture files, then upload the .zip" yMargin="mb-8" />
             <div>
-                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onClick={insertModelDataHandler}>
+                <Button isDisabled={isDisabled} className="text-white text-xl mt-8 mb-6 bg-[#004C46]" onClick={insertModelWrapper}>
                     Enter 3D Model into Database
                 </Button>
             </div>
