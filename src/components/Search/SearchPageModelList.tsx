@@ -8,8 +8,8 @@
  */
 
 // Typical imports
-import { useContext, Dispatch, SetStateAction } from 'react'
-import { model } from '@prisma/client'
+import { useContext, Dispatch, SetStateAction, lazy } from 'react'
+import { model, userSubmittal } from '@prisma/client'
 import { fullUserSubmittal } from '@/ts/types'
 import { QueryContext } from './SearchClient'
 import { SearchPageState } from '@/ts/search'
@@ -18,6 +18,8 @@ import { sortModelsByOrder } from '@/functions/client/search'
 // Default imports
 import HerbariumCard from './HerbariumCard'
 import CommunityCard from './CommunityCard'
+//import ThumbnailSection from '@/components/Search/ThumbnailSection'
+const ThumbnailSection = lazy(() => import('@/components/Search/ThumbnailSection'))
 
 // Main JSX
 export default function SearchPageModelList(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) {
@@ -50,6 +52,15 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
   if (selectedModeler === 'All' && selectedAnnotator === 'All' && state.communityIncluded) filteredModels.push(...communityModels)
   filteredModels = sortModelsByOrder(filteredModels, state.order as 'Newest First' | 'Alphabetical' | 'Reverse Alphabetical')
 
+  function chunkArray(arr: (model | fullUserSubmittal)[], chunkSize = 12) {
+    const result = []
+    for (let i = 0; i < arr.length; i += chunkSize) result.push(arr.slice(i, i + chunkSize))
+    return result
+  }
+
+  const filteredChunks = chunkArray(filteredModels) as unknown as (model | fullUserSubmittal)[][]
+  console.log(filteredChunks)
+
   return <>
     {
       filteredModels && filteredModels.length === 0 &&
@@ -57,13 +68,6 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
         <p className='text-2xl px-5'>No models found matching the current filters. Try adjusting your filter settings for broader results.</p>
       </div>
     }
-    <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-4 mx-5'>
-      {filteredModels && filteredModels.map((model: model | fullUserSubmittal, index: number) => {
-        return <>
-          {Object.keys(model).includes('spec_name') && <HerbariumCard index={index} model={model as model} />}
-          {Object.keys(model).includes('speciesName') && <CommunityCard index={index} model={model as fullUserSubmittal} />}
-        </>
-      })}
-    </section >
+    {filteredChunks.map((filteredChunk) => <ThumbnailSection key={(filteredChunk[0] as model).uid ?? (filteredChunk[0] as userSubmittal).confirmation} filteredModels={filteredChunk} />)}
   </>
 }

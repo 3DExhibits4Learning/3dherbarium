@@ -9,9 +9,9 @@
 // Typical imports
 import { handleImgError } from "@/functions/client/utils/imageHandler"
 import { model } from "@prisma/client"
-import { SyntheticEvent, useState } from "react"
+import { SyntheticEvent, useEffect, useState } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
-import { Chip } from "@nextui-org/react"
+import { Chip, Skeleton } from "@nextui-org/react"
 import { configureNfsUrl } from "@/functions/client/utils"
 import { isMobileOrTablet } from "@/functions/client/utils/isMobile"
 
@@ -33,32 +33,36 @@ export default function HerbariumCard(props: { index: number, model: model }) {
 
     // Mobile annotation modal state
     const [mobileAnnotationModalOpen, setMobileAnnotationModalOpen] = useState(false)
-    const [loading, setLoading] = useState(false)
+    const [src, setSrc] = useState('')
+
+    const setPhotoSrc = async () => {
+        await fetch(thumbnailPath)
+            .then(res => {
+                if (!res.ok) setSrc('/noImage.png')
+                else return res.blob()
+            })
+            .then(blob => setSrc(URL.createObjectURL(blob as Blob)))
+    }
+
+    useEffect(() => { setPhotoSrc() }, [])
 
     return <>
-        <div key={index} className='noselect'>
+        <div className='noselect'>
             {!model.base_model && mobileAnnotationModalOpen && <MobileAnnotationModelModal isOpen={mobileAnnotationModalOpen} model={model} setIsOpen={setMobileAnnotationModalOpen} />}
 
             <article className='rounded-md overflow-hidden mx-1'>
 
                 {!model.base_model && <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white bg-[#004C46]'>Annotation</Chip>}
 
-                {/* {
-                    loading &&
+                {
+                    !src &&
                     <section className='rounded shadow-md mx-auto'>
-                        <Link href={href} tabIndex={-1}>
-                            <img
-                                alt={'Image of ' + model.spec_name}
-                                role='button'
-                                src={thumbnailPath}
-                                className='w-full h-[calc(100vh-275px)] min-h-[25rem] max-h-[30rem] object-cover relative z-5 rounded-t-md'
-                                onError={(e: SyntheticEvent<HTMLImageElement, Event>) => { handleImgError(e.currentTarget, noImage) }} />
-                        </Link>
+                        <Skeleton className="w-full h-[calc(100vh-275px)] min-h-[25rem] max-h-[30rem]" />
                     </section>
-                } */}
+                }
 
                 {
-                    (!isMobileOrTablet() || isMobileOrTablet() && model.base_model) && //!loading &&
+                    (!isMobileOrTablet() || isMobileOrTablet() && model.base_model) && src &&
                     <section className='rounded shadow-md mx-auto'>
                         <Link href={href} tabIndex={-1}>
                             <img
@@ -72,7 +76,7 @@ export default function HerbariumCard(props: { index: number, model: model }) {
                 }
 
                 {
-                    isMobileOrTablet() && !model.base_model &&
+                    isMobileOrTablet() && !model.base_model && src &&
                     <section className='rounded shadow-md mx-auto'>
                         <img
                             alt={'Image of ' + model.spec_name}
