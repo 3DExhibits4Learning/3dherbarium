@@ -29,7 +29,7 @@ export default function PhotoAnnotation(props: { sketchfabApi: any }) {
 
         <div id="annotationDivText">
             <br></br>
-            <p dangerouslySetInnerHTML={{ __html: (sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation).annotation }} className='m-auto pr-[3%] pl-[2%] fade' />
+            <p dangerouslySetInnerHTML={{ __html: (sketchfabApi.annotations[sketchfabApi.index - 1].annotation as photo_annotation).annotation }} className='m-auto pr-[3%] pl-[2%] text-center fade' />
         </div>
 
         <div id="annotationDivCitation">
