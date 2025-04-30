@@ -21,10 +21,9 @@ import noImage from "../../../public/noImage.png"
 import MobileAnnotationModelModal from "@/components/Search/MobileAnnotationModel"
 
 // Main JSX
-export default function HerbariumCard(props: { index: number, model: model }) {
+export default function HerbariumCard(props: { model: model }) {
 
     // Props => variables
-    const index = props.index
     const model = props.model
 
     // Determine hyperlink URL based on whether or not the model is a base model; determine thumbnail path

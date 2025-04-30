@@ -19,8 +19,8 @@ export default function ThumbnailSection(props: { filteredModels: (model | fullU
     return <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-4 mx-5'>
         {props.filteredModels && props.filteredModels.map((model: model | fullUserSubmittal, index: number) => {
             return <>
-                {Object.keys(model).includes('spec_name') && <HerbariumCard key={(model as model).uid} index={index} model={model as model} />}
-                {Object.keys(model).includes('speciesName') && <CommunityCard key={(model as userSubmittal).confirmation} index={index} model={model as fullUserSubmittal} />}
+                {Object.keys(model).includes('spec_name') && <HerbariumCard key={(model as model).uid} model={model as model} />}
+                {Object.keys(model).includes('speciesName') && <CommunityCard key={(model as userSubmittal).confirmation} model={model as fullUserSubmittal} />}
             </>
         })}
     </section >

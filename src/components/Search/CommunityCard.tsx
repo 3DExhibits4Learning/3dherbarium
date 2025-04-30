@@ -7,23 +7,22 @@
 'use client'
 
 // Typical imports
-import { Chip } from "@nextui-org/react";
-import { fullUserSubmittal } from "@/ts/types";
-import { handleImgError } from "@/functions/client/utils/imageHandler";
-import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
-import { SyntheticEvent } from "react";
+import { Chip } from "@nextui-org/react"
+import { fullUserSubmittal } from "@/ts/types"
+import { handleImgError } from "@/functions/client/utils/imageHandler"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
+import { SyntheticEvent } from "react"
 
 // Default imports
 import noImage from '../../../public/noImage.png'
-import Link from "next/link";
+import Link from "next/link"
 
-export default function CommunityCard(props: { model: fullUserSubmittal, index: number }) {
+export default function CommunityCard(props: { model: fullUserSubmittal}) {
 
     // Props => variables
-    const index = props.index
     const model = props.model
 
-    return <div key={index} className='noselect'>
+    return <div className='noselect'>
         
         <article className='rounded-md overflow-hidden mx-1'>
             
