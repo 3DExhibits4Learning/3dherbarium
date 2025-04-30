@@ -6,14 +6,16 @@
 
 'use client'
 
+// Typical imports
 import { fullUserSubmittal } from "@/ts/types"
 import { model, userSubmittal } from "@prisma/client"
 
+// Default imports
 import HerbariumCard from "@/components/Search/HerbariumCard"
 import CommunityCard from "@/components/Search/CommunityCard"
 
+// Main JSX
 export default function ThumbnailSection(props: { filteredModels: (model | fullUserSubmittal)[] }) {
-    console.log('Thumbnail section')
     return <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-4 mx-5'>
         {props.filteredModels && props.filteredModels.map((model: model | fullUserSubmittal, index: number) => {
             return <>

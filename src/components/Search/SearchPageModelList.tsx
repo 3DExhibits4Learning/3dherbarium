@@ -18,6 +18,7 @@ import { sortModelsByOrder } from '@/functions/client/search'
 // Default imports
 import HerbariumCard from './HerbariumCard'
 import CommunityCard from './CommunityCard'
+import LazyLoader from '@/components/Search/LazyLoader'
 //import ThumbnailSection from '@/components/Search/ThumbnailSection'
 const ThumbnailSection = lazy(() => import('@/components/Search/ThumbnailSection'))
 
@@ -59,7 +60,6 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
   }
 
   const filteredChunks = chunkArray(filteredModels) as unknown as (model | fullUserSubmittal)[][]
-  console.log(filteredChunks)
 
   return <>
     {
@@ -68,6 +68,6 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
         <p className='text-2xl px-5'>No models found matching the current filters. Try adjusting your filter settings for broader results.</p>
       </div>
     }
-    {filteredChunks.map((filteredChunk) => <ThumbnailSection key={(filteredChunk[0] as model).uid ?? (filteredChunk[0] as userSubmittal).confirmation} filteredModels={filteredChunk} />)}
+    {filteredChunks.map((filteredChunk) => <LazyLoader key={(filteredChunk[0] as model).uid ?? (filteredChunk[0] as userSubmittal).confirmation} filteredModels={filteredChunk} />)}
   </>
 }
