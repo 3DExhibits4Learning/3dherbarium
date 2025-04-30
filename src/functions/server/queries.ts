@@ -720,29 +720,27 @@ export const deleteAnnotation = async (id: string, modelUid: string) => {
   const remainingAnnotations = await prisma.annotations.findMany({
     where: {
       uid: modelUid,
-      annotation_no: {
-        gt: annotationPendingDeletionNumber
-      }
+      annotation_no: {gt: annotationPendingDeletionNumber}
     },
+    orderBy: {annotation_no: 'asc'}
   })
 
   // Promises array; push deletion of annotation with given annoation_id
-  let promises = []
-  promises.push(prisma.annotations.delete({ where: { annotation_id: id } }))
+  let tx = []
+  tx.push(prisma.annotations.delete({ where: { annotation_id: id } }))
 
   // Push updates to all remaining annotations higher in number; number is decresed by 1
   for (let i in remainingAnnotations) {
-    promises.push(prisma.annotations.update({
+    tx.push(prisma.annotations.update({
       where: { annotation_id: remainingAnnotations[i].annotation_id },
       data: { annotation_no: remainingAnnotations[i].annotation_no - 1 }
     }))
   }
 
   // Await promises to resolve
-  const responses = await Promise.all(promises).then(responses => responses)
+  await prisma.$transaction(tx)
 
-  // The deleted annotation is returned from prisma
-  return responses[0]
+  return 
 }
 
 /**
