@@ -1,10 +1,19 @@
-import { Divider } from '@nextui-org/react'
-import Image from 'next/image'
-import Link from 'next/link';
+/**
+ * @file src/components/Shared/Foot.tsx
+ * 
+ * @fileoverview Footer
+ */
 
-function Foot() {
-  return (
-    <footer>
+// Typical imports
+import { Divider } from '@nextui-org/react'
+
+// Default imports
+import Image from 'next/image'
+import Link from 'next/link'
+
+// Main JSX
+export default function Foot() {
+  return <footer>
       
       {/***** Large screen footer *****/}
       
@@ -79,7 +88,4 @@ function Foot() {
       </section>
 
     </footer>
-  )
 }
-
-export default Foot;
