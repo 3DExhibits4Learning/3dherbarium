@@ -74,7 +74,7 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
   const successObj = {
     success: (api: any) => { api.start(); api.addEventListener('viewerready', () => sketchfabApiDispatch({ type: 'setApi', api: api })) },
     error: (e: any) => { throw Error(e.message) },
-    ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in, orbit_constraint_zoom_out: 9
+    ui_stop: 0, ui_infos: 0, ui_inspector: 0, ui_settings: 0, ui_watermark: 0, ui_annotations: 0, ui_color: "004C46", ui_fadeout: 0, orbit_constraint_zoom_in: wrapperProps.model[0].max_zoom_in ?? 3, orbit_constraint_zoom_out: wrapperProps.model[0].max_zoom_out ?? 30
   }
 
   // Add annotation loader if the parameter is a model annotation; establish zoom out contraints

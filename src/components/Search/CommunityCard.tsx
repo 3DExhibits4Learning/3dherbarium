@@ -2,6 +2,8 @@
  * @file C:\Users\ab632\Documents\Code\3DExhibits4Learning\herbarium\src\components\Search\CommunityCard.tsx
  * 
  * @fileoverview community model 'card' displayed in the SearchPageModelList 
+ * 
+ * @todo add skeleton loader
  */
 
 'use client'
