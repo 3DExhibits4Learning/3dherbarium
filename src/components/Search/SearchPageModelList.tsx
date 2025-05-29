@@ -8,19 +8,15 @@
  */
 
 // Typical imports
-import { useContext, Dispatch, SetStateAction, lazy } from 'react'
+import { useContext, Dispatch, SetStateAction} from 'react'
 import { model, userSubmittal } from '@prisma/client'
 import { fullUserSubmittal } from '@/ts/types'
 import { QueryContext } from './SearchClient'
 import { SearchPageState } from '@/ts/search'
-import { sortModelsByOrder } from '@/functions/client/search'
+import { get2dModelArray, sortModelsByOrder } from '@/functions/client/search'
 
 // Default imports
-import HerbariumCard from './HerbariumCard'
-import CommunityCard from './CommunityCard'
 import LazyLoader from '@/components/Search/LazyLoader'
-//import ThumbnailSection from '@/components/Search/ThumbnailSection'
-const ThumbnailSection = lazy(() => import('@/components/Search/ThumbnailSection'))
 
 // Main JSX
 export default function SearchPageModelList(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>>, models: model[] }) {
@@ -53,13 +49,8 @@ export default function SearchPageModelList(props: { state: SearchPageState, set
   if (selectedModeler === 'All' && selectedAnnotator === 'All' && state.communityIncluded) filteredModels.push(...communityModels)
   filteredModels = sortModelsByOrder(filteredModels, state.order as 'Newest First' | 'Alphabetical' | 'Reverse Alphabetical')
 
-  function chunkArray(arr: (model | fullUserSubmittal)[], chunkSize = 12) {
-    const result = []
-    for (let i = 0; i < arr.length; i += chunkSize) result.push(arr.slice(i, i + chunkSize))
-    return result
-  }
-
-  const filteredChunks = chunkArray(filteredModels) as unknown as (model | fullUserSubmittal)[][]
+  // Finally, return a filtered array of arrays of a maxiumum of 12 models
+  const filteredChunks = get2dModelArray(filteredModels) as unknown as (model | fullUserSubmittal)[][]
 
   return <>
     {

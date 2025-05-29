@@ -12,22 +12,22 @@
 // Typical imports
 import { useEffect, useState, createContext, useReducer } from 'react'
 import { useSearchParams } from "next/navigation"
-import { isMobileOrTablet } from '@/functions/client/utils/isMobile';
-import { annotations, userSubmittal } from '@prisma/client';
-import { CollectionsWrapperData } from '@/ts/reducer';
-import { CollectionsWrapperProps } from '@/ts/collections';
-import { getCommunityModel } from '@/functions/client/collections/collectionsWrapper';
+import { isMobileOrTablet } from '@/functions/client/utils/isMobile'
+import { annotations, userSubmittal } from '@prisma/client'
+import { CollectionsWrapperData } from '@/ts/reducer'
+import { CollectionsWrapperProps } from '@/ts/collections'
+import { getCommunityModel } from '@/functions/client/collections/collectionsWrapper'
 
 // Default imports
-import Header from '../../Header/Header';
-import CollectionsSubheader from '../SubHeader';
-import CommunityModelWithoutGmatch from '@/components/Collections/CommunityWithoutGmatch';
-import collectionsMediaReducer from '@/functions/client/reducers/CollectionsMediaStateReducer';
+import Header from '../../Header/Header'
+import CollectionsSubheader from '../SubHeader'
+import CommunityModelWithoutGmatch from '@/components/Collections/CommunityWithoutGmatch'
+import collectionsMediaReducer from '@/functions/client/reducers/CollectionsMediaStateReducer'
 import Foot from '@/components/Shared/Foot'
-import CollectionsWrapperIdError from '../../Error/CollectionsWrapper';
-import CollectionsHerbariumModel from './HerbariumModel';
-import CollectionsCommunityModel from './CommunityModel';
-import CollectionsNoModel from './NoModel';
+import CollectionsWrapperIdError from '../../Error/CollectionsWrapper'
+import CollectionsHerbariumModel from './HerbariumModel'
+import CollectionsCommunityModel from './CommunityModel'
+import CollectionsNoModel from './NoModel'
 
 // Exported context
 export const CollectionsContext = createContext<'' | CollectionsWrapperData>('')
