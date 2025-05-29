@@ -34,6 +34,7 @@ const AutoComplete = forwardRef((props: { autocompleteOptions: any[], fetchAutoC
                     width={props.width ?? 'w-[10vw] focus:w-[15vw] min-w-[225px] focus:min-w-[250px]'}
                     className="inline-block h-[42px] rounded-l-lg dark:bg-[#27272a] transition-all duration-500 ease-in-out dark:hover:bg-[#3E3E47] px-4 text-[15px] outline-[#004C46] text-[#004C46] dark:text-white" />
                 <button
+                    aria-label="Search Button"
                     className="ml-0 text-white bg-gray-100 hover:bg-gray-200 transition duration-300 ease-in-out px-4 rounded-r-lg h-[42px]"
                     onClick={() => { if (searchQuery.current) router.push(`/collections/${searchQuery.current}`) }}>
                     <SearchIcon style={{ color: "black" }} size={22} width="" height="" />

@@ -133,13 +133,13 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     return <>
             <div className="flex">
                 <input
+                    aria-label={`Search Bar`}
                     ref={selectedValue as LegacyRef<HTMLInputElement>}
                     type='text'
                     className={`${props.className} ${props.width}`}
                     onChange={(e) => changeHandler(e)}
                     onKeyDown={autocompleteKeyHandler}
-                    defaultValue={props.defaultValue}
-                >
+                    defaultValue={props.defaultValue}>
                 </input>
                 {
                     props.options.length > 0 && optionsVisible &&

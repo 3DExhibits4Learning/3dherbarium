@@ -31,7 +31,7 @@ export default function CommunityCard(props: { model: fullUserSubmittal}) {
             <Chip size='lg' className='z-[1] absolute ml-4 mt-2 text-white bg-[#004C46]'>Community</Chip>
             
             <section className='rounded shadow-md mx-auto'>
-                <Link href={"/collections/" + model.speciesName + `?communityId=${model.modeluid}`} tabIndex={-1}>
+                <Link href={"/collections/" + model.speciesName + `?communityId=${model.modeluid}`} tabIndex={-1} aria-label={`Go to a 3D model of ${model.speciesName} uploaded by a community member`}>
                     <img
                         alt={'Image of ' + model.speciesName}
                         role='button'

@@ -63,7 +63,7 @@ export default function HerbariumCard(props: { model: model }) {
                 {
                     (!isMobileOrTablet() || isMobileOrTablet() && model.base_model) && src &&
                     <section className='rounded shadow-md mx-auto'>
-                        <Link href={href} tabIndex={-1}>
+                        <Link href={href} tabIndex={-1} aria-label={`Go to a 3D Model for ${model.spec_name}, also known as ${model.pref_comm_name}`}>
                             <img
                                 alt={'Image of ' + model.spec_name}
                                 role='button'
