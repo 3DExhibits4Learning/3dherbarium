@@ -26,12 +26,13 @@ import initializeDataTransfer from "@/functions/client/dataTransfer/initializeDa
 import botanyClientReducer from "@/functions/client/reducers/botanyClientReducer"
 import AnnotationEntryWrapper from "./AnnotationEntryWrapper"
 import Tasks from "../Tasks/Tasks"
+import AddModelAnnotationToPublishedModel from "@/components/Admin/Botanist/AddModelAnnotationToPublishedModel"
 
 // Exported context
 export const BotanyClientContext = createContext<botanyClientContext | ''>('')
 
 // Main JSX
-export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[], epic: any }) {
+export default function BotanyClient(props: { modelsToAnnotate: model[], annotationModels: model[], epic: any, baseModelsForAnnotationModels: model[] }) {
 
     // Reducer
     const [botanyState, botanyDispatch] = useReducer(botanyClientReducer, initialBotanyClientState)
@@ -59,6 +60,8 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     useEffect(() => { getAnnotationsObj(botanyState.uid as string, newAnnotationEnabled, botanyDispatch) }, [botanyState.uid, botanyState.annotationSavedOrDeleted])
     useEffect(() => { if (!selectedKey?.has('annotate')) botanyDispatch({ type: 'undefineUidAndActiveAnnotation' }) }, [selectedKey])
 
+    //const annotationModelSpeciesNames = props.annotationModels.map(model => model.spec_name.toLowerCase())
+
     return <BotanyClientContext.Provider value={{ botanyState, botanyDispatch, initializeDataTransferHandler, terminateDataTransferHandler }}>
 
         <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
@@ -79,12 +82,9 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                     </section>
                 </AccordionItem>
 
-                {/* <AccordionItem key={'annotate'} aria-label={'Add annotation model'} title={"Add model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <section className="flex w-full h-full">
-                        <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
-                        <AnnotationEntryWrapper annotationModels={props.annotationModels} />
-                    </section>
-                </AccordionItem> */}
+                <AccordionItem key={'Add annotation model'} aria-label={'Add annotation model'} title={"I want to add a model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                    <AddModelAnnotationToPublishedModel baseModelsForAnnotationModels={props.baseModelsForAnnotationModels}/>
+                </AccordionItem>
 
             </Accordion>
 

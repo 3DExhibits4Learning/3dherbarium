@@ -168,7 +168,7 @@ export const getAllSiteReadyModels = async (development: boolean): Promise<model
 export const getAllAnnotationModels = async (): Promise<model[]> => {
 
   const models = await prisma.model.findMany({
-    where: { site_ready: true, base_model: false },
+    where: { site_ready: true, base_model: false, annotation_number: null },
     orderBy: {
       spec_name: 'asc'
     }

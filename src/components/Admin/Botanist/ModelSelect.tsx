@@ -1,18 +1,21 @@
 'use client'
 
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import { model } from "@prisma/client";
-import { forwardRef, MutableRefObject, SetStateAction, useRef, Dispatch } from "react";
-import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
-import { NewModelClicked } from "@/ts/reducer";
-import { useContext } from "react";
-import { BotanyClientContext } from "./BotanyClient";
-import { botanyClientContext } from "@/ts/botanist";
-import { Spinner } from "@nextui-org/react";
-import { AnnotationButtons } from "./AnnotationSubcomponents/AnnotationButtons";
+// Typical imports
+import { Accordion, AccordionItem } from "@nextui-org/react"
+import { model } from "@prisma/client"
+import { forwardRef, MutableRefObject, SetStateAction, useRef, Dispatch } from "react"
+import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
+import { NewModelClicked } from "@/ts/reducer"
+import { useContext } from "react"
+import { BotanyClientContext } from "./BotanyClient"
+import { botanyClientContext } from "@/ts/botanist"
+import { Spinner } from "@nextui-org/react"
+import { AnnotationButtons } from "./AnnotationSubcomponents/AnnotationButtons"
 
-import BotanistRefWrapper from "./BotanistModelViewerRef";
+// Default imports
+import BotanistRefWrapper from "./BotanistModelViewerRef"
 
+// Main JSX
 export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setModalOpen: Dispatch<SetStateAction<boolean>> }, ref) => {
 
     const modelClicked = useRef<boolean>()
@@ -39,8 +42,8 @@ export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setMo
                             botanyState.firstAnnotationPosition === undefined && botanyState.uid && !botanyState.activeAnnotation &&
                             <div className="h-[400px] w-full flex justify-center"><Spinner label='Loading Annotations' size="lg" /></div>
                         }
-                        {/* Conditional render that waits until the first annotation(thus all annotations) is loaded*/}
-                        {/* RefWrapper required to pass ref to dynamically imported component*/}
+                        {/* Conditional render that waits until the first annotation(thus all annotations) is loaded */}
+                        {/* RefWrapper required to pass ref to dynamically imported component */}
                         {
                             botanyState.firstAnnotationPosition !== undefined &&
                             <div className="h-[400px]"><BotanistRefWrapper ref={newAnnotationEnabled} /></div>

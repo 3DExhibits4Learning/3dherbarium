@@ -29,8 +29,7 @@ export default function AnnotationEntryWrapper(props: { annotationModels: model[
             }
             {
                 botanyState.activeAnnotationIndex && // This indicates the first annotation
-                <AnnotationEntry index={getIndex(botanyState) as number} annotationModels={props.annotationModels}
-                />
+                <AnnotationEntry index={getIndex(botanyState) as number} annotationModels={props.annotationModels}/>
             }
         </section>
     </div>

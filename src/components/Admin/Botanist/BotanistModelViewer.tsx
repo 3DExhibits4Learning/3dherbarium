@@ -8,9 +8,9 @@
 "use client"
 
 // Typical imports
-import { MutableRefObject, useEffect, useRef, forwardRef, ForwardedRef, useState, useContext } from 'react';
-import { BotanyClientContext } from './BotanyClient';
-import { botanyClientContext } from '@/ts/botanist';
+import { MutableRefObject, useEffect, useRef, forwardRef, ForwardedRef, useState, useContext } from 'react'
+import { BotanyClientContext } from './BotanyClient'
+import { botanyClientContext } from '@/ts/botanist'
 
 // Logic import
 import * as fn from '@/functions/client/admin/botanistModelViewer'
@@ -93,8 +93,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
             execution-while-not-rendered="true"
             web-share="true"
             allowFullScreen
-            style={{ width: "100%" }}
-        />
+            style={{ width: "100%" }}/>
     </div>
 })
 
