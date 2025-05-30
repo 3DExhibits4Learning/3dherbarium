@@ -11,12 +11,11 @@
 import { MutableRefObject, useRef, useState, useContext, useEffect } from 'react'
 import { BotanyClientContext } from './BotanyClient'
 import { botanyClientContext } from '@/ts/botanist'
-
-// Default imports
-import Sketchfab from '@sketchfab/viewer-api'
+import { addAnnotationModelViewerSuccessFn, initializeModelAnnotationAdditionViewer } from '@/functions/client/admin/botanistModelViewer'
+import { fullAnnotation } from '@/ts/types'
 
 // Main JSX
-export default function AddModelAnnotationModelViewer(props: { minHeight?: string, uid: string }) {
+export default function AddModelAnnotationModelViewer(props: { minHeight?: string, uid: string, firstAnnotationPosition: string, annotations: fullAnnotation[] }) {
 
     // Context
     const context = useContext(BotanyClientContext) as botanyClientContext
@@ -25,6 +24,7 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
 
     // Refs
     const modelViewer = useRef<HTMLIFrameElement>()
+    const tmpAnnotationIndex = useRef(props.annotations.length + 1)
 
     // State
     const [sketchfabApi, setSketchfabApi] = useState<any>()
@@ -32,8 +32,9 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
     // iFrame minimum height
     const minHeight = props.minHeight ? props.minHeight : '150px'
 
+    // Viewer initialization success object
     const successObj = {
-        success: function onSuccess(api: any) { api.start() },
+        success: function onSuccess(api: any) { addAnnotationModelViewerSuccessFn(api, props.firstAnnotationPosition, props.annotations, setSketchfabApi) },
         error: function onError() { },
         ui_stop: 0,
         ui_infos: 0,
@@ -45,12 +46,14 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
         ui_fadeout: 0
     }
 
+    // Initialize the viewer
+    useEffect(() => initializeModelAnnotationAdditionViewer(modelViewer.current as HTMLIFrameElement, props.uid, successObj), [props.uid])
+
     useEffect(() => {
-        const iframe = modelViewer.current as HTMLIFrameElement
-        iframe.src = props.uid
-        const client = new Sketchfab(iframe)
-        client.init(props.uid, successObj)
-    }, [props.uid])
+        if(sketchfabApi){
+            //sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'fast' })
+        }
+    })
 
     // Simple iframe with ref
     return <div className={`flex bg-black m-auto min-h-[${minHeight}]`} style={{ height: "100%", width: "100%" }}>

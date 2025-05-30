@@ -276,10 +276,102 @@ export const repositionUncheckedHandler = (botanyState: BotanyClientState, sketc
  * @param botanyState 
  * @param annotationSelectWrapper 
  */
-export const annotationSelectEventHandler= (sketchfabApi: any, botanyState: BotanyClientState, annotationSelectWrapper: Function) => {
+export const annotationSelectEventHandler = (sketchfabApi: any, botanyState: BotanyClientState, annotationSelectWrapper: Function) => {
     // Set the activeAnnotationIndex when an annotation is selected
     // Note that this event is triggered by any click, even those not on an annotation. Such events return and index of -1
     if (sketchfabApi && !botanyState.repositionEnabled) sketchfabApi.addEventListener('annotationSelect', annotationSelectWrapper)
     else if (sketchfabApi) sketchfabApi.removeEventListener('annotationSelect', annotationSelectWrapper)
 }
+
+/**
+ * 
+ * @param api 
+ * @param firstAnnotationPosition 
+ * @param annotations 
+ * @param setSketchfabApi 
+ */
+export const addAnnotationModelViewerSuccessFn = (api: any, firstAnnotationPosition: string, annotations: fullAnnotation[], setSketchfabApi: Dispatch<SetStateAction<any>>) => {
+
+    // Viewer initialization
+    setSketchfabApi(api)
+    api.start()
+    api.addEventListener('viewerready', () => {
+        // Parse first annotation position
+        const firstAnnotationPositionArr = JSON.parse(firstAnnotationPosition)
+
+        // Create the first annotation if it exists
+        api.createAnnotationFromScenePosition(firstAnnotationPositionArr[0], firstAnnotationPositionArr[1], firstAnnotationPositionArr[2], 'Taxonomy and Description', '', (e: any, index: any) => {
+            if (e) throw Error(e.message)
+            console.log('Created annotation ' + index)
+        })
+
+        // Create any futher annotations that exist
+        for (let i in annotations) {
+            // Check for position
+            if (annotations[i].position) {
+                // Parse position string for array
+                const position = JSON.parse(annotations[i].position)
+
+                // Create annotation
+                api.createAnnotationFromScenePosition(position[0], position[1], position[2], `${annotations[i].title}`, '', (e: any, index: any) => {
+                    if (e) throw Error(e.message)
+                    console.log('Created annotation ' + index)
+                })
+            }
+        }
+
+    })
+}
+
+/**
+ * 
+ * @param iframe 
+ * @param uid 
+ * @param successObj 
+ */
+export const initializeModelAnnotationAdditionViewer = (iframe: HTMLIFrameElement, uid: string, successObj: any) => {
+    iframe.src = uid
+    const client = new Sketchfab(iframe)
+    client.init(uid, successObj)
+}
+
+/**
+ * 
+ * @param info 
+ * @param botanyState 
+ * @param sketchfabApi 
+ * @param temporaryAnnotationIndex 
+ * @param newAnnotationEnabled 
+ * @param dispatch 
+ */
+export const addNewModelAnnotationMarker = (info: any, botanyState: BotanyClientState, sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, newAnnotationEnabled: MutableRefObject<boolean>, dispatch: Dispatch<BotanyClientAction>) => {
+        // Remove previous annotation if there is a new click
+        if (temporaryAnnotationIndex.current !== undefined) sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
+
+        // Get camera position
+        sketchfabApi.getCameraLookAt((e: any, camera: any) => {
+            if (e) throw Error(e.message)
+
+            // Create annotation
+            sketchfabApi.createAnnotationFromScenePosition(info.position3D, camera.position, camera.target, '', '', (e: any, index: any) => {
+                if (e) throw Error(e.message)
+                temporaryAnnotationIndex.current = index
+            })
+
+            // If the click was on the 3d model (and not the background) set position/activeAnnotation data
+            if (info.instanceID) {
+                console.log("Info: ", info)
+                const positionArray = Array.from(info.position3D)
+                const positionDispatch: SetPosition = { type: "setPosition", position: JSON.stringify([positionArray, camera.position, camera.target]) }
+                dispatch(positionDispatch)
+
+                // Ensure that active annotation index is set to 'new'
+                if (botanyState.activeAnnotationIndex !== 'new') { const indexDispatch: SetActiveAnnotationIndex = { type: 'setActiveAnnotationIndex', index: 'new' }; dispatch(indexDispatch) }
+
+            }
+            // If not, set position to undefined
+            else { const positionDispatch: SetPosition = { type: "setPosition", position: undefined }; dispatch(positionDispatch) }
+        })
+    }
+
 
