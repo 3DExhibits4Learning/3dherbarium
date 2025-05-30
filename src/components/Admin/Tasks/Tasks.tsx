@@ -21,6 +21,7 @@ import SubtaskButton from "./SubtaskButtons"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 import TaskImage from "./TaskImage"
 
+// Main JSX
 export default function Tasks(props: { epic: any, botanist?: boolean }) {
 
     // Data transfer context
@@ -35,10 +36,9 @@ export default function Tasks(props: { epic: any, botanist?: boolean }) {
     const inProgressTasks = useMemo(() => props.epic.issues.filter((issue: any) => issue.fields.status.name === 'In Progress'), [props.epic])
     const doneTasks = useMemo(() => props.epic.issues.filter((issue: any) => issue.fields.status.name === 'Done'), [props.epic])
 
-    // More code that needed to be written because an assistant didn't feel the need to follow instructions
-    const dueDate = '4/25/2025'
+    // Respective titles
     const modelerTitle = (issue: any) => issue.fields.summary.slice(0, -11) + ` (${countCompletedSubtasks(issue.fields.subtasks)}/${issue.fields.subtasks.length})`
-    const botanistTitle = (issue: any) => <span>{issue.fields.summary.slice(0, -11)}<br />Subtasks completed: {countCompletedSubtasks(issue.fields.subtasks)} of {issue.fields.subtasks.length}<br /> Due: {dueDate}</span>
+    const botanistTitle = (issue: any) => <span>{issue.fields.summary.slice(0, -11)}<br />Subtasks completed: {countCompletedSubtasks(issue.fields.subtasks)} of {issue.fields.subtasks.length}</span>
 
     // Transition handler
     const transitionHandler = (transitionId: number, issueKey: string) => dataTransferHandler(initializeTransfer, terminateTransfer, transitionIssue, [transitionId, issueKey], 'Updating issue status')

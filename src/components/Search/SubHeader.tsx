@@ -12,6 +12,7 @@ import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@nextui-org/react
 import { useRouter } from "next/navigation"
 import { SetStateAction, Dispatch } from "react"
 
+// Main JSX
 export default function SubHeader(props: { state: SearchPageState, setState: Dispatch<SetStateAction<SearchPageState>> }) {
 
   // Props

@@ -53,15 +53,6 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     // Ref
     const newAnnotationEnabled = useRef<boolean>(false)
 
-    // Only a single model can be displayed at a time due to an assistant thinking they don't have to follow explicit directions
-    const dateSort = (a: Date, b: Date): number => {
-        if (a < b) return -1
-        else if (a > b) return 1
-        else return 0
-    }
-    const datesOfModelsToAnnotate = props.modelsToAnnotate.map(model => model.spec_acquis_date).sort(dateSort)
-    const modelToAnnotate = [props.modelsToAnnotate.find(model => model.spec_acquis_date === datesOfModelsToAnnotate[0])] as model[]
-
     // Effects: dispatch (handler) for active annotation changes, an annotations getter for when an annotation is saved/deleted or a new model is selected, 
     // and data reset when the annotations accordion item is closed
     useEffect(() => activeAnnotationIndexDispatch(botanyState, botanyDispatch), [botanyState.activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -83,17 +74,17 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
                 <AccordionItem key={'annotate'} aria-label={'annotate'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                     <section className="flex w-full h-full">
-                        <ModelSelect modelsToAnnotate={modelToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
+                        <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
                         <AnnotationEntryWrapper annotationModels={props.annotationModels} />
                     </section>
                 </AccordionItem>
 
-                <AccordionItem key={'annotate'} aria-label={'Add annotation model'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                {/* <AccordionItem key={'annotate'} aria-label={'Add annotation model'} title={"Add model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                     <section className="flex w-full h-full">
-                        <ModelSelect modelsToAnnotate={modelToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
+                        <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
                         <AnnotationEntryWrapper annotationModels={props.annotationModels} />
                     </section>
-                </AccordionItem>
+                </AccordionItem> */}
 
             </Accordion>
 
