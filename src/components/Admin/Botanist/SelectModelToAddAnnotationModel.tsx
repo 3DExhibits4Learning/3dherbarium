@@ -5,17 +5,14 @@ import { Accordion, AccordionItem } from "@nextui-org/react"
 import { model } from "@prisma/client"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
-import { NewModelClicked } from "@/ts/reducer"
-import { useContext } from "react"
-import { BotanyClientContext } from "./BotanyClient"
-import { botanyClientContext } from "@/ts/botanist"
-import { Spinner } from "@nextui-org/react"
-import AddModelAnnotationModelViewer from "@/components/Admin/Botanist/AddModelAnnotationModelViewer"
 import { fullAnnotation } from "@/ts/types"
 import { getFullAnnotations } from "@/functions/server/botanist"
 
+// Default imports
+import AddModelAnnotationModelViewer from "@/components/Admin/Botanist/AddModelAnnotationModelViewer"
+
 // Main JSX
-export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotate: model[], uid: string, setUid: Dispatch<SetStateAction<string>> }) {
+export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotate: model[], uid: string, setUid: Dispatch<SetStateAction<string>>, setPosition: Dispatch<SetStateAction<string>> }) {
 
     const modelClicked = useRef(false)
     const setUid = props.setUid
@@ -35,9 +32,7 @@ export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotat
                         title={toUpperFirstLetter(model.spec_name)}
                         classNames={{ title: 'text-[ #004C46] text-2xl' }}
                         onPress={() => {
-                            if (modelClicked.current) {
-                                setUid(model.uid)
-                            }
+                            if (modelClicked.current) setUid(model.uid)
                             else setUid('')
                         }}>
                         {
@@ -46,7 +41,8 @@ export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotat
                                 <AddModelAnnotationModelViewer 
                                 uid={props.uid} 
                                 firstAnnotationPosition={props.modelsToAnnotate.find(model => model.uid === props.uid)?.annotationPosition as string} 
-                                annotations={annotations}/>
+                                annotations={annotations}
+                                setPosition={props.setPosition}/>
                             </div>
                         }
                     </AccordionItem>

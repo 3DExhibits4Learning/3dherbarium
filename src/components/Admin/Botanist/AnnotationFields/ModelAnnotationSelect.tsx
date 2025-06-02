@@ -13,7 +13,7 @@ export default function ModelAnnotationSelect(props: { value: string, setValue?:
 
     return (
         <>
-            <p className="text-xl mb-1">Annotation Model
+            <p className="text-2xl mb-1">Annotation Model
                 <span className="text-red-600 ml-1">*</span>
             </p>
             <select

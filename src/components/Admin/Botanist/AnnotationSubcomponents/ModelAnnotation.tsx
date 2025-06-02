@@ -1,10 +1,12 @@
 'use client'
 
+// Typical imports
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
 import { annotationEntryContext } from "@/ts/botanist"
 import { model } from "@prisma/client"
 
+// Default imports
 import TextInput from "@/components/Shared/TextInput"
 import ModelAnnotationSelect from "../AnnotationFields/ModelAnnotationSelect"
 import Annotation from "../AnnotationFields/Annotation"
@@ -13,8 +15,10 @@ import dynamic from "next/dynamic"
 // Dymamic imports
 const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), { ssr: false })
 
+// Main JSX
 export default function ModelAnnotation(props: { annotationModels: model[] }) {
 
+    // Context
     const context = useContext(AnnotationEntryContext) as annotationEntryContext
     const annotationState = context.annotationState
 
@@ -30,9 +34,7 @@ export default function ModelAnnotation(props: { annotationModels: model[] }) {
                 </div>
                 {
                     annotationState.modelAnnotationUid && annotationState.modelAnnotationUid !== 'select' &&
-                    <div className="w-1/3">
-                        <ModelViewer uid={annotationState.modelAnnotationUid} />
-                    </div>
+                    <div className="w-1/3"><ModelViewer uid={annotationState.modelAnnotationUid} /></div>
                 }
             </section>
         }

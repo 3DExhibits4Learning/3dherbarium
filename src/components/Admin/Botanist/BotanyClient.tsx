@@ -82,15 +82,13 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
                     </section>
                 </AccordionItem>
 
-                {/* <AccordionItem key={'Add annotation model'} aria-label={'Add annotation model'} title={"I want to add a model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <AddModelAnnotationToPublishedModel baseModelsForAnnotationModels={props.baseModelsForAnnotationModels}/>
-                </AccordionItem> */}
+                <AccordionItem key={'Add annotation model'} aria-label={'Add annotation model'} title={"I want to add a model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
+                    <AddModelAnnotationToPublishedModel baseModelsForAnnotationModels={props.baseModelsForAnnotationModels} annotationModels={props.annotationModels}/>
+                </AccordionItem>
 
             </Accordion>
 
-            <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
-                <Tasks epic={props.epic} botanist />
-            </div>
+            <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto"><Tasks epic={props.epic} botanist /></div>
 
         </section>
 

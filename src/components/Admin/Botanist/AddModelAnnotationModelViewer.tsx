@@ -1,26 +1,19 @@
 /**
  * @file src/components/Admin/Botanist/BotanistModelViewer.tsx
  * 
- * @fileoverview model viewer enabling botanist annotations
+ * @fileoverview model viewer enabling the addition of a model annotation to an already published base model
  * 
  */
 
 "use client"
 
 // Typical imports
-import { MutableRefObject, useRef, useState, useContext, useEffect } from 'react'
-import { BotanyClientContext } from './BotanyClient'
-import { botanyClientContext } from '@/ts/botanist'
-import { addAnnotationModelViewerSuccessFn, initializeModelAnnotationAdditionViewer } from '@/functions/client/admin/botanistModelViewer'
+import { MutableRefObject, useRef, useState, useEffect, Dispatch, SetStateAction } from 'react'
+import { addAnnotationModelViewerSuccessFn, addNewModelAnnotationMarker, initializeModelAnnotationAdditionViewer } from '@/functions/client/admin/botanistModelViewer'
 import { fullAnnotation } from '@/ts/types'
 
 // Main JSX
-export default function AddModelAnnotationModelViewer(props: { minHeight?: string, uid: string, firstAnnotationPosition: string, annotations: fullAnnotation[] }) {
-
-    // Context
-    const context = useContext(BotanyClientContext) as botanyClientContext
-    const botanyState = context.botanyState
-    const dispatch = context.botanyDispatch
+export default function AddModelAnnotationModelViewer(props: { minHeight?: string, uid: string, firstAnnotationPosition: string, annotations: fullAnnotation[], setPosition: Dispatch<SetStateAction<string>>  }) {
 
     // Refs
     const modelViewer = useRef<HTMLIFrameElement>()
@@ -31,6 +24,9 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
 
     // iFrame minimum height
     const minHeight = props.minHeight ? props.minHeight : '150px'
+
+    // Event handler wrappers
+    const addNewModelAnnotationMarkerWrapper = (info: any) => addNewModelAnnotationMarker(info, sketchfabApi, tmpAnnotationIndex, props.setPosition)
 
     // Viewer initialization success object
     const successObj = {
@@ -49,10 +45,10 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
     // Initialize the viewer
     useEffect(() => initializeModelAnnotationAdditionViewer(modelViewer.current as HTMLIFrameElement, props.uid, successObj), [props.uid])
 
+    // Add event listener which adds marker on click
     useEffect(() => {
-        if(sketchfabApi){
-            //sketchfabApi.addEventListener('click', createAnnotationWrapper, { pick: 'fast' })
-        }
+        if (sketchfabApi) sketchfabApi.addEventListener('click', addNewModelAnnotationMarkerWrapper, { pick: 'fast' })
+        return () => { if (sketchfabApi) sketchfabApi.removeEventListener('click', addNewModelAnnotationMarkerWrapper, { pick: 'fast' }) }
     })
 
     // Simple iframe with ref

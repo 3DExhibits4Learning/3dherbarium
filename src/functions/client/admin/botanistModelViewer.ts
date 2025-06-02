@@ -338,23 +338,19 @@ export const initializeModelAnnotationAdditionViewer = (iframe: HTMLIFrameElemen
 /**
  * 
  * @param info 
- * @param botanyState 
  * @param sketchfabApi 
  * @param temporaryAnnotationIndex 
- * @param newAnnotationEnabled 
- * @param dispatch 
+ * @param setPosition 
  */
-export const addNewModelAnnotationMarker = (info: any, botanyState: BotanyClientState, sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, newAnnotationEnabled: MutableRefObject<boolean>, dispatch: Dispatch<BotanyClientAction>) => {
+export const addNewModelAnnotationMarker = (info: any, sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, setPosition: Dispatch<SetStateAction<string>>) => {
         // Remove previous annotation if there is a new click
         if (temporaryAnnotationIndex.current !== undefined) sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
 
         // Get camera position
         sketchfabApi.getCameraLookAt((e: any, camera: any) => {
-            if (e) throw Error(e.message)
 
             // Create annotation
             sketchfabApi.createAnnotationFromScenePosition(info.position3D, camera.position, camera.target, '', '', (e: any, index: any) => {
-                if (e) throw Error(e.message)
                 temporaryAnnotationIndex.current = index
             })
 
@@ -362,15 +358,8 @@ export const addNewModelAnnotationMarker = (info: any, botanyState: BotanyClient
             if (info.instanceID) {
                 console.log("Info: ", info)
                 const positionArray = Array.from(info.position3D)
-                const positionDispatch: SetPosition = { type: "setPosition", position: JSON.stringify([positionArray, camera.position, camera.target]) }
-                dispatch(positionDispatch)
-
-                // Ensure that active annotation index is set to 'new'
-                if (botanyState.activeAnnotationIndex !== 'new') { const indexDispatch: SetActiveAnnotationIndex = { type: 'setActiveAnnotationIndex', index: 'new' }; dispatch(indexDispatch) }
-
+                setPosition(JSON.stringify([positionArray, camera.position, camera.target]))
             }
-            // If not, set position to undefined
-            else { const positionDispatch: SetPosition = { type: "setPosition", position: undefined }; dispatch(positionDispatch) }
         })
     }
 
