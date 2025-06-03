@@ -11,15 +11,28 @@ import { getFullAnnotations } from "@/functions/server/botanist"
 // Default imports
 import AddModelAnnotationModelViewer from "@/components/Admin/Botanist/AddModelAnnotationModelViewer"
 
+// Main JSX props interface
+interface SelectModelToAddAnnotationModelProps {
+    modelsToAnnotate: model[],
+    model: { uid: string, species: string },
+    setModel: Dispatch<SetStateAction<{ uid: string, species: string }>>,
+    setPosition: Dispatch<SetStateAction<string>>
+}
+
 // Main JSX
-export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotate: model[], model: { uid: string, species: string }, setModel: Dispatch<SetStateAction<{ uid: string, species: string }>>, setPosition: Dispatch<SetStateAction<string>> }) {
+export default function SelectModelToAddAnnotationModel(props: SelectModelToAddAnnotationModelProps) {
+    // props => variables
     const uid = props.model.uid
     const setModel = props.setModel
-    const modelClicked = useRef(false)
 
+    // Ref and state variables
+    const modelClicked = useRef(false)
     const [annotations, setAnnotations] = useState<fullAnnotation[]>()
+
+    // Wrapper for setting annotations to getFullAnnotations
     const setFullAnnotations = async (uid: string) => setAnnotations(await getFullAnnotations(uid))
 
+    // Effect to use wrapper
     useEffect(() => { if (uid) setFullAnnotations(uid) }, [uid])
 
     return <section className="h-full w-1/5">
