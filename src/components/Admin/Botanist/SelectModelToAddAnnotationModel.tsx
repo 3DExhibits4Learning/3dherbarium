@@ -12,41 +12,48 @@ import { getFullAnnotations } from "@/functions/server/botanist"
 import AddModelAnnotationModelViewer from "@/components/Admin/Botanist/AddModelAnnotationModelViewer"
 
 // Main JSX
-export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotate: model[], uid: string, setUid: Dispatch<SetStateAction<string>>, setPosition: Dispatch<SetStateAction<string>> }) {
-
+export default function SelectModelToAddAnnotationModel(props: { modelsToAnnotate: model[], model: { uid: string, species: string }, setModel: Dispatch<SetStateAction<{ uid: string, species: string }>>, setPosition: Dispatch<SetStateAction<string>> }) {
+    const uid = props.model.uid
+    const setModel = props.setModel
     const modelClicked = useRef(false)
-    const setUid = props.setUid
 
     const [annotations, setAnnotations] = useState<fullAnnotation[]>()
-    const setFullAnnotations = async(uid: string) => setAnnotations(await getFullAnnotations(uid))
+    const setFullAnnotations = async (uid: string) => setAnnotations(await getFullAnnotations(uid))
 
-    useEffect(() => {if (props.uid) setFullAnnotations(props.uid)}, [props.uid])
+    useEffect(() => { if (uid) setFullAnnotations(uid) }, [uid])
 
     return <section className="h-full w-1/5">
-        <Accordion className="h-full" onSelectionChange={(keys: any) => modelClicked.current = keys.size ? true : false}>
+        <Accordion
+            className="h-full"
+            onSelectionChange={(keys: any) => {
+                modelClicked.current = keys.size ? true : false
+                setAnnotations(undefined) // so that AddModelAnnotationModelViewer is not rerendered until new annotations have been fetched
+            }}>
             {
-                props.modelsToAnnotate.map((model, i) => {
-                    return <AccordionItem
-                        key={i}
-                        aria-label={'Specimen to model'}
-                        title={toUpperFirstLetter(model.spec_name)}
-                        classNames={{ title: 'text-[ #004C46] text-2xl' }}
-                        onPress={() => {
-                            if (modelClicked.current) setUid(model.uid)
-                            else setUid('')
-                        }}>
-                        {
-                            props.uid && annotations &&
-                            <div className="h-[400px]">
-                                <AddModelAnnotationModelViewer 
-                                uid={props.uid} 
-                                firstAnnotationPosition={props.modelsToAnnotate.find(model => model.uid === props.uid)?.annotationPosition as string} 
-                                annotations={annotations}
-                                setPosition={props.setPosition}/>
-                            </div>
+                props.modelsToAnnotate.map((model) => <AccordionItem
+                    key={model.uid}
+                    aria-label={'Specimen to model'}
+                    title={toUpperFirstLetter(model.spec_name)}
+                    classNames={{ title: 'text-[ #004C46] text-2xl' }}
+                    onPress={() => {
+                        if (modelClicked.current) setModel({ uid: model.uid, species: model.spec_name })
+                        else {
+                            setModel({ uid: '', species: '' })
+                            setAnnotations(undefined)
                         }
-                    </AccordionItem>
-                })}
+                    }}>
+                    {
+                        uid && annotations &&
+                        <div className="h-[400px]">
+                            <AddModelAnnotationModelViewer
+                                uid={uid}
+                                firstAnnotationPosition={props.modelsToAnnotate.find(model => model.uid === uid)?.annotationPosition as string}
+                                annotations={annotations}
+                                setPosition={props.setPosition} />
+                        </div>
+                    }
+                </AccordionItem>)
+            }
         </Accordion>
     </section>
 }

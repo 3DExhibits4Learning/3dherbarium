@@ -12,11 +12,11 @@ import { useState } from "react"
 export default function AddModelAnnotationToPublishedModel(props: {baseModelsForAnnotationModels: model[], annotationModels: model[]}) {
 
     // States
-    const [uid, setUid] = useState('')
+    const [model, setModel] = useState({uid: '', species: ''})
     const [markerPosition, setMarkerPosition] = useState('')
     
     return <section className="flex w-full h-full">
-        <SelectModelToAddAnnotationModel modelsToAnnotate={props.baseModelsForAnnotationModels} uid={uid} setUid={setUid} setPosition={setMarkerPosition}/>
-        <AddModelAnnotationForm annotationModels={props.annotationModels} baseUid={uid} position={markerPosition}/>
+        <SelectModelToAddAnnotationModel modelsToAnnotate={props.baseModelsForAnnotationModels} setPosition={setMarkerPosition} model={model} setModel={setModel}/>
+        <AddModelAnnotationForm annotationModels={props.annotationModels} model={model} position={markerPosition}/>
     </section>
 }
