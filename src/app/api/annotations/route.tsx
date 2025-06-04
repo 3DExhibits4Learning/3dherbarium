@@ -80,7 +80,7 @@ export async function POST(request: Request) {
                 case 'video':
 
                     // Video annotation 
-                    const videoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string } })
+                    const videoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string }})
 
                     // Await transaction, typical response
                     const newVideoAnnotation = await prisma?.$transaction([annotation, videoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(videoAnnotation)', "Couldn't create video anotation"))
@@ -185,7 +185,7 @@ export async function PATCH(request: Request) {
                             prisma.model_annotation.delete({ where: { annotation_id: data.get('annotation_id') as string } })
 
                         // Create new video annotation
-                        const newVideoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string } })
+                        const newVideoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string }})
 
                         // Await transaction, return with typical response
                         const update = await prisma?.$transaction([deleteAnnotation, updateAnnotation, newVideoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(update)', "Couldn't update annotation or make new video annotation"))
@@ -195,7 +195,7 @@ export async function PATCH(request: Request) {
                     // Update video annotation
                     const updatedVideoAnnotation = prisma.video_annotation.update({
                         where: { annotation_id: data.get('annotation_id') as string },
-                        data: { url: data.get('url') as string, length: data.get('length') as string }
+                        data: { url: data.get('url') as string, length: data.get('length') as string, annotation: data.get('annotation') as string }
                     })
 
                     // Await transaction, return with typical response

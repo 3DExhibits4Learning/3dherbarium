@@ -10,12 +10,7 @@ export default function PhotoAnnotation(props: { sketchfabApi: any }) {
 
     return <>
         <div className="w-full h-[65%]" id="annotationDivMedia" style={{ display: "block" }}>
-            {
-                loading &&
-                <div className='w-full h-full justify-center'>
-                    <Skeleton className="w-full h-full" />
-                </div>
-            }
+            {loading && <div className='w-full h-full justify-center'><Skeleton className="w-full h-full" /></div>}
             {
                 !loading &&
                 <div className='w-full h-full text-center fade'>

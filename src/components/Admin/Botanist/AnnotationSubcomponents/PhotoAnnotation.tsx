@@ -23,18 +23,8 @@ export default function PhotoAnnotation(props: {}) {
                         <div className="ml-12">
                             <TextInput value={annotationState.annotationTitle as string} field='annotationTitle' title='Annotation Title' required />
                         </div>
-                        {
-                            annotationState.mediaType === 'url' &&
-                            <div className="ml-12">
-                                <TextInput value={annotationState.url as string} field='url' title='URL' required />
-                            </div>
-                        }
-                        {
-                            annotationState.mediaType === 'upload' &&
-                            <div className="ml-12 mb-4">
-                                <FileInput />
-                            </div>
-                        }
+                        {annotationState.mediaType === 'url' &&<div className="ml-12"><TextInput value={annotationState.url as string} field='url' title='URL' required /></div>}
+                        {annotationState.mediaType === 'upload' && <div className="ml-12 mb-4"><FileInput /></div>}
                         <div className="ml-12">
                             <TextInput value={annotationState.author as string} field='author' title='Author' required />
                             <License license={annotationState.license} />
@@ -47,9 +37,7 @@ export default function PhotoAnnotation(props: {}) {
                         <img className='rounded-sm inline-block w-1/2 max-w-[600px] h-full' src={annotationState.imageSource as string} alt={'Annotation Image'}></img>
                     }
                 </div>
-                <div className="ml-12">
-                    <Annotation annotation={annotationState.annotation} />
-                </div>
+                <div className="ml-12"><Annotation annotation={annotationState.annotation} /></div>
             </section>
         }
     </>

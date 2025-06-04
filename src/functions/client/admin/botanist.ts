@@ -212,8 +212,8 @@ export const videoSaveButtonEnabler = (isNew: boolean, botanyState: BotanyClient
         case false:
 
             const caseAnnotation = botanyState.activeAnnotation as video_annotation
-            const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.url, caseAnnotation.length]
-            const currentValues = [annotationState.annotationTitle, annotationState.url, length]
+            const originalValues = [botanyState.activeAnnotationTitle, caseAnnotation.url, caseAnnotation.length, caseAnnotation.annotation]
+            const currentValues = [annotationState.annotationTitle, annotationState.url, length, annotationState.annotation]
 
             if (currentValues.every(value => value) && !arrStrCompare(originalValues, currentValues) || isNewPosition) annotationDispatch({ type: 'enableSaveAndCreate' })
             else annotationDispatch({ type: 'disableSaveAndCreate' })
@@ -330,7 +330,6 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
         case 'model':
             // Model_annotation table data
             data.set('modelAnnotationUid', annotationState.modelAnnotationUid as string)
-            data.set('annotation', annotationState.annotation)
 
             break
 
@@ -338,7 +337,6 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
             // Photo_annotation table data
             data.set('author', annotationState.author)
             data.set('license', annotationState.license)
-            data.set('annotation', annotationState.annotation)
             data.set('annotator', 'Kat Lim')
             if (annotationState.photoTitle) data.set('photoTitle', annotationState.photoTitle)
             if (annotationState.website) data.set('website', annotationState.website)
@@ -347,6 +345,7 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
     // Shared data (url was formerly the foreign key)
     const annotationId = uuidv4()
     data.set('annotation_id', annotationId)
+    data.set('annotation', annotationState.annotation ?? '')
 
     if (!annotationState.file) data.set('url', annotationState.url)
 
@@ -410,7 +409,6 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
         case 'model':
             // Model_annotation table data
             data.set('modelAnnotationUid', annotationState.modelAnnotationUid as string)
-            data.set('annotation', annotationState.annotation)
             console.log('MODEL CASE RAN')
 
             break
@@ -420,7 +418,6 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
             // Photo_annotation table data
             data.set('author', annotationState.author)
             data.set('license', annotationState.license)
-            data.set('annotation', annotationState.annotation)
             data.set('annotator', 'Kat Lim')
             if (annotationState.photoTitle) data.set('photoTitle', annotationState.photoTitle)
             if (annotationState.website) data.set('website', annotationState.website)
@@ -429,6 +426,7 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
     // Shared data (url was formerly the foreign key)
     // Note that the url is the url necessary from the collections page; also note the old path must be inlcuded for deletion; also note that a new id is not generated for update
     data.set('annotation_id', (botanyState.activeAnnotation as photo_annotation | video_annotation).annotation_id)
+    data.set('annotation', annotationState.annotation ?? '')
 
     // Set url as field value when there is no file or media type is 'url'
     if (!annotationState.file || annotationState.mediaType === 'url') data.set('url', annotationState.url)
