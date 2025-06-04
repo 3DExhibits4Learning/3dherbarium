@@ -16,6 +16,8 @@ import { botanyClientContext } from "@/ts/botanist"
 import { initialBotanyClientState } from "@/ts/botanist"
 import { activeAnnotationIndexDispatch, getAnnotationsObj } from "@/functions/client/admin/botanist"
 import { ModelSelect } from "./ModelSelect"
+import { AnnotationNumbers } from "@/components/Admin/Botanist/AnnotationSubcomponents/AnnotationNumber"
+import { renumberAnnotationsServer } from "@/functions/server/botanist"
 
 // Default imports
 import AreYouSure from "../../Shared/AreYouSure"
@@ -27,6 +29,7 @@ import botanyClientReducer from "@/functions/client/reducers/botanyClientReducer
 import AnnotationEntryWrapper from "./AnnotationEntryWrapper"
 import Tasks from "../Tasks/Tasks"
 import AddModelAnnotationToPublishedModel from "@/components/Admin/Botanist/AddModelAnnotationToPublishedModel"
+import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
 
 // Exported context
 export const BotanyClientContext = createContext<botanyClientContext | ''>('')
@@ -50,6 +53,9 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     // Data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
+
+    // Annotation renumber handler
+    const renumberAnnotations = async(annotationNumbers: AnnotationNumbers) => await dataTransferHandler(initializeDataTransfer, terminateDataTransfer, renumberAnnotationsServer, [annotationNumbers], 'Renumbering annotations')
 
     // Ref
     const newAnnotationEnabled = useRef<boolean>(false)

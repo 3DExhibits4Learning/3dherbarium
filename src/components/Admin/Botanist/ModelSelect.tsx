@@ -44,10 +44,7 @@ export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setMo
                         }
                         {/* Conditional render that waits until the first annotation(thus all annotations) is loaded */}
                         {/* RefWrapper required to pass ref to dynamically imported component */}
-                        {
-                            botanyState.firstAnnotationPosition !== undefined &&
-                            <div className="h-[400px]"><BotanistRefWrapper ref={newAnnotationEnabled} /></div>
-                        }
+                        {botanyState.firstAnnotationPosition !== undefined && <div className="h-[400px]"><BotanistRefWrapper ref={newAnnotationEnabled} /></div>}
                         <AnnotationButtons setModalOpen={props.setModalOpen} ref={newAnnotationEnabled} />
                     </AccordionItem>
 
