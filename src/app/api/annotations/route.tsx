@@ -309,7 +309,7 @@ export async function DELETE(request: Request) {
         if (data.path) await rm(data.path, { recursive: true, force: true }).catch(e => routeHandlerErrorHandler(path, e.message, "rm", "Couldn't remove directory"))
 
         // Delete the annotation, typical return 
-        await deleteAnnotation(data.annotation_id, data.uid).catch(e => routeHandlerErrorHandler(path, e.message, "deleteAnnotation", "Couldn't delete annotation"))
+        await deleteAnnotation(data.annotation_id, data.modelUid).catch(e => routeHandlerErrorHandler(path, e.message, "deleteAnnotation", "Couldn't delete annotation"))
         return routeHandlerTypicalResponse('Annotation deleted', 'Annotation deleted')
     }
     // Typical catch
