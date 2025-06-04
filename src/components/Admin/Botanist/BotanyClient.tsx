@@ -54,6 +54,9 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     // Ref
     const newAnnotationEnabled = useRef<boolean>(false)
 
+    // @ts-ignore sort models to annotate by date
+    props.modelsToAnnotate.sort((a, b) => new Date(a.spec_acquis_date) - new Date(b.spec_acquis_date))
+
     // Effects: dispatch (handler) for active annotation changes, an annotations getter for when an annotation is saved/deleted or a new model is selected, 
     // and data reset when the annotations accordion item is closed
     useEffect(() => activeAnnotationIndexDispatch(botanyState, botanyDispatch), [botanyState.activeAnnotationIndex]) // eslint-disable-line react-hooks/exhaustive-deps
@@ -75,13 +78,13 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
                 <AccordionItem key={'annotate'} aria-label={'annotate'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                     <section className="flex w-full h-full">
-                        <ModelSelect modelsToAnnotate={props.modelsToAnnotate} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
+                        <ModelSelect modelsToAnnotate={[props.modelsToAnnotate[0]]} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
                         <AnnotationEntryWrapper annotationModels={props.annotationModels} />
                     </section>
                 </AccordionItem>
 
                 <AccordionItem key={'Add annotation model'} aria-label={'Add annotation model'} title={"I want to add a model annotation to published 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
-                    <AddModelAnnotationToPublishedModel baseModelsForAnnotationModels={props.baseModelsForAnnotationModels} annotationModels={props.annotationModels}/>
+                    <AddModelAnnotationToPublishedModel baseModelsForAnnotationModels={props.baseModelsForAnnotationModels} annotationModels={props.annotationModels} />
                 </AccordionItem>
 
             </Accordion>
