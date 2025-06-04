@@ -13,6 +13,7 @@ import { annotationEntryContext} from "@/ts/botanist"
 
 // Default imports
 import TextInput from "@/components/Shared/TextInput"
+import Annotation from "@/components/Admin/Botanist/AnnotationFields/Annotation"
 
 // Main JSX
 export default function VideoAnnotation() {
@@ -29,6 +30,7 @@ export default function VideoAnnotation() {
                     <TextInput value={annotationState.annotationTitle as string} field='annotationTitle' title='Annotation Title' required />
                     <TextInput value={annotationState.url as string} field='url' title='URL' required />
                     <TextInput value={annotationState.length as string} field='length' title='Length' required />
+                    <Annotation annotation={annotationState.annotation} notRequired/>
                 </div>
                 <div className="flex h-[50vh] w-[45%]">
                     {

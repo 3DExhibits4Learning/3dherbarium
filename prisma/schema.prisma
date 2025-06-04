@@ -137,6 +137,14 @@ model photo_annotation {
   annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "photoFk1")
 }
 
+model video_annotation {
+  url           String      @db.VarChar(1000)
+  length        String?     @db.VarChar(5)
+  annotation_id String      @id @db.VarChar(36)
+  annotation    String?     @db.VarChar(4000)
+  annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "videoFk1")
+}
+
 model Session {
   id            String   @id @default(cuid())
   sessionToken  String   @unique @map("session_token")
@@ -247,11 +255,4 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verificationtokens")
-}
-
-model video_annotation {
-  url           String      @db.VarChar(1000)
-  length        String?     @db.VarChar(5)
-  annotation_id String      @id @db.VarChar(36)
-  annotations   annotations @relation(fields: [annotation_id], references: [annotation_id], onDelete: Cascade, map: "videoFk1")
 }
