@@ -59,7 +59,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     const terminateDataTransferHandler = (result: string) => terminateDataTransfer(setResult, setTransferring, result)
 
     // Annotation renumber handler
-    const renumberAnnotations = async(annotationNumbers: AnnotationNumbers) => await dataTransferHandler(initializeDataTransfer, terminateDataTransfer, renumberAnnotationsServer, [annotationNumbers], 'Renumbering annotations')
+    const renumberAnnotations = async(annotationNumbers: AnnotationNumbers) => await dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, renumberAnnotationsServer, [annotationNumbers], 'Renumbering annotations')
 
     // Ref
     const newAnnotationEnabled = useRef<boolean>(false)
