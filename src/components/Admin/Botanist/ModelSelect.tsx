@@ -16,7 +16,7 @@ import { AnnotationButtons } from "./AnnotationSubcomponents/AnnotationButtons"
 import BotanistRefWrapper from "./BotanistModelViewerRef"
 
 // Main JSX
-export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setModalOpen: Dispatch<SetStateAction<boolean>> }, ref) => {
+export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setModalOpen: Dispatch<SetStateAction<boolean>>, setReorderOpen:  Dispatch<SetStateAction<boolean>>}, ref) => {
 
     const modelClicked = useRef<boolean>()
     const newAnnotationEnabled = ref as MutableRefObject<boolean>
@@ -45,7 +45,7 @@ export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setMo
                         {/* Conditional render that waits until the first annotation(thus all annotations) is loaded */}
                         {/* RefWrapper required to pass ref to dynamically imported component */}
                         {botanyState.firstAnnotationPosition !== undefined && <div className="h-[400px]"><BotanistRefWrapper ref={newAnnotationEnabled} /></div>}
-                        <AnnotationButtons setModalOpen={props.setModalOpen} ref={newAnnotationEnabled} />
+                        <AnnotationButtons setModalOpen={props.setModalOpen} setReorderOpen={props.setReorderOpen} ref={newAnnotationEnabled} />
                     </AccordionItem>
 
                 })}

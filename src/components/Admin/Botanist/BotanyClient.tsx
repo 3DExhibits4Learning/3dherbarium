@@ -30,6 +30,7 @@ import AnnotationEntryWrapper from "./AnnotationEntryWrapper"
 import Tasks from "../Tasks/Tasks"
 import AddModelAnnotationToPublishedModel from "@/components/Admin/Botanist/AddModelAnnotationToPublishedModel"
 import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHandler"
+import RenumberAnnotations from "@/components/Admin/Botanist/RenumberAnnotations"
 
 // Exported context
 export const BotanyClientContext = createContext<botanyClientContext | ''>('')
@@ -49,6 +50,9 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
     const [transferring, setTransferring] = useState<boolean>(false)
     const [result, setResult] = useState<string>('')
     const [loadingLabel, setLoadingLabel] = useState<string>('')
+
+    // Annotation renumber state
+    const [renumberOpen, setRenumberOpen] = useState(false)
 
     // Data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
@@ -73,6 +77,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
         <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/botanist' />
         <AreYouSure uid={botanyState.uid as string} open={modalOpen} setOpen={setModalOpen} species={botanyState.specimenName as string} sid={botanyState.sid as string} />
+        {botanyState.annotations && botanyState.annotations.length >=2 && botanyState.uid && <RenumberAnnotations isOpen={renumberOpen} setIsOpen={setRenumberOpen} renumberAnnotations={renumberAnnotations}/>}
 
         <section className="w-full h-full flex">
 
@@ -84,7 +89,7 @@ export default function BotanyClient(props: { modelsToAnnotate: model[], annotat
 
                 <AccordionItem key={'annotate'} aria-label={'annotate'} title={"I want to annotate a 3D model"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                     <section className="flex w-full h-full">
-                        <ModelSelect modelsToAnnotate={[props.modelsToAnnotate[0]]} setModalOpen={setModalOpen} ref={newAnnotationEnabled} />
+                        <ModelSelect modelsToAnnotate={[props.modelsToAnnotate[0]]} setModalOpen={setModalOpen} setReorderOpen={setRenumberOpen} ref={newAnnotationEnabled} />
                         <AnnotationEntryWrapper annotationModels={props.annotationModels} />
                     </section>
                 </AccordionItem>

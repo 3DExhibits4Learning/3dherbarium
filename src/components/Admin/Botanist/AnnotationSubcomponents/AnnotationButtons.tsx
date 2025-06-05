@@ -1,12 +1,15 @@
 'use client'
 
-import { Button } from "@nextui-org/react";
-import { Dispatch, forwardRef, MutableRefObject, SetStateAction, useContext } from "react";
-import { BotanyClientContext } from "../BotanyClient";
-import { botanyClientContext } from "@/ts/botanist";
+// Typical imports
+import { Button } from "@nextui-org/react"
+import { Dispatch, forwardRef, MutableRefObject, SetStateAction, useContext } from "react"
+import { BotanyClientContext } from "../BotanyClient"
+import { botanyClientContext } from "@/ts/botanist"
 
-export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetStateAction<boolean>>}, newAnnotationEnabledRef) =>  {
+// Main JSX
+export const AnnotationButtons = forwardRef((props: { setModalOpen: Dispatch<SetStateAction<boolean>>, setReorderOpen: Dispatch<SetStateAction<boolean>> }, newAnnotationEnabledRef) => {
 
+    // Context, variables
     const context = useContext(BotanyClientContext) as botanyClientContext
     const botanyState = context.botanyState
     const botanyDispatch = context.botanyDispatch
@@ -17,10 +20,25 @@ export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetSt
             !botanyState.newAnnotationEnabled && botanyState.activeAnnotationIndex != 'new' && botanyState.firstAnnotationPosition != undefined &&
             <Button
                 onPress={() => { newAnnotationEnabled.current = true; botanyDispatch({ type: 'newAnnotationClicked' }) }}
+                aria-label='New Annotation'
                 className="text-white mt-2 text-lg"
                 isDisabled={botanyState.repositionEnabled}>
                 + New Annotation
             </Button>
+        }
+        {
+            // Renumber annotations button
+            !botanyState.newAnnotationEnabled && botanyState.activeAnnotationIndex !== 'new' && botanyState.firstAnnotationPosition !== undefined &&
+            botanyState.annotations && botanyState.annotations?.length >= 2 &&
+            <>
+                <br></br>
+                <Button
+                    onPress={() => { props.setReorderOpen(true) }}
+                    className="text-white mt-2 text-lg"
+                    isDisabled={botanyState.repositionEnabled}>
+                    Renumber Annotations
+                </Button>
+            </>
         }
         {
             botanyState.annotations && botanyState.annotations?.length >= 6 &&
@@ -28,6 +46,7 @@ export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetSt
                 <br></br>
                 <Button
                     onPress={() => props.setModalOpen(true)}
+                    aria-label='Mark as annotated'
                     className="text-white mt-2 text-lg"
                     isDisabled={botanyState.repositionEnabled}>
                     Mark as Annotated
@@ -41,6 +60,7 @@ export const AnnotationButtons = forwardRef((props:{setModalOpen: Dispatch<SetSt
                 <p className="text-lg">or</p>
                 <Button
                     color="danger"
+                    aria-label='Cancel Annotation'
                     variant="light"
                     className="text-red-600 hover:text-white text-lg"
                     onPress={() => { newAnnotationEnabled.current = false; botanyDispatch({ type: 'newAnnotationCancelled' }) }}>

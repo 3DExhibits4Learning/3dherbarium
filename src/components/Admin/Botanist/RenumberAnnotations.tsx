@@ -2,13 +2,11 @@
  * @file src/components/Shared/Modals/ModalWrapper.tsx
  * 
  * @fileoverview allows annotators to reorder the annotation numbers
- * 
- * @todo context.annotationsAndPositions.annotations is initially loading with all annotations; this shouldn't be the case
  */
 
 // Typical imports
 import { Button, Modal, ModalContent } from "@nextui-org/react"
-import { Dispatch, SetStateAction, useContext, useState, useEffect, ChangeEvent } from "react"
+import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react"
 import { AnnotationNumbers } from "@/components/Admin/Botanist/AnnotationSubcomponents/AnnotationNumber"
 import { BotanyClientContext } from "@/components/Admin/Botanist/BotanyClient"
 import { botanyClientContext } from "@/ts/botanist"
@@ -18,7 +16,7 @@ import { fullAnnotation } from "@/ts/types"
 import AnnotationNumber from "@/components/Admin/Botanist/AnnotationSubcomponents/AnnotationNumber"
 
 // Main JSX
-export default function AnnotationReorder(props: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>>, renumberAnnotations: Function }) {
+export default function RenumberAnnotations(props: { isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>>, renumberAnnotations: Function }) {
 
     // Context
     const context = useContext(BotanyClientContext) as botanyClientContext
