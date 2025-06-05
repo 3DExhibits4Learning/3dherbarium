@@ -53,6 +53,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
 
         // Chunk file to disk
         const modelFile = model as File
+        const extension = modelFile.name.split('.').pop()
         const speciesAndSidSlice = `${props.specimen.spec_name}-${props.specimen.sid.slice(0,10)}`
         await chunkFileToDisk(model as File, speciesAndSidSlice, 'backup')
 
@@ -65,7 +66,7 @@ export default function ModelForm(props: { specimen: specimenWithImageSet }) {
         data.set('isBase', isBase ? "yes" : "no")
         data.set('species', props.specimen.spec_name)
         data.set('height', height)
-        data.set('modelPath', await getBackupPath(speciesAndSidSlice))
+        data.set('modelPath', await getBackupPath(speciesAndSidSlice, extension as string))
         data.set('fileName', modelFile.name)
 
         return await insertModelIntoDatabase(data)

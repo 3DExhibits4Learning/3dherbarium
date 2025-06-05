@@ -27,11 +27,12 @@ export const chunkFileToDisk = async (file: File, id: string, dir: 'backup' | 't
     while (offset < file.size) {
         const chunk = file.slice(offset, offset + chunkSize)
         offset += chunkSize
+        const extension = file.name.split('.').pop()
 
         // Set form data
         const data = new FormData()
         data.set('chunk', chunk)
-        data.set('path', dir === 'tmp' ? await getTmpPath(id): await getBackupPath(id))
+        data.set('path', dir === 'tmp' ? await getTmpPath(id, extension as string): await getBackupPath(id, extension as string))
 
         // Await fetch
         const res = await fetch('/api/modelSubmit/tmp', { method: 'POST', body: data })
