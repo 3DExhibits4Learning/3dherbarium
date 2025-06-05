@@ -44,7 +44,8 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 length: annotation.length as string,
                 imageSource: annotation.url,
                 annotationTitle: setVideoAction.annotationTitle,
-                annotationType: 'video'
+                annotationType: 'video',
+                annotation: annotation.annotation ?? ''
             }
 
         case 'activeAnnotationIsModel':
