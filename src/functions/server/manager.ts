@@ -95,7 +95,7 @@ export const migrateModelAnnotationToAnnotatedModel = async (annotationModelUid:
         return `Annotation Model migrated from ${d1} database to ${d2} database`
     }
     // Typical catch
-    catch (e: any) { serverActionCatch(e.message) }
+    catch (e: any) { return `Error: ${e.message}` }
 }
 
 /**
