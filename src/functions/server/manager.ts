@@ -72,31 +72,27 @@ export const updateThumbnail = async (uid: string, isCommunity: boolean) => {
  * @param uid 
  * @returns 
  */
-export const migrateModelAnnotationToAnnotatedModel = async (modelAnnotationUid: string) => {
+export const migrateModelAnnotationToAnnotatedModel = async (annotationModelUid: string) => {
     try {
         // Get annotation id from model annotation uid
-        const annotationId = await prisma.model_annotation.findUnique({ where: { uid: modelAnnotationUid } }).then(annotation => annotation?.annotation_id)
+        const annotationId = await prisma.model_annotation.findUnique({ where: { uid: annotationModelUid } }).then(annotation => annotation?.annotation_id)
             .catch(e => serverActionErrorHandler(e.message, 'await prisma.model_annotation.findUnique()', "Couldn't get annotation id")) as string
 
-        // Get base model uid from annotation id
-        const baseModelUid = await prisma.annotations.findUnique({ where: { annotation_id: annotationId } }).then(annotation => annotation?.uid)
-            .catch(e => serverActionErrorHandler(e.message, 'prisma.annotations.findUnique', "Couldn't get base model uid")) as string
-
         // Establish database to migrate to/from based on environment
-        const d1 = isLocalEnv() ? 'Development' : 'Test'
-        const d2 = isLocalEnv() ? 'Test' : 'Production'
+        const local = process.env.LOCAL_ENV
+        const d1 = local === 'development' ? 'Development' : 'Test'
+        const d2 = local === 'development' ? 'Test' : 'Production'
 
         // Prisma transaction array
         const transaction = [
-            annotationModelMigrate.migrateAnnotationModelData(baseModelUid, d1, d2),
-            annotationModelMigrate.migrateAnnotationNumbers(baseModelUid, d1, d2),
+            annotationModelMigrate.migrateAnnotationModelData(annotationModelUid, d1, d2),
             annotationModelMigrate.migrateBaseAnnotation(annotationId, d1, d2),
             annotationModelMigrate.migrateModelAnnotation(annotationId, d1, d2)
         ]
 
         // Await transaction, return
         await prisma.$transaction(transaction).catch(e => serverActionErrorHandler(e.message, 'prisma.$transaction(transaction)', "Couldn't migrate new model annotation"))
-        return 'Model annotation added to test server'
+        return `Annotation Model migrated from ${d1} database to ${d2} database`
     }
     // Typical catch
     catch (e: any) { serverActionCatch(e.message) }

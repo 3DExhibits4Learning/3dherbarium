@@ -35,15 +35,15 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const pendingModels: userSubmittal[] = models
 
     // Task field states
-    const [uid, setUid] = useState<string>('')
-    const [communityUid, setCommunityUid] = useState<string>('')
-    const [tempFile, setTempFile] = useState<File>()
+    const [uid, setUid] = useState('')
+    const [communityUid, setCommunityUid] = useState('')
+    const [annotationId, setAnnotationId] = useState('')
 
     // Data transfer states
-    const [openModal, setOpenModal] = useState<boolean>(false)
-    const [transferring, setTransferring] = useState<boolean>(false)
-    const [result, setResult] = useState<string>('')
-    const [loadingLabel, setLoadingLabel] = useState<string>('')
+    const [openModal, setOpenModal] = useState(false)
+    const [transferring, setTransferring] = useState(false)
+    const [result, setResult] = useState('')
+    const [loadingLabel, setLoadingLabel] = useState('')
 
     // Initialize/terminate data transfer handlers
     const initializeDataTransferHandler = (loadingLabel: string) => initializeDataTransfer(setOpenModal, setTransferring, setLoadingLabel, loadingLabel)
@@ -53,31 +53,8 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const thumbnailHandler = (uid: string, community: boolean) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, updateThumbnail, [uid, community], "Updating thumbnail")
     const approveWrapper = (args: any[]) => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, fn.approveCommunityModel, args, "Approving Community Model")
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateAnnotatedAndAnnotationModels, [], 'Migrating annotated 3D models')
-    const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateModelAnnotationToAnnotatedModel, ['cf42d4bb5fee4bfdb86d90984816fcd8'], "Migrating model annotation")
+    const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateModelAnnotationToAnnotatedModel, [annotationId], "Migrating model annotation")
 
-    const chunkUpload = async () => {
-        const chunkSize = 4 * 1024 * 1024
-        var offset = 0
-        const model = tempFile as File
-
-        while (offset < model.size) {
-            const chunk = model.slice(offset, offset + chunkSize)
-            offset += chunkSize
-            const arrayBuffer = await chunk.arrayBuffer()
-            const iterable = new Uint8Array(arrayBuffer)
-
-            await fetch('/api/test', {
-                method: 'POST',
-                headers: {
-                    'content-type': 'application/octet-stream',
-                    'x-file-name': encodeURIComponent((tempFile as File).name)
-                },
-                body: iterable,
-                // @ts-ignore
-                duplex: 'half'
-            }).then(res => res.json()).then(json => console.log(json)).catch(e => console.log(e.message))
-        }
-    }
 
     return <>
         <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
@@ -124,24 +101,17 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
 
             <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
                 <label className='text-2xl block mb-2'>Add model annotation to existing model</label>
-                <Button className="bg-[#004C46] mt-14" onPress={migrateModelAnnotationWrapper}>
+                <input
+                    onChange={e => setAnnotationId(e.target.value)}
+                    type='text'
+                    className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
+                    placeholder="Enter Annotation ID"
+                >
+                </input>
+                <Button className="bg-[#004C46]" onPress={migrateModelAnnotationWrapper} isDisabled={annotationId ? false : true}>
                     Migrate annotated 3D models
                 </Button>
             </div>
-
-            {/* <div className="h-full w-1/3 flex flex-col items-center border border-[#004C46]">
-                <label className='text-2xl block mb-2'>Test zip upload</label>
-                <input
-                    onChange={e => e.target.files ? setTempFile(e.target.files[0]) : setTempFile(undefined)}
-                    type='file'
-                    className={`w-3/5 max-w-[500px] rounded-xl mb-4 dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 text-[14px] outline-[#004C46]`}
-                    placeholder="Enter UID">
-                </input>
-                <Button className="bg-[#004C46] mt-4" onPress={chunkUpload}>
-                    Server Action Upload
-                </Button>
-            </div> */}
-
         </div>
         {pendingModels && <PendingModelsAdmin pendingModels={pendingModels as unknown as Models[]} approveWrapper={approveWrapper} />}
     </>
