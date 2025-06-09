@@ -37,7 +37,5 @@ export default function LazyLoader(props: { filteredModels: (model | fullUserSub
         return () => observer.disconnect()
     }, [])
 
-    return <div ref={containerRef} style={{ minHeight: minHeight }}>
-        {isVisible && <ThumbnailSection filteredModels={props.filteredModels} />}
-    </div>
+    return <div ref={containerRef} style={{ minHeight: minHeight }}>{isVisible && <ThumbnailSection filteredModels={props.filteredModels} />}</div>
 }

@@ -16,7 +16,7 @@ import CommunityCard from "@/components/Search/CommunityCard"
 
 // Main JSX
 export default function ThumbnailSection(props: { filteredModels: (model | fullUserSubmittal)[] }) {
-    return <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4  gap-4 mx-5'>
+    return <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 mx-5 mb-4'>
         {props.filteredModels && props.filteredModels.map((model: model | fullUserSubmittal, index: number) => {
             return <>
                 {Object.keys(model).includes('spec_name') && <HerbariumCard key={(model as model).uid} model={model as model} />}
