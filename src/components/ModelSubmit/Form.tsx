@@ -2,31 +2,33 @@
  * @file src/components/ModelSubmit/Form.tsx
  * 
  * @fileoverview form allowing submission of 3D models
+ * 
+ * @todo chunk file upload
  */
 
 'use client'
 
 //  Typical imports
-import { useState, SetStateAction, Dispatch, useEffect } from 'react';
-import { Button } from "@nextui-org/react";
-import { Divider } from '@nextui-org/react';
-import { uid } from 'uid';
+import { useState, SetStateAction, Dispatch, useEffect } from 'react'
+import { Button } from "@nextui-org/react"
+import { Divider } from '@nextui-org/react'
+import { uid } from 'uid'
+import { chunkFileToDisk } from '@/functions/client/modelSubmit'
+import { getTmpPath } from '@/functions/server/modelSubmit'
 
 // Default imports
-import MobileSelect from './MobileSelectField';
-import ProcessSelect from './ProcessSelectField';
-import TagInput from './Tags';
-import Leaflet, { latLng } from 'leaflet';
-import dynamic from 'next/dynamic';
-import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper';
-import TextInput from '../Shared/TextInput';
-import PhotoInput from '../Shared/Form Fields/PhotoInput';
-import ModelInput from './ModelInput';
-import DataTransfer from './DataTransfer';
-import WildSelect from './Wild';
-import Link from 'next/link';
-import JSZip from 'jszip';
-import { isZipFile } from '@/functions/client/utils/zip';
+import MobileSelect from './MobileSelectField'
+import ProcessSelect from './ProcessSelectField'
+import TagInput from './Tags'
+import Leaflet from 'leaflet'
+import dynamic from 'next/dynamic'
+import AutoCompleteWrapper from '../Shared/Form Fields/AutoCompleteWrapper'
+import TextInput from '../Shared/TextInput'
+import PhotoInput from '../Shared/Form Fields/PhotoInput'
+import ModelInput from './ModelInput'
+import DataTransfer from './DataTransfer'
+import WildSelect from './Wild'
+import Link from 'next/link'
 
 // Dynamic imports
 const FormMap = dynamic(() => import('../Map/Form'), { ssr: false })
@@ -76,11 +78,9 @@ export default function ModelSubmitForm() {
             // Set number of photos and photo files
             if (photos?.length) { data.set('numberOfPhotos', photos.length.toString()); for (let i = 0; i < photos.length; i++) { data.set(`photo${i}`, photos[i]) } }
 
-            // Zip file if it isn't
-            const zip = new JSZip()
-            const model = file as File
-            zip.file(model.name, model)
-            const zippedModel = await isZipFile(model) ? model : await zip.generateAsync({ type: 'blob' })
+            const modelFile = file as File
+            const extension = modelFile.name.split('.').pop()
+            await chunkFileToDisk(modelFile, confirmation, 'tmp')
 
             // Set remaining data
             data.set('artist', artistName)
@@ -90,13 +90,15 @@ export default function ModelSubmitForm() {
             data.set('software', software)
             data.set('tags', tags)
             data.set('position', pos)
-            data.set('file', zippedModel, `${speciesName}.zip`)
             data.set('confirmation', confirmation)
             data.set('wildOrCultivated', wildOrCultivated as string)
+            data.set('modelPath', await getTmpPath(confirmation, extension as string))
+            data.set('fileName', modelFile.name)
 
             // Route handler fetch
             const result = await fetch('/api/modelSubmit', { method: 'POST', body: data })
-                .then(res => { if (!res.ok) throw Error(res.statusText); return res.json() }).then(json => json.data).catch(e => { throw Error(e.message) })
+                .then(res => { if (!res.ok) throw Error(res.statusText); return res.json() })
+                .then(json => json.data).catch(e => { throw Error(e.message) })
 
             // Set success results
             setResult(result)

@@ -2,18 +2,20 @@
  * @file src/app/api/modelSubmit/route.ts
  * 
  * @fileoverview route handler for 3D model submission
+ * 
+ * @todo get chunked file from tmp
  */
 
 // Imports
-import { prismaClient } from "@/functions/server/queries";
-import { ModelUploadResponse } from '@/ts/types';
+import { prismaClient } from "@/functions/server/queries"
+import { ModelUploadResponse } from '@/ts/types'
 import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { redirect } from "next/navigation"
-import { mkdir, writeFile } from "fs/promises";
-import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
-import { routeHandlerTypicalResponse } from "@/functions/server/response";
-import { sendHTMLEmail } from "@/functions/server/email";
+import { mkdir, readFile, writeFile } from "fs/promises"
+import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
+import { routeHandlerTypicalResponse } from "@/functions/server/response"
+import { sendHTMLEmail } from "@/functions/server/email"
 
 // Singleton prisma client, path
 const prisma = prismaClient()
@@ -45,6 +47,8 @@ export async function POST(request: Request) {
         const isMobile = body.get('isMobile') == 'Yes' ? true : false
         const email = session.user.email
         const orgModelUploadEnd = `https://api.sketchfab.com/v3/orgs/${process.env.SKETCHFAB_ORGANIZATION}/models`
+        const modelPath = body.get('modelPath') as string
+        const fileName = body.get('fileName') as string
 
         // Function to write ID photos to tmp storage
         const writePhotos = async () => {
@@ -78,10 +82,15 @@ export async function POST(request: Request) {
         const requestHeader: HeadersInit = new Headers()
         requestHeader.set('Authorization', process.env.SKETCHFAB_API_TOKEN as string)
 
+        // Read file from tmp
+        const buffer = await readFile(modelPath)
+        const typedArray = new Uint8Array(buffer)
+        const blob = new Blob([typedArray])
+
         // Set from data
         const data = new FormData()
         data.set('orgProject', process.env.SKETCHFAB_PROJECT_COMMUNITY as string)
-        data.set('modelFile', body.get('file') as File)
+        data.set('modelFile', blob, fileName)
         data.set('visibility', 'private')
         data.set('options', JSON.stringify({ background: { color: "#000000" } }))
 
@@ -157,7 +166,7 @@ export async function POST(request: Request) {
 
         // Note that this is a nonFatal error catch
         await Promise.all([sendHTMLEmail(email, "3D Model Submitted", clientEmailHtml), sendHTMLEmail('ab632@humboldt.edu', "3D Model Submitted", adminEmailHtml)])
-        .catch(e => console.error(routeHandlerError(path, e.message, "sendHTMLEmail()", 'POST', true)))
+            .catch(e => console.error(routeHandlerError(path, e.message, "sendHTMLEmail()", 'POST', true)))
 
         // Typical success response
         return routeHandlerTypicalResponse('Model uploaded sucessfully', insert)
