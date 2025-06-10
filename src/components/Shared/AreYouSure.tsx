@@ -1,8 +1,8 @@
 'use client'
 
 import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
-import { SetStateAction, useState, Dispatch } from "react";
-import { Spinner } from "@nextui-org/react";
+import { SetStateAction, useState, Dispatch } from "react"
+import { Spinner } from "@nextui-org/react"
 
 export default function AreYouSure(props: { uid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, species: string, sid: string }) {
 
@@ -27,45 +27,41 @@ export default function AreYouSure(props: { uid: string, open: boolean, setOpen:
         setMarkedAsAnnotated(true)
     }
 
-    return (
-        <>
-            <Modal isOpen={props.open}>
-                <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalBody className="font-medium text-center">
-                                {
-                                    !areTheySure &&
-                                    <>
-                                        <p className="mt-8">Are you sure you want to mark your model as annotated?</p>
-                                        <p className="mb-8">This will remove the 3D model from your dashboard and mark it ready for the production website.</p>
-                                        <div className="flex justify-around mb-8">
-                                            <Button id='editModal' className="text-white" onPress={() => props.setOpen(false)}>Cancel</Button>
-                                            <Button id='editModal' className="text-white" onClick={() => {
-                                                setAreTheySure(true)
-                                                markAsAnnotated()
-                                            }}>Mark as Annotated</Button>
-                                        </div>
-                                    </>
-                                }
-                                {
-                                    areTheySure && !markedAsAnnotated &&
-                                    <Spinner label='Marking 3D Model as Annotated' />
-                                }
-                                {
-                                    areTheySure && markedAsAnnotated &&
-                                    <>
-                                        <p className="mb-8">{msg}</p>
-                                        <div>
-                                            <a href='/admin/botanist'><Button id='editModal' className="text-white">OK</Button></a>
-                                        </div>
-                                    </>
-                                }
-                            </ModalBody>
-                        </>
-                    )}
-                </ModalContent>
-            </Modal>
-        </>
-    );
+    return <Modal isOpen={props.open}>
+        <ModalContent>
+            {(onClose) => (
+                <>
+                    <ModalBody className="font-medium text-center">
+                        {
+                            !areTheySure &&
+                            <>
+                                <p className="mt-8">Are you sure you want to mark your model as annotated?</p>
+                                <p className="mb-8">This will remove the 3D model from your dashboard and mark it ready for the production website.</p>
+                                <div className="flex justify-around mb-8">
+                                    <Button id='editModal' className="text-white" onPress={() => props.setOpen(false)}>Cancel</Button>
+                                    <Button id='editModal' className="text-white" onClick={() => {
+                                        setAreTheySure(true)
+                                        markAsAnnotated()
+                                    }}>Mark as Annotated</Button>
+                                </div>
+                            </>
+                        }
+                        {
+                            areTheySure && !markedAsAnnotated &&
+                            <Spinner label='Marking 3D Model as Annotated' />
+                        }
+                        {
+                            areTheySure && markedAsAnnotated &&
+                            <>
+                                <p className="mb-8">{msg}</p>
+                                <div>
+                                    <a href='/admin/botanist'><Button id='editModal' className="text-white">OK</Button></a>
+                                </div>
+                            </>
+                        }
+                    </ModalBody>
+                </>
+            )}
+        </ModalContent>
+    </Modal>
 }

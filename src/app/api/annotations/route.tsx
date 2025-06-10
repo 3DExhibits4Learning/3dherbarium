@@ -11,7 +11,7 @@ import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/
 import { unlink, rm } from "fs/promises"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
 import { autoWrite } from "@/functions/server/files"
-import { transitionSubtask } from "@/functions/server/jira"
+import { transitionSubtask, transitionTask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 
 // Default imports
@@ -50,16 +50,18 @@ export async function POST(request: Request) {
 
         // Grab form data, ensure subtask is marked as 'in progress'
         const data = await request.formData()
-        await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
+
 
         // First annotation handler; always taxonomy and description, insert position with typical try-catch return
         if (data.get('index') === '1') {
             const update = await insertFirstAnnotationPosition(data.get('uid') as string, data.get('position') as string).catch((e) => routeHandlerErrorHandler(path, e.message, 'getFirstAnnotationPosition()', "Couldn't get annotation position"))
+            await transitionTask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 21)
             return routeHandlerTypicalResponse('Annotation Created', update)
         }
 
         // Else the annotation must be photo, video or model
         else {
+            await transitionSubtask('SPRIN-1', (data.get('sid') as string).slice(0, 8), 'Annotate', 21).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))
 
             // Base annotation (same for all annotation types)
             const annotation = prisma.annotations.create({
@@ -80,7 +82,7 @@ export async function POST(request: Request) {
                 case 'video':
 
                     // Video annotation 
-                    const videoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string }})
+                    const videoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string } })
 
                     // Await transaction, typical response
                     const newVideoAnnotation = await prisma?.$transaction([annotation, videoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(videoAnnotation)', "Couldn't create video anotation"))
@@ -185,7 +187,7 @@ export async function PATCH(request: Request) {
                             prisma.model_annotation.delete({ where: { annotation_id: data.get('annotation_id') as string } })
 
                         // Create new video annotation
-                        const newVideoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string }})
+                        const newVideoAnnotation = prisma.video_annotation.create({ data: { url: data.get('url') as string, length: data.get('length') as string, annotation_id: data.get('annotation_id') as string, annotation: data.get('annotation') as string } })
 
                         // Await transaction, return with typical response
                         const update = await prisma?.$transaction([deleteAnnotation, updateAnnotation, newVideoAnnotation]).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction(update)', "Couldn't update annotation or make new video annotation"))
