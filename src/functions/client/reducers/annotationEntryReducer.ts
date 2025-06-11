@@ -112,6 +112,27 @@ export default function annotationEntryReducer(annotationEntryState: AnnotationE
                 annotationType: 'photo'
             }
 
+        case 'activeAnnotationIsNew':
+
+            return {
+                ...annotationEntryState,
+                videoChecked: false,
+                photoChecked: false,
+                modelChecked: false,
+                author: '',
+                license: '',
+                photoTitle: '',
+                website: '',
+                annotation: '',
+                annotationTitle: '',
+                mediaType: undefined,
+                urlChecked: false,
+                uploadChecked: false,
+                imageSource: undefined,
+                url: '',
+                annotationType: undefined
+            }
+
         case 'enableSaveAndCreate':
 
             return {

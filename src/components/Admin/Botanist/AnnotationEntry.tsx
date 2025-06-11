@@ -53,6 +53,9 @@ export default function AnnotationEntry(props: { index: number, annotationModels
     // Populates all relevant form fields with the corresponding data when there is an active annotation that has already been databased
     useEffect(() => activeAnnotationChangeHandler(annotationDispatch, botanyState, isNew), [botanyState.activeAnnotation]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    // Reset all fields for a new annotation
+    useEffect(() => { if (botanyState.activeAnnotationIndex === 'new') annotationDispatch({ type: 'activeAnnotationIsNew' }) }, [botanyState.activeAnnotationIndex])
+
     // Enables the 'save changes' button for databased annoations if all required fields are populated and at least one differs from the data from the database
     // For new annotations, it enables the 'create annotation' button if all required fields are populated
     const createOrSaveDependencies = [annotationState.annotationTitle, botanyState.position3D, annotationState.url, annotationState.author, annotationState.license, annotationState.annotation, annotationState.file, length, annotationState.photoTitle, annotationState.website, annotationState.modelAnnotationUid]

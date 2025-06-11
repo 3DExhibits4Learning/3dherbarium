@@ -71,7 +71,8 @@ export interface AnnotationEntryType {
     'modelRadioButtonSelected' |
     'videoRadioButtonSelected' |
     'urlRadioButtonSelected' | 
-    'uploadRadioButtonSelected'
+    'uploadRadioButtonSelected' | 
+    'activeAnnotationIsNew'
 }
 export interface SetString extends AnnotationEntryType {
     field: string
