@@ -18,7 +18,7 @@ import BotanistRefWrapper from "./BotanistModelViewerRef"
 // Main JSX
 export const ModelSelect = forwardRef((props: { modelsToAnnotate: model[], setModalOpen: Dispatch<SetStateAction<boolean>>, setReorderOpen:  Dispatch<SetStateAction<boolean>>}, ref) => {
 
-    const modelClicked = useRef<boolean>()
+    const modelClicked = useRef<boolean>(undefined)
     const newAnnotationEnabled = ref as MutableRefObject<boolean>
     const context = useContext(BotanyClientContext) as botanyClientContext
     const botanyState = context.botanyState

@@ -27,7 +27,7 @@ export interface annotationModalProps {
 
 
 export interface ConditionalChildren {
-  children?: Array<ReactElement | "" | undefined> | ReactElement | "" | undefined
+  children?: Array<ReactElement<any> | "" | undefined> | ReactElement<any> | "" | undefined
 }
 
 

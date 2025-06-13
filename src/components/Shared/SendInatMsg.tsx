@@ -22,9 +22,9 @@ export default function SendInatMsg(props: { username: string, open: boolean, se
     const [sending, setSending] = useState<boolean>(false)
     const [result, setResult] = useState<string>('')
 
-    const subject = useRef<string>()
-    const message = useRef<string>()
-    const id = useRef<number>()
+    const subject = useRef<string>(undefined)
+    const message = useRef<string>(undefined)
+    const id = useRef<number>(undefined)
 
     if (!session || !session.user) {
         router.push('/api/auth/signin')

@@ -36,7 +36,7 @@ export default function Header (props: SearchHeaderProps) {
   const [autocompleteOptions, setAutocompleteOptions] = useState<any[]>([])
   const [mobileSearchOpen, setMobileSearchOpen] = useState<boolean>(false)
 
-  const searchQuery = useRef<string>()
+  const searchQuery = useRef<string>(undefined)
 
   const headerTitle: string = props.headerTitle;
   const specimenName: string = (params['specimenName']) as string ?? headerTitle ?? ''

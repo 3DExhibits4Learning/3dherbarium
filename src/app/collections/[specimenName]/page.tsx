@@ -31,7 +31,10 @@ import prisma from "@/functions/server/utils/prisma"
 const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })
 
 // Main JSX (communityId to be used here in the future, hence searchParams)
-export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: { communityId: string } }) {
+export default async function Page(
+  props: { params: Promise<{ specimenName: string }>, searchParams: Promise<{ communityId: string }> }
+) {
+  const params = await props.params;
 
   try {
 

@@ -33,7 +33,7 @@ export default function SearchPageContent() {
   }
 
   // Ref for site ready models
-  const siteReadyModels = useRef<model[]>()
+  const siteReadyModels = useRef<model[]>(undefined)
 
   // State object for this component and its three immediate children
   const [searchPageState, setSearchPageState] = useState<SearchPageState>(initialState)

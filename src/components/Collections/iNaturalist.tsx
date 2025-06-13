@@ -24,7 +24,7 @@ const InatMap = dynamic(() => import('../Map/iNaturalist'), { ssr: false })
 
 export default function Inaturalist(props: { activeSpecies: string }) {
 
-    const observationsRef = useRef<any>()
+    const observationsRef = useRef<any>(undefined)
 
     const [observations, setObservations] = useState<any>()
     const [userCoordinates, setUserCoordinates] = useState<LatLngLiteral>({ lat: 40.8665, lng: -124.0828 })

@@ -4,6 +4,8 @@
  * @fileoverview loading page for the home page
  */
 
+'use client'
+
 // Typical imports
 import { Spinner } from "@heroui/react"
 

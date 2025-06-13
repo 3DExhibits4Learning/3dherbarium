@@ -7,7 +7,7 @@
 'use client'
 
 export function isMobileOrTablet(): boolean | undefined{
-  if(typeof window){
+  if(typeof window !== 'undefined'){
     const userAgent = window.navigator.userAgent
     const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
     return mobileRegex.test(userAgent);

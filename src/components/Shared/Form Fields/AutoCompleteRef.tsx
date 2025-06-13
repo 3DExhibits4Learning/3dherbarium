@@ -3,7 +3,7 @@
 
 'use client'
 
-import { ChangeEvent, LegacyRef, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent } from "react"
+import { ChangeEvent, Ref, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent } from "react"
 import { useRouter } from "next/navigation"
 
 const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, width?: string, defaultValue?: string, className?: string, listWidth?: string, search?: boolean }, ref) => {
@@ -13,8 +13,8 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     const router = useRouter()
 
     const valueRef = ref as MutableRefObject<string>
-    const selectedValue = useRef<HTMLInputElement>()
-    const options = useRef<HTMLUListElement>()
+    const selectedValue = useRef<HTMLInputElement>(undefined)
+    const options = useRef<HTMLUListElement>(undefined)
     const [optionsVisible, setOptionsVisible] = useState<boolean>(true)
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
 
@@ -125,7 +125,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
         <>
             <div className="flex">
                 <input
-                    ref={selectedValue as LegacyRef<HTMLInputElement>}
+                    ref={selectedValue as Ref<HTMLInputElement>}
                     type='text'
                     className={`${props.className} ${props.width}`}
                     onChange={(e) => changeHandler(e)}
@@ -135,7 +135,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
                 </input>
                 {
                     props.options.length > 0 && optionsVisible &&
-                    <ul ref={options as LegacyRef<HTMLUListElement>} className={`absolute ${props.listWidth} z-50 bg-white dark:bg-[#27272a] rounded-xl mt-[42px] text-[#004C46]`}>
+                    <ul ref={options as Ref<HTMLUListElement>} className={`absolute ${props.listWidth} z-50 bg-white dark:bg-[#27272a] rounded-xl mt-[42px] text-[#004C46]`}>
                         {props.options.map((option, index) => {
                             if (index == highlightedIndex) return <li onClick={() => listSelect(option.name)} className={`hover:cursor-pointer px-4 bg-[#00856A] rounded-lg text-white`} key={option.name}>{option.name}</li>
                             else return <li onClick={() => listSelect(option.name)} className={`hover:bg-[#00856A] hover:text-white dark:hover:bg-[#00856A] dark:text-white hover:cursor-pointer px-4 rounded-lg`} key={option.name}>{option.name}</li>
@@ -144,7 +144,7 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
                 }
             </div>
         </>
-    )
+    );
 })
 Autocomplete.displayName = 'Autocomplete'
 export default Autocomplete

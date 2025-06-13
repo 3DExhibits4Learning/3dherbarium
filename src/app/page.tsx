@@ -8,7 +8,7 @@
 import dynamic from 'next/dynamic'
 
 // Dynamic imports
-const HomePageClient = dynamic(() => import('@/components/Home/Client'), { ssr: false })
+const HomePageClient = dynamic(() => import('@/components/Home/Client'))
 
 // Main JSX
 export default async function Page() {

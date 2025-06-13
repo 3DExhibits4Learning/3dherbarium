@@ -24,8 +24,8 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
 
     // Refs
     const newAnnotationEnabled = ref as MutableRefObject<boolean>
-    const modelViewer = useRef<HTMLIFrameElement>()
-    const temporaryAnnotationIndex = useRef<number>()
+    const modelViewer = useRef<HTMLIFrameElement>(undefined)
+    const temporaryAnnotationIndex = useRef<number>(undefined)
 
     // State
     const [sketchfabApi, setSketchfabApi] = useState<any>()
@@ -84,7 +84,6 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     return <div className={`flex bg-black m-auto min-h-[${minHeight}]`} style={{ height: "100%", width: "100%" }}>
         <iframe
             ref={modelViewer as MutableRefObject<HTMLIFrameElement>}
-            src=""
             frameBorder="0"
             title={"Model Viewer for " + ''}
             allow="autoplay; fullscreen; xr-spatial-tracking"

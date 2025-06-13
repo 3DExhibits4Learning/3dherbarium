@@ -427,6 +427,6 @@ input[type="file"]::file-selector-button {
 /* Removes stripes from tagify tags when 'readOnly' is enabled */
 
 tags.tagify {
-  text-decoration: 'none' !;
+  text-decoration: 'none' !important;
   --readonly-striped: 0
 }

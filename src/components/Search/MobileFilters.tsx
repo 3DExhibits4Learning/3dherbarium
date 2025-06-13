@@ -43,7 +43,7 @@ export default function MobileSearchFilters(props: { state: SearchPageState, set
                     value={state.selectedModeler}
                     onChange={e => setState({ ...state, selectedModeler: e.target.value })}
                     className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}>
-                    <option value="All" disabled selected>Modeled by</option>
+                    <option value="All" disabled>Modeled by</option>
                     {modeledByList.map((modeler: string) => <option key={modeler} value={modeler}>{modeler}</option>)}
                 </select>
 
@@ -51,7 +51,7 @@ export default function MobileSearchFilters(props: { state: SearchPageState, set
                     value={state.selectedAnnotator}
                     onChange={e => setState({ ...state, selectedModeler: e.target.value })}
                     className={`min-w-[166px] w-fit max-w-[200px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[40px] text-[14px] px-2 outline-[#004C46]`}>
-                    <option value="All" disabled selected>Annotated by</option>
+                    <option value="All" disabled>Annotated by</option>
                     {annotatedByList.map((annotator: string) => <option key={annotator} value={annotator}>{annotator}</option>)}
                 </select>
 

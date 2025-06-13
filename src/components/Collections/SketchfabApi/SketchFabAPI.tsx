@@ -57,9 +57,9 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
   const [sketchfabApi, sketchfabApiDispatch] = useReducer(sketchFabApiReducer, initialData)
 
   // Refs
-  const sRef = useRef<Herbarium>() // sRef = specimenRef
-  const modelViewer = useRef<HTMLIFrameElement>()
-  const annotationDiv = useRef<HTMLDivElement>()
+  const sRef = useRef<Herbarium>(undefined) // sRef = specimenRef
+  const modelViewer = useRef<HTMLIFrameElement>(undefined)
+  const annotationDiv = useRef<HTMLDivElement>(undefined)
 
   // Direct dom references to annotation switches
   const annotationSwitch = document.getElementById("annotationSwitch") as HTMLInputElement

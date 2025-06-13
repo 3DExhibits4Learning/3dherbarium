@@ -12,7 +12,7 @@ import { MutableRefObject, useEffect, useRef } from 'react'
 
 export default function ModelViewer(props: { uid: string}) {
 
-    const modelViewer = useRef<HTMLIFrameElement>()
+    const modelViewer = useRef<HTMLIFrameElement>(undefined)
 
     const successObj = {
         success: (api: any) => api.start(),
@@ -37,7 +37,6 @@ export default function ModelViewer(props: { uid: string}) {
     return <div className={`flex bg-black m-auto !min-h-[50vh]`} style={{ height: "100%", width: "100%" }}>
         <iframe
             ref={modelViewer as MutableRefObject<HTMLIFrameElement>}
-            src=""
             frameBorder="0"
             title={"Model Viewer for " + ''}
             allow="autoplay; fullscreen; xr-spatial-tracking"

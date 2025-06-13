@@ -11,7 +11,7 @@
 
 'use client'
 
-import { ChangeEvent, LegacyRef, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent, useContext } from "react"
+import { ChangeEvent, Ref, MutableRefObject, forwardRef, useRef, useState, useEffect, KeyboardEvent, useContext } from "react"
 import { useRouter } from "next/navigation"
 import { QueryContext } from "../Search/SearchClient"
 
@@ -22,8 +22,8 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     const router = useRouter()
     const setQuery = useContext(QueryContext).setQuery
     const valueRef = ref as MutableRefObject<string>
-    const selectedValue = useRef<HTMLInputElement>()
-    const options = useRef<HTMLUListElement>()
+    const selectedValue = useRef<HTMLInputElement>(undefined)
+    const options = useRef<HTMLUListElement>(undefined)
     const [optionsVisible, setOptionsVisible] = useState<boolean>(true)
     const [highlightedIndex, setHighlightedIndex] = useState<number>(-1)
 
@@ -130,28 +130,30 @@ const Autocomplete = forwardRef((props: { options: any[], changeFn: Function, wi
     }, [props.options]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
-    return <>
-            <div className="flex">
-                <input
-                    aria-label={`Search Bar`}
-                    ref={selectedValue as LegacyRef<HTMLInputElement>}
-                    type='text'
-                    className={`${props.className} ${props.width}`}
-                    onChange={(e) => changeHandler(e)}
-                    onKeyDown={autocompleteKeyHandler}
-                    defaultValue={props.defaultValue}>
-                </input>
-                {
-                    props.options.length > 0 && optionsVisible &&
-                    <ul ref={options as LegacyRef<HTMLUListElement>} className={`absolute ${props.listWidth} z-50 bg-white dark:bg-[#27272a] rounded-xl mt-[42px] text-[#004C46]`}>
-                        {props.options.map((option, index) => {
-                            if (index == highlightedIndex) return <li onClick={() => listSelect(option.name)} className={`hover:cursor-pointer px-4 bg-[#00856A] rounded-lg text-white`} key={option.name}>{option.name}</li>
-                            else return <li onClick={() => listSelect(option.name)} className={`hover:bg-[#00856A] hover:text-white dark:hover:bg-[#00856A] dark:text-white hover:cursor-pointer px-4 rounded-lg`} key={option.name}>{option.name}</li>
-                        })}
-                    </ul>
-                }
-            </div>
-        </>
+    return (
+        <>
+                <div className="flex">
+                    <input
+                        aria-label={`Search Bar`}
+                        ref={selectedValue as Ref<HTMLInputElement>}
+                        type='text'
+                        className={`${props.className} ${props.width}`}
+                        onChange={(e) => changeHandler(e)}
+                        onKeyDown={autocompleteKeyHandler}
+                        defaultValue={props.defaultValue}>
+                    </input>
+                    {
+                        props.options.length > 0 && optionsVisible &&
+                        <ul ref={options as Ref<HTMLUListElement>} className={`absolute ${props.listWidth} z-50 bg-white dark:bg-[#27272a] rounded-xl mt-[42px] text-[#004C46]`}>
+                            {props.options.map((option, index) => {
+                                if (index == highlightedIndex) return <li onClick={() => listSelect(option.name)} className={`hover:cursor-pointer px-4 bg-[#00856A] rounded-lg text-white`} key={option.name}>{option.name}</li>
+                                else return <li onClick={() => listSelect(option.name)} className={`hover:bg-[#00856A] hover:text-white dark:hover:bg-[#00856A] dark:text-white hover:cursor-pointer px-4 rounded-lg`} key={option.name}>{option.name}</li>
+                            })}
+                        </ul>
+                    }
+                </div>
+            </>
+    );
 })
 
 // Display name, export
