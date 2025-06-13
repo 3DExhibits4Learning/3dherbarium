@@ -11,7 +11,7 @@ import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react'
 import { LatLngLiteral } from 'leaflet'
 import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
 import { ReactImageGalleryItem } from "react-image-gallery"
-import { Spinner } from '@nextui-org/react'
+import { Spinner } from '@heroui/react'
 
 // Default imports
 import Leaderboards from './Leaderboards'

@@ -1,7 +1,7 @@
 'use client'
 
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure } from "@heroui/react";
-import { Progress } from "@nextui-org/progress";
+import { Progress } from "@heroui/progress";
 import { useRouter } from "next/navigation";
 
 const ProgressModal = (props: { progress: number, success: boolean | null, errorMsg: string }) => {

@@ -20,6 +20,7 @@ import { serverErrorHandler } from "@/functions/server/error"
 import dynamic from "next/dynamic"
 import NoDataFound from "@/components/Collections/NoData"
 import FullPageError from "@/components/Error/FullPageError"
+import CollectionsClient from "@/components/Collections/CollectionsWrapper/Client"
 
 // Path
 const path = 'src/app/collections/[specimenName]/page.tsx'
@@ -28,7 +29,7 @@ const path = 'src/app/collections/[specimenName]/page.tsx'
 import prisma from "@/functions/server/utils/prisma"
 
 // Dynamic imports
-const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })
+const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'))
 
 // Main JSX (communityId to be used here in the future, hence searchParams)
 export default async function Page(
@@ -83,7 +84,7 @@ export default async function Page(
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
       <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
       <title>3D Herbarium Collections</title>
-      <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} annotations={annotations}  />
+      <CollectionsClient model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} annotations={annotations}  />
     </>
   }
   // Typical error component catch

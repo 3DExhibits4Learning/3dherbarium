@@ -1,6 +1,6 @@
 'use client'
 import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@heroui/react"
-import { Progress } from "@nextui-org/progress";
+import { Progress } from "@heroui/progress";
 import { SetStateAction, Dispatch } from "react";
 
 export default function DataTransfer(props: { open: boolean, transferring: boolean, result: string, success: boolean | null }) {

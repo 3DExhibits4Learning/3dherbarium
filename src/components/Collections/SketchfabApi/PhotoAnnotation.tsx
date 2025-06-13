@@ -1,7 +1,7 @@
 'use client'
 
 import { photo_annotation } from "@prisma/client"
-import { Skeleton } from "@nextui-org/skeleton";
+import { Skeleton } from "@heroui/skeleton";
 
 export default function PhotoAnnotation(props: { sketchfabApi: any }) {
 

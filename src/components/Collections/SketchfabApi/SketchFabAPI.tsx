@@ -26,9 +26,11 @@ import Sketchfab from '@sketchfab/viewer-api'
 import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal'
 import Herbarium from '@/functions/client/utils/HerbariumClass'
 import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer'
-import ModelViewer from './ModelViewer'
 import Annotation from './Annotation'
 import FullPageError from '../../Error/FullPageError'
+import dynamic from 'next/dynamic'
+
+const ModelViewer = dynamic(() => import('./ModelViewer'), {ssr: false})
 
 // Exported context
 export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
