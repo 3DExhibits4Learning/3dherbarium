@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import Image from "next/image"
-import { Divider } from "@nextui-org/react"
+import { Divider } from "@heroui/react"
 import ImageGallery from 'react-image-gallery'
 import "react-image-gallery/styles/css/image-gallery.css";
 import { ReactImageGalleryItem } from "react-image-gallery"

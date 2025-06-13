@@ -3,7 +3,7 @@
 import { ChangeEvent, SetStateAction, useRef, useState, Dispatch, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { Modal, ModalContent, ModalBody, ModalFooter, useDisclosure, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, ModalFooter, useDisclosure, Button } from "@heroui/react"
 import DataTransferModal from "../Shared/DataTransferModal"
 import checkToken from "@/functions/client/utils/checkToken"
 import { LegacyRef } from "react"

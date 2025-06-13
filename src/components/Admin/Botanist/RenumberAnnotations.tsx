@@ -5,7 +5,7 @@
  */
 
 // Typical imports
-import { Button, Modal, ModalContent } from "@nextui-org/react"
+import { Button, Modal, ModalContent } from "@heroui/react"
 import { Dispatch, SetStateAction, useContext, useState, useEffect } from "react"
 import { AnnotationNumbers } from "@/components/Admin/Botanist/AnnotationSubcomponents/AnnotationNumber"
 import { BotanyClientContext } from "@/components/Admin/Botanist/BotanyClient"

@@ -9,7 +9,7 @@
 'use client'
 
 // Typical imports
-import { Accordion, AccordionItem } from "@nextui-org/react"
+import { Accordion, AccordionItem } from "@heroui/react"
 import { useEffect, useState, useRef, createContext, useReducer } from "react"
 import { model } from "@prisma/client"
 import { botanyClientContext } from "@/ts/botanist"

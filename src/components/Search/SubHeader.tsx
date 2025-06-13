@@ -8,7 +8,7 @@
 
 // Typical imports
 import { SearchPageState } from "@/ts/search"
-import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@nextui-org/react"
+import { Navbar, NavbarContent, NavbarMenuItem, Button } from "@heroui/react"
 import { useRouter } from "next/navigation"
 import { SetStateAction, Dispatch } from "react"
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { signIn, signOut } from "next-auth/react"
-import { NavbarMenuItem, Avatar, Button, } from "@nextui-org/react"
+import { NavbarMenuItem, Avatar, Button, } from "@heroui/react"
 import Link from "next/link"
 
 export default function MobileSessionOptions(props: { session: any, userItems: string[] }) {

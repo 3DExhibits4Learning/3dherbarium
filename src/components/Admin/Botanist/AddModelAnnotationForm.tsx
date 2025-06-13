@@ -10,7 +10,7 @@ import dataTransferHandler from "@/functions/client/dataTransfer/dataTransferHan
 // Typical imports
 import { model } from "@prisma/client"
 import { useContext, useEffect, useState } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { enterNewModelAnnotationIntoDb } from "@/functions/server/botanist"
 import { BotanyClientContext } from "@/components/Admin/Botanist/BotanyClient"
 import { botanyClientContext } from "@/ts/botanist"

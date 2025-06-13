@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, Button } from "@heroui/react"
 import { SetStateAction, Dispatch } from "react";
 
 // Main JSX

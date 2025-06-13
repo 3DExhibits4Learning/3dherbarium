@@ -5,7 +5,7 @@
  */
 
 // Typical imports
-import { Spinner } from "@nextui-org/react"
+import { Spinner } from "@heroui/react"
 
 // Default imports
 import Header from '@/components/Header/Header'

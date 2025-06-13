@@ -1,14 +1,12 @@
 'use client'
 
 import { IsClientCtxProvider } from '@/functions/client/utils/isClient'
-import { NextUIProvider } from '@nextui-org/react'
+import { HeroUIProvider } from "@heroui/react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <IsClientCtxProvider>
-      <NextUIProvider>
+  return <IsClientCtxProvider>
+      <HeroUIProvider>
         {children}
-      </NextUIProvider>
+      </HeroUIProvider>
     </IsClientCtxProvider>
-  )
 }

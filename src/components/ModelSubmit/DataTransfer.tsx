@@ -1,5 +1,5 @@
 'use client'
-import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@heroui/react"
 import { Progress } from "@nextui-org/progress";
 import { SetStateAction, Dispatch } from "react";
 

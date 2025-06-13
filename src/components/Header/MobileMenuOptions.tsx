@@ -1,6 +1,6 @@
 'use client'
 
-import { NavbarMenuItem } from "@nextui-org/react"
+import { NavbarMenuItem } from "@heroui/react"
 import Link from "next/link"
 
 export default function MobileMenuOptions(props:{menuItems: string[]}) {

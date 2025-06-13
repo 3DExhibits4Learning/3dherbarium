@@ -11,8 +11,8 @@ import * as fn from "@/functions/client/admin/manager"
 
 // Typical imports
 import { Models } from "@/ts/types"
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import { Button } from "@nextui-org/react";
+import { Accordion, AccordionItem } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { useState, useEffect, SetStateAction, Dispatch } from "react";
 
 // Default imports

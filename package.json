@@ -13,8 +13,7 @@
   "dependencies": {
     "@auth/core": "^0.34.2",
     "@auth/prisma-adapter": "^2.0.0",
-    "@nextui-org/progress": "^2.0.31",
-    "@nextui-org/react": "^2.4.6",
+    "@heroui/react": "^2.7.10",
     "@prisma/client": "^5.13.0",
     "@sketchfab/viewer-api": "^1.12.1",
     "@types/jszip": "^3.4.1",
@@ -25,7 +24,6 @@
     "eslint": "8.49.0",
     "eslint-config-next": "^15.2.1",
     "exifreader": "^4.23.7",
-    "framer-motion": "^10.17.0",
     "jszip": "^3.10.1",
     "leaflet": "^1.9.4",
     "next": "^14.0.4",

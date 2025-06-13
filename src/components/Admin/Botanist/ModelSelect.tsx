@@ -1,7 +1,7 @@
 'use client'
 
 // Typical imports
-import { Accordion, AccordionItem } from "@nextui-org/react"
+import { Accordion, AccordionItem } from "@heroui/react"
 import { model } from "@prisma/client"
 import { forwardRef, MutableRefObject, SetStateAction, useRef, Dispatch } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
@@ -9,7 +9,7 @@ import { NewModelClicked } from "@/ts/reducer"
 import { useContext } from "react"
 import { BotanyClientContext } from "./BotanyClient"
 import { botanyClientContext } from "@/ts/botanist"
-import { Spinner } from "@nextui-org/react"
+import { Spinner } from "@heroui/react"
 import { AnnotationButtons } from "./AnnotationSubcomponents/AnnotationButtons"
 
 // Default imports

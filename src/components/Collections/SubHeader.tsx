@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { Switch } from "@nextui-org/react"
+import { Switch } from "@heroui/react"
 import { SetStateAction, Dispatch, useContext } from "react"
 import { CollectionsContext } from "./CollectionsWrapper/CollectionsWrapper"
 import { CollectionsWrapperData } from "@/ts/reducer"

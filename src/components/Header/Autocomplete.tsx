@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { NavbarItem } from "@nextui-org/react"
+import { NavbarItem } from "@heroui/react"
 import { forwardRef, MutableRefObject, SetStateAction, Dispatch } from "react"
 import { useRouter } from "next/navigation"
 import { SearchIcon } from "./SearchIcon"

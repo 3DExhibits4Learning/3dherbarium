@@ -1,7 +1,7 @@
 'use client'
 
 import AnnotationReposition from "../AnnotationFields/AnnotationReposition"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { useContext } from "react"
 import { AnnotationEntryContext } from "../AnnotationEntry"
 import { annotationEntryContext } from "@/ts/botanist"

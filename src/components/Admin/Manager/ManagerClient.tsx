@@ -15,7 +15,7 @@ import * as fn from "@/functions/client/admin/manager"
 // Typical imports
 import { userSubmittal } from "@prisma/client"
 import { useState } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { Models } from "@/ts/types"
 import { migrateAnnotatedAndAnnotationModels, migrateModelAnnotationToAnnotatedModel, updateThumbnail } from "@/functions/server/manager"
 

@@ -9,7 +9,7 @@
 // Typical imports
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { useState, useContext, useEffect, SetStateAction, Dispatch } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { ModelerContext } from "./ModelerDash"
 import { specimenWithImageSet, dataTransfer } from "@/ts/types"
 import { buttonEnable } from "@/functions/client/shared"

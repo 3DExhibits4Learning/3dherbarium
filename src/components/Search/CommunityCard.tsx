@@ -9,7 +9,7 @@
 'use client'
 
 // Typical imports
-import { Chip } from "@nextui-org/react"
+import { Chip } from "@heroui/react"
 import { fullUserSubmittal } from "@/ts/types"
 import { handleImgError } from "@/functions/client/utils/imageHandler"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"

@@ -1,7 +1,7 @@
 'use client'
 
 import { fullUserSubmittal } from "@/ts/types"
-import { Divider } from "@nextui-org/react"
+import { Divider } from "@heroui/react"
 import { userSubmittal } from "@prisma/client"
 import dynamic from "next/dynamic"
 const ModelViewer = dynamic(() => import('@/components/Shared/ModelViewer'), {ssr: false})
