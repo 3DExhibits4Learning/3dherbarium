@@ -17,7 +17,6 @@ import { redirect } from "next/navigation"
 import { serverErrorHandler } from "@/functions/server/error"
 
 // Default imports
-import dynamic from "next/dynamic"
 import NoDataFound from "@/components/Collections/NoData"
 import FullPageError from "@/components/Error/FullPageError"
 import CollectionsClient from "@/components/Collections/CollectionsWrapper/Client"
@@ -27,9 +26,6 @@ const path = 'src/app/collections/[specimenName]/page.tsx'
 
 // SINGLETON
 import prisma from "@/functions/server/utils/prisma"
-
-// Dynamic imports
-const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'))
 
 // Main JSX (communityId to be used here in the future, hence searchParams)
 export default async function Page(

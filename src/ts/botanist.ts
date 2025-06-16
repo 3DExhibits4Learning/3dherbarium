@@ -49,11 +49,11 @@ export const initialBotanyClientState = {
 }
 
 export interface AnnotationEntryState {
-    photoChecked: boolean | undefined
-    videoChecked: boolean | undefined
-    urlChecked: boolean | undefined
-    uploadChecked: boolean | undefined
-    modelChecked: boolean | undefined
+    photoChecked: boolean
+    videoChecked: boolean
+    urlChecked: boolean
+    uploadChecked: boolean
+    modelChecked: boolean
     mediaType: string | undefined
     imageVisible: boolean | undefined
     createDisabled: boolean
@@ -79,11 +79,11 @@ export interface annotationEntryContext {
 
 export const initialAnnotationEntryState = (annotation: photo_annotation | video_annotation | model_annotation, annotationType: string) => {
     return {
-        photoChecked: undefined,
-        videoChecked: undefined,
-        urlChecked: undefined,
-        uploadChecked: undefined,
-        modelChecked: undefined,
+        photoChecked: false,
+        videoChecked: false,
+        urlChecked: false,
+        uploadChecked: false,
+        modelChecked: false,
         mediaType: undefined,
         imageVisible: undefined,
         createDisabled: true,
