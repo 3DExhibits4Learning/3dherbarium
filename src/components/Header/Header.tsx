@@ -1,5 +1,6 @@
 /**
  * @file /components/Header/Header.tsx
+ * 
  * @fileoverview the header component used throughout the application.
  * It contains a search bar, the site logo, and links to the other pages.
  * It doubles as a drawer component to allow navigation in mobile browsers.

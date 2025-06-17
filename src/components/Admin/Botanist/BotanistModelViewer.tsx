@@ -42,7 +42,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // Sketchfab API initialization success object
     const successObj = {
         success: successObjectFnWrapper,
-        error: (e: any) => { throw Error(e.message) },
+        error: (e: any) => { console.log('Sketchfab Viewer Error: ', e) },
         ui_stop: 0,
         ui_infos: 0,
         ui_inspector: 0,
