@@ -25,7 +25,7 @@ export default function AddModelAnnotationToPublishedModel(props: { baseModelsFo
         }
         {
             !props.baseModelsForAnnotationModels.length &&
-            <p className="text-xl">There are no unused annotation models</p>
+            <p className="text-xl">*There are no unused annotation models</p>
         }
     </>
 }

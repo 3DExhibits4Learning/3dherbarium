@@ -94,8 +94,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
     }, [userCoordinates]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <>
+    return <>
             <article className="h-full w-full flex">
                 {
                     !observations && loading && firstLoad &&
@@ -160,5 +159,4 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 }
             </article>
         </>
-    )
 }
