@@ -8,7 +8,7 @@
 "use client"
 
 // Typical imports
-import { MutableRefObject, useEffect, useRef, forwardRef, ForwardedRef, useState, useContext } from 'react'
+import { RefObject, useEffect, useRef, forwardRef, ForwardedRef, useState, useContext } from 'react'
 import { BotanyClientContext } from './BotanyClient'
 import { botanyClientContext } from '@/ts/botanist'
 
@@ -23,7 +23,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     const dispatch = context.botanyDispatch
 
     // Refs
-    const newAnnotationEnabled = ref as MutableRefObject<boolean>
+    const newAnnotationEnabled = ref as RefObject<boolean>
     const modelViewer = useRef<HTMLIFrameElement>(undefined)
     const temporaryAnnotationIndex = useRef<number>(undefined)
 
@@ -83,7 +83,7 @@ const BotanistModelViewer = forwardRef((props: { minHeight?: string, }, ref: For
     // Simple iframe with ref
     return <div className={`flex bg-black m-auto min-h-[${minHeight}]`} style={{ height: "100%", width: "100%" }}>
         <iframe
-            ref={modelViewer as MutableRefObject<HTMLIFrameElement>}
+            ref={modelViewer as RefObject<HTMLIFrameElement>}
             frameBorder="0"
             title={"Model Viewer for " + ''}
             allow="autoplay; fullscreen; xr-spatial-tracking"
