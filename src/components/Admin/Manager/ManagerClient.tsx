@@ -55,7 +55,6 @@ export default function ManagerClient(props: { pendingModels: string, katId: str
     const migrateWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateAnnotatedAndAnnotationModels, [], 'Migrating annotated 3D models')
     const migrateModelAnnotationWrapper = () => dataTransferHandler(initializeDataTransferHandler, terminateDataTransferHandler, migrateModelAnnotationToAnnotatedModel, [annotationModelUid], "Migrating model annotation")
 
-
     return <>
         <DataTransferModal open={openModal} setOpen={setOpenModal} transferring={transferring} loadingLabel={loadingLabel} result={result} />
         <div className="flex h-48 w-full">
