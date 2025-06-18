@@ -11,7 +11,7 @@ import { getAccountProviders } from "@/functions/server/queries"
 import { Account } from "@prisma/client"
 import { getSubmittalSoftware } from "@/functions/server/queries"
 import { getSubmittalTags } from "@/functions/server/queries"
-const DashboardClient = dynamic(() => import('@/components/Dashboard/DashboardClient'), { ssr: false });
+const DashboardClient = dynamic(() => import('@/components/Dashboard/DashboardClient'))
 const Header = dynamic(() => import('@/components/Header/Header'))
 
 export default async function Page() {
