@@ -21,7 +21,7 @@
     "@types/react-dom": "19.1.6",
     "@yaireo/tagify": "^4.26.5",
     "autoprefixer": "^10.4.19",
-    "eslint": "8.49.0",
+    "eslint": "^8.57.1",
     "eslint-config-next": "15.3.3",
     "exifreader": "^4.23.7",
     "jszip": "^3.10.1",
