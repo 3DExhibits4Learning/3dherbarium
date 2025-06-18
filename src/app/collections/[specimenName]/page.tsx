@@ -17,9 +17,9 @@ import { redirect } from "next/navigation"
 import { serverErrorHandler } from "@/functions/server/error"
 
 // Default imports
-import dynamic from "next/dynamic"
 import NoDataFound from "@/components/Collections/NoData"
 import FullPageError from "@/components/Error/FullPageError"
+import CollectionsClient from "@/components/Collections/CollectionsWrapper/Client"
 
 // Path
 const path = 'src/app/collections/[specimenName]/page.tsx'
@@ -27,11 +27,11 @@ const path = 'src/app/collections/[specimenName]/page.tsx'
 // SINGLETON
 import prisma from "@/functions/server/utils/prisma"
 
-// Dynamic imports
-const CollectionsWrapper = dynamic(() => import('@/components/Collections/CollectionsWrapper/CollectionsWrapper'), { ssr: false })
-
 // Main JSX (communityId to be used here in the future, hence searchParams)
-export default async function Page({ params, searchParams }: { params: { specimenName: string }, searchParams: { communityId: string } }) {
+export default async function Page(
+  props: { params: Promise<{ specimenName: string }>, searchParams: Promise<{ communityId: string }> }
+) {
+  const params = await props.params;
 
   try {
 
@@ -80,7 +80,7 @@ export default async function Page({ params, searchParams }: { params: { specime
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"></meta>
       <meta name="description" content="A digital herbarium featuring annotated 3D models of various botanical specimens"></meta>
       <title>3D Herbarium Collections</title>
-      <CollectionsWrapper model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} annotations={annotations}  />
+      <CollectionsClient model={_3dmodel} gMatch={gMatch} specimenName={params.specimenName} noModelData={noModelData as { title: string, images: GbifImageResponse[] }} annotations={annotations}  />
     </>
   }
   // Typical error component catch

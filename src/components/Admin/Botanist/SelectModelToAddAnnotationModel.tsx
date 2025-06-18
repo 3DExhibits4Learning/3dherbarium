@@ -1,7 +1,7 @@
 'use client'
 
 // Typical imports
-import { Accordion, AccordionItem } from "@nextui-org/react"
+import { Accordion, AccordionItem } from "@heroui/react"
 import { model } from "@prisma/client"
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
@@ -9,7 +9,10 @@ import { fullAnnotation } from "@/ts/types"
 import { getFullAnnotations } from "@/functions/server/botanist"
 
 // Default imports
-import AddModelAnnotationModelViewer from "@/components/Admin/Botanist/AddModelAnnotationModelViewer"
+import dynamic from "next/dynamic"
+
+// Dynamic imports
+const AddModelAnnotationModelViewer = dynamic(() => import('@/components/Admin/Botanist/AddModelAnnotationModelViewer'))
 
 // Main JSX props interface
 interface SelectModelToAddAnnotationModelProps {
@@ -30,7 +33,7 @@ export default function SelectModelToAddAnnotationModel(props: SelectModelToAddA
     const [annotations, setAnnotations] = useState<fullAnnotation[]>()
 
     // Wrapper for setting annotations to getFullAnnotations
-    const setFullAnnotations = async (uid: string) => setAnnotations(await getFullAnnotations(uid))
+    const setFullAnnotations = async (uid: string) => setAnnotations(await getFullAnnotations(uid) as fullAnnotation[])
 
     // Effect to use wrapper
     useEffect(() => { if (uid) setFullAnnotations(uid) }, [uid])

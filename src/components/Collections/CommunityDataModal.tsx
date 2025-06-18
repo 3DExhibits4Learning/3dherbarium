@@ -1,11 +1,11 @@
 'use client'
-import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, ModalFooter, Spinner, useDisclosure, Button } from "@heroui/react"
 import { SetStateAction, Dispatch } from "react";
 import CommunityHerbarium from "@/functions/client/utils/Community3dModel";
 import { addCommas, boolRinse } from "./SketchfabDom";
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter";
 import Image from "next/image";
-import { Divider } from "@nextui-org/react";
+import { Divider } from "@heroui/react";
 
 export default function CommunityDataModal(props: { open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, specimen: CommunityHerbarium }) {
     const s = props.specimen

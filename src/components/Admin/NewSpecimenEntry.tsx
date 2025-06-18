@@ -8,7 +8,7 @@
 
 // Typical imports
 import { useState, useEffect, useContext, SetStateAction, Dispatch } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { ModelerContext } from "./Modeler/ModelerDash"
 import { insertSpecimenIntoDatabase } from "@/functions/client/admin/modeler"
 import { buttonEnable } from "@/functions/client/shared"

@@ -5,12 +5,12 @@
  */
 
 // Typical imports
-import { Modal, ModalBody, ModalContent, ModalHeader } from "@nextui-org/react"
+import { Modal, ModalBody, ModalContent, ModalHeader } from "@heroui/react"
 import { model, model_annotation } from "@prisma/client"
 import { SetStateAction, useEffect, useState, Dispatch } from "react"
 import { getAnnotationModel } from "@/functions/server/search"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { ModelIncludingSpecimenAndSoftware } from "@/components/Collections/SketchfabApi/ModelAnnotation"
 import { getAnnotationModelIncludingSpecimen } from "@/functions/server/collections"
 

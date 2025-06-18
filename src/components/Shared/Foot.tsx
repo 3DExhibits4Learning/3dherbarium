@@ -5,7 +5,7 @@
  */
 
 // Typical imports
-import { Divider } from '@nextui-org/react'
+import { Divider } from '@heroui/react'
 
 // Default imports
 import Image from 'next/image'

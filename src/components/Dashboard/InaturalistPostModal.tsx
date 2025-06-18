@@ -3,10 +3,10 @@
 import { ChangeEvent, SetStateAction, useRef, useState, Dispatch, useEffect } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { Modal, ModalContent, ModalBody, ModalFooter, useDisclosure, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, ModalFooter, useDisclosure, Button } from "@heroui/react"
 import DataTransferModal from "../Shared/DataTransferModal"
 import checkToken from "@/functions/client/utils/checkToken"
-import { LegacyRef } from "react"
+import { Ref } from "react"
 import FormMap from "../Map/Form"
 import { LatLngLiteral } from "leaflet"
 import Autocomplete from "../Shared/AutoCompleteRef"
@@ -28,11 +28,11 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
     const [postDisabled, setPostDisabled] = useState<boolean>(false)
     const [autocompleteOptions, setAutocompleteOptions] = useState<any[]>([])
 
-    const species = useRef<string>()
+    const species = useRef<string>(undefined)
     const description = useRef<string>('')
-    const files = useRef<HTMLInputElement>()
-    const date = useRef<HTMLInputElement>()
-    const time = useRef<HTMLInputElement>()
+    const files = useRef<HTMLInputElement>(undefined)
+    const date = useRef<HTMLInputElement>(undefined)
+    const time = useRef<HTMLInputElement>(undefined)
 
     if (!session || !session.user) {
         router.push('/api/auth/signin')
@@ -136,14 +136,14 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
                                             <tr>
                                                 <td className="align-middle">Observation Date<span className="text-red-700"> *</span></td>
                                                 <td className="align-middle py-4">
-                                                    <input ref={date as LegacyRef<HTMLInputElement>} type='date' className={`w-2/5 min-w-[300px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 !placeholder-[#9797A0] outline-[#004C46]`} onChange={postEnable}></input>
+                                                    <input ref={date as Ref<HTMLInputElement>} type='date' className={`w-2/5 min-w-[300px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 !placeholder-[#9797A0] outline-[#004C46]`} onChange={postEnable}></input>
                                                 </td>
                                             </tr>
 
                                             <tr>
                                                 <td className="align-middle">Observation Time<span className="text-red-700"> *</span></td>
                                                 <td className="align-middle py-4">
-                                                    <input ref={time as LegacyRef<HTMLInputElement>} type='time' className={`w-2/5 min-w-[300px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 !placeholder-[#9797A0] outline-[#004C46]`} onChange={postEnable}></input>
+                                                    <input ref={time as Ref<HTMLInputElement>} type='time' className={`w-2/5 min-w-[300px] rounded-xl dark:bg-[#27272a] dark:hover:bg-[#3E3E47] h-[42px] px-4 !placeholder-[#9797A0] outline-[#004C46]`} onChange={postEnable}></input>
                                                 </td>
                                             </tr>
 
@@ -174,7 +174,7 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
                                                         id='postInput'
                                                         type='file'
                                                         multiple
-                                                        ref={files as LegacyRef<HTMLInputElement>}
+                                                        ref={files as Ref<HTMLInputElement>}
                                                         accept='.jpg,.jpeg,.png,.gif'
                                                         onChange={() => {
                                                             fileLimiter((files.current as HTMLInputElement).files as FileList)
@@ -203,5 +203,5 @@ export default function InaturalistPostModal(props: { open: boolean, setOpen: Di
                 </ModalContent>
             </Modal>
         </>
-    )
+    );
 }

@@ -15,9 +15,7 @@ import { authed } from "@prisma/client"
 import { getIssue } from "@/functions/server/jira"
 
 // Default imports
-import Header from "@/components/Header/Header"
-import Foot from "@/components/Shared/Foot"
-import BotanyClient from "@/components/Admin/Botanist/BotanyClient"
+import BotanyClientWrapper from "@/components/Admin/Botanist/ClientWrapper"
 
 // Main JSX
 export default async function Page() {
@@ -37,11 +35,6 @@ export default async function Page() {
     annotationModels.forEach(model => annotationModelSpeciesNames.add(model.spec_name.toLowerCase()))
     const baseModelsForAnnotationModels = allModels.filter(model => annotationModelSpeciesNames.has(model.spec_name.toLowerCase()))
 
-    return <>
-        <Header pageRoute="collections" headerTitle="Botany Admin" />
-        <main className="w-full min-h-[calc(100vh-177px)] h-[calc(100vh-177px)] overflow-y-auto">
-            <BotanyClient modelsToAnnotate={modelsToAnnotate} annotationModels={annotationModels} epic={epic} baseModelsForAnnotationModels={baseModelsForAnnotationModels} />
-        </main>
-        <Foot />
-    </>
+    return <BotanyClientWrapper modelsToAnnotate={modelsToAnnotate} annotationModels={annotationModels} epic={epic} baseModelsForAnnotationModels={baseModelsForAnnotationModels} />
+
 }

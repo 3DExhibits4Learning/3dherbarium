@@ -1,7 +1,7 @@
 'use client'
 
 // Typical imports
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { Dispatch, forwardRef, MutableRefObject, SetStateAction, useContext } from "react"
 import { BotanyClientContext } from "../BotanyClient"
 import { botanyClientContext } from "@/ts/botanist"

@@ -1,6 +1,6 @@
 'use client'
 
-import { NavbarItem } from "@nextui-org/react"
+import { NavbarItem } from "@heroui/react"
 import { useEffect, useState } from "react";
 import { isBotanyTouchscreen } from "@/functions/client/touchScreen";
 

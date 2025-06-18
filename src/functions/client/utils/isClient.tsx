@@ -4,9 +4,11 @@
  * sets a boolean using useEffect, telling us we are safe to execute client code. 
  */
 
+'use client'
+
 import { createContext, useContext, useEffect, useState } from "react";
 
-const IsClientContext = createContext(false);
+const IsClientContext = createContext(false)
 
 export const IsClientCtxProvider = ({ children }: any) => {
   const [isClient, setIsClient] = useState(false);

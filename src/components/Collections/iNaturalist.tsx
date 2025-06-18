@@ -11,7 +11,7 @@ import { useEffect, useState, useRef, SetStateAction, Dispatch } from 'react'
 import { LatLngLiteral } from 'leaflet'
 import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
 import { ReactImageGalleryItem } from "react-image-gallery"
-import { Spinner } from '@nextui-org/react'
+import { Spinner } from '@heroui/react'
 
 // Default imports
 import Leaderboards from './Leaderboards'
@@ -24,7 +24,7 @@ const InatMap = dynamic(() => import('../Map/iNaturalist'), { ssr: false })
 
 export default function Inaturalist(props: { activeSpecies: string }) {
 
-    const observationsRef = useRef<any>()
+    const observationsRef = useRef<any>(undefined)
 
     const [observations, setObservations] = useState<any>()
     const [userCoordinates, setUserCoordinates] = useState<LatLngLiteral>({ lat: 40.8665, lng: -124.0828 })
@@ -94,8 +94,7 @@ export default function Inaturalist(props: { activeSpecies: string }) {
 
     }, [userCoordinates]) // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <>
+    return <>
             <article className="h-full w-full flex">
                 {
                     !observations && loading && firstLoad &&
@@ -160,5 +159,4 @@ export default function Inaturalist(props: { activeSpecies: string }) {
                 }
             </article>
         </>
-    )
 }

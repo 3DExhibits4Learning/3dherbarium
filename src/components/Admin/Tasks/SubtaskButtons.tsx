@@ -6,7 +6,7 @@
 'use client'
 
 // Typical imports
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 import { useContext } from "react"
 import { ModelerContext } from "../Modeler/ModelerDash"
 import { dataTransfer } from "@/ts/types"

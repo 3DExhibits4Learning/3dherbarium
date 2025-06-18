@@ -26,9 +26,11 @@ import Sketchfab from '@sketchfab/viewer-api'
 import AnnotationModal from '@/components/Collections/SketchfabApi/AnnotationModal'
 import Herbarium from '@/functions/client/utils/HerbariumClass'
 import sketchFabApiReducer from '@/functions/client/reducers/SketchfabApiDataReducer'
-import ModelViewer from './ModelViewer'
 import Annotation from './Annotation'
 import FullPageError from '../../Error/FullPageError'
+import dynamic from 'next/dynamic'
+
+const ModelViewer = dynamic(() => import('./ModelViewer'), {ssr: false})
 
 // Exported context
 export const SketchfabApiContext = createContext<sketchfabApiContext | ''>('')
@@ -57,9 +59,9 @@ export default function SFAPI(props: { numberOfAnnotations: number, annotations:
   const [sketchfabApi, sketchfabApiDispatch] = useReducer(sketchFabApiReducer, initialData)
 
   // Refs
-  const sRef = useRef<Herbarium>() // sRef = specimenRef
-  const modelViewer = useRef<HTMLIFrameElement>()
-  const annotationDiv = useRef<HTMLDivElement>()
+  const sRef = useRef<Herbarium>(undefined) // sRef = specimenRef
+  const modelViewer = useRef<HTMLIFrameElement>(undefined)
+  const annotationDiv = useRef<HTMLDivElement>(undefined)
 
   // Direct dom references to annotation switches
   const annotationSwitch = document.getElementById("annotationSwitch") as HTMLInputElement

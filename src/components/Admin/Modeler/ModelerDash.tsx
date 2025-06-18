@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { Accordion, AccordionItem } from "@nextui-org/react"
+import { Accordion, AccordionItem } from "@heroui/react"
 import { specimenWithImageSet } from "@/ts/types"
 import { useState, createContext, memo } from "react"
 import { dataTransfer } from "@/ts/types"

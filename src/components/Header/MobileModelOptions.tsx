@@ -1,7 +1,7 @@
 'use client'
 
 import { SetStateAction, Dispatch } from "react"
-import { NavbarMenuItem, Switch, Divider, cn } from "@nextui-org/react";
+import { NavbarMenuItem, Switch, Divider, cn } from "@heroui/react";
 
 export default function MobileModelOptions(props: { isSelected: boolean | undefined, setIsSelected: Dispatch<SetStateAction<boolean>>, hasModel: boolean | undefined }) {
     return (

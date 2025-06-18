@@ -9,7 +9,7 @@
 "use client"
 
 // Typical imports
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Skeleton } from "@nextui-org/react"
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, Skeleton } from "@heroui/react"
 import { boolRinse, addCommas, arrayFromObjects } from '../SketchfabDom'
 import { toUpperFirstLetter } from '@/functions/server/utils/toUpperFirstLetter'
 import { GbifResponse, annotationModalProps } from "@/ts/types"

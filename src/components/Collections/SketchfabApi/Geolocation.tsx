@@ -1,7 +1,8 @@
 'use client'
 
 import { LatLngLiteral } from "leaflet"
-import MapWithPoint from "@/components/Map/MapWithPoint"
+import dynamic from "next/dynamic"
+const MapWithPoint = dynamic(() => import('@/components/Map/MapWithPoint'), {ssr: false})
 
 export default function Geolocation(props: { position: LatLngLiteral, locality?: string | null }) {
 

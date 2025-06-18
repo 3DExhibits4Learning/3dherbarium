@@ -10,8 +10,8 @@
 
 //  Typical imports
 import { useState, SetStateAction, Dispatch, useEffect } from 'react'
-import { Button } from "@nextui-org/react"
-import { Divider } from '@nextui-org/react'
+import { Button } from "@heroui/react"
+import { Divider } from '@heroui/react'
 import { uid } from 'uid'
 import { chunkFileToDisk } from '@/functions/client/modelSubmit'
 import { getTmpPath } from '@/functions/server/modelSubmit'

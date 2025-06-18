@@ -3,8 +3,8 @@
 import { useState, SetStateAction, Dispatch, useEffect } from 'react';
 import MobileSelect from '@/components/ModelSubmit/MobileSelectField';
 import ProcessSelect from '@/components/ModelSubmit/ProcessSelectField';
-import { Button } from "@nextui-org/react";
-import { Divider } from '@nextui-org/react';
+import { Button } from "@heroui/react";
+import { Divider } from '@heroui/react';
 import TagInput from '@/components/ModelSubmit/Tags';
 import { LatLngLiteral } from 'leaflet';
 import dynamic from 'next/dynamic';

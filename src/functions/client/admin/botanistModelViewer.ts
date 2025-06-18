@@ -12,8 +12,9 @@ import Sketchfab from '@sketchfab/viewer-api'
  * @param sketchfabApi 
  */
 export const removeHigherAnnotations = (botanyState: BotanyClientState, sketchfabApi: any) => {
-
-    if (botanyState.annotations && botanyState.annotations.length + 1 !== botanyState.activeAnnotationIndex) {
+    if (typeof window === 'undefined') return
+    
+    else if (botanyState.annotations && botanyState.annotations.length + 1 !== botanyState.activeAnnotationIndex) {
 
         for (let i = botanyState.annotations.length; i >= (botanyState.activeAnnotationIndex as number); i--)
 
@@ -343,24 +344,24 @@ export const initializeModelAnnotationAdditionViewer = (iframe: HTMLIFrameElemen
  * @param setPosition 
  */
 export const addNewModelAnnotationMarker = (info: any, sketchfabApi: any, temporaryAnnotationIndex: MutableRefObject<number | undefined>, setPosition: Dispatch<SetStateAction<string>>) => {
-        // Remove previous annotation if there is a new click
-        if (temporaryAnnotationIndex.current !== undefined) sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
+    // Remove previous annotation if there is a new click
+    if (temporaryAnnotationIndex.current !== undefined) sketchfabApi.removeAnnotation(temporaryAnnotationIndex.current, (e: any) => { if (e) throw Error(e.message) })
 
-        // Get camera position
-        sketchfabApi.getCameraLookAt((e: any, camera: any) => {
+    // Get camera position
+    sketchfabApi.getCameraLookAt((e: any, camera: any) => {
 
-            // Create annotation
-            sketchfabApi.createAnnotationFromScenePosition(info.position3D, camera.position, camera.target, '', '', (e: any, index: any) => {
-                temporaryAnnotationIndex.current = index
-            })
-
-            // If the click was on the 3d model (and not the background) set position/activeAnnotation data
-            if (info.instanceID) {
-                console.log("Info: ", info)
-                const positionArray = Array.from(info.position3D)
-                setPosition(JSON.stringify([positionArray, camera.position, camera.target]))
-            }
+        // Create annotation
+        sketchfabApi.createAnnotationFromScenePosition(info.position3D, camera.position, camera.target, '', '', (e: any, index: any) => {
+            temporaryAnnotationIndex.current = index
         })
-    }
+
+        // If the click was on the 3d model (and not the background) set position/activeAnnotation data
+        if (info.instanceID) {
+            console.log("Info: ", info)
+            const positionArray = Array.from(info.position3D)
+            setPosition(JSON.stringify([positionArray, camera.position, camera.target]))
+        }
+    })
+}
 
 

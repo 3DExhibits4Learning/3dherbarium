@@ -11,7 +11,7 @@
 'use client'
 
 // Typical imports
-import { NavbarContent, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@nextui-org/react"
+import { NavbarContent, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar } from "@heroui/react"
 import { signIn, signOut, useSession, } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"

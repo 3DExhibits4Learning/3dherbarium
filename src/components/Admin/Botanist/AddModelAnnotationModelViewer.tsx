@@ -16,7 +16,7 @@ import { fullAnnotation } from '@/ts/types'
 export default function AddModelAnnotationModelViewer(props: { minHeight?: string, uid: string, firstAnnotationPosition: string, annotations: fullAnnotation[], setPosition: Dispatch<SetStateAction<string>>  }) {
 
     // Refs
-    const modelViewer = useRef<HTMLIFrameElement>()
+    const modelViewer = useRef<HTMLIFrameElement>(undefined)
     const tmpAnnotationIndex = useRef(props.annotations.length + 1)
 
     // State
@@ -55,7 +55,6 @@ export default function AddModelAnnotationModelViewer(props: { minHeight?: strin
     return <div className={`flex bg-black m-auto min-h-[${minHeight}]`} style={{ height: "100%", width: "100%" }}>
         <iframe
             ref={modelViewer as MutableRefObject<HTMLIFrameElement>}
-            src=""
             frameBorder="0"
             title={"Model Viewer for " + ''}
             allow="autoplay; fullscreen; xr-spatial-tracking"

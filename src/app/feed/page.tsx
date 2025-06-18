@@ -7,7 +7,7 @@
 'use client'
 
 // Typical imports
-import { Divider } from "@nextui-org/react"
+import { Divider } from "@heroui/react"
 
 // Default imports
 import dynamic from "next/dynamic"

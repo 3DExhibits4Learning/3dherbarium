@@ -1,7 +1,7 @@
 'use client'
 
 import { forwardRef, SetStateAction, Dispatch } from "react"
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from "@heroui/react"
 import AutoComplete from "./Autocomplete"
 
 export const MobileSearch = forwardRef((props: { autocompleteOptions: any[], fetchAutoCompleteOptions: Function, isOpen: boolean, setIsOpen: Dispatch<SetStateAction<boolean>> }, ref) => {

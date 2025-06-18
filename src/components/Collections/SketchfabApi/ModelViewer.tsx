@@ -1,8 +1,8 @@
 'use client'
 
-import { forwardRef, LegacyRef, MutableRefObject } from "react"
+import { forwardRef, Ref, MutableRefObject } from "react"
 
-export const ModelViewer = forwardRef((props:{uid: string}, ref:LegacyRef<HTMLIFrameElement | undefined>) => {
+export const ModelViewer = forwardRef((props:{uid: string}, ref:Ref<HTMLIFrameElement | undefined>) => {
 
     const modelViewerRef = ref as MutableRefObject<HTMLIFrameElement>
 

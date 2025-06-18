@@ -1,8 +1,8 @@
 'use client'
 
-import { Modal, ModalContent, ModalBody, Button } from "@nextui-org/react"
+import { Modal, ModalContent, ModalBody, Button } from "@heroui/react"
 import { SetStateAction, useState, Dispatch } from "react"
-import { Spinner } from "@nextui-org/react"
+import { Spinner } from "@heroui/react"
 
 export default function AreYouSure(props: { uid: string, open: boolean, setOpen: Dispatch<SetStateAction<boolean>>, species: string, sid: string }) {
 

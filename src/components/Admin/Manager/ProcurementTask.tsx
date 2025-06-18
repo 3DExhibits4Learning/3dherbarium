@@ -2,7 +2,7 @@
 
 import { SetStateAction, Dispatch } from "react"
 import { ChangeEvent } from "react"
-import { Button } from "@nextui-org/react"
+import { Button } from "@heroui/react"
 
 export default function ProcurementTask(props:{taskee: string, setTaskee: Dispatch<SetStateAction<string>>, procurementTaskHandler: Function}) {
     return (

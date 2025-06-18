@@ -11,7 +11,7 @@ import { handleImgError } from "@/functions/client/utils/imageHandler"
 import { model } from "@prisma/client"
 import { SyntheticEvent, useEffect, useState } from "react"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
-import { Chip, Skeleton } from "@nextui-org/react"
+import { Chip, Skeleton } from "@heroui/react"
 import { configureNfsUrl } from "@/functions/client/utils"
 import { isMobileOrTablet } from "@/functions/client/utils/isMobile"
 

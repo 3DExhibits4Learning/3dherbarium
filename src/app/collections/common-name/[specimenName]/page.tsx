@@ -13,7 +13,8 @@ const Header = dynamic(() => import('@/components/Header/Header'))
 import Foot from "@/components/Shared/Foot";
 import PageWrapper from "@/components/Shared/PageWrapper";
 
-const CommonNameSearchPage = async ({ params }: { params: { specimenName: string } }) => {
+const CommonNameSearchPage = async (props: { params: Promise<{ specimenName: string }> }) => {
+  const params = await props.params;
 
   const specimenName: string = params.specimenName || '';
   const commonNameInfo: CommonNameInfo[] = await fetchCommonNameInfo(specimenName);
