@@ -114,7 +114,7 @@ model model {
 model model_annotation {
   modeler       String      @db.VarChar(75) @default("Hunter Phillips")
   license       String      @db.VarChar(75) @default("CC BY-NC-SA")
-  annotator     String      @db.VarChar(25) @default("Kat Lim")
+  annotator     String      @db.VarChar(25) @default("Jazzlyn Strebel")
   annotation    String      @db.VarChar(4000)
   annotation_id String      @id @db.VarChar(36)
   max_zoom_in   String?     @db.Char(1)

@@ -199,7 +199,7 @@ export const markAsAnnotated = async (uid: string) => {
 
   const updated = await prisma.model.update({
     where: { uid: uid },
-    data: { annotated: true, annotator: "Kat Lim" }
+    data: { annotated: true, annotator: "Jazzlyn Strebel" }
   })
   return updated
 }

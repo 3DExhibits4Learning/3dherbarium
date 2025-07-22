@@ -72,7 +72,7 @@ export async function PATCH(request: Request) {
         const data = await request.json()
 
         // Mark model as annotated
-        const markModelAsAnnotated = await prisma.model.update({ where: { uid: data.uid }, data: { annotated: true, annotator: "Kat Lim" } })
+        const markModelAsAnnotated = await prisma.model.update({ where: { uid: data.uid }, data: { annotated: true, annotator: "Jazzlyn Strebel" } })
 
         // Mark subtask as complete
         await transitionSubtask('SPRIN-1', (data.sid).slice(0, 8), 'Annotate', 31).catch(e => sendErrorEmail(path, 'transitionSubtask', e.message, true, 'POST'))

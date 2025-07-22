@@ -337,7 +337,7 @@ export const createAnnotation = async (index: number, botanyState: BotanyClientS
             // Photo_annotation table data
             data.set('author', annotationState.author)
             data.set('license', annotationState.license)
-            data.set('annotator', 'Kat Lim')
+            data.set('annotator', 'Jazzlyn Strebel')
             if (annotationState.photoTitle) data.set('photoTitle', annotationState.photoTitle)
             if (annotationState.website) data.set('website', annotationState.website)
     }
@@ -418,7 +418,7 @@ export const updateAnnotation = async (index: number, botanyState: BotanyClientS
             // Photo_annotation table data
             data.set('author', annotationState.author)
             data.set('license', annotationState.license)
-            data.set('annotator', 'Kat Lim')
+            data.set('annotator', 'Jazzlyn Strebel')
             if (annotationState.photoTitle) data.set('photoTitle', annotationState.photoTitle)
             if (annotationState.website) data.set('website', annotationState.website)
     }

@@ -29,7 +29,7 @@ export default function Page() {
                 <p className="text-lg">This is where all of the latest news regarding the herbarium will be posted, beginning with the welcome of the Fall 2024 student team:</p>
                 <br></br>
                 <p><span className="font-medium">Hunter Phillips</span>: Photogrammetrist and 3D Modeler</p>
-                <p><span className="font-medium">Kat Lim</span>: Botany Assistant</p>
+                <p><span className="font-medium">Jazzlyn Strebel</span>: Botany Assistant</p>
                 <p><span className="font-medium">Simon Saltikov</span>: Programming Assistant</p>
                 <br></br><br></br>
                 <p className="text-lg">Check back here regularly for updates!</p>

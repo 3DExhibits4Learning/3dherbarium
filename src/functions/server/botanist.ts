@@ -74,7 +74,7 @@ export const enterNewModelAnnotationIntoDb = async (annotationModelUid: string, 
             data: {
                 modeler: 'Hunter Phillips',
                 license: "CC-BY-NC-SA",
-                annotator: 'Kat Lim',
+                annotator: 'Jazzlyn Strebel',
                 annotation: annotation,
                 annotation_id: annotationId,
                 uid: annotationModelUid
