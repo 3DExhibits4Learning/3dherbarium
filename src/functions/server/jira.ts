@@ -222,3 +222,12 @@ export async function transitionSubtask(issueKey: string, uuidSlice8: string, su
     // throw error on catch
     catch (e: any) { throw Error(e.message) }
 }
+
+export const getJiraTeamMembers = async () => {
+    const base64 = getBase64ApiKey()
+
+    const users = await fetch('https://3dteam.atlassian.net/rest/api/3/users/search', {headers: getJiraHeaders(base64) as unknown as HeadersInit,})
+
+    if (!users.ok) throw Error(users.statusText)
+    else return await users.json().then(json => json)
+}

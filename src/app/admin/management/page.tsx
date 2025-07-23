@@ -17,6 +17,7 @@ import ManagerClient from "@/components/Admin/Manager/ManagerClient"
 import Header from "@/components/Header/Header"
 import Foot from "@/components/Shared/Foot"
 import FullPageError from "@/components/Error/FullPageError"
+import { getJiraTeamMembers } from "@/functions/server/jira"
 
 // Path
 const path = 'src/app/admin/management/page.tsx'
@@ -25,7 +26,6 @@ const path = 'src/app/admin/management/page.tsx'
 export default async function Page() {
 
     try {
-
         // Get email from session
         const session = await getServerSession(authOptions).catch(e => serverErrorHandler(path, e.message, "Couldn't get session", "getServerSession()", false))
         const email = session?.user?.email as string
@@ -42,7 +42,7 @@ export default async function Page() {
         return <>
             <Header pageRoute="collections" headerTitle='Management' />
             <section className="flex flex-col !min-h-[calc(100vh-177px)]">
-                <ManagerClient pendingModels={pendingModelsJson} katId={process.env.KAT_JIRA_ID as string} hunterId={process.env.hunter_JIRA_ID as string} />
+                <ManagerClient pendingModels={pendingModelsJson} katId={process.env.BOTANIST_JIRA_ID as string} hunterId={process.env.hunter_JIRA_ID as string} />
             </section>
             <Foot />
         </>

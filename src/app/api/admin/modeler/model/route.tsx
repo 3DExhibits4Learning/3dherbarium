@@ -11,7 +11,7 @@ import { prismaClient } from "@/functions/server/queries"
 import { toUpperFirstLetter } from "@/functions/server/utils/toUpperFirstLetter"
 import { routeHandlerError, routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
 import { ModelUploadResponse } from "@/ts/types"
-import { markSubtaskAsDone, transitionTask } from "@/functions/server/jira"
+import { markSubtaskAsDone, transitionSubtask, transitionTask } from "@/functions/server/jira"
 import { sendErrorEmail } from "@/functions/server/email"
 import { createTask } from "@/functions/server/jira"
 import { routeHandlerTypicalResponse } from "@/functions/server/response"
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         const modeler = model.get('modeler') as string
         const isViable = model.get('isViable') as string
         const isBase = model.get('isBase') as string
-        const katJira = process.env.KAT_JIRA_ID as string
+        const jazzJira = process.env.BOTANIST_JIRA_ID as string
         const species = model.get('species') as string
         const modelPath = model.get('modelPath') as string
         const fileName = model.get('fileName') as string
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
         await prisma.$transaction(transactionArr).catch(e => routeHandlerErrorHandler(path, e.message, 'prisma.$transaction', "Couldn't complete database transaction"))
 
         // Mark 3D model subtask as complete and the parent model task as complete
-        await Promise.all([markSubtaskAsDone('SPRIN-4', imageSet.sid.slice(0, 8), "Build"), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
+        await Promise.all([transitionSubtask('SPRIN-4', imageSet.sid.slice(0, 8), "Build", 31), transitionTask('SPRIN-4', imageSet.sid.slice(0, 8), 31)])
             .catch(e => sendErrorEmail(path, 'Promise.all(markSubtask, transitionTask)', e.message, true))
 
         // Create annotation task if the model is a viable base model
@@ -143,13 +143,13 @@ export async function POST(request: Request) {
                 'SPRIN-1',
                 `Annotate ${toUpperFirstLetter(imageSet.spec_name)} (${sid.slice(0, 8)})`,
                 `Annotate ${imageSet.spec_name}`,
-                katJira
+                jazzJira
             ).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
 
             // Subtasks (annotation and sketchfab metadata)
             const subTasks = [
-                createTask(task.key, `Add metadata for ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Add metadata for ${imageSet.spec_name}`, katJira, 'Subtask'),
-                createTask(task.key, `Annotate ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Annotate ${imageSet.spec_name}`, katJira, 'Subtask'),
+                createTask(task.key, `Add metadata for ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Add metadata for ${imageSet.spec_name}`, jazzJira, 'Subtask'),
+                createTask(task.key, `Annotate ${imageSet.spec_name} (${sid.slice(0, 8)})`, `Annotate ${imageSet.spec_name}`, jazzJira, 'Subtask'),
             ]
             await Promise.all(subTasks).catch(e => sendErrorEmail(path, 'Promise.all(createTask())', e.message, true))
 
@@ -163,7 +163,7 @@ export async function POST(request: Request) {
                 'SPRIN-1',
                 `Add metadata for ${toUpperFirstLetter(imageSet.spec_name)} (${sid.slice(0, 8)})`,
                 `Add metadata for ${imageSet.spec_name}`,
-                katJira
+                jazzJira
             ).catch((e: any) => sendErrorEmail(path, 'createTask()', e.message, true))
 
             // Typical response
