@@ -6,13 +6,13 @@
  */
 
 // Typical Imports
-import { transitionSubtask } from "@/functions/server/jira";
-import { sendErrorEmail } from "@/functions/server/email";
-import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error";
-import { routeHandlerTypicalResponse } from "@/functions/server/response";
+import { transitionSubtask } from "@/functions/server/jira"
+import { sendErrorEmail } from "@/functions/server/email"
+import { routeHandlerErrorHandler, routeHandlerTypicalCatch } from "@/functions/server/error"
+import { routeHandlerTypicalResponse } from "@/functions/server/response"
 
 // Prisma singleton
-import prisma from "@/functions/server/utils/prisma";
+import prisma from "@/functions/server/utils/prisma"
 
 // PATH
 const path = 'src/app/api/admin/botanist/route.tsx'
