@@ -44,7 +44,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <body className="overflow-hidden min-h-[100vh] dark:bg-[#181818] text-[#004C46] dark:text-[#F5F3E7] min-w-[200px]">
       <Script defer data-domain="3dherbarium.org" src="https://plausible.io/js/script.outbound-links.js"></Script>
       {/*@ts-ignore */}
-      <Script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</Script>
+      <Script id='plausibleScript'>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</Script>
       <SessionProvider session={session}>
         <Providers>
             {children}
