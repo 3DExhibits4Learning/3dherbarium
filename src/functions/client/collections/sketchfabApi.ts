@@ -73,7 +73,7 @@ export const initializeAnnotationsAndListeners = (sketchfabApi: sketchfabApiData
     if (sketchfabApi.s && sketchfabApi.annotations && sketchfabApi.api) {
 
         // For scale implementation
-        //sketchfabApi.api.getSceneGraph((e: any, result: any) => console.log('Result: ', result))
+        // sketchfabApi.api.getSceneGraph((e: any, result: any) => console.log('Result: ', result))
 
         // Create annotations and go to first annotation if client appears to be on desktop (if this a database annotated model)
         if (sketchfabApi.s.model.annotationPosition) {
