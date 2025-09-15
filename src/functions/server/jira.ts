@@ -76,8 +76,8 @@ export const getIssue = async (issueKey: string) => {
     const epic = await fetch(`https://3dteam.atlassian.net/rest/api/3/search?jql="parent" = ${issueKey}`, { headers: getJiraHeaders(base64) as unknown as HeadersInit })
 
     // Throw error on bad request; return epic
-    if (!epic.ok) { throw Error(epic.statusText) }
-    else return await epic.json().then(json => json).catch(e => { throw Error(e.message) })
+    // if (!epic.ok) { console.error(epic.statusText) }
+    // else return await epic.json().then(json => json).catch(e => { throw Error(e.message) })
 }
 
 /**

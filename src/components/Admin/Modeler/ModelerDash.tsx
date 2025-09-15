@@ -48,7 +48,7 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
         <ModelerContext.Provider value={modelerContext}>
             <DataTransferModal open={openModal} transferring={transferring} result={result} loadingLabel={loadingLabel} href='/admin/modeler' />
             <section className="w-full flex">
-                <Accordion className="w-4/5 overflow-y-auto">
+                <Accordion className="w-full overflow-y-auto">
                     <AccordionItem key={'newSpecimen'} aria-label={'New Specimen'} title={"I've acquired a new specimen"} classNames={{ title: 'text-[ #004C46] text-2xl' }}>
                         <NewSpecimenEntry />
                     </AccordionItem>
@@ -59,9 +59,9 @@ export default function ModelerDash(props: { unphotographedSpecimen: specimenWit
                         <MemoForms />
                     </AccordionItem>
                 </Accordion>
-                <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
+                {/* <div className="w-1/5 h-full flex border-l-2 border-[#004C46] overflow-y-auto">
                     <Tasks epic={props.epic}/>
-                </div>
+                </div> */}
             </section>
         </ModelerContext.Provider>
     )
