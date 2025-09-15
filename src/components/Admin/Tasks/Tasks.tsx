@@ -23,6 +23,7 @@ import TaskImage from "./TaskImage"
 
 // Main JSX
 export default function Tasks(props: { epic: any, botanist?: boolean }) {
+    console.log(props.epic)
 
     // Data transfer context
     const modelerContext = useContext(ModelerContext) as dataTransfer
